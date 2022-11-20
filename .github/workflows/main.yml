@@ -1,0 +1,26 @@
+name: Clipboard Builds
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build-linux-amd64:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Run a multi-line script
+        run: |
+          sudo apt update
+          sudo apt install -y g++-12
+          cmake src -D CMAKE_CXX_COMPILER=g++-12
+          cmake --build . -j 4
+      - uses: actions/upload-artifact@v2
+        with:
+          name: clipboard-linux-amd64
+          path: clipboard
