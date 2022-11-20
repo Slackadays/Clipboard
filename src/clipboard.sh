@@ -6,12 +6,12 @@ if [ $# -lt 1 ]
 then
     if [ $ACTION = "copy" ]
     then
-        echo -e "\033[38:5:196m╳\033[91m You need to choose a file to copy.\033[0m"
+        echo -e "\033[38;5;196m╳\033[91m You need to choose a file to copy.\033[0m"
         exit 1
     fi
     if [ $ACTION = "cut" ]
     then
-        echo -e "\033[38:5:196m╳\033[91m You need to choose a file to cut.\033[0m"
+        echo -e "\033[38;5;196m╳\033[91m You need to choose a file to cut.\033[0m"
         exit 1
     fi
 fi
@@ -52,7 +52,7 @@ then
         mv ${flags[@]} ${f} $filepath
     done
 else
-    echo -e "\033[38:5:196m╳\033[91m Invalid action. If you wanted to copy or cut, then this is a bug.\033[0m"
+    echo -e "\033[38;5;196m╳\033[91m Invalid action. If you wanted to copy or cut, then this is a bug.\033[0m"
     exit 1
 fi
 
@@ -123,24 +123,24 @@ then
         then
             if [ $num_directories_success -eq 0 ]
             then
-                echo -e "\033[38:5:40m✔ Copied ${num_files_success} files\033[0m"
+                echo -e "\033[38;5;40m✔ Copied ${num_files_success} files\033[0m"
             elif [ $num_files_success -eq 0 ]
             then
-                echo -e "\033[38:5:40m✔ Copied ${num_directories_success} directories\033[0m"
+                echo -e "\033[38;5;40m✔ Copied ${num_directories_success} directories\033[0m"
             else
-                echo -e "\033[38:5:40m✔ Copied ${num_files_success} files and ${num_directories_success} directories\033[0m"
+                echo -e "\033[38;5;40m✔ Copied ${num_files_success} files and ${num_directories_success} directories\033[0m"
             fi
         fi
         if [ $ACTION = "cut" ]
         then
             if [ $num_directories_success -eq 0 ]
             then
-                echo -e "\033[38:5:40m✔ Cut ${num_files_success} files\033[0m"
+                echo -e "\033[38;5;40m✔ Cut ${num_files_success} files\033[0m"
             elif [ $num_files_success -eq 0 ]
             then
-                echo -e "\033[38:5:40m✔ Cut ${num_directories_success} directories\033[0m"
+                echo -e "\033[38;5;40m✔ Cut ${num_directories_success} directories\033[0m"
             else
-                echo -e "\033[38:5:40m✔ Cut ${num_files_success} files and ${num_directories_success} directories\033[0m"
+                echo -e "\033[38;5;40m✔ Cut ${num_files_success} files and ${num_directories_success} directories\033[0m"
             fi
         fi
     fi
@@ -150,26 +150,26 @@ then
         then
             if [ $num_directories_failed -eq 0 ]
             then
-                echo -e "\033[38:5:196m╳\033[91m Failed to copy ${num_files_failed} files\033[0m"
+                echo -e "\033[38;5;196m╳\033[91m Failed to copy ${num_files_failed} files\033[0m"
             elif [ $num_files_failed -eq 0 ]
             then
-                echo -e "\033[38:5:196m╳\033[91m Failed to copy ${num_directories_failed} directories\033[0m"
+                echo -e "\033[38;5;196m╳\033[91m Failed to copy ${num_directories_failed} directories\033[0m"
             elif [ $num_files_failed -gt 1 ] && [ $num_directories_failed -gt 1 ]
             then
-                echo -e "\033[38:5:196m╳\033[91m Failed to copy ${num_files_failed} files and ${num_directories_failed} directories\033[0m"
+                echo -e "\033[38;5;196m╳\033[91m Failed to copy ${num_files_failed} files and ${num_directories_failed} directories\033[0m"
             fi
         fi
         if [ $ACTION = "cut" ]
         then
             if [ $num_directories_failed -eq 0 ]
             then
-                echo -e "\033[38:5:196m╳\033[91m Failed to cut ${num_files_failed} files\033[0m"
+                echo -e "\033[38;5;196m╳\033[91m Failed to cut ${num_files_failed} files\033[0m"
             elif [ $num_files_failed -eq 0 ]
             then
-                echo -e "\033[38:5:196m╳\033[91m Failed to cut ${num_directories_failed} directories\033[0m"
+                echo -e "\033[38;5;196m╳\033[91m Failed to cut ${num_directories_failed} directories\033[0m"
             elif [ $num_files_failed -gt 1 && $num_directories_failed -gt 1 ]
             then
-                echo -e "\033[38:5:196m╳\033[91m Failed to cut ${num_files_failed} files and ${num_directories_failed} directories\033[0m"
+                echo -e "\033[38;5;196m╳\033[91m Failed to cut ${num_files_failed} files and ${num_directories_failed} directories\033[0m"
             fi
         fi
     fi
@@ -182,22 +182,22 @@ do
     then
         if [ $ACTION = "copy" ]
         then
-            echo -e "\033[38:5:196m╳\033[91m Failed to copy ${f}\033[0m"
+            echo -e "\033[38;5;196m╳\033[91m Failed to copy ${f}\033[0m"
         fi
         if [ $ACTION = "cut" ]
         then
-            echo -e "\033[38:5:196m╳\033[91m Failed to cut ${f}\033[0m"
+            echo -e "\033[38;5;196m╳\033[91m Failed to cut ${f}\033[0m"
         fi
     fi
     if [ -e $filepath/${f} ]
     then
         if [ $ACTION = "copy" ]
         then
-            echo -e "\033[38:5:40m√ Copied ${f}\033[0m"
+            echo -e "\033[38;5;40m√ Copied ${f}\033[0m"
         fi
         if [ $ACTION = "cut" ]
         then
-            echo -e "\033[38:5:40m√ Cut ${f}\033[0m"
+            echo -e "\033[38;5;40m√ Cut ${f}\033[0m"
         fi
     fi
 done
