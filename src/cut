@@ -1,3 +1,0 @@
-#!/bin/bash
-
-ACTION=cut clipboard $@
