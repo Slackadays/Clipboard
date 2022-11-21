@@ -1,5 +1,11 @@
 # Clipboard
-The cut and paste system for the command line.
+The cut and paste system for the command line is here.
+
+Clipboard...
+- is tiny. Clipboard rings in at mere tens of kilobytes for most platforms.
+- is simple. Clipboard takes no time to learn because there's nothing to learn.
+- just works everywhere. All you need is a C++17 compiler.
+- saves time. Stop making temporary directories or memorizing file locations!
 
 ## Copy
 `clipboard copy (file) [files]`
