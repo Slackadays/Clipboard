@@ -1,5 +1,5 @@
 # Clipboard
-The cut/copy and paste system for the command line is here. Now you can copy and paste files wherever you want, all from the comfort of the terminal. What a work saver!
+Cut, copy, and paste files wherever you want, all from the comfort of your terminal.
 
 Clipboard...
 - is tiny. Clipboard rings in at mere tens of kilobytes for most platforms.
@@ -42,7 +42,7 @@ or
 
 `cb paste`
 
-# Compile Clipboard
+# Installation
 ## Clone
 ```
 git clone https://github.com/slackadays/Clipboard
@@ -53,8 +53,6 @@ cmake Clipboard/src
 cmake --build .
 ```
 ## Install
-Right now, you can install Clipboard manually on Linux systems with this:
 ```
-sudo cp clipboard /usr/bin
-sudo ln -s /usr/bin/clipboard /usr/bin/cb
+sudo cmake --install .
 ```

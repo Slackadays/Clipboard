@@ -247,7 +247,7 @@ int main(int argc, char *argv[]) {
         showSuccesses();
 
         showFailures();
-    } catch(const std::exception& e) {
+    } catch (const std::exception& e) {
         std::cout << "\033[38;5;196m╳ Internal error: " << e.what() << std::endl << "▏ This is probably a bug.\033[0m" << std::endl;
         exit(1);
     }

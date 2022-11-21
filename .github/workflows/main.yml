@@ -24,3 +24,19 @@ jobs:
         with:
           name: clipboard-linux-amd64
           path: clipboard
+  build-macos-amd64:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Run a multi-line script
+        run: |
+          cmake src
+          cmake --build . -j 4
+      - uses: actions/upload-artifact@v2
+        with:
+          name: clipboard-macos-amd64
+          path: clipboard

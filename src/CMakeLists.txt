@@ -4,8 +4,6 @@ project(Clipboard LANGUAGES CXX)
 
 project(Clipboard VERSION 0.1.0)
 
-find_package(fmt)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -41,3 +39,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s") # strip the binary for reduced size
   endif()
 endif()
+
+install(TARGETS clipboard DESTINATION bin)
+install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX}/bin/clipboard ${CMAKE_INSTALL_PREFIX}/bin/cb)")
