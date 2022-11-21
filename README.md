@@ -17,7 +17,7 @@ or
 Examples:
 
 ```
-cb foo.txt
+cb copy foo.txt
 clipboard copy MyDirectory
 cb copy bar.conf AnotherDirectory baz.txt
 ```
@@ -31,9 +31,9 @@ or
 Examples:
 
 ```
-cb foo.txt
-clipboard copy MyDirectory
-cb copy bar.conf AnotherDirectory baz.txt
+cb cut foo.txt
+clipboard cut MyDirectory
+cb cut bar.conf AnotherDirectory baz.txt
 ```
 ## Paste
 `clipboard paste`
