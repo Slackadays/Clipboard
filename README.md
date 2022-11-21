@@ -1,5 +1,5 @@
 # Clipboard
-Cut, copy, and paste files wherever you want, all from the comfort of your terminal.
+Cut, copy, and paste files wherever you want, all from the comfort of your terminal! To my knowledge, this is the first implementation of a clipboard ever for a command line.
 
 Clipboard...
 - is tiny. Clipboard rings in at mere tens of kilobytes for most platforms.
@@ -17,7 +17,7 @@ or
 Examples:
 
 ```
-cb copy foo.txt
+cb copy foo.txt launchcodes.doc
 clipboard copy MyDirectory
 cb copy bar.conf AnotherDirectory baz.txt
 ```
@@ -31,7 +31,7 @@ or
 Examples:
 
 ```
-cb cut foo.txt
+cb cut bar.txt baz.docx
 clipboard cut MyDirectory
 cb cut bar.conf AnotherDirectory baz.txt
 ```
