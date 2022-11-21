@@ -2,9 +2,9 @@ name: Clipboard Builds
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   build-linux-amd64:
     runs-on: ubuntu-22.04
