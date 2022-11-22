@@ -5,3 +5,5 @@
 /Makefile
 /cmake_install.cmake
 /install_manifest.txt
+/.vscode/*
+/.vscode

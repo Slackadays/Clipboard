@@ -7,11 +7,7 @@ namespace fs = std::filesystem;
 
 fs::path filepath;
 
-enum class Action {
-    Cut,
-    Copy,
-    Paste
-};
+enum class Action { Cut, Copy, Paste };
 Action action;
 
 std::vector<std::string> items;
@@ -54,26 +50,22 @@ void checkFlags() {
 }
 
 void setupAction() {
-    if (items.at(0) == "clipboard" || items.at(0) == "cb" || items.at(0) == "./clipboard" || items.at(0) == "./cb") {
-        if (items.size() > 1) {
-            if (items.at(1) == "cut") {
-                action = Action::Cut;
-            } else if (items.at(1) == "copy") {
-                action = Action::Copy;
-            } else if (items.at(1) == "paste") {
-                action = Action::Paste;
-            } else {
-                std::cout << "\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy\033[0m." << std::endl;
-                exit(1);
-            }
-            items.erase(items.begin());
-            items.erase(items.begin());
+    if (items.size() > 1) {
+        if (items.at(1) == "cut") {
+            action = Action::Cut;
+        } else if (items.at(1) == "copy") {
+            action = Action::Copy;
+        } else if (items.at(1) == "paste") {
+            action = Action::Paste;
         } else {
-            std::cout << "\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m" << std::endl;
+            std::cout << "\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy\033[0m." << std::endl;
             exit(1);
         }
+        items.erase(items.begin());
+        items.erase(items.begin());
     } else {
-        throw std::runtime_error("Could not determine desired action");
+        std::cout << "\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m" << std::endl;
+        exit(1);
     }
 }
 
