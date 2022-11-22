@@ -40,5 +40,5 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
   endif()
 endif()
 
-install(TARGETS clipboard DESTINATION bin)
-install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX}/bin/clipboard ${CMAKE_INSTALL_PREFIX}/bin/cb)")
+install(TARGETS clipboard DESTINATION /usr/bin/)
+install(CODE "execute_process(COMMAND ln -sf /usr/bin/clipboard /usr/bin/cb)")
