@@ -18,18 +18,18 @@ unsigned int files_failed = 0;
 unsigned int directories_failed = 0;
 
 void displayHelpMessage() {
-    printf("\033[38;5;51m▏This is Clipboard 0.1.0, the copy and paste system for the command line.\033[0m");
-    printf("\033[38;5;51m\033[1m▏How To Use\033[0m");
-    printf("\033[38;5;208m▏clipboard cut [options] (item) [items]\033[0m");
-    printf("\033[38;5;208m▏clipboard copy [options] (item) [items]\033[0m");
-    printf("\033[38;5;208m▏clipboard paste [options]\033[0m");
-    printf("\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m");
-    printf("\033[38;5;51m\033[1m▏Examples\033[0m");
-    printf("\033[38;5;208m▏cb cut nuclearlaunchcodes.txt Contacts_Folder\033[0m");
-    printf("\033[38;5;208m▏clipboard copy dogfood.conf\033[0m");
-    printf("\033[38;5;208m▏cb paste\033[0m");
-    printf("\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m");
-    printf("\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m");
+    printf("\033[38;5;51m▏This is Clipboard 0.1.0, the copy and paste system for the command line.\033[0m\n");
+    printf("\033[38;5;51m\033[1m▏How To Use\033[0m\n");
+    printf("\033[38;5;208m▏clipboard cut [options] (item) [items]\033[0m\n");
+    printf("\033[38;5;208m▏clipboard copy [options] (item) [items]\033[0m\n");
+    printf("\033[38;5;208m▏clipboard paste [options]\033[0m\n");
+    printf("\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n");
+    printf("\033[38;5;51m\033[1m▏Examples\033[0m\n");
+    printf("\033[38;5;208m▏cb cut nuclearlaunchcodes.txt Contacts_Folder\033[0m\n");
+    printf("\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n");
+    printf("\033[38;5;208m▏cb paste\033[0m\n");
+    printf("\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n");
+    printf("\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n");
 }
 
 void setupVariables(const int argc, char *argv[]) {
@@ -58,11 +58,11 @@ void setupAction(const int argc, char *argv[]) {
         } else if (!strcmp(argv[1], "paste")) {
             action = Action::Paste;
         } else {
-            printf("\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy\033[0m.");
+            printf("\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy\033[0m.\n");
             exit(1);
         }
     } else {
-        printf("\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m");
+        printf("\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m\n");
         exit(1);
     }
 }
@@ -70,9 +70,9 @@ void setupAction(const int argc, char *argv[]) {
 void checkForNoItems() {
     if ((action != Action::Paste) && items.size() < 1) {
         if (action == Action::Copy) {
-            printf("\033[38;5;196m╳ You need to choose something to copy.\033[38;5;219m Try adding the items you want to copy to the end, like \033[1mcopy contacts.txt myprogram.cpp\033[0m");
+            printf("\033[38;5;196m╳ You need to choose something to copy.\033[38;5;219m Try adding the items you want to copy to the end, like \033[1mcopy contacts.txt myprogram.cpp\033[0m\n");
         } else if (action == Action::Cut) {
-            printf("\033[38;5;196m╳ You need to choose something to cut.\033[38;5;219m Try adding the items you want to cut to the end, like \033[1mcut contacts.txt myprogram.cpp\033[0m");
+            printf("\033[38;5;196m╳ You need to choose something to cut.\033[38;5;219m Try adding the items you want to cut to the end, like \033[1mcut contacts.txt myprogram.cpp\033[0m\n");
         }
         exit(1);
     }
@@ -86,11 +86,11 @@ void checkForItemExistence() {
         }
     }
     if (missingItems.size() > 0) {
-        printf("\033[38;5;196m╳ The following items do not exist:\033[0m");
+        printf("\033[38;5;196m╳ The following items do not exist:\033[0m\n");
         for (const auto& i : missingItems) {
-            printf("\033[38;5;196m▏ %s\033[0m", i.data());
+            printf("\033[38;5;196m▏ %s\033[0m\n", i.data());
         }
-        printf("\033[38;5;219m▏ Try double-checking the spelling of the files or what directory you're in.\033[0m");
+        printf("\033[38;5;219m▏ Try double-checking the spelling of the files or what directory you're in.\033[0m\n");
         exit(1);
     }
 }
@@ -162,28 +162,28 @@ void countSuccessesAndFailures() {
 void showSuccesses() {
     if ((files_success >= 1) != (directories_success >= 1)) {
         if (action == Action::Copy) {
-            printf("\033[38;5;40m√ Copied %s\033[0m", items.at(0).data());
+            printf("\033[38;5;40m√ Copied %s\033[0m\n", items.at(0).data());
         } else if (action == Action::Cut) {
-            printf("\033[38;5;40m√ Cut %s\033[0m", items.at(0).data());
+            printf("\033[38;5;40m√ Cut %s\033[0m\n", items.at(0).data());
         }
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;40m√ Copied %i files\033[0m", files_success);
+                printf("\033[38;5;40m√ Copied %i files\033[0m\n", files_success);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;40m√ Cut %i files\033[0m", files_success);
+                printf("\033[38;5;40m√ Cut %i files\033[0m\n", files_success);
             }
         } else if ((files_success == 0) && (directories_success > 1)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;40m√ Copied %i directories\033[0m", directories_success);
+                printf("\033[38;5;40m√ Copied %i directories\033[0m\n", directories_success);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;40m√ Cut %i directories\033[0m", directories_success);
+                printf("\033[38;5;40m√ Cut %i directories\033[0m\n", directories_success);
             }
         } else if ((files_success >= 1) && (directories_success >= 1)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;40m√ Copied %i files and %i directories\033[0m", files_success, directories_success);
+                printf("\033[38;5;40m√ Copied %i files and %i directories\033[0m\n", files_success, directories_success);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;40m√ Cut %i files and %i directories\033[0m", files_success, directories_success);
+                printf("\033[38;5;40m√ Cut %i files and %i directories\033[0m\n", files_success, directories_success);
             }
         }
     }
@@ -192,28 +192,28 @@ void showSuccesses() {
 void showFailures() {
     if ((files_failed >= 1) != (directories_failed >= 1)) {
         if (action == Action::Copy) {
-            printf("\033[38;5;196m╳\033[91m Failed to copy %s\033[0m", items.at(0).data());
+            printf("\033[38;5;196m╳\033[91m Failed to copy %s\033[0m\n", items.at(0).data());
         } else if (action == Action::Cut) {
-            printf("\033[38;5;196m╳\033[91m Failed to cut %s\033[0m", items.at(0).data());
+            printf("\033[38;5;196m╳\033[91m Failed to cut %s\033[0m\n", items.at(0).data());
         }
     } else {
         if ((files_failed > 1) && (directories_failed == 0)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;196m╳\033[91m Failed to copy %i files\033[0m", files_failed);
+                printf("\033[38;5;196m╳\033[91m Failed to copy %i files\033[0m\n", files_failed);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;196m╳\033[91m Failed to cut %i files\033[0m", files_failed);
+                printf("\033[38;5;196m╳\033[91m Failed to cut %i files\033[0m\n", files_failed);
             }
         } else if ((files_failed == 0) && (directories_failed > 1)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;196m╳\033[91m Failed to copy %i directories\033[0m", directories_failed);
+                printf("\033[38;5;196m╳\033[91m Failed to copy %i directories\033[0m\n", directories_failed);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;196m╳\033[91m Failed to cut %i directories\033[0m", directories_failed);
+                printf("\033[38;5;196m╳\033[91m Failed to cut %i directories\033[0m\n", directories_failed);
             }
         } else if ((files_failed >= 1) && (directories_failed >= 1)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;196m╳\033[91m Failed to copy %i files and %i directories\033[0m", files_failed, directories_failed);
+                printf("\033[38;5;196m╳\033[91m Failed to copy %i files and %i directories\033[0m\n", files_failed, directories_failed);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;196m╳\033[91m Failed to cut %i files and %i directories\033[0m", files_failed, directories_failed);
+                printf("\033[38;5;196m╳\033[91m Failed to cut %i files and %i directories\033[0m\n", files_failed, directories_failed);
             }
         }
     }
@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
 
         showFailures();
     } catch (const std::exception& e) {
-        printf("\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m", e.what());
+        printf("\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n", e.what());
         exit(1);
     }
     return 0;
