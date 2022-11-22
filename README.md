@@ -2,10 +2,12 @@
 Cut, copy, and paste files wherever you want, all from the comfort of your terminal! This is the ultimate clipboard system for the command line.
 
 Clipboard...
-- is tiny. Clipboard rings in at mere tens of kilobytes for most platforms.
-- is simple. Clipboard takes no time to learn because there's nothing to learn.
-- just works everywhere. All you need is a C++17 compiler.
-- saves time. Stop making temporary directories or memorizing file locations!
+- is **really tiny**. Clipboard rings in at mere tens of kilobytes for most platforms.
+- is **really simple**. Clipboard takes no time to learn because there's nothing to learn.
+- is **discoverable**. I never found out about other implementation of terminal clipboards because they were undiscoverable.
+- **just works everywhere**. Clipboard has zero platform-specific code.
+- **looks pretty**. Colors make everything nicer. 🌈
+- **saves time**. Stop making temporary directories or memorizing file locations!
 
 ## Copy
 `clipboard copy (file) [files]`
