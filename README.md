@@ -4,7 +4,7 @@ Cut, copy, and paste files wherever you want, all from the comfort of your termi
 Clipboard...
 - is **really tiny**. Clipboard rings in at mere tens of kilobytes for most platforms.
 - is **really simple**. Clipboard takes no time to learn because there's nothing to learn.
-- is **discoverable**. I never found out about other implementation of terminal clipboards because they were undiscoverable.
+- is **really discoverable**. I never found out about previous implementations of terminal clipboards because they were undiscoverable.
 - **just works everywhere**. Clipboard has zero platform-specific code.
 - **looks pretty**. Colors make everything nicer. 🌈
 - **saves time**. Stop making temporary directories or memorizing file locations!
