@@ -1,5 +1,5 @@
 # Clipboard
-Cut, copy, and paste files wherever you want, all from the comfort of your terminal! To my knowledge, this is the first implementation of a clipboard ever for a command line.
+Cut, copy, and paste files wherever you want, all from the comfort of your terminal! This is the ultimate clipboard system for the command line.
 
 Clipboard...
 - is tiny. Clipboard rings in at mere tens of kilobytes for most platforms.
