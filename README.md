@@ -1,8 +1,8 @@
 # Clipboard
-Cut, copy, and paste files wherever you want, all from the comfort of your terminal! This is the ultimate clipboard system for the command line.
+Cut, copy, and paste files wherever you want, all from the comfort of your terminal! The ultimate clipboard system for the command line.
 
 Clipboard...
-- is **really tiny**. Clipboard rings in at mere tens of kilobytes for most platforms.
+- is **really tiny**. Clipboard rings in at mere kilobytes for most platforms.
 - is **really simple**. Clipboard takes no time to learn because there's nothing to learn.
 - is **really discoverable**. I never found out about previous implementations of terminal clipboards because they were undiscoverable.
 - **just works everywhere**. Clipboard has zero platform-specific code.
@@ -44,7 +44,7 @@ or
 
 `cb paste`
 
-# Installation
+# Quick Installation
 ## Clone
 ```
 git clone https://github.com/slackadays/Clipboard
