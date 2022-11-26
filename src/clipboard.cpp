@@ -1,6 +1,8 @@
 #include <vector>
 #include <cstring>
 #include <filesystem>
+#include <algorithm>
+#include <utility>
 
 namespace fs = std::filesystem;
 
@@ -77,23 +79,6 @@ void checkForNoItems() {
     }
 }
 
-void checkForItemExistence() {
-    std::vector<std::string> missingItems;
-    for (const auto& i : items) {
-        if (!fs::exists(i)) {
-            missingItems.emplace_back(i);
-        }
-    }
-    if (missingItems.size() > 0) {
-        printf("\033[38;5;196m╳ The following items do not exist:\033[0m\n");
-        for (const auto& i : missingItems) {
-            printf("\033[38;5;196m▏ %s\033[0m\n", i.data());
-        }
-        printf("\033[38;5;219m▏ Try double-checking the spelling of the files or what directory you're in.\033[0m\n");
-        exit(1);
-    }
-}
-
 void setupTempDirectory() {
     if (fs::is_directory(filepath)) {
         if (action != Action::Paste) {
@@ -107,28 +92,55 @@ void setupTempDirectory() {
 }
 
 void performAction() {
+    std::vector<std::pair<fs::path, fs::filesystem_error>> failedItems;
     fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
     if (action == Action::Copy) {
         for (const auto& f : items) {
-            if (fs::is_directory(f)) {
-                fs::create_directories(filepath / f.parent_path().filename());
-                fs::copy(f, filepath / f.parent_path().filename(), opts);
-            } else {
-                fs::copy(f, filepath / f.filename(), opts);
+            try {
+                if (fs::is_directory(f)) {
+                    fs::create_directories(filepath / f.parent_path().filename());
+                    fs::copy(f, filepath / f.parent_path().filename(), opts);
+                } else {
+                    fs::copy(f, filepath / f.filename(), opts);
+                }
+            } catch (const fs::filesystem_error& e) {
+                failedItems.emplace_back(f, e);
             }
         }
     } else if (action == Action::Cut) {
         for (const auto& f : items) {
-            if (fs::is_directory(f)) {
-                fs::create_directories(filepath / f.parent_path().filename());
-                fs::rename(f, filepath / f.parent_path().filename());
-            } else {
-                fs::rename(f, filepath / f.filename());
+            try {
+                if (fs::is_directory(f)) {
+                    fs::create_directories(filepath / f.parent_path().filename());
+                    fs::rename(f, filepath / f.parent_path().filename());
+                } else {
+                    fs::rename(f, filepath / f.filename());
+                }
+            } catch (const fs::filesystem_error& e) {
+                failedItems.emplace_back(f, e);
             }
         }  
     } else if (action == Action::Paste) {
-        fs::copy(filepath, fs::current_path(), opts);
-        printf("\033[38;5;40m√ Pasted\033[0m");
+        try {
+            fs::copy(filepath, fs::current_path(), opts);
+            printf("\033[38;5;40m√ Pasted\033[0m");
+        } catch (const fs::filesystem_error& e) {
+            printf("\033[38;5;196m╳ Failed to paste\033[0m");
+        }
+    }
+    if (failedItems.size() > 0) {
+        printf("\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n", action == Action::Copy ? "copy" : "cut");
+        for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
+            printf("\033[38;5;196m▏ %s: %s\033[0m\n", failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
+            if (i == 4 && failedItems.size() > 5) {
+                printf("\033[38;5;196m▏ ...and %d more.\033[0m\n", int(failedItems.size()) - 5);
+            }
+        }
+        printf("\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n");
+        printf("\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n");
+    }
+    for (const auto& f : failedItems) {
+        items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
     }
 }
 
@@ -138,14 +150,10 @@ void countSuccessesAndFailures() {
             if (fs::is_directory(f)) {
                 if (fs::exists(filepath / f.parent_path().filename())) {
                     directories_success++;
-                } else {
-                    directories_failed++;
                 }
             } else {
                 if (fs::exists(filepath / f.filename())) {
                     files_success++;
-                } else {
-                    files_failed++;
                 }
             }
         }
@@ -154,13 +162,9 @@ void countSuccessesAndFailures() {
             if (fs::is_directory(filepath / f.parent_path().filename())) {
                 if (fs::exists(filepath / f.parent_path().filename())) {
                     directories_success++;
-                } else {
-                    directories_failed++;
                 }
             } else {
                 if (fs::exists(filepath / f.filename())) {
-                    files_failed++;
-                } else {
                     files_failed++;
                 }
             }
@@ -198,36 +202,6 @@ void showSuccesses() {
     }
 }
 
-void showFailures() {
-    if ((files_failed >= 1) != (directories_failed >= 1)) {
-        if (action == Action::Copy) {
-            printf("\033[38;5;196m╳\033[91m Failed to copy %s\033[0m\n", items.at(0).string().data());
-        } else if (action == Action::Cut) {
-            printf("\033[38;5;196m╳\033[91m Failed to cut %s\033[0m\n", items.at(0).string().data());
-        }
-    } else {
-        if ((files_failed > 1) && (directories_failed == 0)) {
-            if (action == Action::Copy) {
-                printf("\033[38;5;196m╳\033[91m Failed to copy %i files\033[0m\n", files_failed);
-            } else if (action == Action::Cut) {
-                printf("\033[38;5;196m╳\033[91m Failed to cut %i files\033[0m\n", files_failed);
-            }
-        } else if ((files_failed == 0) && (directories_failed > 1)) {
-            if (action == Action::Copy) {
-                printf("\033[38;5;196m╳\033[91m Failed to copy %i directories\033[0m\n", directories_failed);
-            } else if (action == Action::Cut) {
-                printf("\033[38;5;196m╳\033[91m Failed to cut %i directories\033[0m\n", directories_failed);
-            }
-        } else if ((files_failed >= 1) && (directories_failed >= 1)) {
-            if (action == Action::Copy) {
-                printf("\033[38;5;196m╳\033[91m Failed to copy %i files and %i directories\033[0m\n", files_failed, directories_failed);
-            } else if (action == Action::Cut) {
-                printf("\033[38;5;196m╳\033[91m Failed to cut %i files and %i directories\033[0m\n", files_failed, directories_failed);
-            }
-        }
-    }
-}
-
 int main(int argc, char *argv[]) {
     try {
         setupVariables(argc, argv);
@@ -238,8 +212,6 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        checkForItemExistence();
-
         setupTempDirectory();
 
         performAction();
@@ -247,8 +219,6 @@ int main(int argc, char *argv[]) {
         countSuccessesAndFailures();
 
         showSuccesses();
-
-        showFailures();
     } catch (const std::exception& e) {
         printf("\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n", e.what());
         exit(1);
