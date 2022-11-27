@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <utility>
+#include <thread>
 
 namespace fs = std::filesystem;
 
@@ -15,8 +16,6 @@ std::vector<fs::path> items;
 
 unsigned int files_success = 0;
 unsigned int directories_success = 0;
-unsigned int files_failed = 0;
-unsigned int directories_failed = 0;
 
 void displayHelpMessage() {
     printf("\033[38;5;51m▏This is Clipboard 0.1.0, the copy and paste system for the command line.\033[0m\n");
@@ -89,6 +88,17 @@ void setupTempDirectory() {
     } else {
         fs::create_directories(filepath);
     }
+}
+
+void setupIndicator() {
+    if (action == Action::Copy) {
+        printf("\033[38;5;214m• Copying...\033[0m\r");
+    } else if (action == Action::Cut) {
+        printf("\033[38;5;214m• Cutting...\033[0m\r");
+    } else if (action == Action::Paste) {
+        printf("\033[38;5;214m• Pasting...\033[0m\r");
+    }
+    fflush(stdout);
 }
 
 void performAction() {
@@ -165,7 +175,7 @@ void countSuccessesAndFailures() {
                 }
             } else {
                 if (fs::exists(filepath / f.filename())) {
-                    files_failed++;
+                    files_success++;
                 }
             }
         }
@@ -213,6 +223,8 @@ int main(int argc, char *argv[]) {
         checkForNoItems();
 
         setupTempDirectory();
+
+        setupIndicator();
 
         performAction();
 
