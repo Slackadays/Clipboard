@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <algorithm>
 #include <utility>
-#include <thread>
 
 namespace fs = std::filesystem;
 
@@ -222,9 +221,9 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        setupTempDirectory();
-
         setupIndicator();
+
+        setupTempDirectory();
 
         performAction();
 
