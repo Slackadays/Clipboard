@@ -16,17 +16,20 @@ std::vector<fs::path> items;
 unsigned int files_success = 0;
 unsigned int directories_success = 0;
 
+bool useColors = true;
+
 void displayHelpMessage() {
-    printf("\033[38;5;51m▏This is Clipboard 0.1.0, the copy and paste system for the command line.\033[0m\n");
+    printf("\033[38;5;51m▏This is Clipboard 0.1.2, the cut, copy, and paste system for the command line.\033[0m\n");
     printf("\033[38;5;51m\033[1m▏How To Use\033[0m\n");
-    printf("\033[38;5;208m▏clipboard cut [options] (item) [items]\033[0m\n");
-    printf("\033[38;5;208m▏clipboard copy [options] (item) [items]\033[0m\n");
-    printf("\033[38;5;208m▏clipboard paste [options]\033[0m\n");
+    printf("\033[38;5;208m▏clipboard cut (item) [items]\033[0m\n");
+    printf("\033[38;5;208m▏clipboard copy (item) [items]\033[0m\n");
+    printf("\033[38;5;208m▏clipboard paste\033[0m\n");
     printf("\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n");
     printf("\033[38;5;51m\033[1m▏Examples\033[0m\n");
-    printf("\033[38;5;208m▏cb cut nuclearlaunchcodes.txt Contacts_Folder\033[0m\n");
     printf("\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n");
+    printf("\033[38;5;208m▏cb cut Nuclear_Launch_Codes.txt contactsfolder\033[0m\n");
     printf("\033[38;5;208m▏cb paste\033[0m\n");
+    printf("\033[38;5;51m▏You can show this help screen anytime with \033[1mclipboard -h\033[0m\033[38;5;51m, \033[1mclipboard --help\033[0m\033[38;5;51m, or\033[1m clipboard help\033[0m\033[38;5;51m.\n");
     printf("\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n");
     printf("\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n");
 }
@@ -37,11 +40,21 @@ void setupVariables(const int argc, char *argv[]) {
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
     }
+
+    if (getenv("NO_COLOR") != nullptr) {
+        useColors = false;
+    }
 }
 
 void checkFlags(const int argc, char *argv[]) {
-    for (int i = 0; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+            displayHelpMessage();
+            exit(0);
+        }
+    }
+    if (argc >= 2) {
+        if (!strcmp(argv[1], "help")) {
             displayHelpMessage();
             exit(0);
         }
