@@ -180,10 +180,17 @@ void performAction() {
         for (const auto& f : items) {
             try {
                 if (fs::is_directory(f)) {
-                    fs::create_directories(filepath / f.parent_path().filename());
-                    fs::copy(f, filepath / f.parent_path().filename(), opts);
+                    if (f.filename() == "") {
+                        fs::create_directories(filepath / f.parent_path().filename());
+                        fs::copy(f, filepath / f.parent_path().filename(), opts);
+                    } else {
+                        fs::create_directories(filepath / f.filename());
+                        fs::copy(f, filepath / f.filename(), opts);
+                    }
+                    directories_success++;
                 } else {
                     fs::copy(f, filepath / f.filename(), opts);
+                    files_success++;
                 }
             } catch (const fs::filesystem_error& e) {
                 failedItems.emplace_back(f, e);
@@ -195,8 +202,10 @@ void performAction() {
                 if (fs::is_directory(f)) {
                     fs::create_directories(filepath / f.parent_path().filename());
                     fs::rename(f, filepath / f.parent_path().filename());
+                    directories_success++;
                 } else {
                     fs::rename(f, filepath / f.filename());
+                    files_success++;
                 }
             } catch (const fs::filesystem_error& e) {
                 failedItems.emplace_back(f, e);
@@ -222,34 +231,6 @@ void performAction() {
     }
     for (const auto& f : failedItems) {
         items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
-    }
-}
-
-void countSuccessesAndFailures() {
-    if (action == Action::Copy) {
-        for (const auto& f : items) {
-            if (fs::is_directory(f)) {
-                if (fs::exists(filepath / f.parent_path().filename())) {
-                    directories_success++;
-                }
-            } else {
-                if (fs::exists(filepath / f.filename())) {
-                    files_success++;
-                }
-            }
-        }
-    } else if (action == Action::Cut) {
-        for (const auto& f : items) {
-            if (fs::is_directory(filepath / f.parent_path().filename())) {
-                if (fs::exists(filepath / f.parent_path().filename())) {
-                    directories_success++;
-                }
-            } else {
-                if (fs::exists(filepath / f.filename())) {
-                    files_success++;
-                }
-            }
-        }
     }
 }
 
@@ -300,8 +281,6 @@ int main(int argc, char *argv[]) {
         setupTempDirectory();
 
         performAction();
-
-        countSuccessesAndFailures();
 
         showSuccesses();
     } catch (const std::exception& e) {
