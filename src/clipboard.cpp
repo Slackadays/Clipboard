@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <algorithm>
 #include <utility>
+#include <string_view>
+#include <locale>
 
 namespace fs = std::filesystem;
 
@@ -16,22 +18,71 @@ std::vector<fs::path> items;
 unsigned int files_success = 0;
 unsigned int directories_success = 0;
 
-bool useColors = true;
+bool colors = true;
 
-void displayHelpMessage() {
-    printf("\033[38;5;51m▏This is Clipboard 0.1.2, the cut, copy, and paste system for the command line.\033[0m\n");
-    printf("\033[38;5;51m\033[1m▏How To Use\033[0m\n");
-    printf("\033[38;5;208m▏clipboard cut (item) [items]\033[0m\n");
-    printf("\033[38;5;208m▏clipboard copy (item) [items]\033[0m\n");
-    printf("\033[38;5;208m▏clipboard paste\033[0m\n");
-    printf("\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n");
-    printf("\033[38;5;51m\033[1m▏Examples\033[0m\n");
-    printf("\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n");
-    printf("\033[38;5;208m▏cb cut Nuclear_Launch_Codes.txt contactsfolder\033[0m\n");
-    printf("\033[38;5;208m▏cb paste\033[0m\n");
-    printf("\033[38;5;51m▏You can show this help screen anytime with \033[1mclipboard -h\033[0m\033[38;5;51m, \033[1mclipboard --help\033[0m\033[38;5;51m, or\033[1m clipboard help\033[0m\033[38;5;51m.\n");
-    printf("\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n");
-    printf("\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n");
+std::string_view copy_action;
+std::string_view cut_action;
+std::string_view paste_action;
+std::string_view help_message;
+std::string_view no_valid_action_message;
+std::string_view no_action_message;
+std::string_view choose_action_items_message;
+std::string_view copying_message;
+std::string_view cutting_message;
+std::string_view pasting_message;
+std::string_view paste_success_message;
+std::string_view paste_fail_message;
+std::string_view clipboard_failed_message;
+std::string_view and_more_message;
+std::string_view fix_problem_message;
+std::string_view copied_one_item_message;
+std::string_view cut_one_item_message;
+std::string_view copied_multiple_files_message;
+std::string_view cut_multiple_directories_message;
+std::string_view copied_multiple_directories_message;
+std::string_view cut_multiple_files_message;
+std::string_view copied_multiple_files_directories_message;
+std::string_view cut_multiple_files_directories_message;
+std::string_view internal_error_message;
+
+void setLanguageEN() {
+    copy_action = "copy";
+    cut_action = "cut";
+    paste_action = "paste";
+    help_message = "\033[38;5;51m▏This is Clipboard 0.1.2, the cut, copy, and paste system for the command line.\033[0m\n"
+        "\033[38;5;51m\033[1m▏How To Use\033[0m\n"
+        "\033[38;5;208m▏clipboard cut (item) [items]\033[0m\n"
+        "\033[38;5;208m▏clipboard copy (item) [items]\033[0m\n"
+        "\033[38;5;208m▏clipboard paste\033[0m\n"
+        "\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n"
+        "\033[38;5;51m\033[1m▏Examples\033[0m\n"
+        "\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n"
+        "\033[38;5;208m▏cb cut Nuclear_Launch_Codes.txt contactsfolder\033[0m\n"
+        "\033[38;5;208m▏cb paste\033[0m\n"
+        "\033[38;5;51m▏You can show this help screen anytime with \033[1mclipboard -h\033[0m\033[38;5;51m, \033[1mclipboard --help\033[0m\033[38;5;51m, or\033[1m clipboard help\033[0m\033[38;5;51m.\n"
+        "\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n"
+        "\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n";
+    no_valid_action_message = "\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy.\033[0m\n";
+    no_action_message = "\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m\n";
+    choose_action_items_message = "\033[38;5;196m╳ You need to choose something to %s.\033[38;5;219m Try adding the items you want to %s to the end, like \033[1mclipboard %s contacts.txt myprogram.cpp\033[0m\n";
+    copying_message = "\033[38;5;214m• Copying...\033[0m\r";
+    cutting_message = "\033[38;5;214m• Cutting...\033[0m\r";
+    pasting_message = "\033[38;5;214m• Pasting...\033[0m\r";
+    paste_success_message = "\033[38;5;40m√ Pasted\033[0m";
+    paste_fail_message = "\033[38;5;196m╳ Failed to paste\033[0m";
+    clipboard_failed_message = "\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n";
+    and_more_message = "\033[38;5;196m▏ ...and %d more.\033[0m\n";
+    fix_problem_message = "\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n"
+        "\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n";
+    copied_one_item_message = "\033[38;5;40m√ Copied %s\033[0m\n";
+    cut_one_item_message = "\033[38;5;40m√ Cut %s\033[0m\n";
+    copied_multiple_files_message = "\033[38;5;40m√ Copied %i files\033[0m\n";
+    cut_multiple_files_message = "\033[38;5;40m√ Cut %i files\033[0m\n";
+    copied_multiple_directories_message = "\033[38;5;40m√ Copied %i directories\033[0m\n";
+    cut_multiple_directories_message = "\033[38;5;40m√ Cut %i directories\033[0m\n";
+    copied_multiple_files_directories_message = "\033[38;5;40m√ Copied %i files and %i directories\033[0m\n";
+    cut_multiple_files_directories_message = "\033[38;5;40m√ Cut %i files and %i directories\033[0m\n";
+    internal_error_message = "\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n";
 }
 
 void setupVariables(const int argc, char *argv[]) {
@@ -42,20 +93,29 @@ void setupVariables(const int argc, char *argv[]) {
     }
 
     if (getenv("NO_COLOR") != nullptr) {
-        useColors = false;
+        colors = false;
+    }
+}
+
+void checkLanguage() {
+    setLanguageEN();
+    if (std::locale("").name() == "en_US.UTF-8") {
+        
+    } else {
+        
     }
 }
 
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-            displayHelpMessage();
+            printf("%s", help_message.data());
             exit(0);
         }
     }
     if (argc >= 2) {
         if (!strcmp(argv[1], "help")) {
-            displayHelpMessage();
+            printf("%s", help_message.data());
             exit(0);
         }
     }
@@ -63,18 +123,18 @@ void checkFlags(const int argc, char *argv[]) {
 
 void setupAction(const int argc, char *argv[]) {
     if (argc >= 2) {
-        if (!strcmp(argv[1], "cut")) {
+        if (!strcmp(argv[1], cut_action.data())) {
             action = Action::Cut;
-        } else if (!strcmp(argv[1], "copy")) {
+        } else if (!strcmp(argv[1], copy_action.data())) {
             action = Action::Copy;
-        } else if (!strcmp(argv[1], "paste")) {
+        } else if (!strcmp(argv[1], paste_action.data())) {
             action = Action::Paste;
         } else {
-            printf("\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy\033[0m.\n");
+            printf("%s", no_valid_action_message.data());
             exit(1);
         }
     } else {
-        printf("\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m\n");
+        printf("%s", no_action_message.data());
         exit(1);
     }
 }
@@ -82,9 +142,9 @@ void setupAction(const int argc, char *argv[]) {
 void checkForNoItems() {
     if ((action != Action::Paste) && items.size() < 1) {
         if (action == Action::Copy) {
-            printf("\033[38;5;196m╳ You need to choose something to copy.\033[38;5;219m Try adding the items you want to copy to the end, like \033[1mcopy contacts.txt myprogram.cpp\033[0m\n");
+            printf(choose_action_items_message.data(), copy_action.data(), copy_action.data(), copy_action.data());
         } else if (action == Action::Cut) {
-            printf("\033[38;5;196m╳ You need to choose something to cut.\033[38;5;219m Try adding the items you want to cut to the end, like \033[1mcut contacts.txt myprogram.cpp\033[0m\n");
+            printf(choose_action_items_message.data(), cut_action.data(), cut_action.data(), cut_action.data());
         }
         exit(1);
     }
@@ -104,11 +164,11 @@ void setupTempDirectory() {
 
 void setupIndicator() {
     if (action == Action::Copy) {
-        printf("\033[38;5;214m• Copying...\033[0m\r");
+        printf("%s", copying_message.data());
     } else if (action == Action::Cut) {
-        printf("\033[38;5;214m• Cutting...\033[0m\r");
+        printf("%s", cutting_message.data());
     } else if (action == Action::Paste) {
-        printf("\033[38;5;214m• Pasting...\033[0m\r");
+        printf("%s", pasting_message.data());
     }
     fflush(stdout);
 }
@@ -145,21 +205,20 @@ void performAction() {
     } else if (action == Action::Paste) {
         try {
             fs::copy(filepath, fs::current_path(), opts);
-            printf("\033[38;5;40m√ Pasted\033[0m");
+            printf("%s", paste_success_message.data());
         } catch (const fs::filesystem_error& e) {
-            printf("\033[38;5;196m╳ Failed to paste\033[0m");
+            printf("%s", paste_fail_message.data());
         }
     }
     if (failedItems.size() > 0) {
-        printf("\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n", action == Action::Copy ? "copy" : "cut");
+        printf(clipboard_failed_message.data(), action == Action::Copy ? copy_action.data() : cut_action.data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
             printf("\033[38;5;196m▏ %s: %s\033[0m\n", failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
             if (i == 4 && failedItems.size() > 5) {
-                printf("\033[38;5;196m▏ ...and %d more.\033[0m\n", int(failedItems.size()) - 5);
+                printf(and_more_message.data(), int(failedItems.size()) - 5);
             }
         }
-        printf("\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n");
-        printf("\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n");
+        printf("%s", fix_problem_message.data());
     }
     for (const auto& f : failedItems) {
         items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
@@ -195,30 +254,30 @@ void countSuccessesAndFailures() {
 }
 
 void showSuccesses() {
-    if ((files_success >= 1) != (directories_success >= 1)) {
+    if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
         if (action == Action::Copy) {
-            printf("\033[38;5;40m√ Copied %s\033[0m\n", items.at(0).string().data());
+            printf(copied_one_item_message.data(), items.at(0).string().data());
         } else if (action == Action::Cut) {
-            printf("\033[38;5;40m√ Cut %s\033[0m\n", items.at(0).string().data());
+            printf(cut_one_item_message.data(), items.at(0).string().data());
         }
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;40m√ Copied %i files\033[0m\n", files_success);
+                printf(copied_multiple_files_message.data(), files_success);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;40m√ Cut %i files\033[0m\n", files_success);
+                printf(cut_multiple_files_message.data(), files_success);
             }
         } else if ((files_success == 0) && (directories_success > 1)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;40m√ Copied %i directories\033[0m\n", directories_success);
+                printf(copied_multiple_directories_message.data(), directories_success);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;40m√ Cut %i directories\033[0m\n", directories_success);
+                printf(cut_multiple_directories_message.data(), directories_success);
             }
         } else if ((files_success >= 1) && (directories_success >= 1)) {
             if (action == Action::Copy) {
-                printf("\033[38;5;40m√ Copied %i files and %i directories\033[0m\n", files_success, directories_success);
+                printf(copied_multiple_files_directories_message.data(), files_success, directories_success);
             } else if (action == Action::Cut) {
-                printf("\033[38;5;40m√ Cut %i files and %i directories\033[0m\n", files_success, directories_success);
+                printf(cut_multiple_files_directories_message.data(), files_success, directories_success);
             }
         }
     }
@@ -227,6 +286,8 @@ void showSuccesses() {
 int main(int argc, char *argv[]) {
     try {
         setupVariables(argc, argv);
+
+        checkLanguage();
 
         checkFlags(argc, argv);
 
@@ -244,7 +305,7 @@ int main(int argc, char *argv[]) {
 
         showSuccesses();
     } catch (const std::exception& e) {
-        printf("\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n", e.what());
+        printf(internal_error_message.data(), e.what());
         exit(1);
     }
     return 0;
