@@ -5,6 +5,15 @@
 #include <utility>
 #include <string_view>
 #include <locale>
+#include <iostream>
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <io.h>
+#define isatty _isatty
+#define fileno _fileno
+#else
+#include <unistd.h>
+#endif
 
 namespace fs = std::filesystem;
 
@@ -20,70 +29,47 @@ unsigned int directories_success = 0;
 
 bool colors = true;
 
-std::string_view copy_action;
-std::string_view cut_action;
-std::string_view paste_action;
-std::string_view help_message;
-std::string_view no_valid_action_message;
-std::string_view no_action_message;
-std::string_view choose_action_items_message;
-std::string_view copying_message;
-std::string_view cutting_message;
-std::string_view pasting_message;
-std::string_view paste_success_message;
-std::string_view paste_fail_message;
-std::string_view clipboard_failed_message;
-std::string_view and_more_message;
-std::string_view fix_problem_message;
-std::string_view copied_one_item_message;
-std::string_view cut_one_item_message;
-std::string_view copied_multiple_files_message;
-std::string_view cut_multiple_directories_message;
-std::string_view copied_multiple_directories_message;
-std::string_view cut_multiple_files_message;
-std::string_view copied_multiple_files_directories_message;
-std::string_view cut_multiple_files_directories_message;
-std::string_view internal_error_message;
+enum class IOType { Interactive, PipeIn, PipeOut };
+IOType io_type = IOType::Interactive;
 
-void setLanguageEN() {
-    copy_action = "copy";
-    cut_action = "cut";
-    paste_action = "paste";
-    help_message = "\033[38;5;51m▏This is Clipboard 0.1.2, the cut, copy, and paste system for the command line.\033[0m\n"
-        "\033[38;5;51m\033[1m▏How To Use\033[0m\n"
-        "\033[38;5;208m▏clipboard cut (item) [items]\033[0m\n"
-        "\033[38;5;208m▏clipboard copy (item) [items]\033[0m\n"
-        "\033[38;5;208m▏clipboard paste\033[0m\n"
-        "\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n"
-        "\033[38;5;51m\033[1m▏Examples\033[0m\n"
-        "\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n"
-        "\033[38;5;208m▏cb cut Nuclear_Launch_Codes.txt contactsfolder\033[0m\n"
-        "\033[38;5;208m▏cb paste\033[0m\n"
-        "\033[38;5;51m▏You can show this help screen anytime with \033[1mclipboard -h\033[0m\033[38;5;51m, \033[1mclipboard --help\033[0m\033[38;5;51m, or\033[1m clipboard help\033[0m\033[38;5;51m.\n"
-        "\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n"
-        "\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n";
-    no_valid_action_message = "\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy.\033[0m\n";
-    no_action_message = "\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m\n";
-    choose_action_items_message = "\033[38;5;196m╳ You need to choose something to %s.\033[38;5;219m Try adding the items you want to %s to the end, like \033[1mclipboard %s contacts.txt myprogram.cpp\033[0m\n";
-    copying_message = "\033[38;5;214m• Copying...\033[0m\r";
-    cutting_message = "\033[38;5;214m• Cutting...\033[0m\r";
-    pasting_message = "\033[38;5;214m• Pasting...\033[0m\r";
-    paste_success_message = "\033[38;5;40m√ Pasted\033[0m";
-    paste_fail_message = "\033[38;5;196m╳ Failed to paste\033[0m";
-    clipboard_failed_message = "\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n";
-    and_more_message = "\033[38;5;196m▏ ...and %d more.\033[0m\n";
-    fix_problem_message = "\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n"
-        "\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n";
-    copied_one_item_message = "\033[38;5;40m√ Copied %s\033[0m\n";
-    cut_one_item_message = "\033[38;5;40m√ Cut %s\033[0m\n";
-    copied_multiple_files_message = "\033[38;5;40m√ Copied %i files\033[0m\n";
-    cut_multiple_files_message = "\033[38;5;40m√ Cut %i files\033[0m\n";
-    copied_multiple_directories_message = "\033[38;5;40m√ Copied %i directories\033[0m\n";
-    cut_multiple_directories_message = "\033[38;5;40m√ Cut %i directories\033[0m\n";
-    copied_multiple_files_directories_message = "\033[38;5;40m√ Copied %i files and %i directories\033[0m\n";
-    cut_multiple_files_directories_message = "\033[38;5;40m√ Cut %i files and %i directories\033[0m\n";
-    internal_error_message = "\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n";
-}
+std::string_view copy_action = "copy";
+std::string_view cut_action = "cut";
+std::string_view paste_action = "paste";
+std::string_view help_message = "\033[38;5;51m▏This is Clipboard 0.1.2, the cut, copy, and paste system for the command line.\033[0m\n"
+                                "\033[38;5;51m\033[1m▏How To Use\033[0m\n"
+                                "\033[38;5;208m▏clipboard cut (item) [items]\033[0m\n"
+                                "\033[38;5;208m▏clipboard copy (item) [items]\033[0m\n"
+                                "\033[38;5;208m▏clipboard paste\033[0m\n"
+                                "\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n"
+                                "\033[38;5;51m\033[1m▏Examples\033[0m\n"
+                                "\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n"
+                                "\033[38;5;208m▏cb cut Nuclear_Launch_Codes.txt contactsfolder\033[0m\n"
+                                "\033[38;5;208m▏cb paste\033[0m\n"
+                                "\033[38;5;51m▏You can show this help screen anytime with \033[1mclipboard -h\033[0m\033[38;5;51m, \033[1mclipboard --help\033[0m\033[38;5;51m, or\033[1m clipboard help\033[0m\033[38;5;51m.\n"
+                                "\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n"
+                                "\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n";
+std::string_view no_valid_action_message = "\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy.\033[0m\n";
+std::string_view no_action_message = "\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m\n";
+std::string_view choose_action_items_message = "\033[38;5;196m╳ You need to choose something to %s.\033[38;5;219m Try adding the items you want to %s to the end, like \033[1mclipboard %s contacts.txt myprogram.cpp\033[0m\n";
+std::string_view fix_redirection_action_message = "\033[38;5;196m╳ You can't use the \033[1m%s\033[0m\033[38;5;196m action with redirection here. \033[38;5;219mTry removing \033[1m%s\033[0m\033[38;5;219m or use \033[1m%s\033[0m\033[38;5;219m instead, like \033[1mclipboard %s\033[0m\033[38;5;219m.\n";
+std::string_view copying_message = "\033[38;5;214m• Copying...\033[0m\r";
+std::string_view cutting_message = "\033[38;5;214m• Cutting...\033[0m\r";
+std::string_view pasting_message = "\033[38;5;214m• Pasting...\033[0m\r";
+std::string_view paste_success_message = "\033[38;5;40m√ Pasted\033[0m";
+std::string_view paste_fail_message = "\033[38;5;196m╳ Failed to paste\033[0m";
+std::string_view clipboard_failed_message = "\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n";
+std::string_view and_more_message = "\033[38;5;196m▏ ...and %d more.\033[0m\n";
+std::string_view fix_problem_message = "\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n"
+                                       "\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n";
+std::string_view copied_one_item_message = "\033[38;5;40m√ Copied %s\033[0m\n";
+std::string_view cut_one_item_message = "\033[38;5;40m√ Cut %s\033[0m\n";
+std::string_view copied_multiple_files_message = "\033[38;5;40m√ Copied %i files\033[0m\n";
+std::string_view cut_multiple_files_message = "\033[38;5;40m√ Cut %i files\033[0m\n";
+std::string_view copied_multiple_directories_message = "\033[38;5;40m√ Copied %i directories\033[0m\n";
+std::string_view cut_multiple_directories_message = "\033[38;5;40m√ Cut %i directories\033[0m\n";
+std::string_view copied_multiple_files_directories_message = "\033[38;5;40m√ Copied %i files and %i directories\033[0m\n";
+std::string_view cut_multiple_files_directories_message = "\033[38;5;40m√ Cut %i files and %i directories\033[0m\n";
+std::string_view internal_error_message = "\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n";
 
 void setupVariables(const int argc, char *argv[]) {
     filepath = fs::temp_directory_path() / "Clipboard";
@@ -95,13 +81,14 @@ void setupVariables(const int argc, char *argv[]) {
     if (getenv("NO_COLOR") != nullptr) {
         colors = false;
     }
-}
 
-void checkLanguage() {
-    setLanguageEN();
+    if (!isatty(fileno(stdin) && isatty(fileno(stdout)))) {
+        io_type = IOType::PipeIn;
+    } else if (isatty(fileno(stdin)) && !isatty(fileno(stdout))) {
+        io_type = IOType::PipeOut;
+    }
+
     if (std::locale("").name() == "en_US.UTF-8") {
-        
-    } else {
         
     }
 }
@@ -124,18 +111,39 @@ void checkFlags(const int argc, char *argv[]) {
 void setupAction(const int argc, char *argv[]) {
     if (argc >= 2) {
         if (!strcmp(argv[1], cut_action.data())) {
-            action = Action::Cut;
+            if (io_type == IOType::Interactive) {
+                action = Action::Cut;
+            } else {
+                fprintf(stderr, fix_redirection_action_message.data(), cut_action.data(), cut_action.data(), copy_action.data(), copy_action.data());
+                exit(1);
+            }
         } else if (!strcmp(argv[1], copy_action.data())) {
-            action = Action::Copy;
+            if (io_type != IOType::PipeOut) {
+                action = Action::Copy;
+            } else {
+                fprintf(stderr, fix_redirection_action_message.data(), copy_action.data(), copy_action.data(), paste_action.data(), paste_action.data());
+                exit(1);
+            }
         } else if (!strcmp(argv[1], paste_action.data())) {
-            action = Action::Paste;
+            if (io_type != IOType::PipeIn) {
+                action = Action::Paste;
+            } else {
+                fprintf(stderr, fix_redirection_action_message.data(), paste_action.data(), paste_action.data(), copy_action.data(), copy_action.data());
+                exit(1);
+            }
         } else {
             printf("%s", no_valid_action_message.data());
             exit(1);
         }
     } else {
-        printf("%s", no_action_message.data());
-        exit(1);
+        if (io_type == IOType::Interactive) {
+            printf("%s", no_action_message.data());
+            exit(1);
+        } else if (io_type == IOType::PipeIn) {
+            action = Action::Copy;
+        } else if (io_type == IOType::PipeOut) {
+            action = Action::Paste;
+        }
     }
 }
 
@@ -267,8 +275,6 @@ void showSuccesses() {
 int main(int argc, char *argv[]) {
     try {
         setupVariables(argc, argv);
-
-        checkLanguage();
 
         checkFlags(argc, argv);
 
