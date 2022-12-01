@@ -10,16 +10,15 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          submodules: recursive
 
       - name: Run a multi-line script
         run: |
           sudo apt update
           sudo apt install -y g++-12
           cmake src -D CMAKE_CXX_COMPILER=g++-12
-          cmake --build . -j 4
+          cmake --build .
       - uses: actions/upload-artifact@v2
         with:
           name: clipboard-linux-amd64
@@ -28,15 +27,29 @@ jobs:
     runs-on: macos-11
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          submodules: recursive
 
       - name: Run a multi-line script
         run: |
           cmake src
-          cmake --build . -j 4
+          cmake --build .
       - uses: actions/upload-artifact@v2
         with:
           name: clipboard-macos-amd64
           path: clipboard
+  build-windows-amd64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+
+      - name: Run a multi-line script
+        run: |
+          cmake src
+          cmake --build .
+      - uses: actions/upload-artifact@v2
+        with:
+          name: clipboard-windows-amd64
+          path: clipboard.exe

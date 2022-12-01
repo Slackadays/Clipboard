@@ -6,6 +6,7 @@
 #include <string_view>
 #include <locale>
 #include <iostream>
+#include <fstream>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -19,13 +20,14 @@ namespace fs = std::filesystem;
 
 fs::path filepath;
 
-enum class Action { Cut, Copy, Paste };
+enum class Action { Cut, Copy, Paste, PipeIn, PipeOut };
 Action action;
 
 std::vector<fs::path> items;
 
-unsigned int files_success = 0;
-unsigned int directories_success = 0;
+unsigned long files_success = 0;
+unsigned long directories_success = 0;
+unsigned long long bytes_success = 0;
 
 bool colors = true;
 
@@ -55,12 +57,16 @@ std::string_view fix_redirection_action_message = "\033[38;5;196m╳ You can't u
 std::string_view copying_message = "\033[38;5;214m• Copying...\033[0m\r";
 std::string_view cutting_message = "\033[38;5;214m• Cutting...\033[0m\r";
 std::string_view pasting_message = "\033[38;5;214m• Pasting...\033[0m\r";
-std::string_view paste_success_message = "\033[38;5;40m√ Pasted\033[0m";
-std::string_view paste_fail_message = "\033[38;5;196m╳ Failed to paste\033[0m";
+std::string_view pipingin_message = "\033[38;5;214m• Piping in...\033[0m\r";
+std::string_view pipingout_message = "\033[38;5;214m• Piping out...\033[0m\r";
+std::string_view paste_success_message = "\033[38;5;40m√ Pasted successfully\033[0m\n";
+std::string_view paste_fail_message = "\033[38;5;196m╳ Failed to paste\033[0m\n";
 std::string_view clipboard_failed_message = "\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n";
 std::string_view and_more_message = "\033[38;5;196m▏ ...and %d more.\033[0m\n";
 std::string_view fix_problem_message = "\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n"
                                        "\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n";
+std::string_view pipein_success_message = "\033[38;5;40m√ Piped in %i bytes\033[0m\n";
+std::string_view pipeout_success_message = "\033[38;5;40m√ Piped out %i bytes\033[0m\n";
 std::string_view copied_one_item_message = "\033[38;5;40m√ Copied %s\033[0m\n";
 std::string_view cut_one_item_message = "\033[38;5;40m√ Cut %s\033[0m\n";
 std::string_view copied_multiple_files_message = "\033[38;5;40m√ Copied %i files\033[0m\n";
@@ -80,12 +86,6 @@ void setupVariables(const int argc, char *argv[]) {
 
     if (getenv("NO_COLOR") != nullptr) {
         colors = false;
-    }
-
-    if (!isatty(fileno(stdin) && isatty(fileno(stdout)))) {
-        io_type = IOType::PipeIn;
-    } else if (isatty(fileno(stdin)) && !isatty(fileno(stdout))) {
-        io_type = IOType::PipeOut;
     }
 
     if (std::locale("").name() == "en_US.UTF-8") {
@@ -110,23 +110,27 @@ void checkFlags(const int argc, char *argv[]) {
 
 void setupAction(const int argc, char *argv[]) {
     if (argc >= 2) {
-        if (!strcmp(argv[1], cut_action.data())) {
-            if (io_type == IOType::Interactive) {
+        if (!strncmp(argv[1], cut_action.data(), 2)) {
+            if (isatty(fileno(stdin)) && isatty(fileno(stdout))) {
                 action = Action::Cut;
             } else {
                 fprintf(stderr, fix_redirection_action_message.data(), cut_action.data(), cut_action.data(), copy_action.data(), copy_action.data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], copy_action.data())) {
-            if (io_type != IOType::PipeOut) {
+        } else if (!strncmp(argv[1], copy_action.data(), 2)) {
+            if (isatty(fileno(stdin))) {
                 action = Action::Copy;
+            } else if (!isatty(fileno(stdin))) {
+                action = Action::PipeIn;
             } else {
                 fprintf(stderr, fix_redirection_action_message.data(), copy_action.data(), copy_action.data(), paste_action.data(), paste_action.data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], paste_action.data())) {
-            if (io_type != IOType::PipeIn) {
+        } else if (!strncmp(argv[1], paste_action.data(), 1)) {
+            if (isatty(fileno(stdin)) && isatty(fileno(stdout))) {
                 action = Action::Paste;
+            } else if (!isatty(fileno(stdout))) {
+                action = Action::PipeOut;
             } else {
                 fprintf(stderr, fix_redirection_action_message.data(), paste_action.data(), paste_action.data(), copy_action.data(), copy_action.data());
                 exit(1);
@@ -135,20 +139,24 @@ void setupAction(const int argc, char *argv[]) {
             printf("%s", no_valid_action_message.data());
             exit(1);
         }
+    } else if (!isatty(fileno(stdin))) {
+        action = Action::PipeIn;
+    } else if (!isatty(fileno(stdout))) {
+        action = Action::PipeOut;
     } else {
-        if (io_type == IOType::Interactive) {
-            printf("%s", no_action_message.data());
+        printf("%s", no_action_message.data());
+        exit(1);
+    }
+    if (action == Action::PipeIn || action == Action::PipeOut) {
+        if (argc >= 3) {
+            fprintf(stderr, "\033[38;5;196m╳ You can't specify items when you use redirection. \033[38;5;219mTry removing the items that come after \033[1mclipboard [action].\n");
             exit(1);
-        } else if (io_type == IOType::PipeIn) {
-            action = Action::Copy;
-        } else if (io_type == IOType::PipeOut) {
-            action = Action::Paste;
         }
     }
 }
 
 void checkForNoItems() {
-    if ((action != Action::Paste) && items.size() < 1) {
+    if ((action == Action::Cut || action == Action::Copy) && items.size() < 1) {
         if (action == Action::Copy) {
             printf(choose_action_items_message.data(), copy_action.data(), copy_action.data(), copy_action.data());
         } else if (action == Action::Cut) {
@@ -160,7 +168,7 @@ void checkForNoItems() {
 
 void setupTempDirectory() {
     if (fs::is_directory(filepath)) {
-        if (action != Action::Paste) {
+        if (action != Action::Paste && action != Action::PipeOut) {
             for (const auto& entry : std::filesystem::directory_iterator(filepath)) {
                 fs::remove_all(entry.path());
             }
@@ -177,6 +185,10 @@ void setupIndicator() {
         printf("%s", cutting_message.data());
     } else if (action == Action::Paste) {
         printf("%s", pasting_message.data());
+    } else if (action == Action::PipeIn) {
+        fprintf(stderr, "%s", pipingin_message.data());
+    } else if (action == Action::PipeOut) {
+        fprintf(stderr, "%s", pipingout_message.data());
     }
     fflush(stdout);
 }
@@ -226,6 +238,22 @@ void performAction() {
         } catch (const fs::filesystem_error& e) {
             printf("%s", paste_fail_message.data());
         }
+    } else if (action == Action::PipeIn) {
+        std::ofstream file(filepath / "clipboard.txt");
+        std::string line;
+        while (std::getline(std::cin, line)) {
+            file << line << std::endl;
+            bytes_success += line.size();
+        }
+        file.close();
+    } else if (action == Action::PipeOut) {
+        std::ifstream file(filepath / "clipboard.txt");
+        std::string line;
+        while (std::getline(file, line)) {
+            std::cout << line << std::endl;
+            bytes_success += line.size();
+        }
+        file.close();
     }
     if (failedItems.size() > 0) {
         printf(clipboard_failed_message.data(), action == Action::Copy ? copy_action.data() : cut_action.data());
@@ -243,6 +271,14 @@ void performAction() {
 }
 
 void showSuccesses() {
+    if (bytes_success > 0) {
+        if (action == Action::PipeIn) {
+            fprintf(stderr, pipein_success_message.data(), bytes_success);
+        } else if (action == Action::PipeOut) {
+            fprintf(stderr, pipeout_success_message.data(), bytes_success);
+        }
+        return;
+    }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
         if (action == Action::Copy) {
             printf(copied_one_item_message.data(), items.at(0).string().data());
@@ -290,7 +326,7 @@ int main(int argc, char *argv[]) {
 
         showSuccesses();
     } catch (const std::exception& e) {
-        printf(internal_error_message.data(), e.what());
+        fprintf(stderr, internal_error_message.data(), e.what());
         exit(1);
     }
     return 0;
