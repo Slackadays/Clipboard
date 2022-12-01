@@ -31,9 +31,6 @@ unsigned long long bytes_success = 0;
 
 bool colors = true;
 
-enum class IOType { Interactive, PipeIn, PipeOut };
-IOType io_type = IOType::Interactive;
-
 std::string_view copy_action = "copy";
 std::string_view cut_action = "cut";
 std::string_view paste_action = "paste";
@@ -77,6 +74,14 @@ std::string_view copied_multiple_files_directories_message = "\033[38;5;40m√ C
 std::string_view cut_multiple_files_directories_message = "\033[38;5;40m√ Cut %i files and %i directories\033[0m\n";
 std::string_view internal_error_message = "\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n";
 
+void setLanguageES() {
+
+}
+
+void setLanguagePT() {
+
+}
+
 void setupVariables(const int argc, char *argv[]) {
     filepath = fs::temp_directory_path() / "Clipboard";
 
@@ -88,8 +93,10 @@ void setupVariables(const int argc, char *argv[]) {
         colors = false;
     }
 
-    if (std::locale("").name() == "en_US.UTF-8") {
-        
+    if (std::locale("").name().substr(0, 3) == "es_") {
+        setLanguageES();
+    } else if (std::locale("").name().substr(0, 3) == "pt_") {
+        setLanguagePT();
     }
 }
 
