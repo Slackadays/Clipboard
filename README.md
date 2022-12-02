@@ -1,13 +1,14 @@
-# Clipboard
+# 📋 Clipboard 
 Cut, copy, and paste anything anywhere you want, all from the comfort of your terminal! The ultimate clipboard system for the command line.
 
-Clipboard...
-- **is really tiny**. Clipboard rings in at mere kilobytes for most platforms.
+**Clipboard...**
+- **is really tiny**. Clipboard rings in at mere kilobytes for most/all platforms.
 - **is really simple**. Clipboard takes no time to learn because there's nothing to learn.
-- **is really discoverable**. I never found out about previous implementations of terminal clipboards because they were undiscoverable.
-- **just works everywhere**. Clipboard works on any Windows or POSIX (Linux, macOS, *BSD) system.
-- **looks pretty**. Colors make everything nicer. 🌈 Say sayonara to boring black & white!
-- **saves time**. Stop making temporary directories or memorizing file locations!
+- **is really friendly**. Clipboard is one of the most user-friendly pieces of software out there.
+- **is really discoverable**. I never found out about any previously made terminal clipboards because they were 99% invisible.
+- **just works everywhere**. Clipboard works on any Windows or POSIX (Linux, macOS, *BSD, etc.) system and has ZERO dependencies.
+- **looks pretty**. Colors make everything nicer. 🌈 Say adiós to boring black & white!
+- **saves time**. Stop making temporary directories or memorizing file locations. Say hello to productivity!
 
 # How To Use
 
@@ -86,3 +87,7 @@ cmake --build .
 ```
 sudo cmake --install .
 ```
+
+# Documentation 
+
+[Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
