@@ -12,12 +12,10 @@ Cut, copy, and paste anything anywhere you want, all from the comfort of your te
 
 # How To Use
 
+In all commands, you can substitute `cb` for `clipboard`.
+
 ## Copy
 `clipboard copy (file) [files]`
-
-or
-
-`cb copy (file) [files]`
 
 Examples:
 
@@ -29,10 +27,6 @@ cb copy bar.conf AnotherDirectory baz.txt
 ## Cut
 `clipboard cut (file) [files]`
 
-or
-
-`cb cut (file) [files]`
-
 Examples:
 
 ```
@@ -43,17 +37,9 @@ cb cut bar.conf AnotherDirectory baz.txt
 ## Paste
 `clipboard paste`
 
-or
-
-`cb paste`
-
 ## Pipe In
 
 `(something) | clipboard [copy]`
-
-or
-
-`(something) | cb [copy]`
 
 ## Pipe Out
 
@@ -63,14 +49,6 @@ or
 
 `clipboard [paste] > (some file)`
 
-or
-
-`cb [paste] | (something)`
-
-or
-
-`cb [paste] > (some file)`
-
 # Quick Installation
 ## Clone
 ```
@@ -78,7 +56,6 @@ git clone https://github.com/slackadays/Clipboard
 ```
 ## Compile
 
-You'll need a compiler that supports C++17.
 ```
 cmake Clipboard/src
 cmake --build .
