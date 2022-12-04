@@ -32,8 +32,6 @@ unsigned long long bytes_success = 0;
 
 bool colors = true;
 
-<<<<<<< HEAD
-=======
 std::string_view clipboard_version = "0.1.2";
 
 std::string_view red = "\033[38;5;196m";
@@ -45,7 +43,6 @@ std::string_view pink = "\033[38;5;219m";
 std::string_view bold = "\033[1m";
 std::string_view blank = "\033[0m";
 
->>>>>>> b51a152 (Add trimColors)
 std::string_view copy_action = "copy";
 std::string_view cut_action = "cut";
 std::string_view paste_action = "paste";
