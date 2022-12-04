@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Clipboard LANGUAGES CXX)
 
-project(Clipboard VERSION 0.1.0)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -40,5 +38,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
   endif()
 endif()
 
-install(TARGETS clipboard DESTINATION /usr/bin/)
-install(CODE "execute_process(COMMAND ln -sf /usr/bin/clipboard /usr/bin/cb)")
+if(WIN32)
+  install(TARGETS clipboard DESTINATION bin)
+else()
+  install(TARGETS clipboard DESTINATION /usr/bin/)
+  install(CODE "execute_process(COMMAND ln -sf /usr/bin/clipboard /usr/bin/cb)")
+endif()

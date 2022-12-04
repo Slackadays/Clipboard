@@ -7,6 +7,7 @@
 #include <locale>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -31,48 +32,95 @@ unsigned long long bytes_success = 0;
 
 bool colors = true;
 
+<<<<<<< HEAD
+=======
+std::string_view clipboard_version = "0.1.2";
+
+std::string_view red = "\033[38;5;196m";
+std::string_view green = "\033[38;5;40m";
+std::string_view yellow = "\033[38;5;214m";
+std::string_view orange = "\033[38;5;208m";
+std::string_view blue = "\033[38;5;51m";
+std::string_view pink = "\033[38;5;219m";
+std::string_view bold = "\033[1m";
+std::string_view blank = "\033[0m";
+
+>>>>>>> b51a152 (Add trimColors)
 std::string_view copy_action = "copy";
 std::string_view cut_action = "cut";
 std::string_view paste_action = "paste";
-std::string_view help_message = "\033[38;5;51m▏This is Clipboard 0.1.2, the cut, copy, and paste system for the command line.\033[0m\n"
-                                "\033[38;5;51m\033[1m▏How To Use\033[0m\n"
-                                "\033[38;5;208m▏clipboard cut (item) [items]\033[0m\n"
-                                "\033[38;5;208m▏clipboard copy (item) [items]\033[0m\n"
-                                "\033[38;5;208m▏clipboard paste\033[0m\n"
-                                "\033[38;5;51m▏You can substitute \"cb\" for \"clipboard\" to save time.\033[0m\n"
-                                "\033[38;5;51m\033[1m▏Examples\033[0m\n"
-                                "\033[38;5;208m▏clipboard copy dogfood.conf\033[0m\n"
-                                "\033[38;5;208m▏cb cut Nuclear_Launch_Codes.txt contactsfolder\033[0m\n"
-                                "\033[38;5;208m▏cb paste\033[0m\n"
-                                "\033[38;5;51m▏You can show this help screen anytime with \033[1mclipboard -h\033[0m\033[38;5;51m, \033[1mclipboard --help\033[0m\033[38;5;51m, or\033[1m clipboard help\033[0m\033[38;5;51m.\n"
-                                "\033[38;5;51m▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.\033[0m\n"
-                                "\033[38;5;51m▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.\033[0m\n";
-std::string_view no_valid_action_message = "\033[38;5;196m╳ You did not specify a valid action, or you forgot to include one. \033[38;5;219mTry using or adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m instead, like \033[1mclipboard copy.\033[0m\n";
-std::string_view no_action_message = "\033[38;5;196m╳ You did not specify an action. \033[38;5;219mTry adding \033[1mcut, copy, or paste\033[0m\033[38;5;219m to the end, like \033[1mclipboard copy\033[0m\033[38;5;219m. If you need more help, try \033[1mclipboard -h\033[0m\033[38;5;219m to show the help screen.\033[0m\n";
-std::string_view choose_action_items_message = "\033[38;5;196m╳ You need to choose something to %s.\033[38;5;219m Try adding the items you want to %s to the end, like \033[1mclipboard %s contacts.txt myprogram.cpp\033[0m\n";
-std::string_view fix_redirection_action_message = "\033[38;5;196m╳ You can't use the \033[1m%s\033[0m\033[38;5;196m action with redirection here. \033[38;5;219mTry removing \033[1m%s\033[0m\033[38;5;219m or use \033[1m%s\033[0m\033[38;5;219m instead, like \033[1mclipboard %s\033[0m\033[38;5;219m.\n";
-std::string_view copying_message = "\033[38;5;214m• Copying...\033[0m\r";
-std::string_view cutting_message = "\033[38;5;214m• Cutting...\033[0m\r";
-std::string_view pasting_message = "\033[38;5;214m• Pasting...\033[0m\r";
-std::string_view pipingin_message = "\033[38;5;214m• Piping in...\033[0m\r";
-std::string_view pipingout_message = "\033[38;5;214m• Piping out...\033[0m\r";
-std::string_view paste_success_message = "\033[38;5;40m√ Pasted successfully\033[0m\n";
-std::string_view paste_fail_message = "\033[38;5;196m╳ Failed to paste\033[0m\n";
-std::string_view clipboard_failed_message = "\033[38;5;196m╳ Clipboard couldn't %s these items.\033[0m\n";
-std::string_view and_more_message = "\033[38;5;196m▏ ...and %d more.\033[0m\n";
-std::string_view fix_problem_message = "\033[38;5;219m▏ See if you have the needed permissions, or\033[0m\n"
-                                       "\033[38;5;219m▏ try double-checking the spelling of the files or what directory you're in.\033[0m\n";
-std::string_view pipein_success_message = "\033[38;5;40m√ Piped in %i bytes\033[0m\n";
-std::string_view pipeout_success_message = "\033[38;5;40m√ Piped out %i bytes\033[0m\n";
-std::string_view copied_one_item_message = "\033[38;5;40m√ Copied %s\033[0m\n";
-std::string_view cut_one_item_message = "\033[38;5;40m√ Cut %s\033[0m\n";
-std::string_view copied_multiple_files_message = "\033[38;5;40m√ Copied %i files\033[0m\n";
-std::string_view cut_multiple_files_message = "\033[38;5;40m√ Cut %i files\033[0m\n";
-std::string_view copied_multiple_directories_message = "\033[38;5;40m√ Copied %i directories\033[0m\n";
-std::string_view cut_multiple_directories_message = "\033[38;5;40m√ Cut %i directories\033[0m\n";
-std::string_view copied_multiple_files_directories_message = "\033[38;5;40m√ Copied %i files and %i directories\033[0m\n";
-std::string_view cut_multiple_files_directories_message = "\033[38;5;40m√ Cut %i files and %i directories\033[0m\n";
-std::string_view internal_error_message = "\033[38;5;196m╳ Internal error: %s\n▏ This is probably a bug.\033[0m\n";
+std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
+                                "{blue}{bold}▏How To Use{blank}\n"
+                                "{orange}▏clipboard cut (item) [items]{blank}\n"
+                                "{orange}▏clipboard copy (item) [items]{blank}\n"
+                                "{orange}▏clipboard paste{blank}\n"
+                                "{blue}▏You can substitute \"cb\" for \"clipboard\" to save time.{blank}\n"
+                                "{blue}{bold}▏Examples{blank}\n"
+                                "{orange}▏clipboard copy dogfood.conf{blank}\n"
+                                "{orange}▏cb cut Nuclear_Launch_Codes.txt contactsfolder{blank}\n"
+                                "{orange}▏cb paste{blank}\n"
+                                "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
+                                "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
+                                "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
+std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, or paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
+std::string_view no_action_message = "{red}╳ You did not specify an action. {pink}Try adding {bold}cut, copy, or paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink}. If you need more help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
+std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
+std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
+std::string_view copying_message = "{yellow}• Copying...{blank}\r";
+std::string_view cutting_message = "{yellow}• Cutting...{blank}\r";
+std::string_view pasting_message = "{yellow}• Pasting...{blank}\r";
+std::string_view pipingin_message = "{yellow}• Piping in...{blank}\r";
+std::string_view pipingout_message = "{yellow}• Piping out...{blank}\r";
+std::string_view paste_success_message = "{green}√ Pasted successfully{blank}\n";
+std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
+std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
+std::string_view and_more_message = "{red}▏ ...and %d more.{blank}\n";
+std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or{blank}\n"
+                                       "{pink}▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
+std::string_view pipein_success_message = "{green}√ Piped in %i bytes{blank}\n";
+std::string_view pipeout_success_message = "{green}√ Piped out %i bytes{blank}\n";
+std::string_view copied_one_item_message = "{green}√ Copied %s{blank}\n";
+std::string_view cut_one_item_message = "{green}√ Cut %s{blank}\n";
+std::string_view copied_multiple_files_message = "{green}√ Copied %i files{blank}\n";
+std::string_view cut_multiple_files_message = "{green}√ Cut %i files{blank}\n";
+std::string_view copied_multiple_directories_message = "{green}√ Copied %i directories{blank}\n";
+std::string_view cut_multiple_directories_message = "{green}√ Cut %i directories{blank}\n";
+std::string_view copied_multiple_files_directories_message = "{green}√ Copied %i files and %i directories{blank}\n";
+std::string_view cut_multiple_files_directories_message = "{green}√ Cut %i files and %i directories{blank}\n";
+std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug.{blank}\n";
+
+std::string_view trimColors(const std::string_view& str) {
+    std::string result{str};
+    if (colors) {
+        return str;
+    } else {
+        for (int i = 0; (i = str.find("{red}", i)) != std::string::npos;) {
+            result.replace(i, 5, "");
+        }
+        for (int i = 0; (i = str.find("{green}", i)) != std::string::npos;) {
+            result.replace(i, 7, "");
+        }
+        for (int i = 0; (i = str.find("{yellow}", i)) != std::string::npos;) {
+            result.replace(i, 8, "");
+        }
+        for (int i = 0; (i = str.find("{blue}", i)) != std::string::npos;) {
+            result.replace(i, 6, "");
+        }
+        for (int i = 0; (i = str.find("{pink}", i)) != std::string::npos;) {
+            result.replace(i, 6, "");
+        }
+        for (int i = 0; (i = str.find("{orange}", i)) != std::string::npos;) {
+            result.replace(i, 8, "");
+        }
+        for (int i = 0; (i = str.find("{bold}", i)) != std::string::npos;) {
+            result.replace(i, 6, "");
+        }
+        for (int i = 0; (i = str.find("{blank}", i)) != std::string::npos;) {
+            result.replace(i, 7, "");
+        }
+        return std::string_view{result};
+    }
+}
 
 void setLanguageES() {
 
@@ -103,13 +151,13 @@ void setupVariables(const int argc, char *argv[]) {
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-            printf("%s", help_message.data());
+            printf(trimColors(help_message).data(), clipboard_version.data());
             exit(0);
         }
     }
     if (argc >= 2) {
         if (!strcmp(argv[1], "help")) {
-            printf("%s", help_message.data());
+            printf(help_message.data(), clipboard_version.data());
             exit(0);
         }
     }
@@ -156,7 +204,7 @@ void setupAction(const int argc, char *argv[]) {
     }
     if (action == Action::PipeIn || action == Action::PipeOut) {
         if (argc >= 3) {
-            fprintf(stderr, "\033[38;5;196m╳ You can't specify items when you use redirection. \033[38;5;219mTry removing the items that come after \033[1mclipboard [action].\n");
+            fprintf(stderr, "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n");
             exit(1);
         }
     }
@@ -257,7 +305,7 @@ void performAction() {
         std::ifstream file(filepath / "clipboard.txt");
         std::string line;
         while (std::getline(file, line)) {
-            std::cout << line << std::endl;
+            std::cout << line << std::flush;
             bytes_success += line.size();
         }
         file.close();
@@ -265,7 +313,7 @@ void performAction() {
     if (failedItems.size() > 0) {
         printf(clipboard_failed_message.data(), action == Action::Copy ? copy_action.data() : cut_action.data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
-            printf("\033[38;5;196m▏ %s: %s\033[0m\n", failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
+            printf("{red}▏ %s: %s{blank}\n", failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
             if (i == 4 && failedItems.size() > 5) {
                 printf(and_more_message.data(), int(failedItems.size()) - 5);
             }
