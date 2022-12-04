@@ -5,7 +5,8 @@ Cut, copy, and paste anything anywhere you want, all from the comfort of your te
 - **is really tiny**. Clipboard rings in at mere kilobytes for most/all platforms.
 - **is really simple**. Clipboard takes no time to learn because there's nothing to learn.
 - **is really friendly**. Clipboard is one of the most user-friendly pieces of software out there.
-- **just works everywhere**. Clipboard works on any Windows or POSIX (Linux, macOS, *BSD, etc.) system and has ZERO dependencies.
+- **is really discoverable**. I never found out about any previously made terminal clipboards because they were 99% invisible.
+- **just works everywhere**. Clipboard works on any Windows or POSIX (Linux, macOS, *BSD, etc.) system and has ZERO external dependencies.
 - **looks pretty**. Colors make everything nicer. 🌈 Say adiós to boring black & white!
 - **saves time**. Stop making temporary directories or memorizing file locations. Say hello to productivity!
 

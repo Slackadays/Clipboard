@@ -17,6 +17,9 @@
 #include <unistd.h>
 #endif
 
+#define FMT_HEADER_ONLY
+#include "fmt/format.h"
+
 namespace fs = std::filesystem;
 
 fs::path filepath;
@@ -29,8 +32,6 @@ std::vector<fs::path> items;
 unsigned long files_success = 0;
 unsigned long directories_success = 0;
 unsigned long long bytes_success = 0;
-
-bool colors = true;
 
 std::string_view clipboard_version = "0.1.2";
 
@@ -46,7 +47,14 @@ std::string_view blank = "\033[0m";
 std::string_view copy_action = "copy";
 std::string_view cut_action = "cut";
 std::string_view paste_action = "paste";
-std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
+
+std::string_view copied_action = "Copied";
+std::string_view cut_past_action = "Cut";
+std::string_view pasted_action = "Pasted";
+std::string_view pipedin_action = "Piped in";
+std::string_view pipedout_action = "Piped out";
+
+std::string_view help_message = "{blue}▏This is Clipboard {version}, the {cut}, {copy}, and {paste} system for the command line.{blank}\n"
                                 "{blue}{bold}▏How To Use{blank}\n"
                                 "{orange}▏clipboard cut (item) [items]{blank}\n"
                                 "{orange}▏clipboard copy (item) [items]{blank}\n"
@@ -60,9 +68,9 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
 std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, or paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
-std::string_view no_action_message = "{red}╳ You did not specify an action. {pink}Try adding {bold}cut, copy, or paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink}. If you need more help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
-std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
-std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
+std::string_view no_action_message = "{red}╳ You did not specify an action. {pink}Try adding {bold}{cut}, {copy}, or {paste}{blank}{pink} to the end, like {bold}clipboard {copy}{blank}{pink}. If you need more help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
+std::string_view choose_action_items_message = "{red}╳ You need to choose something to {action}.{pink} Try adding the items you want to {action} to the end, like {bold}clipboard {action} contacts.txt myprogram.cpp{blank}\n";
+std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}{badaction}{blank}{red} action with redirection here. {pink}Try removing {bold}{badaction}{blank}{pink} or use {bold}{goodaction}{blank}{pink} instead, like {bold}clipboard {goodaction}{blank}{pink}.\n";
 std::string_view copying_message = "{yellow}• Copying...{blank}\r";
 std::string_view cutting_message = "{yellow}• Cutting...{blank}\r";
 std::string_view pasting_message = "{yellow}• Pasting...{blank}\r";
@@ -70,54 +78,16 @@ std::string_view pipingin_message = "{yellow}• Piping in...{blank}\r";
 std::string_view pipingout_message = "{yellow}• Piping out...{blank}\r";
 std::string_view paste_success_message = "{green}√ Pasted successfully{blank}\n";
 std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
-std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
-std::string_view and_more_message = "{red}▏ ...and %d more.{blank}\n";
-std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or{blank}\n"
-                                       "{pink}▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-std::string_view pipein_success_message = "{green}√ Piped in %i bytes{blank}\n";
-std::string_view pipeout_success_message = "{green}√ Piped out %i bytes{blank}\n";
-std::string_view copied_one_item_message = "{green}√ Copied %s{blank}\n";
-std::string_view cut_one_item_message = "{green}√ Cut %s{blank}\n";
-std::string_view copied_multiple_files_message = "{green}√ Copied %i files{blank}\n";
-std::string_view cut_multiple_files_message = "{green}√ Cut %i files{blank}\n";
-std::string_view copied_multiple_directories_message = "{green}√ Copied %i directories{blank}\n";
-std::string_view cut_multiple_directories_message = "{green}√ Cut %i directories{blank}\n";
-std::string_view copied_multiple_files_directories_message = "{green}√ Copied %i files and %i directories{blank}\n";
-std::string_view cut_multiple_files_directories_message = "{green}√ Cut %i files and %i directories{blank}\n";
-std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug.{blank}\n";
-
-std::string_view trimColors(const std::string_view& str) {
-    std::string result{str};
-    if (colors) {
-        return str;
-    } else {
-        for (int i = 0; (i = str.find("{red}", i)) != std::string::npos;) {
-            result.replace(i, 5, "");
-        }
-        for (int i = 0; (i = str.find("{green}", i)) != std::string::npos;) {
-            result.replace(i, 7, "");
-        }
-        for (int i = 0; (i = str.find("{yellow}", i)) != std::string::npos;) {
-            result.replace(i, 8, "");
-        }
-        for (int i = 0; (i = str.find("{blue}", i)) != std::string::npos;) {
-            result.replace(i, 6, "");
-        }
-        for (int i = 0; (i = str.find("{pink}", i)) != std::string::npos;) {
-            result.replace(i, 6, "");
-        }
-        for (int i = 0; (i = str.find("{orange}", i)) != std::string::npos;) {
-            result.replace(i, 8, "");
-        }
-        for (int i = 0; (i = str.find("{bold}", i)) != std::string::npos;) {
-            result.replace(i, 6, "");
-        }
-        for (int i = 0; (i = str.find("{blank}", i)) != std::string::npos;) {
-            result.replace(i, 7, "");
-        }
-        return std::string_view{result};
-    }
-}
+std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't {action} these items.{blank}\n";
+std::string_view and_more_message = "{red}▏ ...and {num} more.{blank}\n";
+std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
+                                       "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
+std::string_view pipe_success_message = "{green}√ {actioned} {num} bytes{blank}\n";
+std::string_view one_item_success_message = "{green}√ {actioned} {item}{blank}\n";
+std::string_view multiple_files_success_message = "{green}√ {actioned} {num} files{blank}\n";
+std::string_view multiple_directories_success_message = "{green}√ {actioned} {num} directories{blank}\n";
+std::string_view multiple_files_directories_success_message = "{green}√ {actioned} {numfiles} files and {numdirs} directories{blank}\n";
+std::string_view internal_error_message = "{red}╳ Internal error: {error}\n▏ This is probably a bug.{blank}\n";
 
 void setLanguageES() {
 
@@ -135,7 +105,14 @@ void setupVariables(const int argc, char *argv[]) {
     }
 
     if (getenv("NO_COLOR") != nullptr) {
-        colors = false;
+        red = "";
+        green = "";
+        yellow = "";
+        blue = "";
+        pink = "";
+        orange = "";
+        bold = "";
+        blank = "";
     }
 
     if (std::locale("").name().substr(0, 3) == "es_") {
@@ -148,13 +125,13 @@ void setupVariables(const int argc, char *argv[]) {
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-            printf(trimColors(help_message).data(), clipboard_version.data());
+            fmt::vprint(help_message, fmt::make_format_args(fmt::arg("blue", blue), fmt::arg("version", clipboard_version), fmt::arg("blank", blank), fmt::arg("bold", bold), fmt::arg("orange", orange), fmt::arg("cut", cut_action), fmt::arg("copy", copy_action), fmt::arg("paste", paste_action)));
             exit(0);
         }
     }
     if (argc >= 2) {
         if (!strcmp(argv[1], "help")) {
-            printf(help_message.data(), clipboard_version.data());
+            fmt::vprint(help_message, fmt::make_format_args(fmt::arg("blue", blue), fmt::arg("version", clipboard_version), fmt::arg("blank", blank), fmt::arg("bold", bold), fmt::arg("orange", orange)));
             exit(0);
         }
     }
@@ -166,7 +143,7 @@ void setupAction(const int argc, char *argv[]) {
             if (isatty(fileno(stdin)) && isatty(fileno(stdout))) {
                 action = Action::Cut;
             } else {
-                fprintf(stderr, fix_redirection_action_message.data(), cut_action.data(), cut_action.data(), copy_action.data(), copy_action.data());
+                fmt::vprint(stderr, fix_redirection_action_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("bold", bold), fmt::arg("badaction", cut_action), fmt::arg("goodaction", copy_action), fmt::arg("blank", blank), fmt::arg("pink", pink)));
                 exit(1);
             }
         } else if (!strncmp(argv[1], copy_action.data(), 2)) {
@@ -175,7 +152,7 @@ void setupAction(const int argc, char *argv[]) {
             } else if (!isatty(fileno(stdin))) {
                 action = Action::PipeIn;
             } else {
-                fprintf(stderr, fix_redirection_action_message.data(), copy_action.data(), copy_action.data(), paste_action.data(), paste_action.data());
+                fmt::vprint(stderr, fix_redirection_action_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("bold", bold), fmt::arg("badaction", copy_action), fmt::arg("goodaction", paste_action), fmt::arg("blank", blank), fmt::arg("pink", pink)));
                 exit(1);
             }
         } else if (!strncmp(argv[1], paste_action.data(), 1)) {
@@ -184,11 +161,11 @@ void setupAction(const int argc, char *argv[]) {
             } else if (!isatty(fileno(stdout))) {
                 action = Action::PipeOut;
             } else {
-                fprintf(stderr, fix_redirection_action_message.data(), paste_action.data(), paste_action.data(), copy_action.data(), copy_action.data());
+                fmt::vprint(stderr, fix_redirection_action_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("bold", bold), fmt::arg("badaction", paste_action), fmt::arg("goodaction", copy_action), fmt::arg("blank", blank), fmt::arg("pink", pink)));
                 exit(1);
             }
         } else {
-            printf("%s", no_valid_action_message.data());
+            fmt::vprint(no_valid_action_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("pink", pink), fmt::arg("bold", bold), fmt::arg("blank", blank)));
             exit(1);
         }
     } else if (!isatty(fileno(stdin))) {
@@ -196,12 +173,12 @@ void setupAction(const int argc, char *argv[]) {
     } else if (!isatty(fileno(stdout))) {
         action = Action::PipeOut;
     } else {
-        printf("%s", no_action_message.data());
+        fmt::vprint(no_action_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("pink", pink), fmt::arg("bold", bold), fmt::arg("blank", blank), fmt::arg("cut", cut_action), fmt::arg("copy", copy_action), fmt::arg("paste", paste_action)));
         exit(1);
     }
     if (action == Action::PipeIn || action == Action::PipeOut) {
         if (argc >= 3) {
-            fprintf(stderr, "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n");
+            fmt::vprint(stderr, "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n", fmt::make_format_args(fmt::arg("red", red), fmt::arg("pink", pink), fmt::arg("bold", bold)));
             exit(1);
         }
     }
@@ -210,9 +187,9 @@ void setupAction(const int argc, char *argv[]) {
 void checkForNoItems() {
     if ((action == Action::Cut || action == Action::Copy) && items.size() < 1) {
         if (action == Action::Copy) {
-            printf(choose_action_items_message.data(), copy_action.data(), copy_action.data(), copy_action.data());
+            fmt::vprint(choose_action_items_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("action", copy_action), fmt::arg("pink", pink), fmt::arg("bold", bold), fmt::arg("blank", blank)));
         } else if (action == Action::Cut) {
-            printf(choose_action_items_message.data(), cut_action.data(), cut_action.data(), cut_action.data());
+            fmt::vprint(choose_action_items_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("action", cut_action), fmt::arg("pink", pink), fmt::arg("bold", bold), fmt::arg("blank", blank)));
         }
         exit(1);
     }
@@ -232,15 +209,15 @@ void setupTempDirectory() {
 
 void setupIndicator() {
     if (action == Action::Copy) {
-        printf("%s", copying_message.data());
+        fmt::vprint(copying_message, fmt::make_format_args(fmt::arg("yellow", yellow), fmt::arg("blank", blank)));
     } else if (action == Action::Cut) {
-        printf("%s", cutting_message.data());
+        fmt::vprint(cutting_message, fmt::make_format_args(fmt::arg("yellow", yellow), fmt::arg("blank", blank)));
     } else if (action == Action::Paste) {
-        printf("%s", pasting_message.data());
+        fmt::vprint(pasting_message, fmt::make_format_args(fmt::arg("yellow", yellow), fmt::arg("blank", blank)));
     } else if (action == Action::PipeIn) {
-        fprintf(stderr, "%s", pipingin_message.data());
+        fmt::vprint(stderr, pipingin_message, fmt::make_format_args(fmt::arg("yellow", yellow), fmt::arg("blank", blank)));
     } else if (action == Action::PipeOut) {
-        fprintf(stderr, "%s", pipingout_message.data());
+        fmt::vprint(stderr, pipingout_message, fmt::make_format_args(fmt::arg("yellow", yellow), fmt::arg("blank", blank)));
     }
     fflush(stdout);
 }
@@ -286,9 +263,9 @@ void performAction() {
     } else if (action == Action::Paste) {
         try {
             fs::copy(filepath, fs::current_path(), opts);
-            printf("%s", paste_success_message.data());
+            fmt::vprint(paste_success_message, fmt::make_format_args(fmt::arg("green", green), fmt::arg("blank", blank)));
         } catch (const fs::filesystem_error& e) {
-            printf("%s", paste_fail_message.data());
+            fmt::vprint(paste_fail_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("blank", blank)));
         }
     } else if (action == Action::PipeIn) {
         std::ofstream file(filepath / "clipboard.txt");
@@ -308,14 +285,14 @@ void performAction() {
         file.close();
     }
     if (failedItems.size() > 0) {
-        printf(clipboard_failed_message.data(), action == Action::Copy ? copy_action.data() : cut_action.data());
+        fmt::vprint(clipboard_failed_message, fmt::make_format_args(fmt::arg("action", action == Action::Copy ? copy_action : cut_action), fmt::arg("red", red), fmt::arg("blank", blank)));
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
-            printf("{red}▏ %s: %s{blank}\n", failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
+            fmt::vprint("{red}▏ {item}: {error}{blank}", fmt::make_format_args(fmt::arg("red", red), fmt::arg("error", failedItems.at(i).first.string()), fmt::arg("error", failedItems.at(i).second.code().message()), fmt::arg("blank", blank)));
             if (i == 4 && failedItems.size() > 5) {
-                printf(and_more_message.data(), int(failedItems.size()) - 5);
+                fmt::vprint(and_more_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("num", int(failedItems.size() - 5)), fmt::arg("blank", blank)));
             }
         }
-        printf("%s", fix_problem_message.data());
+        fmt::vprint(fix_problem_message, fmt::make_format_args(fmt::arg("pink", pink), fmt::arg("blank", blank)));
     }
     for (const auto& f : failedItems) {
         items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
@@ -324,38 +301,18 @@ void performAction() {
 
 void showSuccesses() {
     if (bytes_success > 0) {
-        if (action == Action::PipeIn) {
-            fprintf(stderr, pipein_success_message.data(), bytes_success);
-        } else if (action == Action::PipeOut) {
-            fprintf(stderr, pipeout_success_message.data(), bytes_success);
-        }
+        fmt::vprint(stderr, pipe_success_message, fmt::make_format_args(fmt::arg("green", green), fmt::arg("num", bytes_success), fmt::arg("blank", blank), fmt::arg("actioned", action == Action::PipeIn ? pipedin_action : pipedout_action)));
         return;
     }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
-        if (action == Action::Copy) {
-            printf(copied_one_item_message.data(), items.at(0).string().data());
-        } else if (action == Action::Cut) {
-            printf(cut_one_item_message.data(), items.at(0).string().data());
-        }
+        fmt::vprint(one_item_success_message, fmt::make_format_args(fmt::arg("green", green), fmt::arg("item", items.at(0).string()), fmt::arg("blank", blank), fmt::arg("actioned", action == Action::Copy ? copied_action : cut_past_action)));
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
-            if (action == Action::Copy) {
-                printf(copied_multiple_files_message.data(), files_success);
-            } else if (action == Action::Cut) {
-                printf(cut_multiple_files_message.data(), files_success);
-            }
+            fmt::vprint(multiple_files_success_message, fmt::make_format_args(fmt::arg("green", green), fmt::arg("num", files_success), fmt::arg("blank", blank), fmt::arg("actioned", action == Action::Copy ? copied_action : cut_past_action)));
         } else if ((files_success == 0) && (directories_success > 1)) {
-            if (action == Action::Copy) {
-                printf(copied_multiple_directories_message.data(), directories_success);
-            } else if (action == Action::Cut) {
-                printf(cut_multiple_directories_message.data(), directories_success);
-            }
+            fmt::vprint(multiple_directories_success_message, fmt::make_format_args(fmt::arg("green", green), fmt::arg("num", directories_success), fmt::arg("blank", blank), fmt::arg("actioned", action == Action::Copy ? copied_action : cut_past_action)));
         } else if ((files_success >= 1) && (directories_success >= 1)) {
-            if (action == Action::Copy) {
-                printf(copied_multiple_files_directories_message.data(), files_success, directories_success);
-            } else if (action == Action::Cut) {
-                printf(cut_multiple_files_directories_message.data(), files_success, directories_success);
-            }
+            fmt::vprint(multiple_files_directories_success_message, fmt::make_format_args(fmt::arg("green", green), fmt::arg("numfiles", files_success), fmt::arg("numdirs", directories_success), fmt::arg("blank", blank), fmt::arg("actioned", action == Action::Copy ? copied_action : cut_past_action)));
         }
     }
 }
@@ -378,7 +335,7 @@ int main(int argc, char *argv[]) {
 
         showSuccesses();
     } catch (const std::exception& e) {
-        fprintf(stderr, internal_error_message.data(), e.what());
+        fmt::vprint(stderr, internal_error_message, fmt::make_format_args(fmt::arg("red", red), fmt::arg("error", e.what()), fmt::arg("blank", blank)));
         exit(1);
     }
     return 0;
