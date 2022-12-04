@@ -7,7 +7,6 @@
 #include <locale>
 #include <iostream>
 #include <fstream>
-#include <string>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
