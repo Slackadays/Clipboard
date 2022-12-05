@@ -24,6 +24,25 @@ fs::path filepath;
 enum class Action { Cut, Copy, Paste, PipeIn, PipeOut };
 Action action;
 
+std::vector<fs::path> items;
+
+unsigned long files_success = 0;
+unsigned long directories_success = 0;
+unsigned long long bytes_success = 0;
+
+constexpr std::string_view clipboard_version = "0.1.2";
+
+std::unordered_map<std::string, std::string> colors = {
+    {"red", "\033[38;5;196m"},
+    {"green", "\033[38;5;40m"},
+    {"yellow", "\033[38;5;214m"},
+    {"blue", "\033[38;5;51m"},
+    {"orange", "\033[38;5;208m"},
+    {"pink", "\033[38;5;219m"},
+    {"bold", "\033[1m"},
+    {"blank", "\033[0m"}
+};
+
 std::unordered_map<Action, std::string_view> actions = {
     {Action::Cut, "cut"},
     {Action::Copy, "copy"},
@@ -46,27 +65,6 @@ std::unordered_map<Action, std::string_view> did_action = {
     {Action::Paste, "Pasted"},
     {Action::PipeIn, "Piped in"},
     {Action::PipeOut, "Piped out"}
-};
-
-std::vector<fs::path> items;
-
-unsigned long files_success = 0;
-unsigned long directories_success = 0;
-unsigned long long bytes_success = 0;
-
-constexpr std::string_view clipboard_version = "0.1.2";
-
-bool use_colors = true;
-
-std::unordered_map<std::string, std::string> colors = {
-    {"red", "\033[38;5;196m"},
-    {"green", "\033[38;5;40m"},
-    {"yellow", "\033[38;5;214m"},
-    {"blue", "\033[38;5;51m"},
-    {"orange", "\033[38;5;208m"},
-    {"pink", "\033[38;5;219m"},
-    {"bold", "\033[1m"},
-    {"blank", "\033[0m"}
 };
 
 std::string_view help_message = "{blue}▏This is Clipboard %s, the {cut}, {copy}, and {paste} system for the command line.{blank}\n"
@@ -100,24 +98,17 @@ std::string_view multiple_directories_success_message = "{green}√ %s %i direct
 std::string_view multiple_files_directories_success_message = "{green}√ %s %i files and %i directories{blank}\n";
 std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug.{blank}\n";
 
+#include "langs.hpp"
+
 std::string replaceColors(const std::string_view& str) {
     std::string temp(str);
     for (const auto& key : colors) {
         std::string search = "{" + key.first + "}";
-        std::string replacement = use_colors ? key.second : "";
-        for (int i = 0; (i = temp.find(search, i)) != std::string::npos; i += replacement.length()) {
-            temp.replace(i, search.length(), replacement);
+        for (int i = 0; (i = temp.find(search, i)) != std::string::npos; i += key.second.length()) {
+            temp.replace(i, search.length(), key.second);
         }
     }
     return temp;
-}
-
-void setLanguageES() {
-
-}
-
-void setLanguagePT() {
-
 }
 
 void setupVariables(const int argc, char *argv[]) {
@@ -128,25 +119,21 @@ void setupVariables(const int argc, char *argv[]) {
     }
 
     if (getenv("NO_COLOR") != nullptr) {
-        use_colors = false;
+        for (auto& key : colors) {
+            key.second = "";
+        }
     }
 
-    if (std::locale("").name().substr(0, 3) == "es_") {
+    if (std::locale("").name().substr(0, 2) == "es") {
         setLanguageES();
-    } else if (std::locale("").name().substr(0, 3) == "pt_") {
+    } else if (std::locale("").name().substr(0, 2) == "pt") {
         setLanguagePT();
     }
 }
 
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-            printf(replaceColors(help_message).data(), clipboard_version.data());
-            exit(0);
-        }
-    }
-    if (argc >= 2) {
-        if (!strcmp(argv[1], "help")) {
+        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
             printf(replaceColors(help_message).data(), clipboard_version.data());
             exit(0);
         }
@@ -297,12 +284,12 @@ void performAction() {
 }
 
 void showSuccesses() {
-    if (bytes_success > 0) {
+    if (action == Action::PipeIn || action == Action::PipeOut) {
         fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), bytes_success);
         return;
     }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
-        printf(replaceColors(one_item_success_message).data(), items.at(0).string().data(), did_action[action].data());
+        printf(replaceColors(one_item_success_message).data(), did_action[action].data(), items.at(0).string().data());
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
             printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), files_success);
