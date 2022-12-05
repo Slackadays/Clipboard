@@ -143,27 +143,24 @@ void checkFlags(const int argc, char *argv[]) {
 void setupAction(const int argc, char *argv[]) {
     if (argc >= 2) {
         if (!strncmp(argv[1], actions[Action::Cut].data(), 2)) {
-            if (isatty(fileno(stdin)) && isatty(fileno(stdout))) {
-                action = Action::Cut;
-            } else {
+            action = Action::Cut;
+            if (!isatty(fileno(stdin)) || !isatty(fileno(stdout))) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
         } else if (!strncmp(argv[1], actions[Action::Copy].data(), 2)) {
-            if (isatty(fileno(stdin))) {
-                action = Action::Copy;
-            } else if (!isatty(fileno(stdin))) {
+            action = Action::Copy;
+            if (!isatty(fileno(stdin))) {
                 action = Action::PipeIn;
-            } else {
+            } else if (!isatty(fileno(stdout))) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
         } else if (!strncmp(argv[1], actions[Action::Paste].data(), 1)) {
-            if (isatty(fileno(stdin)) && isatty(fileno(stdout))) {
-                action = Action::Paste;
-            } else if (!isatty(fileno(stdout))) {
+            action = Action::Paste;
+            if (!isatty(fileno(stdout))) {
                 action = Action::PipeOut;
-            } else {
+            } else if (!isatty(fileno(stdin)))) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
