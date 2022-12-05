@@ -146,7 +146,7 @@ void setupAction(const int argc, char *argv[]) {
             if (isatty(fileno(stdin)) && isatty(fileno(stdout))) {
                 action = Action::Cut;
             } else {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[Action::Copy].data());
+                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
         } else if (!strncmp(argv[1], actions[Action::Copy].data(), 2)) {
@@ -155,7 +155,7 @@ void setupAction(const int argc, char *argv[]) {
             } else if (!isatty(fileno(stdin))) {
                 action = Action::PipeIn;
             } else {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[Action::Paste].data());
+                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
         } else if (!strncmp(argv[1], actions[Action::Paste].data(), 1)) {
@@ -164,7 +164,7 @@ void setupAction(const int argc, char *argv[]) {
             } else if (!isatty(fileno(stdout))) {
                 action = Action::PipeOut;
             } else {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[Action::Copy].data());
+                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
         } else {
