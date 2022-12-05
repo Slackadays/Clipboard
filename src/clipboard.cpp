@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <array>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -32,16 +33,16 @@ unsigned long long bytes_success = 0;
 
 constexpr std::string_view clipboard_version = "0.1.2";
 
-std::unordered_map<std::string, std::string> colors = {
-    {"red", "\033[38;5;196m"},
-    {"green", "\033[38;5;40m"},
-    {"yellow", "\033[38;5;214m"},
-    {"blue", "\033[38;5;51m"},
-    {"orange", "\033[38;5;208m"},
-    {"pink", "\033[38;5;219m"},
-    {"bold", "\033[1m"},
-    {"blank", "\033[0m"}
-};
+std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
+    {"{red}", "\033[38;5;196m"},
+    {"{green}", "\033[38;5;40m"},
+    {"{yellow}", "\033[38;5;214m"},
+    {"{blue}", "\033[38;5;51m"},
+    {"{orange}", "\033[38;5;208m"},
+    {"{pink}", "\033[38;5;219m"},
+    {"{bold}", "\033[1m"},
+    {"{blank}", "\033[0m"}
+}};
 
 std::unordered_map<Action, std::string_view> actions = {
     {Action::Cut, "cut"},
@@ -67,7 +68,7 @@ std::unordered_map<Action, std::string_view> did_action = {
     {Action::PipeOut, "Piped out"}
 };
 
-std::string_view help_message = "{blue}▏This is Clipboard %s, the {cut}, {copy}, and {paste} system for the command line.{blank}\n"
+std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
                                 "{blue}{bold}▏How To Use{blank}\n"
                                 "{orange}▏clipboard cut (item) [items]{blank}\n"
                                 "{orange}▏clipboard copy (item) [items]{blank}\n"
@@ -101,11 +102,10 @@ std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This
 #include "langs.hpp"
 
 std::string replaceColors(const std::string_view& str) {
-    std::string temp(str);
-    for (const auto& key : colors) {
-        std::string search = "{" + key.first + "}";
-        for (int i = 0; (i = temp.find(search, i)) != std::string::npos; i += key.second.length()) {
-            temp.replace(i, search.length(), key.second);
+    std::string temp(str); //a string to do scratch work on
+    for (const auto& key : colors) { //iterate over all the possible colors to replace
+        for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) { //
+            temp.replace(i, key.first.length(), key.second);
         }
     }
     return temp;
@@ -271,7 +271,7 @@ void performAction() {
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
-            printf("{red}▏ %s: %s{blank}", failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
+            printf(replaceColors("{red}▏ %s: %s{blank}\n").data(), failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
             if (i == 4 && failedItems.size() > 5) {
                 printf(replaceColors(and_more_message).data(), int(failedItems.size() - 5));
             }
