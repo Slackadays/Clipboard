@@ -1,15 +1,4 @@
 void setLanguageES() {
-colors = {
-    {"red", "\033[38;5;196m"},
-    {"green", "\033[38;5;40m"},
-    {"yellow", "\033[38;5;214m"},
-    {"blue", "\033[38;5;51m"},
-    {"orange", "\033[38;5;208m"},
-    {"pink", "\033[38;5;219m"},
-    {"bold", "\033[1m"},
-    {"blank", "\033[0m"}
-};
-
 actions = {
     {Action::Cut, "cut"},
     {Action::Copy, "copy"},
@@ -67,17 +56,6 @@ internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bu
 }
 
 void setLanguagePT() {
-colors = {
-    {"red", "\033[38;5;196m"},
-    {"green", "\033[38;5;40m"},
-    {"yellow", "\033[38;5;214m"},
-    {"blue", "\033[38;5;51m"},
-    {"orange", "\033[38;5;208m"},
-    {"pink", "\033[38;5;219m"},
-    {"bold", "\033[1m"},
-    {"blank", "\033[0m"}
-};
-
 actions = {
     {Action::Cut, "cut"},
     {Action::Copy, "copy"},
