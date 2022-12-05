@@ -160,7 +160,7 @@ void setupAction(const int argc, char *argv[]) {
             action = Action::Paste;
             if (!isatty(fileno(stdout))) {
                 action = Action::PipeOut;
-            } else if (!isatty(fileno(stdin)))) {
+            } else if (!isatty(fileno(stdin))) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
