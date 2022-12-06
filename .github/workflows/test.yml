@@ -1,0 +1,59 @@
+name: Clipboard Builds
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build-linux-amd64:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          sudo apt update
+          sudo apt install -y g++-12
+          cmake src -D CMAKE_CXX_COMPILER=g++-12 -D TEST
+          cmake --build .
+          echo "Blah!" > dummy.txt
+          mkdir dummydir
+          echo "Blah!" > dummydir/foo.txt
+          ./clipboard copy dummy.txt dummydir
+          if [ ! -f /tmp/Clipboard/dummy.txt ]; then
+            exit 1
+          fi
+          if [ ! -f /tmp/Clipboard/dummydir/foo.txt ]; then
+            exit 1
+          fi
+          mkdir dummydir2
+          cd dummydir2
+          ./clipboard paste
+          if [ ! -f dummy.txt ]; then
+            exit 1
+          fi
+          if [ ! -f dummydir/foo.txt ]; then
+            exit 1
+          fi
+  build-macos-amd64:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          cmake src -D TEST
+          cmake --build .
+  build-windows-amd64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          cmake src -D TEST
+          cmake --build . --config Release
