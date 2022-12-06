@@ -19,10 +19,11 @@ jobs:
           sudo apt install -y g++-12
           cmake src -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
           cmake --build .
+          sudo cmake --install .
           echo "Blah!" > dummy.txt
           mkdir dummydir
           echo "Blah!" > dummydir/foo.txt
-          ./clipboard copy dummy.txt dummydir
+          clipboard copy dummy.txt dummydir
           if [ ! -f /tmp/Clipboard/dummy.txt ]; then
             exit 1
           fi
@@ -31,7 +32,7 @@ jobs:
           fi
           mkdir dummydir2
           cd dummydir2
-          ./clipboard paste
+          clipboard paste
           if [ ! -f dummy.txt ]; then
             exit 1
           fi
