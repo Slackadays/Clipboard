@@ -11,9 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: Yuri6037/Action-FakeTTY@v1.1
+
 
       - name: Run a multi-line script
-        uses: Yuri6037/Action-FakeTTY@v1.1
         run: |
           cmake src -D TEST=1
           cmake --build .
@@ -53,9 +54,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: Yuri6037/Action-FakeTTY@v1.1
+
 
       - name: Run a multi-line script
-        uses: Yuri6037/Action-FakeTTY@v1.1
         run: |
           cmake src -D TEST=1
           cmake --build .
@@ -94,11 +96,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: Yuri6037/Action-FakeTTY@v1.1
 
       - name: Run a multi-line script
-        uses: Yuri6037/Action-FakeTTY@v1.1
         run: |
           cmake src -D TEST=1
           cmake --build . --config Release
           cmake --install .
-
