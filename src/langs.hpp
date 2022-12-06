@@ -74,11 +74,11 @@ doing_action = {
 };
 
 did_action = {
-    {Action::Cut, "Recortado"},
-    {Action::Copy, "Copiado"},
-    {Action::Paste, "Colado"},
-    {Action::PipeIn, "Direcionado para dentro"},
-    {Action::PipeOut, "Direcionado para fora"}
+    {Action::Cut, "Recortou"},
+    {Action::Copy, "Copiou"},
+    {Action::Paste, "Colou"},
+    {Action::PipeIn, "Direcionou para dentro"},
+    {Action::PipeOut, "Direcionou para fora"}
 };
 
 help_message = "{blue}▏Este é Clipboard %s, o sistema de recortar, copiar e colar para a linha de comando.{blank}\n"
