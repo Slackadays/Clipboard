@@ -44,8 +44,8 @@ redirection_no_items_message = "{red}╳ You can't specify items when you use re
 paste_success_message = "{green}√ Pasted successfully{blank}\n";
 paste_fail_message = "{red}╳ Failed to paste{blank}\n";
 clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
-and_more_fails_message = "{red}▏ ...and %i more.{blank}\n";
-and_more_items_message = "{blue}▏ ...and %i more.{blank}\n";
+and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
+and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                     "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 working_message = "{yellow}• %s...{blank}\r";
@@ -103,8 +103,8 @@ redirection_no_items_message = "{red}╳ Você não pode especificar itens ao re
 paste_success_message = "{green}√ Colado com sucesso{blank}\n";
 paste_fail_message = "{red}╳ Não foi possível colar{blank}\n";
 clipboard_failed_message = "{red}╳ Clipboard não pôde %s esses itens.{blank}\n";
-and_more_fails_message = "{red}▏ ...e mais %i.{blank}\n";
-and_more_items_message = "{blue}▏ ...e mais %i.{blank}\n";
+and_more_fails_message = "{red}▏ ...e mais {bold}%i{blank}{red}.{blank}\n";
+and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
 fix_problem_message = "{pink}▏ Veja se você possui as permissões necessárias, ou\n"
                     "▏ verifique a ortografia do arquivo ou diretório que voce está.{blank}\n";
 working_message = "{yellow}• %s...{blank}\r";

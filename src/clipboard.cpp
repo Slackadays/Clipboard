@@ -81,8 +81,9 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
-std::string_view clipboard_contents_message = "{blue}• There are %i items (%i files and %i directories) in the clipboard.\n";
-std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard. {pink}Try adding {bold}%s, %s, or %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started. If you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
+std::string_view clipboard_contents_message = "{blue}• There are {bold}%i{blank}{blue} files and {bold}%i{blank}{blue} directories in the clipboard.\n";
+std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank} "
+                                                "{pink}Add {bold}%s, %s, or %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
 std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, or paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
 std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
@@ -90,8 +91,8 @@ std::string_view redirection_no_items_message = "{red}╳ You can't specify item
 std::string_view paste_success_message = "{green}√ Pasted successfully{blank}\n";
 std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
 std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
-std::string_view and_more_fails_message = "{red}▏ ...and %i more.{blank}\n";
-std::string_view and_more_items_message = "{blue}▏ ...and %i more.{blank}\n";
+std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
+std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 std::string_view working_message = "{yellow}• %s...{blank}\r";
@@ -177,20 +178,18 @@ void setupAction(const int argc, char *argv[]) {
         action = Action::PipeOut;
     } else {
         if (fs::is_directory(filepath) && !fs::is_empty(filepath)) {
-            int files = 0;
-            int directories = 0;
             std::vector<fs::path> countedItems;
             for (const auto& entry : std::filesystem::directory_iterator(filepath)) {
                 if (entry.is_directory()) {
-                    directories++;
+                    directories_success++;
                 } else {
-                    files++;
+                    files_success++;
                 }
                 countedItems.emplace_back(entry.path());
             }
-            printf(replaceColors(clipboard_contents_message).data(), files + directories, files, directories);
-            for (int i = 0; i < std::min(5, files + directories); i++) {
-                printf(replaceColors("{blue}▏ %s{blank}\n").data(), countedItems.at(i).filename().string().data());
+            printf(replaceColors(clipboard_contents_message).data(), files_success, directories_success);
+            for (int i = 0; i < std::min(5, int(countedItems.size())); i++) {
+                printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), countedItems.at(i).filename().string().data());
                 if (i == 4 && countedItems.size() > 5) {
                     printf(replaceColors(and_more_items_message).data(), int(countedItems.size() - 5));
                 }
@@ -293,7 +292,7 @@ void performAction() {
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
-            printf(replaceColors("{red}▏ %s: %s{blank}\n").data(), failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
+            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
             if (i == 4 && failedItems.size() > 5) {
                 printf(replaceColors(and_more_fails_message).data(), int(failedItems.size() - 5));
             }
