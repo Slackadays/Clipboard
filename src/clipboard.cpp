@@ -252,7 +252,7 @@ void performAction() {
         std::ofstream file(filepath / "clipboard.txt");
         std::string line;
         while (std::getline(std::cin, line)) {
-            file << line << std::endl;
+            file << line << std::flush;
             bytes_success += line.size();
         }
         file.close();
