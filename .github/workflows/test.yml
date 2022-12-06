@@ -43,7 +43,7 @@ jobs:
           fi
           clipboard paste > dummy.txt
           contents=$(cat dummy.txt)
-          if [ "$contents" != "Bleh\n" ]; then
+          if [ "$contents" != "Bleh" ]; then
             echo "contents: $contents"
             exit 1
           fi
