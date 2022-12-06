@@ -39,6 +39,16 @@ jobs:
           if [ ! -f dummydir/foo.txt ]; then
             exit 1
           fi
+          echo "Bleh" | clipboard
+          if [ ! -f /tmp/Clipboard/clipboard.txt ]; then
+            exit 1
+          fi
+          clipboard paste > dummy.txt
+          contents=$(cat dummy.txt)
+          if [ "$contents" != "Bleh" ]; then
+            exit 1
+          fi
+          echo "Test passed"
   build-macos-amd64:
     runs-on: macos-11
 
@@ -46,9 +56,40 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run a multi-line script
+        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
           cmake src -D TEST=1
           cmake --build .
+          sudo cmake --install .
+          echo "Blah!" > dummy.txt
+          mkdir dummydir
+          echo "Blah!" > dummydir/foo.txt
+          clipboard copy dummy.txt dummydir
+          if [ ! -f /tmp/Clipboard/dummy.txt ]; then
+            exit 1
+          fi
+          if [ ! -f /tmp/Clipboard/dummydir/foo.txt ]; then
+            exit 1
+          fi
+          mkdir dummydir2
+          cd dummydir2
+          clipboard paste
+          if [ ! -f dummy.txt ]; then
+            exit 1
+          fi
+          if [ ! -f dummydir/foo.txt ]; then
+            exit 1
+          fi
+          echo "Bleh" | clipboard
+          if [ ! -f /tmp/Clipboard/clipboard.txt ]; then
+            exit 1
+          fi
+          clipboard paste > dummy.txt
+          contents=$(cat dummy.txt)
+          if [ "$contents" != "Bleh" ]; then
+            exit 1
+          fi
+          echo "Test passed"
   build-windows-amd64:
     runs-on: windows-latest
 
@@ -59,3 +100,5 @@ jobs:
         run: |
           cmake src -D TEST=1
           cmake --build . --config Release
+          cmake --install .
+          
