@@ -308,7 +308,7 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        printf(replaceColors(working_message).data(), doing_action[action].data()); //action indicator
+        fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data()); //action indicator
         fflush(stdout);
 
         setupTempDirectory();
