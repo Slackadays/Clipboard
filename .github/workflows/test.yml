@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y g++-12
-          cmake src -D CMAKE_CXX_COMPILER=g++-12 -D TEST
+          cmake src -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
           cmake --build .
           echo "Blah!" > dummy.txt
           mkdir dummydir
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          cmake src -D TEST
+          cmake src -D TEST=1
           cmake --build .
   build-windows-amd64:
     runs-on: windows-latest
@@ -55,5 +55,5 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          cmake src -D TEST
+          cmake src -D TEST=1
           cmake --build . --config Release
