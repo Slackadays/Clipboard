@@ -85,6 +85,7 @@ std::string_view no_valid_action_message = "{red}╳ You did not specify a valid
 std::string_view no_action_message = "{red}╳ You did not specify an action. {pink}Try adding {bold}%s, %s, or %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink}. If you need more help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
 std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
+std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
 std::string_view paste_success_message = "{green}√ Pasted successfully{blank}\n";
 std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
 std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
@@ -178,7 +179,7 @@ void setupAction(const int argc, char *argv[]) {
     }
     if (action == Action::PipeIn || action == Action::PipeOut) {
         if (argc >= 3) {
-            fprintf(stderr, "%s", replaceColors("{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n").data());
+            fprintf(stderr, "%s", replaceColors(redirection_no_items_message).data());
             exit(1);
         }
     }
