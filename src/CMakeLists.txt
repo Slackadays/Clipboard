@@ -21,6 +21,9 @@ else()
     if(NOT MSVC)
       set(CMAKE_CXX_FLAGS_RELEASE "-Os")
     endif()
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+      set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s") # strip the binary for reduced size
+    endif()
   endif()
 endif()
 
@@ -46,12 +49,6 @@ if(lto_supported)
   endif()
 else()
     message(STATUS "IPO/LTO not supported: ${lto_error}")
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Release" AND NOT TEST)
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s") # strip the binary for reduced size
-  endif()
 endif()
 
 if(WIN32)
