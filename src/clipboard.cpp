@@ -178,20 +178,19 @@ void setupAction(const int argc, char *argv[]) {
         action = Action::PipeOut;
     } else {
         if (fs::is_directory(filepath) && !fs::is_empty(filepath)) {
-            std::vector<fs::path> countedItems;
             for (const auto& entry : std::filesystem::directory_iterator(filepath)) {
                 if (entry.is_directory()) {
                     directories_success++;
                 } else {
                     files_success++;
                 }
-                countedItems.emplace_back(entry.path());
+                items.emplace_back(entry.path());
             }
             printf(replaceColors(clipboard_contents_message).data(), files_success, directories_success);
-            for (int i = 0; i < std::min(5, int(countedItems.size())); i++) {
-                printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), countedItems.at(i).filename().string().data());
-                if (i == 4 && countedItems.size() > 5) {
-                    printf(replaceColors(and_more_items_message).data(), int(countedItems.size() - 5));
+            for (int i = 0; i < std::min(5, int(items.size())); i++) {
+                printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), items.at(i).filename().string().data());
+                if (i == 4 && items.size() > 5) {
+                    printf(replaceColors(and_more_items_message).data(), int(items.size() - 5));
                 }
             }
             exit(0);
