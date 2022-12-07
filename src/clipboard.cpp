@@ -21,6 +21,7 @@
 namespace fs = std::filesystem;
 
 fs::path filepath;
+fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
 
 enum class Action { Cut, Copy, Paste, PipeIn, PipeOut };
 Action action;
@@ -81,7 +82,7 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
-std::string_view clipboard_contents_message = "{blue}• There are {bold}%i{blank}{blue} files and {bold}%i{blank}{blue} directories in the clipboard.\n";
+std::string_view clipboard_contents_message = "{blue}• There are {bold}%i{blank}{blue} files and {bold}%i{blank}{blue} directories in the clipboard:\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank} "
                                                 "{pink}Add {bold}%s, %s, or %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
 std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, or paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
@@ -90,7 +91,7 @@ std::string_view fix_redirection_action_message = "{red}╳ You can't use the {b
 std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
 std::string_view paste_success_message = "{green}√ Pasted successfully{blank}\n";
 std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
-std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
+std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
 std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
 std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
@@ -101,7 +102,7 @@ std::string_view one_item_success_message = "{green}√ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}√ %s %i files{blank}\n";
 std::string_view multiple_directories_success_message = "{green}√ %s %i directories{blank}\n";
 std::string_view multiple_files_directories_success_message = "{green}√ %s %i files and %i directories{blank}\n";
-std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug.{blank}\n";
+std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking permissions on this system.{blank}\n";
 
 #include "langs.hpp"
 
@@ -178,7 +179,7 @@ void setupAction(const int argc, char *argv[]) {
         action = Action::PipeOut;
     } else {
         if (fs::is_directory(filepath) && !fs::is_empty(filepath)) {
-            for (const auto& entry : std::filesystem::directory_iterator(filepath)) {
+            for (const auto& entry : fs::directory_iterator(filepath)) {
                 if (entry.is_directory()) {
                     directories_success++;
                 } else {
@@ -214,10 +215,39 @@ void checkForNoItems() {
     }
 }
 
+void checkItemSize() {
+    unsigned long long total_item_size = 0;
+    unsigned long long space_available = fs::space(filepath).available;
+    auto calculateTotalItemSize = [&]() {
+        for (const auto& i : items) {
+            if (fs::is_directory(i)) {
+                for (const auto& entry : fs::recursive_directory_iterator(i)) {
+                    if (fs::is_regular_file(entry)) {
+                        total_item_size += fs::file_size(entry);
+                    }
+                }
+            } else if (fs::is_regular_file(i)) {
+                total_item_size += fs::file_size(i);
+            } else if (fs::is_symlink(i)) {
+                total_item_size += 8;
+            }
+        }
+    };
+    if (action == Action::Cut || action == Action::Copy) {
+        calculateTotalItemSize();
+        if (total_item_size > (space_available / 2)) {
+            printf(replaceColors("{red}╳ There isn't enough storage available to %s all your items (%gkB to %s, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), actions[action].data(), total_item_size / (1024.0 * 1024.0), actions[action].data(), space_available / (1024.0 * 1024.0));
+            exit(1);
+        } else if (total_item_size > (space_available / 3) && action == Action::Copy) {
+            opts |= fs::copy_options::create_hard_links;
+        }
+    }
+}
+
 void setupTempDirectory() {
     if (fs::is_directory(filepath)) {
         if (action != Action::Paste && action != Action::PipeOut) {
-            for (const auto& entry : std::filesystem::directory_iterator(filepath)) {
+            for (const auto& entry : fs::directory_iterator(filepath)) {
                 fs::remove_all(entry.path());
             }
         }
@@ -228,7 +258,6 @@ void setupTempDirectory() {
 
 void performAction() {
     std::vector<std::pair<fs::path, fs::filesystem_error>> failedItems;
-    fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
     if (action == Action::Copy) {
         for (const auto& f : items) {
             try {
@@ -333,6 +362,8 @@ int main(int argc, char *argv[]) {
 
         fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data()); //action indicator
         fflush(stderr);
+
+        checkItemSize();
 
         setupTempDirectory();
 
