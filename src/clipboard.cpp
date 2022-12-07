@@ -363,9 +363,9 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data()); //action indicator
         fflush(stderr);
 
-        checkItemSize();
-
         setupTempDirectory();
+
+        checkItemSize();
 
         performAction();
 
