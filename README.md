@@ -1,13 +1,15 @@
 # 📋 Clipboard 
-Cut, copy, and paste anything anywhere you want, all from the comfort of your terminal! The ultimate clipboard system for the command line.
+Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the ultimate clipboard system for the command line.
 
 **Clipboard...**
-- **is really tiny**. Clipboard rings in at mere kilobytes for most/all platforms.
-- **is really simple**. Clipboard takes no time to learn because there's nothing to learn.
-- **is really friendly**. Clipboard is one of the most user-friendly pieces of software out there.
-- **just works everywhere**. Clipboard works on any Windows or POSIX (Linux, macOS, *BSD, etc.) system and has ZERO dependencies.
-- **looks pretty**. Colors make everything nicer. 🌈 Say adiós to boring black & white!
-- **saves time**. Stop making temporary directories or memorizing file locations. Say hello to productivity!
+- **is really tiny**. We're serious about code size; Clipboard rings in at mere kilobytes on most platforms.
+- **is really simple**. We're serious about scope; Clipboard is exactly that, a clipboard.
+- **is really friendly**. We're serious about UX; Clipboard is zero-config and is carefully designed to be friendly to newbies and power users alike.
+- **"just works" everywhere**. We're serious about compatibility; Clipboard works on any Windows, Linux, macOS, FreeBSD, or OpenBSD system, or anything that supports C++20, all with ZERO dependencies.
+- **looks pretty**. We're serious about design; Clipboard has colorful text baked in everywhere.** 🌈 Say adiós to boring black & white!
+- **saves time**. We're serious about productivity; Stop making temporary directories or memorizing file locations!
+
+**You can disable colors with the NO_COLOR environment variable.
 
 # How To Use
 
