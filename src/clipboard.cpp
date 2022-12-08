@@ -146,26 +146,28 @@ void checkFlags(const int argc, char *argv[]) {
 }
 
 void setupAction(const int argc, char *argv[]) {
+    const bool stdin_is_tty = isatty(fileno(stdin));
+    const bool stdout_is_tty = isatty(fileno(stdout));
     if (argc >= 2) {
         if (!strncmp(argv[1], actions[Action::Cut].data(), 2)) {
             action = Action::Cut;
-            if (!isatty(fileno(stdin)) || !isatty(fileno(stdout))) {
+            if (!stdin_is_tty|| !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
         } else if (!strncmp(argv[1], actions[Action::Copy].data(), 2)) {
             action = Action::Copy;
-            if (!isatty(fileno(stdin))) {
+            if (!stdin_is_tty) {
                 action = Action::PipeIn;
-            } else if (!isatty(fileno(stdout))) {
+            } else if (!stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
         } else if (!strncmp(argv[1], actions[Action::Paste].data(), 1)) {
             action = Action::Paste;
-            if (!isatty(fileno(stdout))) {
+            if (!stdout_is_tty) {
                 action = Action::PipeOut;
-            } else if (!isatty(fileno(stdin))) {
+            } else if (!stdin_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
@@ -173,9 +175,9 @@ void setupAction(const int argc, char *argv[]) {
             printf("%s", replaceColors(no_valid_action_message).data());
             exit(1);
         }
-    } else if (!isatty(fileno(stdin))) {
+    } else if (!stdin_is_tty) {
         action = Action::PipeIn;
-    } else if (!isatty(fileno(stdout))) {
+    } else if (!stdout_is_tty) {
         action = Action::PipeOut;
     } else {
         if (fs::is_directory(filepath) && !fs::is_empty(filepath)) {
@@ -217,19 +219,21 @@ void checkForNoItems() {
 
 void checkItemSize() {
     unsigned long long total_item_size = 0;
-    unsigned long long space_available = fs::space(filepath).available;
+    const unsigned long long space_available = fs::space(filepath).available;
     auto calculateTotalItemSize = [&]() {
         for (const auto& i : items) {
             if (fs::is_directory(i)) {
                 for (const auto& entry : fs::recursive_directory_iterator(i)) {
                     if (fs::is_regular_file(entry)) {
                         total_item_size += fs::file_size(entry);
+                    } else {
+                        total_item_size += 16;
                     }
                 }
             } else if (fs::is_regular_file(i)) {
                 total_item_size += fs::file_size(i);
-            } else if (fs::is_symlink(i)) {
-                total_item_size += 8;
+            } else {
+                total_item_size += 16;
             }
         }
     };
@@ -257,7 +261,7 @@ void setupTempDirectory() {
 }
 
 void performAction() {
-    std::vector<std::pair<fs::path, fs::filesystem_error>> failedItems;
+    std::vector<std::pair<std::string, std::string>> failedItems;
     if (action == Action::Copy) {
         for (const auto& f : items) {
             try {
@@ -275,7 +279,7 @@ void performAction() {
                     files_success++;
                 }
             } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(f, e);
+                failedItems.emplace_back(f.string(), e.code().message());
             }
         }
     } else if (action == Action::Cut) {
@@ -290,7 +294,7 @@ void performAction() {
                     files_success++;
                 }
             } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(f, e);
+                failedItems.emplace_back(f.string(), e.code().message());
             }
         }  
     } else if (action == Action::Paste) {
@@ -320,7 +324,7 @@ void performAction() {
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
-            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), failedItems.at(i).first.string().data(), failedItems.at(i).second.code().message().data());
+            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), failedItems.at(i).first.data(), failedItems.at(i).second.data());
             if (i == 4 && failedItems.size() > 5) {
                 printf(replaceColors(and_more_fails_message).data(), int(failedItems.size() - 5));
             }
