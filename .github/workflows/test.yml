@@ -18,11 +18,9 @@ jobs:
           cmake src -D TEST=1
           cmake --build .
           sudo cmake --install .
-          bash test.sh
+          bash tests/test_files.sh
+          bash tests/test_redirection.sh
   test-macos-amd64:
-    defaults:
-      run:
-        shell: bash {0}
     runs-on: macos-11
 
     steps:
@@ -33,4 +31,4 @@ jobs:
           cmake src -D TEST=1
           cmake --build .
           cmake --install .
-          bash test.sh
+          bash tests/test_redirection.sh
