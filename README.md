@@ -6,7 +6,7 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **is really simple**. We're serious about scope; Clipboard is exactly that, a clipboard.
 - **is really friendly**. We're serious about UX; Clipboard is zero-config and is carefully designed to be friendly to newbies and power users alike.
 - **is really global**. We're serious about localization; Clipboard currently supports English, Spanish, and Portuguese locales.
-- **"just works" everywhere**. We're serious about compatibility; Clipboard works on any Windows, Linux, macOS, FreeBSD, or OpenBSD system, or anything that supports C++20, all with ZERO dependencies.
+- **"just works" everywhere**. We're serious about compatibility; Clipboard works on any Windows, Linux, macOS, FreeBSD, OpenBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies.
 - **looks pretty**. We're serious about design; Clipboard has colorful text baked in everywhere.** 🌈 Say adiós to boring black & white!
 - **saves time**. We're serious about productivity; Clipboard frees you from ugly, temporary directories and memorizing file locations!
 
@@ -63,7 +63,7 @@ cmake Clipboard/src
 cmake --build .
 ```
 ## Install
-Platforms where you have `sudo` to install software (Linux, macOS, FreeBSD):
+Platforms where you have `sudo` to install software (Linux, macOS, *BSD, OI):
 ```
 sudo cmake --install .
 ```
@@ -76,7 +76,20 @@ Windows:
 cmake --install .
 ```
 
-# Install from the AUR
+## Uninstall
+Platforms where you have `sudo` to uninstall software (Linux, macOS, FreeBSD, OI):
+```
+sudo xargs rm < install_manifest.txt
+```
+OpenBSD:
+```
+doas xargs rm < install_manifest.txt
+```
+Windows:
+
+This is currently WIP
+
+## Install from the AUR
 
 Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin) or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
 

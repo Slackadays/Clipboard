@@ -1,27 +1,21 @@
 void setLanguageES() {
-actions = {
-    {Action::Cut, "cut"},
-    {Action::Copy, "copy"},
-    {Action::Paste, "paste"},
-    {Action::PipeIn, "pipe in"},
-    {Action::PipeOut, "pipe out"},
-};
+actions[Action::Cut] = "cut";
+actions[Action::Copy] = "copy";
+actions[Action::Paste] = "paste";
+actions[Action::PipeIn] = "pipe in";
+actions[Action::PipeOut] = "pipe out";
 
-doing_action = {
-    {Action::Cut, "Cutting"},
-    {Action::Copy, "Copying"},
-    {Action::Paste, "Pasting"},
-    {Action::PipeIn, "Piping in"},
-    {Action::PipeOut, "Piping out"}
-};
+doing_action[Action::Cut] = "Cutting";
+doing_action[Action::Copy] = "Copying";
+doing_action[Action::Paste] = "Pasting";
+doing_action[Action::PipeIn] = "Piping in";
+doing_action[Action::PipeOut] = "Piping out";
 
-did_action = {
-    {Action::Cut, "Cut"},
-    {Action::Copy, "Copied"},
-    {Action::Paste, "Pasted"},
-    {Action::PipeIn, "Piped in"},
-    {Action::PipeOut, "Piped out"}
-};
+did_action[Action::Cut] = "Cut";
+did_action[Action::Copy] = "Copied";
+did_action[Action::Paste] = "Pasted";
+did_action[Action::PipeIn] = "Piped in";
+did_action[Action::PipeOut] = "Piped out";
 
 help_message = "{blue}▏This is Clipboard %s, the {cut}, {copy}, and {paste} system for the command line.{blank}\n"
                 "{blue}{bold}▏How To Use{blank}\n"
@@ -58,29 +52,23 @@ internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bu
 }
 
 void setLanguagePT() {
-actions = {
-    {Action::Cut, "recortar"},
-    {Action::Copy, "copiar"},
-    {Action::Paste, "colar"},
-    {Action::PipeIn, "direcionar para dentro"},
-    {Action::PipeOut, "direcionar para fora"},
-};
+actions[Action::Cut] = "recortar";
+actions[Action::Copy] = "copiar";
+actions[Action::Paste] = "colar";
+actions[Action::PipeIn] = "direcionar para dentro";
+actions[Action::PipeOut] = "direcionar para fora";
 
-doing_action = {
-    {Action::Cut, "Recortando"},
-    {Action::Copy, "Copiando"},
-    {Action::Paste, "Colando"},
-    {Action::PipeIn, "Direcionando para dentro"},
-    {Action::PipeOut, "Direcionando para fora"}
-};
+doing_action[Action::Cut] = "Recortando";
+doing_action[Action::Copy] = "Copiando";
+doing_action[Action::Paste] = "Colando";
+doing_action[Action::PipeIn] = "Direcionando para dentro";
+doing_action[Action::PipeOut] = "Direcionando para fora";
 
-did_action = {
-    {Action::Cut, "Recortou"},
-    {Action::Copy, "Copiou"},
-    {Action::Paste, "Colou"},
-    {Action::PipeIn, "Direcionou para dentro"},
-    {Action::PipeOut, "Direcionou para fora"}
-};
+did_action[Action::Cut] = "Recortou";
+did_action[Action::Copy] = "Copiou";
+did_action[Action::Paste] = "Colou";
+did_action[Action::PipeIn] = "Direcionou para dentro";
+did_action[Action::PipeOut] = "Direcionou para fora";
 
 help_message = "{blue}▏Este é Clipboard %s, o sistema de recortar, copiar e colar para a linha de comando.{blank}\n"
                 "{blue}{bold}▏Como utilizar{blank}\n"

@@ -23,7 +23,7 @@ namespace fs = std::filesystem;
 fs::path filepath;
 fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
 
-enum class Action { Cut, Copy, Paste, PipeIn, PipeOut };
+enum class Action { Cut, Copy, Paste, PipeIn, PipeOut, Clear };
 Action action;
 
 std::vector<fs::path> items;
@@ -32,7 +32,7 @@ unsigned long files_success = 0;
 unsigned long directories_success = 0;
 unsigned long long bytes_success = 0;
 
-constexpr std::string_view clipboard_version = "0.1.2";
+constexpr std::string_view clipboard_version = "0.1.3";
 
 std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
@@ -51,6 +51,7 @@ std::unordered_map<Action, std::string_view> actions = {
     {Action::Paste, "paste"},
     {Action::PipeIn, "pipe in"},
     {Action::PipeOut, "pipe out"},
+    {Action::Clear, "clear"}
 };
 
 std::unordered_map<Action, std::string_view> doing_action = {
@@ -58,7 +59,8 @@ std::unordered_map<Action, std::string_view> doing_action = {
     {Action::Copy, "Copying"},
     {Action::Paste, "Pasting"},
     {Action::PipeIn, "Piping in"},
-    {Action::PipeOut, "Piping out"}
+    {Action::PipeOut, "Piping out"},
+    {Action::Clear, "Clearing"}
 };
 
 std::unordered_map<Action, std::string_view> did_action = {
@@ -66,7 +68,8 @@ std::unordered_map<Action, std::string_view> did_action = {
     {Action::Copy, "Copied"},
     {Action::Paste, "Pasted"},
     {Action::PipeIn, "Piped in"},
-    {Action::PipeOut, "Piped out"}
+    {Action::PipeOut, "Piped out"},
+    {Action::Clear, "Cleared"}
 };
 
 std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
@@ -74,12 +77,15 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{orange}▏clipboard cut (item) [items]{blank}\n"
                                 "{orange}▏clipboard copy (item) [items]{blank}\n"
                                 "{orange}▏clipboard paste{blank}\n"
-                                "{blue}▏You can substitute \"cb\" for \"clipboard\" to save time.{blank}\n"
+                                "{orange}▏clipboard clear{blank}\n"
+                                "{blue}▏You can substitute \"cb\" for \"clipboard,\" \"mv\" for \"cut,\" \"cp\" for \"copy,\" \"p\" for \"paste,\" and \"clr\" for \"clear\" to save time.{blank}\n"
                                 "{blue}{bold}▏Examples{blank}\n"
                                 "{orange}▏clipboard copy dogfood.conf{blank}\n"
                                 "{orange}▏cb cut Nuclear_Launch_Codes.txt contactsfolder{blank}\n"
-                                "{orange}▏cb paste{blank}\n"
+                                "{orange}▏cb p{blank}\n"
+                                "{orange}▏cb clr{blank}\n"
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
+                                "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
 std::string_view clipboard_contents_message = "{blue}• There are {bold}%i{blank}{blue} files and {bold}%i{blank}{blue} directories in the clipboard:\n";
@@ -149,13 +155,13 @@ void setupAction(const int argc, char *argv[]) {
     const bool stdin_is_tty = isatty(fileno(stdin));
     const bool stdout_is_tty = isatty(fileno(stdout));
     if (argc >= 2) {
-        if (!strncmp(argv[1], actions[Action::Cut].data(), 2)) {
+        if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], "mv")) {
             action = Action::Cut;
             if (!stdin_is_tty|| !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strncmp(argv[1], actions[Action::Copy].data(), 2)) {
+        } else if (!strcmp(argv[1], actions[Action::Copy].data()) || !strcmp(argv[1], "cp")) {
             action = Action::Copy;
             if (!stdin_is_tty) {
                 action = Action::PipeIn;
@@ -163,12 +169,21 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
-        } else if (!strncmp(argv[1], actions[Action::Paste].data(), 1)) {
+        } else if (!strcmp(argv[1], actions[Action::Paste].data()) || !strcmp(argv[1], "p")) {
             action = Action::Paste;
             if (!stdout_is_tty) {
                 action = Action::PipeOut;
             } else if (!stdin_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
+                exit(1);
+            }
+        } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], "clr")) {
+            action = Action::Clear;
+            if (!stdin_is_tty) {
+                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
+                exit(1);
+            } else if (!stdout_is_tty) {
+                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
         } else {
@@ -305,6 +320,12 @@ void performAction() {
             bytes_success += line.size();
         }
         file.close();
+    } else if (action == Action::Clear) {
+        if (fs::is_empty(filepath)) {
+            printf("%s", replaceColors("{green}✓ Cleared the clipboard{blank}\n").data());
+        } else {
+            printf("%s", replaceColors("{red}╳ Failed to clear the clipboard{blank}\n").data());
+        }
     }
     for (const auto& f : failedItems) {
         items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
