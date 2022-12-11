@@ -138,6 +138,8 @@ void setupVariables(const int argc, char *argv[]) {
             argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
         }
         filepath = filepath / std::to_string(clipboard_number);
+    } else {
+        filepath = filepath / "0";
     }
 
     for (int i = 2; i < argc; i++) {
