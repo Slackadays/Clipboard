@@ -51,6 +51,9 @@ or
 
 `clipboard [paste] > (some file)`
 
+## Clear
+`clipboard clear`
+
 # Quick Installation
 ## Clone
 ```
