@@ -89,7 +89,7 @@ std::string_view no_valid_action_message = "{red}╳ You did not specify a valid
 std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
 std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
-std::string_view paste_success_message = "{green}√ Pasted successfully{blank}\n";
+std::string_view paste_success_message = "{green}✓ Pasted successfully{blank}\n";
 std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
 std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
 std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
@@ -97,11 +97,11 @@ std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 std::string_view working_message = "{yellow}• %s...{blank}\r";
-std::string_view pipe_success_message = "{green}√ %s %i bytes{blank}\n";
-std::string_view one_item_success_message = "{green}√ %s %s{blank}\n";
-std::string_view multiple_files_success_message = "{green}√ %s %i files{blank}\n";
-std::string_view multiple_directories_success_message = "{green}√ %s %i directories{blank}\n";
-std::string_view multiple_files_directories_success_message = "{green}√ %s %i files and %i directories{blank}\n";
+std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
+std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
+std::string_view multiple_directories_success_message = "{green}✓ %s %i directories{blank}\n";
+std::string_view multiple_files_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
 std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking permissions on this system.{blank}\n";
 
 #include "langs.hpp"

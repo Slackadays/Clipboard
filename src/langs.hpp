@@ -41,7 +41,7 @@ no_clipboard_contents_message = "{red}╳ You did not specify an action. {pink}T
 choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
 redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
-paste_success_message = "{green}√ Pasted successfully{blank}\n";
+paste_success_message = "{green}✓ Pasted successfully{blank}\n";
 paste_fail_message = "{red}╳ Failed to paste{blank}\n";
 clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
 and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
@@ -49,11 +49,11 @@ and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n"
 fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                     "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 working_message = "{yellow}• %s...{blank}\r";
-pipe_success_message = "{green}√ %s %i bytes{blank}\n";
-one_item_success_message = "{green}√ %s %s{blank}\n";
-multiple_files_success_message = "{green}√ %s %i files{blank}\n";
-multiple_directories_success_message = "{green}√ %s %i directories{blank}\n";
-multiple_files_directories_success_message = "{green}√ %s %i files and %i directories{blank}\n";
+pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+one_item_success_message = "{green}✓ %s %s{blank}\n";
+multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
+multiple_directories_success_message = "{green}✓ %s %i directories{blank}\n";
+multiple_files_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
 internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug.{blank}\n";
 }
 
@@ -100,7 +100,7 @@ no_clipboard_contents_message = "{red}╳ Você não especificou uma ação vál
 choose_action_items_message = "{red}╳ Você precisa especificar algo para %s.{pink} Tenta adicionar os itens que você quer %s ao final, como em {bold}clipboard %s contatos.txt meuprograma.cpp{blank}\n";
 fix_redirection_action_message = "{red}╳ Você não pode {bold}%s{blank}{red} com redirecionamento aqui. {pink}Tente remover {bold}%s{blank}{pink} ou utilizar {bold}%s{blank}{pink}, como em {bold}clipboard %s{blank}{pink}.\n";
 redirection_no_items_message = "{red}╳ Você não pode especificar itens ao redirecionar. {pink}Tente remover itens que vêm após {bold}clipboard [action].\n";
-paste_success_message = "{green}√ Colado com sucesso{blank}\n";
+paste_success_message = "{green}✓ Colado com sucesso{blank}\n";
 paste_fail_message = "{red}╳ Não foi possível colar{blank}\n";
 clipboard_failed_message = "{red}╳ Clipboard não pôde %s esses itens.{blank}\n";
 and_more_fails_message = "{red}▏ ...e mais {bold}%i{blank}{red}.{blank}\n";
@@ -108,10 +108,10 @@ and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
 fix_problem_message = "{pink}▏ Veja se você possui as permissões necessárias, ou\n"
                     "▏ verifique a ortografia do arquivo ou diretório que voce está.{blank}\n";
 working_message = "{yellow}• %s...{blank}\r";
-pipe_success_message = "{green}√ %s %i bytes{blank}\n";
-one_item_success_message = "{green}√ %s %s{blank}\n";
-multiple_files_success_message = "{green}√ %s %i arquivos{blank}\n";
-multiple_directories_success_message = "{green}√ %s %i diretórios{blank}\n";
-multiple_files_directories_success_message = "{green}√ %s %i arquivos e %i diretórios{blank}\n";
+pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+one_item_success_message = "{green}✓ %s %s{blank}\n";
+multiple_files_success_message = "{green}✓ %s %i arquivos{blank}\n";
+multiple_directories_success_message = "{green}✓ %s %i diretórios{blank}\n";
+multiple_files_directories_success_message = "{green}✓ %s %i arquivos e %i diretórios{blank}\n";
 internal_error_message = "{red}╳ Erro interno: %s\n▏ Isso é provavelmente um bug.{blank}\n";
 }
