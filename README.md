@@ -14,7 +14,8 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 
 # How To Use
 
-In all commands, you can substitute `cb` for `clipboard`.
+In all commands, you can substitute `cb` for `clipboard`. 
+Add a number from 0 to 9 to the end of the action to choose which clipboard you want to use (the default is 0).
 
 ## Copy
 `clipboard copy (file) [files]`
@@ -23,8 +24,8 @@ Examples:
 
 ```
 cb copy foo.txt launchcodes.doc
-clipboard copy MyDirectory
-cb copy bar.conf AnotherDirectory baz.txt
+clipboard copy1 MyDirectory
+cb copy8 bar.conf AnotherDirectory baz.txt
 ```
 ## Cut
 `clipboard cut (file) [files]`
@@ -33,8 +34,8 @@ Examples:
 
 ```
 cb cut bar.txt baz.docx
-clipboard cut MyDirectory
-cb cut bar.conf AnotherDirectory baz.txt
+clipboard cut5 MyDirectory
+cb cut9 bar.conf AnotherDirectory baz.txt
 ```
 ## Paste
 `clipboard paste`
