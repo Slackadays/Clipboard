@@ -20,6 +20,9 @@ jobs:
           sudo cmake --install .
           bash test.sh
   test-macos-amd64:
+    defaults:
+      run:
+        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
     runs-on: macos-11
 
     steps:
