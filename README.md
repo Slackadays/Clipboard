@@ -76,6 +76,10 @@ Windows:
 cmake --install .
 ```
 
+# Install from the AUR
+
+Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin) or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
+
 # Painless Documentation 
 
 [Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
