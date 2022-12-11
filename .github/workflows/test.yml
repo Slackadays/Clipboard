@@ -29,5 +29,6 @@ jobs:
         run: |
           cmake src -D TEST=1
           cmake --build .
+          csrutil disable
           sudo cmake --install .
           bash test.sh
