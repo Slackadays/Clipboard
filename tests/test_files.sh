@@ -5,11 +5,11 @@ echo "Blah!" > dummydir/foo.txt
 
 #test copying a file and a directory
 clipboard copy dummy.txt dummydir
-if [ ! -f /tmp/Clipboard/0/dummy.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/dummy.txt ]; then
 echo did not copy file
   exit 1
 fi
-if [ ! -f /tmp/Clipboard/0/dummydir/foo.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/dummydir/foo.txt ]; then
   echo did not copy directory
   exit 1
 fi
@@ -33,11 +33,11 @@ rm -rf dummydir2
 
 #test copying a file and a directory to clipboard 1
 clipboard copy1 dummy.txt dummydir
-if [ ! -f /tmp/Clipboard/1/dummy.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/dummy.txt ]; then
   echo did not copy file into cb 1
   exit 1
 fi
-if [ ! -f /tmp/Clipboard/1/dummydir/foo.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/dummydir/foo.txt ]; then
   echo did not copy directory into cb 1
   exit 1
 fi
