@@ -262,7 +262,7 @@ void setupTempDirectory() {
 
 void performAction() {
     std::vector<std::pair<std::string, std::string>> failedItems;
-    if (action == Action::Copy) {
+    if (action == Action::Copy || action == Action::Cut) {
         for (const auto& f : items) {
             try {
                 if (fs::is_directory(f)) {
@@ -282,21 +282,6 @@ void performAction() {
                 failedItems.emplace_back(f.string(), e.code().message());
             }
         }
-    } else if (action == Action::Cut) {
-        for (const auto& f : items) {
-            try {
-                if (fs::is_directory(f)) {
-                    fs::create_directories(filepath / f.parent_path().filename());
-                    fs::rename(f, filepath / f.parent_path().filename());
-                    directories_success++;
-                } else {
-                    fs::rename(f, filepath / f.filename());
-                    files_success++;
-                }
-            } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(f.string(), e.code().message());
-            }
-        }  
     } else if (action == Action::Paste) {
         try {
             fs::copy(filepath, fs::current_path(), opts);
@@ -321,6 +306,18 @@ void performAction() {
         }
         file.close();
     }
+    for (const auto& f : failedItems) {
+        items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
+    }
+    if (action == Action::Cut) {
+        for (const auto& f : items) {
+            try {
+                fs::remove_all(f);
+            } catch (const fs::filesystem_error& e) {
+                failedItems.emplace_back(f.string(), e.code().message());
+            }
+        }
+    }
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
@@ -330,9 +327,6 @@ void performAction() {
             }
         }
         printf("%s", replaceColors(fix_problem_message).data());
-    }
-    for (const auto& f : failedItems) {
-        items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
     }
 }
 
