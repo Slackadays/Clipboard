@@ -152,11 +152,13 @@ void setupVariables(const int argc, char *argv[]) {
         }
     }
 
-    if (std::locale("").name().substr(0, 2) == "es") {
-        setLanguageES();
-    } else if (std::locale("").name().substr(0, 2) == "pt") {
-        setLanguagePT();
-    }
+    try {
+        if (std::locale("").name().substr(0, 2) == "es") {
+            setLanguageES();
+        } else if (std::locale("").name().substr(0, 2) == "pt") {
+            setLanguagePT();
+        }
+    } catch (...) {}
 }
 
 void checkFlags(const int argc, char *argv[]) {
