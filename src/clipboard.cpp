@@ -286,10 +286,10 @@ void setupIndicator(std::stop_token stop_token) {
     if (action == Action::Cut || action == Action::Copy) {
         unsigned int percent_done = 0;
         while (!stop_token.stop_requested()) {
-            progress_flag.wait(false);
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items.size(); 
             fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
             fflush(stderr);
+            progress_flag.wait(false);
             progress_flag.clear();
         }
     } else {
@@ -476,7 +476,8 @@ int main(int argc, char *argv[]) {
         performAction();
 
         indicator.request_stop();
-        indicator.join();
+        progress_flag.test_and_set();
+        progress_flag.notify_one();
 
         showSuccesses();
     } catch (const std::exception& e) {
