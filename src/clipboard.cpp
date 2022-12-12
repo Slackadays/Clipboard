@@ -146,7 +146,7 @@ void setupVariables(const int argc, char *argv[]) {
         items.emplace_back(argv[i]);
     }
 
-    if (getenv("NO_COLOR") != nullptr) {
+    if (getenv("NO_COLOR") != nullptr && getenv("FORCE_COLOR") == nullptr) {
         for (auto& key : colors) {
             key.second = "";
         }
