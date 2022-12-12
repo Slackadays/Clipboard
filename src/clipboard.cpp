@@ -114,7 +114,7 @@ std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} 
 std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-std::string_view working_message = "{yellow}• %s... %s{blank}\r";
+std::string_view working_message = "{yellow}• %s... %s{blank}";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -283,17 +283,24 @@ void checkForNoItems() {
 }
 
 void setupIndicator(std::stop_token stop_token) {
+    int num_printed = 0;
     if (action == Action::Cut || action == Action::Copy) {
         unsigned int percent_done = 0;
         while (!stop_token.stop_requested()) {
-            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items.size(); 
-            fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
+            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items.size();
+            num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
+            for (int i = 0; i < num_printed; i++) {
+                fprintf(stderr, "\b");
+            }
             fflush(stderr);
             progress_flag.wait(false);
             progress_flag.clear();
         }
     } else {
-        fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
+        num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
+        for (int i = 0; i < num_printed; i++) {
+            fprintf(stderr, "\b");
+        }
         fflush(stderr);
     }
 }
