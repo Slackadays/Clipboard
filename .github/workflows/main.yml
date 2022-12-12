@@ -30,7 +30,8 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          cmake src
+          brew install gcc
+          cmake src -D CMAKE_CXX_COMPILER=g++-12
           cmake --build .
       - uses: actions/upload-artifact@v2
         with:
