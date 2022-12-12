@@ -9,6 +9,9 @@
 #include <fstream>
 #include <unordered_map>
 #include <array>
+#include <atomic>
+#include <thread>
+#include <chrono>
 #include <iostream>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -25,6 +28,8 @@ fs::path filepath;
 fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::string>> failedItems;
+
+std::atomic_flag progress_flag{};
 
 unsigned int clipboard_number = 0;
 unsigned long files_success = 0;
@@ -109,7 +114,7 @@ std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} 
 std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-std::string_view working_message = "{yellow}• %s...{blank}\r";
+std::string_view working_message = "{yellow}• %s... %s{blank}\r";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -130,17 +135,12 @@ std::string replaceColors(const std::string_view& str) {
 }
 
 void setupVariables(const int argc, char *argv[]) {
-    filepath = fs::temp_directory_path() / "Clipboard";
-
-    if (argc >= 2) {
-        if (argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
-            clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
-            argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
-        }
-        filepath = filepath / std::to_string(clipboard_number);
-    } else {
-        filepath = filepath / "0";
+    if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
+        clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
+        argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
     }
+
+    filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
 
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
@@ -280,6 +280,21 @@ void checkForNoItems() {
     }
 }
 
+void setupIndicator(std::stop_token stop_token) {
+    if (action == Action::Cut || action == Action::Copy) {
+        unsigned int percent_done = 0;
+        while (!stop_token.stop_requested()) {
+            progress_flag.wait(false);
+            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items.size(); 
+            fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
+            fflush(stderr);
+        }
+    } else {
+        fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
+        fflush(stderr);
+    }
+}
+
 void checkItemSize() {
     unsigned long long total_item_size = 0;
     const unsigned long long space_available = fs::space(filepath).available;
@@ -342,6 +357,9 @@ void copyFiles() {
         } catch (const fs::filesystem_error& e) {
             failedItems.emplace_back(f.string(), e.code().message());
         }
+        progress_flag.test_and_set();
+        progress_flag.notify_one();
+        //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -446,14 +464,16 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data()); //action indicator
-        fflush(stderr);
+        std::jthread indicator(setupIndicator);
 
         setupTempDirectory();
 
         checkItemSize();
 
         performAction();
+
+        indicator.request_stop();
+        indicator.join();
 
         showSuccesses();
     } catch (const std::exception& e) {

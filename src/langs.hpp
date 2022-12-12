@@ -42,7 +42,6 @@ and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
 and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                     "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-working_message = "{yellow}• %s...{blank}\r";
 pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 one_item_success_message = "{green}✓ %s %s{blank}\n";
 multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -95,7 +94,6 @@ and_more_fails_message = "{red}▏ ...e mais {bold}%i{blank}{red}.{blank}\n";
 and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
 fix_problem_message = "{pink}▏ Veja se você possui as permissões necessárias, ou\n"
                     "▏ verifique a ortografia do arquivo ou diretório que voce está.{blank}\n";
-working_message = "{yellow}• %s...{blank}\r";
 pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 one_item_success_message = "{green}✓ %s %s{blank}\n";
 multiple_files_success_message = "{green}✓ %s %i arquivos{blank}\n";
