@@ -379,20 +379,22 @@ void pipeIn() {
     std::ofstream file(filepath / "clipboard.txt");
     std::string line;
     while (std::getline(std::cin, line)) {
-        file << line << std::flush;
-        bytes_success += line.size();
+        file << line << std::endl;
+        bytes_success += line.size() + 1;
     }
     file.close();
 }
 
 void pipeOut() {
-    std::ifstream file(filepath / "clipboard.txt");
     std::string line;
-    while (std::getline(file, line)) {
-        std::cout << line << std::flush;
-        bytes_success += line.size();
+    for (const auto& entry : fs::recursive_directory_iterator(filepath)) {
+        std::ifstream file(entry.path());
+        while (std::getline(file, line)) {
+            std::cout << line << std::endl;
+            bytes_success += line.size() + 1;
+        }
+        file.close();
     }
-    file.close();
 }
 
 void clearClipboard() {
