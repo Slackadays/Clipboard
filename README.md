@@ -15,7 +15,8 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 # How To Use
 
 In all commands, you can substitute `cb` for `clipboard`. 
-Add a number from 0 to 9 to the end of the action to choose which clipboard you want to use (the default is 0).
+Add a number from 0 to 9 to the end of the action to choose which clipboard you want to use (the default is 0). 
+That's right, you have 10 different clipboards!
 
 ## Copy
 `clipboard copy (file) [files]`
