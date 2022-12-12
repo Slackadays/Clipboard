@@ -53,6 +53,9 @@ or
 
 `clipboard [paste] > (some file)`
 
+## Show Contents
+`clipboard show`
+
 ## Clear
 `clipboard clear`
 
