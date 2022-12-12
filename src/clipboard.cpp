@@ -290,6 +290,7 @@ void setupIndicator(std::stop_token stop_token) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items.size(); 
             fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
             fflush(stderr);
+            progress_flag.clear();
         }
     } else {
         fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
