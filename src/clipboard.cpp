@@ -451,6 +451,9 @@ void performAction() {
             }
         }
     }
+}
+
+void showFailures() {
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
         for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
@@ -502,6 +505,8 @@ int main(int argc, char *argv[]) {
         indicator.request_stop();
         progress_flag.test_and_set();
         progress_flag.notify_one();
+
+        showFailures();
 
         showSuccesses();
     } catch (const std::exception& e) {
