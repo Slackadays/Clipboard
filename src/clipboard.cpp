@@ -36,6 +36,10 @@ unsigned long files_success = 0;
 unsigned long directories_success = 0;
 unsigned long long bytes_success = 0;
 
+bool stdin_is_tty = true;
+bool stdout_is_tty = true;
+bool stderr_is_tty = true;
+
 constexpr std::string_view clipboard_version = "0.1.3";
 
 enum class Action { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show };
@@ -135,6 +139,10 @@ std::string replaceColors(const std::string_view& str) {
 }
 
 void setupVariables(const int argc, char *argv[]) {
+    stdin_is_tty = isatty(fileno(stdin));
+    stdout_is_tty = isatty(fileno(stdout));
+    stderr_is_tty = isatty(fileno(stderr));
+
     if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
         clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
         argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
@@ -219,12 +227,10 @@ void showClipboardContents() {
 }
 
 void setupAction(const int argc, char *argv[]) {
-    const bool stdin_is_tty = isatty(fileno(stdin));
-    const bool stdout_is_tty = isatty(fileno(stdout));
     if (argc >= 2) {
         if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], "ct")) {
             action = Action::Cut;
-            if (!stdin_is_tty|| !stdout_is_tty) {
+            if (!stdin_is_tty || !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
@@ -290,15 +296,15 @@ void setupIndicator(std::stop_token stop_token) {
         unsigned long items_size = items.size();
         while (!stop_token.stop_requested()) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
-            num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
+            num_printed = printf(replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
             for (int i = 0; i < num_printed; i++) {
-                fprintf(stderr, "\b");
+                printf("\b");
             }
             fflush(stderr);
             progress_flag.wait(false);
             progress_flag.clear();
         }
-    } else if (action == Action::PipeIn || action == Action::PipeOut) {
+    } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
         while (!stop_token.stop_requested()) {
             num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data()); //action indicator
             for (int i = 0; i < num_printed; i++) {
@@ -308,7 +314,7 @@ void setupIndicator(std::stop_token stop_token) {
             progress_flag.wait(false);
             progress_flag.clear();
         }
-    } else {
+    } else if (stderr_is_tty) {
         num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
         for (int i = 0; i < num_printed; i++) {
             fprintf(stderr, "\b");
@@ -467,7 +473,7 @@ void showFailures() {
 }
 
 void showSuccesses() {
-    if (action == Action::PipeIn || action == Action::PipeOut) {
+    if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
         fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), bytes_success);
         return;
     }
