@@ -180,10 +180,9 @@ void checkFlags(const int argc, char *argv[]) {
 
 void showClipboardStatus() {
     std::vector<bool> clipboards_with_contents(10, false);
-    fs::path rootFilepath = fs::temp_directory_path() / "Clipboard";
-    for (int clipboard = 0; clipboard < 10; clipboard++) {
-        if (fs::exists(rootFilepath / std::to_string(clipboard)) && !fs::is_empty(rootFilepath / std::to_string(clipboard))) {
-            clipboards_with_contents.at(clipboard) = true;
+    for (int i = 0; i < 10; i++) {
+        if (const fs::path cb = filepath.parent_path() / std::to_string(i); fs::is_directory(cb) && !fs::is_empty(cb)) {
+            clipboards_with_contents.at(i) = true;
         }
     }
     if (std::none_of(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const bool& v) { return v; })) {

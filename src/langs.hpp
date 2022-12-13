@@ -95,7 +95,6 @@ and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
 fix_problem_message = "{pink}▏ Veja se você possui as permissões necessárias, ou\n"
                     "▏ verifique a ortografia do arquivo ou diretório que voce está.{blank}\n";
 pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
-one_item_success_message = "{green}✓ %s %s{blank}\n";
 multiple_files_success_message = "{green}✓ %s %i arquivos{blank}\n";
 multiple_directories_success_message = "{green}✓ %s %i diretórios{blank}\n";
 multiple_files_directories_success_message = "{green}✓ %s %i arquivos e %i diretórios{blank}\n";
