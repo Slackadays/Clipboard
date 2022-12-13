@@ -33,12 +33,12 @@ fi
 
 #test contents of the files
 contents=$(cat copyme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
 contents=$(cat dummydir/copyme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
@@ -69,12 +69,12 @@ fi
 
 #test contents of the files
 contents=$(cat cutme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
 contents=$(cat cutdummydir/cutme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
@@ -109,12 +109,12 @@ fi
 
 #test contents of the files
 contents=$(cat copyme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
 contents=$(cat dummydir/copyme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
@@ -150,12 +150,12 @@ fi
 
 #test contents of the files
 contents=$(cat cutme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
 contents=$(cat cutdummydir/cutme.txt)
-if [ "$contents" != "Foobar\n" ]; then
+if [ "$contents" != "Foobar" ]; then
   echo "contents: $contents"
   exit 1
 fi
