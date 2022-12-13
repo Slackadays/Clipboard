@@ -31,6 +31,18 @@ if [ ! -f dummydir/copyme.txt ]; then
   exit 1
 fi
 
+#test contents of the files
+contents=$(cat copyme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
+  exit 1
+fi
+contents=$(cat dummydir/copyme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
+  exit 1
+fi
+
 #test cutting a file and a directory
 cd ..
 clipboard cut cutme.txt cutdummydir
@@ -52,6 +64,18 @@ if [ ! -f cutme.txt ]; then
 fi
 if [ ! -f cutdummydir/cutme.txt ]; then
   echo did not paste file in directory
+  exit 1
+fi
+
+#test contents of the files
+contents=$(cat cutme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
+  exit 1
+fi
+contents=$(cat cutdummydir/cutme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
   exit 1
 fi
 
@@ -83,6 +107,18 @@ if [ ! -f dummydir/copyme.txt ]; then
   exit 1
 fi
 
+#test contents of the files
+contents=$(cat copyme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
+  exit 1
+fi
+contents=$(cat dummydir/copyme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
+  exit 1
+fi
+
 #setup for more cut tests
 cd ..
 echo "Foobar" > cutme.txt
@@ -109,6 +145,18 @@ if [ ! -f cutme.txt ]; then
 fi
 if [ ! -f cutdummydir/cutme.txt ]; then
   echo did not paste file in directory from cb 1
+  exit 1
+fi
+
+#test contents of the files
+contents=$(cat cutme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
+  exit 1
+fi
+contents=$(cat cutdummydir/cutme.txt)
+if [ "$contents" != "Foobar\n" ]; then
+  echo "contents: $contents"
   exit 1
 fi
 
