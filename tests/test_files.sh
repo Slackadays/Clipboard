@@ -84,12 +84,12 @@ if [ ! -f dummydir/copyme.txt ]; then
 fi
 
 #setup for more cut tests
+cd ..
 echo "Foobar" > cutme.txt
 mkdir cutdummydir
 echo "Foobar" > cutdummydir/cutme.txt
 
 #test cutting a file and a directory to clipboard 1
-cd ..
 clipboard cut1 cutme.txt cutdummydir
 if [ ! -f "$TMPDIR"/Clipboard/1/cutme.txt ]; then
   echo did not cut file into cb 1
