@@ -2,9 +2,10 @@
 echo "Foobar" > copyme.txt
 mkdir dummydir
 echo "Foobar" > dummydir/copyme.txt
+
 echo "Foobar" > cutme.txt
 mkdir cutdummydir
-echo "Foobar" > dummydir/cutme.txt
+echo "Foobar" > cutdummydir/cutme.txt
 
 #test copying a file and a directory
 clipboard copy copyme.txt dummydir
@@ -85,7 +86,7 @@ fi
 #setup for more cut tests
 echo "Foobar" > cutme.txt
 mkdir cutdummydir
-echo "Foobar" > dummydir/cutme.txt
+echo "Foobar" > cutdummydir/cutme.txt
 
 #test cutting a file and a directory to clipboard 1
 cd ..
