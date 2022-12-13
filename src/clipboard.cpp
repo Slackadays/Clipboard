@@ -16,6 +16,8 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
+#define NOMINMAX
+#include <Windows.h>
 #define isatty _isatty
 #define fileno _fileno
 #else
@@ -139,6 +141,18 @@ std::string replaceColors(const std::string_view& str) {
 }
 
 void setupVariables(const int argc, char *argv[]) {
+    #if defined(_WIN64) || defined (_WIN32)
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
+	DWORD dwMode = 0;
+	GetConsoleMode(hOut, &dwMode);
+	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
+        for (auto& key : colors) {
+            key.second = "";
+        }
+	}
+	SetConsoleOutputCP(CP_UTF8); //fix broken accents on Windows
+    #endif
+
     stdin_is_tty = isatty(fileno(stdin));
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));

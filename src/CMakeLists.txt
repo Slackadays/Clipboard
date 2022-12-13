@@ -12,9 +12,6 @@ if(TEST)
     add_compile_options(-fsanitize=address)
     add_link_options(-fsanitize=address)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -pg")
-  else()
-    add_compile_options(/fsanitize=address)
-    add_link_options(/fsanitize=address)
   endif()
 else()
   if(NOT CMAKE_BUILD_TYPE)
@@ -30,6 +27,8 @@ endif()
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
+
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)

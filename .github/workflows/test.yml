@@ -35,3 +35,16 @@ jobs:
           cmake --build .
           cmake --install .
           bash tests/test_redirection.sh
+  test-windows-amd64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        shell: bash
+        run: |
+          cmake src -D TEST=1
+          cmake --build .
+          echo $TMPDIR
+          echo $HOME
