@@ -46,5 +46,7 @@ jobs:
         run: |
           cmake src -D TEST=1
           cmake --build .
-          echo $TMPDIR
           echo $HOME
+          export TMPDIR=/c/Users/runneradmin/AppData/Local/Temp
+          cmake --install .
+          bash tests/test_redirection.sh
