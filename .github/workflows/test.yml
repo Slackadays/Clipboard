@@ -44,8 +44,8 @@ jobs:
       - name: Run a multi-line script
         shell: bash
         run: |
-          cmake src -D TEST=1
-          cmake --build .
+          cmake src -D
+          cmake --build . --config Release
           echo $HOME
           export TMPDIR=/c/Users/runneradmin/AppData/Local/Temp
           cmake --install .
