@@ -296,6 +296,16 @@ void setupIndicator(std::stop_token stop_token) {
             progress_flag.wait(false);
             progress_flag.clear();
         }
+    } else if (action == Action::PipeIn || action == Action::PipeOut) {
+        while (!stop_token.stop_requested()) {
+            num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data()); //action indicator
+            for (int i = 0; i < num_printed; i++) {
+                fprintf(stderr, "\b");
+            }
+            fflush(stderr);
+            progress_flag.wait(false);
+            progress_flag.clear();
+        }
     } else {
         num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
         for (int i = 0; i < num_printed; i++) {
@@ -306,8 +316,8 @@ void setupIndicator(std::stop_token stop_token) {
 }
 
 void checkItemSize() {
-    unsigned long long total_item_size = 0;
     const unsigned long long space_available = fs::space(filepath).available;
+    unsigned long long total_item_size = 0;
     auto calculateTotalItemSize = [&]() {
         for (const auto& i : items) {
             if (fs::is_directory(i)) {
@@ -369,7 +379,6 @@ void copyFiles() {
         }
         progress_flag.test_and_set();
         progress_flag.notify_one();
-        //std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -388,6 +397,8 @@ void pipeIn() {
     while (std::getline(std::cin, line)) {
         file << line << std::endl;
         bytes_success += line.size() + 1;
+        progress_flag.test_and_set();
+        progress_flag.notify_one();
     }
     file.close();
 }
@@ -399,6 +410,8 @@ void pipeOut() {
         while (std::getline(file, line)) {
             std::cout << line << std::endl;
             bytes_success += line.size() + 1;
+            progress_flag.test_and_set();
+            progress_flag.notify_one();
         }
         file.close();
     }
