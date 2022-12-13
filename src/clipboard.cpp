@@ -135,7 +135,12 @@ std::string replaceColors(const std::string_view& str) {
 }
 
 void setupVariables(const int argc, char *argv[]) {
-    filepath = fs::temp_directory_path() / "Clipboard";
+    if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
+        clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
+        argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
+    }
+
+    filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
 
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
@@ -156,15 +161,6 @@ void setupVariables(const int argc, char *argv[]) {
     } catch (...) {}
 }
 
-void setFilepath(int argc, char *argv[]) {
-    if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
-        clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
-        argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
-    }
-
-    filepath = filepath / std::to_string(clipboard_number);
-}
-
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
@@ -176,8 +172,9 @@ void checkFlags(const int argc, char *argv[]) {
 
 void showClipboardStatus() {
     std::vector<bool> clipboards_with_contents(10, false);
+    fs::path rootFilepath = fs::temp_directory_path() / "Clipboard";
     for (int clipboard = 0; clipboard < 10; clipboard++) {
-        if (fs::exists(filepath / std::to_string(clipboard)) && !fs::is_empty(filepath / std::to_string(clipboard))) {
+        if (fs::exists(rootFilepath / std::to_string(clipboard)) && !fs::is_empty(rootFilepath / std::to_string(clipboard))) {
             clipboards_with_contents.at(clipboard) = true;
         }
     }
@@ -290,8 +287,9 @@ void setupIndicator(std::stop_token stop_token) {
     int num_printed = 0;
     if (action == Action::Cut || action == Action::Copy) {
         unsigned int percent_done = 0;
+        unsigned long items_size = items.size();
         while (!stop_token.stop_requested()) {
-            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items.size();
+            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
             for (int i = 0; i < num_printed; i++) {
                 fprintf(stderr, "\b");
@@ -490,8 +488,6 @@ int main(int argc, char *argv[]) {
         checkFlags(argc, argv);
 
         setupAction(argc, argv);
-
-        setFilepath(argc, argv);
 
         checkForNoItems();
 
