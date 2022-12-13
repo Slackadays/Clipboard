@@ -21,6 +21,7 @@ jobs:
           export TMPDIR=/tmp
           bash tests/test_files.sh
           bash tests/test_redirection.sh
+          bash tests/test_files_and_redirection.sh
   test-macos-amd64:
     runs-on: macos-11
 
