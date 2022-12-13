@@ -135,12 +135,7 @@ std::string replaceColors(const std::string_view& str) {
 }
 
 void setupVariables(const int argc, char *argv[]) {
-    if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
-        clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
-        argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
-    }
-
-    filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
+    filepath = fs::temp_directory_path() / "Clipboard";
 
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
@@ -161,6 +156,15 @@ void setupVariables(const int argc, char *argv[]) {
     } catch (...) {}
 }
 
+void setFilepath(int argc, char *argv[]) {
+    if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
+        clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
+        argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
+    }
+
+    filepath = filepath / std::to_string(clipboard_number);
+}
+
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
@@ -177,7 +181,7 @@ void showClipboardStatus() {
             clipboards_with_contents.at(clipboard) = true;
         }
     }
-    if (std::none_of(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](bool v) { return v; })) {
+    if (std::none_of(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const bool& v) { return v; })) {
         printf("%s", replaceColors(no_clipboard_contents_message).data());
         printf(replaceColors(clipboard_action_prompt).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
     } else {
@@ -408,7 +412,7 @@ void pipeOut() {
     for (const auto& entry : fs::recursive_directory_iterator(filepath)) {
         std::ifstream file(entry.path());
         while (std::getline(file, line)) {
-            std::cout << line << std::endl;
+            printf("%s\n", line.data());
             bytes_success += line.size() + 1;
             progress_flag.test_and_set();
             progress_flag.notify_one();
@@ -486,6 +490,8 @@ int main(int argc, char *argv[]) {
         checkFlags(argc, argv);
 
         setupAction(argc, argv);
+
+        setFilepath(argc, argv);
 
         checkForNoItems();
 
