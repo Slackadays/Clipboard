@@ -118,7 +118,7 @@ std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} 
 std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-std::string_view working_message = "{yellow}• %s... %s{blank}";
+std::string_view working_message = "{yellow}• %s... %s{blank}\r";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -289,35 +289,25 @@ void checkForNoItems() {
 }
 
 void setupIndicator(std::stop_token stop_token) {
-    int num_printed = 0;
     if (action == Action::Cut || action == Action::Copy) {
         unsigned int percent_done = 0;
         unsigned long items_size = items.size();
         while (!stop_token.stop_requested()) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
-            num_printed = printf(replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data()); //action indicator
-            for (int i = 0; i < num_printed; i++) {
-                printf("\b");
-            }
-            fflush(stderr);
+            printf(replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data());
+            fflush(stdout);
             progress_flag.wait(false);
             progress_flag.clear();
         }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
         while (!stop_token.stop_requested()) {
-            num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data()); //action indicator
-            for (int i = 0; i < num_printed; i++) {
-                fprintf(stderr, "\b");
-            }
+            fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data());
             fflush(stderr);
             progress_flag.wait(false);
             progress_flag.clear();
         }
     } else if (stderr_is_tty) {
-        num_printed = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), ""); //action indicator
-        for (int i = 0; i < num_printed; i++) {
-            fprintf(stderr, "\b");
-        }
+        fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), "");
         fflush(stderr);
     }
 }
