@@ -142,10 +142,9 @@ std::string replaceColors(const std::string_view& str) {
 
 void setupVariables(const int argc, char *argv[]) {
     #if defined(_WIN64) || defined (_WIN32)
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
-	DWORD dwMode = 0;
-	GetConsoleMode(hOut, &dwMode);
-	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
+	DWORD dwMode = 0; //Windows terminal color compatibility
+	GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &dwMode);
+	if (!SetConsoleMode(hOut, (0 | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
         for (auto& key : colors) {
             key.second = "";
         }
@@ -310,15 +309,15 @@ void setupIndicator(std::stop_token stop_token) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             printf(replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data());
             fflush(stdout);
-            progress_flag.wait(false);
-            progress_flag.clear();
+            progress_flag.wait(false, std::memory_order_relaxed);
+            progress_flag.clear(std::memory_order_relaxed);
         }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
         while (!stop_token.stop_requested()) {
             fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data());
             fflush(stderr);
-            progress_flag.wait(false);
-            progress_flag.clear();
+            progress_flag.wait(false, std::memory_order_relaxed);
+            progress_flag.clear(std::memory_order_relaxed);
         }
     } else if (stderr_is_tty) {
         fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), "");
@@ -388,7 +387,7 @@ void copyFiles() {
         } catch (const fs::filesystem_error& e) {
             failedItems.emplace_back(f.string(), e.code().message());
         }
-        progress_flag.test_and_set();
+        progress_flag.test_and_set(std::memory_order_relaxed);
         progress_flag.notify_one();
     }
 }
@@ -408,7 +407,7 @@ void pipeIn() {
     while (std::getline(std::cin, line)) {
         file << line << std::endl;
         bytes_success += line.size() + 1;
-        progress_flag.test_and_set();
+        progress_flag.test_and_set(std::memory_order_relaxed);
         progress_flag.notify_one();
     }
     file.close();
@@ -421,7 +420,7 @@ void pipeOut() {
         while (std::getline(file, line)) {
             printf("%s\n", line.data());
             bytes_success += line.size() + 1;
-            progress_flag.test_and_set();
+            progress_flag.test_and_set(std::memory_order_relaxed);
             progress_flag.notify_one();
         }
         file.close();
@@ -512,7 +511,7 @@ int main(int argc, char *argv[]) {
         performAction();
 
         indicator.request_stop();
-        progress_flag.test_and_set();
+        progress_flag.test_and_set(std::memory_order_relaxed);
         progress_flag.notify_one();
 
         showFailures();
