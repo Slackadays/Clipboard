@@ -275,6 +275,9 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
+        } else if (!strcmp(argv[1], "ee")) {
+            printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
+            exit(0);
         } else {
             printf("%s", replaceColors(no_valid_action_message).data());
             exit(1);
@@ -326,28 +329,30 @@ void setupIndicator(std::stop_token stop_token) {
     }
 }
 
+unsigned long long calculateTotalItemSize() {
+    unsigned long long total_item_size = 0;
+    for (const auto& i : items) {
+        if (fs::is_directory(i)) {
+            for (const auto& entry : fs::recursive_directory_iterator(i)) {
+                if (fs::is_regular_file(entry)) {
+                    total_item_size += fs::file_size(entry);
+                } else {
+                    total_item_size += 16;
+                }
+            }
+        } else if (fs::is_regular_file(i)) {
+            total_item_size += fs::file_size(i);
+        } else {
+            total_item_size += 16;
+        }
+    }
+}
+
 void checkItemSize() {
     const unsigned long long space_available = fs::space(filepath).available;
     unsigned long long total_item_size = 0;
-    auto calculateTotalItemSize = [&]() {
-        for (const auto& i : items) {
-            if (fs::is_directory(i)) {
-                for (const auto& entry : fs::recursive_directory_iterator(i)) {
-                    if (fs::is_regular_file(entry)) {
-                        total_item_size += fs::file_size(entry);
-                    } else {
-                        total_item_size += 16;
-                    }
-                }
-            } else if (fs::is_regular_file(i)) {
-                total_item_size += fs::file_size(i);
-            } else {
-                total_item_size += 16;
-            }
-        }
-    };
     if (action == Action::Cut || action == Action::Copy) {
-        calculateTotalItemSize();
+        total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
             printf(replaceColors("{red}╳ There isn't enough storage available to %s all your items (%gkB to %s, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), actions[action].data(), total_item_size / (1024.0 * 1024.0), actions[action].data(), space_available / (1024.0 * 1024.0));
             exit(1);
