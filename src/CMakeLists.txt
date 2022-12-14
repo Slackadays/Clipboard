@@ -25,6 +25,10 @@ else()
   endif()
 endif()
 
+set(CMAKE_THREAD_PREFER_PTHREAD True)
+set(THREADS_PREFER_PTHREAD_FLAG True)
+find_package(Threads REQUIRED)
+
 include(CheckIPOSupported)
 check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
 
@@ -50,6 +54,8 @@ if(lto_supported)
 else()
     message(STATUS "IPO/LTO not supported: ${lto_error}")
 endif()
+
+target_link_libraries(clipboard Threads::Threads)
 
 if(WIN32)
   install(TARGETS clipboard DESTINATION bin)
