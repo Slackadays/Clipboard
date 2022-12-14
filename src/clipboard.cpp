@@ -142,9 +142,10 @@ std::string replaceColors(const std::string_view& str) {
 
 void setupVariables(const int argc, char *argv[]) {
     #if defined(_WIN64) || defined (_WIN32)
-	DWORD dwMode = 0; //Windows terminal color compatibility
-	GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &dwMode);
-	if (!SetConsoleMode(hOut, (0 | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
+	DWORD dwMode = 0;
+	GetConsoleMode(hOut, &dwMode);
+	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
         for (auto& key : colors) {
             key.second = "";
         }
