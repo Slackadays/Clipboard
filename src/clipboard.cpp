@@ -162,7 +162,11 @@ void setupVariables(const int argc, char *argv[]) {
         argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
     }
 
-    filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
+    if (getenv("TMPDIR") != nullptr) {
+        filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / std::to_string(clipboard_number);
+    } else {
+        filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
+    }
 
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
@@ -346,6 +350,7 @@ unsigned long long calculateTotalItemSize() {
             total_item_size += 16;
         }
     }
+    return total_item_size;
 }
 
 void checkItemSize() {
