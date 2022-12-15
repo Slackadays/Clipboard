@@ -354,15 +354,13 @@ unsigned long long calculateTotalItemSize() {
 }
 
 void checkItemSize() {
-    const unsigned long long space_available = fs::space(filepath).available;
+    const unsigned long long space_available = fs::space(fs::current_path().root_path()).available;
     unsigned long long total_item_size = 0;
     if (action == Action::Cut || action == Action::Copy) {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
-            printf(replaceColors("{red}╳ There isn't enough storage available to %s all your items (%gkB to %s, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), actions[action].data(), total_item_size / (1024.0 * 1024.0), actions[action].data(), space_available / (1024.0 * 1024.0));
+            printf(replaceColors("{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), total_item_size / (1024.0 * 1024.0), space_available / (1024.0 * 1024.0));
             exit(1);
-        } else if (total_item_size > (space_available / 3) && action == Action::Copy) {
-            opts |= fs::copy_options::create_hard_links;
         }
     }
 }
@@ -381,7 +379,7 @@ void setupTempDirectory() {
 
 void copyFiles() {
     for (const auto& f : items) {
-        try {
+        auto copyItem = [&](const bool use_regular_copy = false) {
             if (fs::is_directory(f)) {
                 if (f.filename() == "") {
                     fs::create_directories(filepath / f.parent_path().filename());
@@ -392,11 +390,22 @@ void copyFiles() {
                 }
                 directories_success++;
             } else {
-                fs::copy(f, filepath / f.filename(), opts);
+                if (!use_regular_copy) {
+                    fs::copy(f, filepath / f.filename(), opts | fs::copy_options::create_hard_links);
+                } else {
+                    fs::copy(f, filepath / f.filename(), opts);
+                }
                 files_success++;
             }
+        };
+        try {
+            copyItem();
         } catch (const fs::filesystem_error& e) {
-            failedItems.emplace_back(f.string(), e.code().message());
+            try {
+                copyItem(true);
+            } catch (const fs::filesystem_error& e) {
+                failedItems.emplace_back(f.string(), e.code().message());
+            }
         }
         progress_flag.test_and_set(std::memory_order_relaxed);
         progress_flag.notify_one();
