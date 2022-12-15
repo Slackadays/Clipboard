@@ -354,7 +354,7 @@ unsigned long long calculateTotalItemSize() {
 }
 
 void checkItemSize() {
-    const unsigned long long space_available = fs::space(fs::current_path().root_path()).available;
+    const unsigned long long space_available = fs::space(filepath).available;
     unsigned long long total_item_size = 0;
     if (action == Action::Cut || action == Action::Copy) {
         total_item_size = calculateTotalItemSize();
