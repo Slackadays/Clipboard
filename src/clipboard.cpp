@@ -27,6 +27,7 @@
 namespace fs = std::filesystem;
 
 fs::path filepath;
+fs::path original_filepaths;
 fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::string>> failedItems;
@@ -34,6 +35,7 @@ std::vector<std::pair<std::string, std::string>> failedItems;
 std::atomic_flag progress_flag{};
 
 unsigned int clipboard_number = 0;
+unsigned int output_length = 0;
 unsigned long files_success = 0;
 unsigned long directories_success = 0;
 unsigned long long bytes_success = 0;
@@ -167,6 +169,8 @@ void setupVariables(const int argc, char *argv[]) {
     } else {
         filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
     }
+
+    original_filepaths = filepath.parent_path() / (std::to_string(clipboard_number) + ".files");
 
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
@@ -310,25 +314,25 @@ void checkForNoItems() {
 }
 
 void setupIndicator(std::stop_token stop_token) {
-    if (action == Action::Cut || action == Action::Copy) {
+    if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
         unsigned int percent_done = 0;
         unsigned long items_size = items.size();
         while (!stop_token.stop_requested()) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
-            printf(replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data());
-            fflush(stdout);
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data());
+            fflush(stderr);
             progress_flag.wait(false, std::memory_order_relaxed);
             progress_flag.clear(std::memory_order_relaxed);
         }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
         while (!stop_token.stop_requested()) {
-            fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data());
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data());
             fflush(stderr);
             progress_flag.wait(false, std::memory_order_relaxed);
             progress_flag.clear(std::memory_order_relaxed);
         }
     } else if (stderr_is_tty) {
-        fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), "");
+        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), "");
         fflush(stderr);
     }
 }
@@ -366,6 +370,9 @@ void checkItemSize() {
 }
 
 void setupTempDirectory() {
+    if (action != Action::Paste) {
+        fs::remove(original_filepaths);
+    }
     if (fs::is_directory(filepath)) {
         if (action != Action::Paste && action != Action::PipeOut) {
             for (const auto& entry : fs::directory_iterator(filepath)) {
@@ -378,6 +385,10 @@ void setupTempDirectory() {
 }
 
 void copyFiles() {
+    std::ofstream originalFiles;
+    if (action == Action::Cut) {
+        originalFiles.open(original_filepaths);
+    }
     for (const auto& f : items) {
         auto copyItem = [&](const bool use_regular_copy = false) {
             if (fs::is_directory(f)) {
@@ -397,6 +408,9 @@ void copyFiles() {
                 }
                 files_success++;
             }
+            if (action == Action::Cut) {
+                originalFiles << fs::absolute(f).string() << std::endl;
+            }
         };
         try {
             copyItem();
@@ -412,6 +426,25 @@ void copyFiles() {
     }
 }
 
+void removeOldFiles() {
+    if (fs::is_regular_file(original_filepaths)) {
+        std::ifstream files(original_filepaths);
+        std::string line;
+        while (std::getline(files, line)) {
+            try {
+                fs::remove_all(line);
+            } catch (const fs::filesystem_error& e) {
+                failedItems.emplace_back(line, e.code().message());
+            }
+        }
+        files.close();
+        if (failedItems.size() == 0) {
+            fs::remove(original_filepaths);
+        }
+        action = Action::Cut;
+    }
+}
+
 void pasteFiles() {
     try {
         fs::copy(filepath, fs::current_path(), opts);
@@ -419,6 +452,7 @@ void pasteFiles() {
     } catch (const fs::filesystem_error& e) {
         printf("%s", replaceColors(paste_fail_message).data());
     }
+    removeOldFiles();
 }
 
 void pipeIn() {
@@ -469,15 +503,6 @@ void performAction() {
     }
     for (const auto& f : failedItems) {
         items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
-    }
-    if (action == Action::Cut) {
-        for (const auto& f : items) {
-            try {
-                fs::remove_all(f);
-            } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(f.string(), e.code().message());
-            }
-        }
     }
 }
 
@@ -533,6 +558,11 @@ int main(int argc, char *argv[]) {
         indicator.request_stop();
         progress_flag.test_and_set(std::memory_order_relaxed);
         progress_flag.notify_one();
+
+        if (stderr_is_tty) {
+            fprintf(stderr, "\r%*s\r", output_length, "");
+            fflush(stderr);
+        }
 
         showFailures();
 
