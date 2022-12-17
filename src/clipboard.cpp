@@ -10,7 +10,6 @@
 #include <unordered_map>
 #include <array>
 #include <atomic>
-#include <thread>
 #include <chrono>
 #include <iostream>
 
@@ -32,9 +31,7 @@ fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_sym
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::string>> failedItems;
 
-std::atomic_flag progress_flag{};
-
-unsigned long long clipboard_number = 0; //unsigned long long = size optimization
+unsigned int clipboard_number = 0; //unsigned long long = size optimization
 unsigned int output_length = 0;
 unsigned long files_success = 0;
 unsigned long directories_success = 0;
@@ -130,7 +127,7 @@ std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} 
 std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-std::string_view working_message = "{yellow}• %s... %s{blank}\r";
+std::string_view working_message = "{yellow}• %s... %i%s{blank}\r";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -210,7 +207,7 @@ void checkFlags(const int argc, char *argv[]) {
 
 void showClipboardStatus() {
     std::vector<bool> clipboards_with_contents(10, false);
-    for (unsigned long long i = 0; i < 10; i++) { //unsigned long long = size optimization
+    for (unsigned int i = 0; i < 10; i++) { //unsigned long long = size optimization
         if (const fs::path cb = filepath.parent_path() / std::to_string(i); fs::is_directory(cb) && !fs::is_empty(cb)) {
             clipboards_with_contents.at(i) = true;
         }
@@ -321,26 +318,18 @@ void checkForNoItems() {
     }
 }
 
-void setupIndicator(std::stop_token stop_token) {
+void setupIndicator() {
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
-        unsigned long long percent_done = 0;
-        unsigned long items_size = items.size();
-        while (!stop_token.stop_requested()) {
-            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(percent_done) + "%").data());
-            fflush(stderr);
-            progress_flag.wait(false, std::memory_order_relaxed);
-            progress_flag.clear(std::memory_order_relaxed);
-        }
+        static unsigned int percent_done = 0;
+        static unsigned long items_size = items.size();
+        percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
+        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%");
+        fflush(stderr);
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        while (!stop_token.stop_requested()) {
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (std::to_string(bytes_success) + "B").data());
-            fflush(stderr);
-            progress_flag.wait(false, std::memory_order_relaxed);
-            progress_flag.clear(std::memory_order_relaxed);
-        }
+        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B");
+        fflush(stderr);
     } else if (stderr_is_tty) {
-        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), "");
+        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%");
         fflush(stderr);
     }
 }
@@ -425,8 +414,7 @@ void copyFiles() {
                 failedItems.emplace_back(f.string(), e.code().message());
             }
         }
-        progress_flag.test_and_set(std::memory_order_relaxed);
-        progress_flag.notify_one();
+        setupIndicator();
     }
 }
 
@@ -465,8 +453,7 @@ void pipeIn() {
     while (std::getline(std::cin, line)) {
         file << line << std::endl;
         bytes_success += line.size() + 1;
-        progress_flag.test_and_set(std::memory_order_relaxed);
-        progress_flag.notify_one();
+        setupIndicator();
     }
     file.close();
 }
@@ -478,8 +465,7 @@ void pipeOut() {
         while (std::getline(file, line)) {
             printf("%s\n", line.data());
             bytes_success += line.size() + 1;
-            progress_flag.test_and_set(std::memory_order_relaxed);
-            progress_flag.notify_one();
+            setupIndicator();
         }
         file.close();
     }
@@ -551,17 +537,13 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        std::jthread indicator(setupIndicator);
+        setupIndicator();
 
         setupTempDirectory();
 
         checkItemSize();
 
         performAction();
-
-        indicator.request_stop();
-        progress_flag.test_and_set(std::memory_order_relaxed);
-        progress_flag.notify_one();
 
         if (stderr_is_tty) {
             fprintf(stderr, "\r%*s\r", output_length, "");
