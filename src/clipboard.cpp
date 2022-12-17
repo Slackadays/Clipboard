@@ -360,7 +360,7 @@ void checkItemSize() {
     if (action == Action::Cut || action == Action::Copy) {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
-            printf(replaceColors("{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), total_item_size / (1024.0 * 1024.0), space_available / (1024.0 * 1024.0));
+            printf(replaceColors("{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), total_item_size / 1024.0, space_available / 1024.0);
             exit(1);
         }
     }
