@@ -34,7 +34,7 @@ std::vector<std::pair<std::string, std::string>> failedItems;
 
 std::atomic_flag progress_flag{};
 
-unsigned int clipboard_number = 0;
+unsigned long long clipboard_number = 0; //unsigned long long = size optimization
 unsigned int output_length = 0;
 unsigned long files_success = 0;
 unsigned long directories_success = 0;
@@ -210,7 +210,7 @@ void checkFlags(const int argc, char *argv[]) {
 
 void showClipboardStatus() {
     std::vector<bool> clipboards_with_contents(10, false);
-    for (int i = 0; i < 10; i++) {
+    for (unsigned long long i = 0; i < 10; i++) { //unsigned long long = size optimization
         if (const fs::path cb = filepath.parent_path() / std::to_string(i); fs::is_directory(cb) && !fs::is_empty(cb)) {
             clipboards_with_contents.at(i) = true;
         }
@@ -323,7 +323,7 @@ void checkForNoItems() {
 
 void setupIndicator(std::stop_token stop_token) {
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
-        unsigned int percent_done = 0;
+        unsigned long long percent_done = 0;
         unsigned long items_size = items.size();
         while (!stop_token.stop_requested()) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
@@ -409,11 +409,7 @@ void copyFiles() {
                 }
                 directories_success++;
             } else {
-                if (!use_regular_copy) {
-                    fs::copy(f, filepath / f.filename(), opts | fs::copy_options::create_hard_links);
-                } else {
-                    fs::copy(f, filepath / f.filename(), opts);
-                }
+                fs::copy(f, filepath / f.filename(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
                 files_success++;
             }
             if (action == Action::Cut) {
