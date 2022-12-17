@@ -46,9 +46,6 @@ bool stderr_is_tty = true;
 
 constexpr std::string_view clipboard_version = "0.1.3";
 
-enum class Action { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show };
-Action action;
-
 std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
     {"{green}", "\033[38;5;40m"},
@@ -60,33 +57,44 @@ std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{blank}", "\033[0m"}
 }};
 
-std::unordered_map<Action, std::string_view> actions = {
-    {Action::Cut, "cut"},
-    {Action::Copy, "copy"},
-    {Action::Paste, "paste"},
-    {Action::PipeIn, "pipe in"},
-    {Action::PipeOut, "pipe out"},
-    {Action::Clear, "clear"},
-    {Action::Show, "show"}
+enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show };
+Action action;
+
+template <typename T, size_t N>
+class ActionArray : public std::array<T, N> {
+public:
+    T& operator[](Action index) {
+        return std::array<T, N>::operator[](std::to_underlying(index));
+    }
 };
 
-std::unordered_map<Action, std::string_view> doing_action = {
-    {Action::Cut, "Cutting"},
-    {Action::Copy, "Copying"},
-    {Action::Paste, "Pasting"},
-    {Action::PipeIn, "Piping in"},
-    {Action::PipeOut, "Piping out"},
-    {Action::Clear, "Clearing"}
-};
+ActionArray<std::string_view, 7> actions = {{
+    "cut",
+    "copy",
+    "paste",
+    "pipe in",
+    "pipe out",
+    "clear",
+    "show"
+}};
 
-std::unordered_map<Action, std::string_view> did_action = {
-    {Action::Cut, "Cut"},
-    {Action::Copy, "Copied"},
-    {Action::Paste, "Pasted"},
-    {Action::PipeIn, "Piped in"},
-    {Action::PipeOut, "Piped out"},
-    {Action::Clear, "Cleared"}
-};
+ActionArray<std::string_view, 7> doing_action = {{
+    "Cutting",
+    "Copying",
+    "Pasting",
+    "Piping in",
+    "Piping out",
+    "Clearing"
+}};
+
+ActionArray<std::string_view, 7> did_action = {{
+    "Cut",
+    "Copied",
+    "Pasted",
+    "Piped in",
+    "Piped out",
+    "Cleared"
+}};
 
 std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
                                 "{blue}{bold}▏How To Use{blank}\n"
