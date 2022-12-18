@@ -30,8 +30,8 @@ fs::path original_filepaths;
 fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::string>> failedItems;
+std::string clipboard_name = "0";
 
-unsigned int clipboard_number = 0; //unsigned long long = size optimization
 unsigned int output_length = 0;
 unsigned long files_success = 0;
 unsigned long directories_success = 0;
@@ -113,7 +113,7 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
 std::string_view check_clipboard_status_message = "{blue}• There are items in these clipboards: ";
-std::string_view clipboard_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%i{blank}{blue}: {blank}\n";
+std::string_view clipboard_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
 std::string_view clipboard_action_prompt = "{pink}Add {bold}%s, %s, {blank}{pink}or{bold} %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
 std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
@@ -165,17 +165,17 @@ void setupVariables(const int argc, char *argv[]) {
     stderr_is_tty = isatty(fileno(stderr));
 
     if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
-        clipboard_number = argv[1][strlen(argv[1]) - 1] - '0';
+        clipboard_name = argv[1][strlen(argv[1]) - 1];
         argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
     }
 
     if (getenv("TMPDIR") != nullptr) {
-        filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / std::to_string(clipboard_number);
+        filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
     } else {
-        filepath = fs::temp_directory_path() / "Clipboard" / std::to_string(clipboard_number);
+        filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
     }
 
-    original_filepaths = filepath.parent_path() / (std::to_string(clipboard_number) + ".files");
+    original_filepaths = filepath.parent_path() / (clipboard_name + ".files");
 
     for (int i = 2; i < argc; i++) {
         items.emplace_back(argv[i]);
@@ -240,7 +240,7 @@ void showClipboardContents() {
             }
             items.emplace_back(entry.path());
         }
-        printf(replaceColors(clipboard_contents_message).data(), std::min((unsigned long)(20), files_success + directories_success), clipboard_number);
+        printf(replaceColors(clipboard_contents_message).data(), std::min((unsigned long)(20), files_success + directories_success), clipboard_name.data());
         for (int i = 0; i < std::min(20, int(items.size())); i++) {
             printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), items.at(i).filename().string().data());
             if (i == 19 && items.size() > 20) {
