@@ -1,4 +1,4 @@
-echo "=> Clipboard For Windows"
+echo "=> Clipboard For Windows Installer"
 echo "=> Made by gentoo-btw"
 
 echo "=> You are about to install Clipboard. Press ENTER to confirm and install clipboard."
