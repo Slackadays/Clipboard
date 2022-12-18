@@ -75,6 +75,16 @@ ActionArray<std::string_view, 7> actions = {{
     "show"
 }};
 
+ActionArray<std::string_view, 7> action_shortcuts = {{
+    "ct",
+    "cp",
+    "p",
+    "pin",
+    "pout",
+    "clr",
+    "sh"
+}};
+
 ActionArray<std::string_view, 7> doing_action = {{
     "Cutting",
     "Copying",
@@ -260,13 +270,13 @@ void showClipboardContents() {
 
 void setupAction(const int argc, char *argv[]) {
     if (argc >= 2) {
-        if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], "ct")) {
+        if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], action_shortcuts[Action::Cut].data())) {
             action = Action::Cut;
             if (!stdin_is_tty || !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Copy].data()) || !strcmp(argv[1], "cp")) {
+        } else if (!strcmp(argv[1], actions[Action::Copy].data()) || !strcmp(argv[1], action_shortcuts[Action::Copy].data())) {
             action = Action::Copy;
             if (!stdin_is_tty) {
                 action = Action::PipeIn;
@@ -274,7 +284,7 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Paste].data()) || !strcmp(argv[1], "p")) {
+        } else if (!strcmp(argv[1], actions[Action::Paste].data()) || !strcmp(argv[1], action_shortcuts[Action::Paste].data())) {
             action = Action::Paste;
             if (!stdout_is_tty) {
                 action = Action::PipeOut;
@@ -282,10 +292,10 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Show].data()) || !strcmp(argv[1], "sh")) {
+        } else if (!strcmp(argv[1], actions[Action::Show].data()) || !strcmp(argv[1], action_shortcuts[Action::Show].data())) {
             showClipboardContents();
             exit(0);
-        } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], "clr")) {
+        } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], action_shortcuts[Action::Clear].data())) {
             action = Action::Clear;
             if (!stdin_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
