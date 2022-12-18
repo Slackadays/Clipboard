@@ -115,10 +115,10 @@ void setLanguageTR() {
 
 actions[Action::Cut] = "kes";
 actions[Action::Copy] = "kopyala";
-actions[Action::Paste] = "yapıştır";
-actions[Action::PipeIn] = "içe yönlendir";
-actions[Action::PipeOut] = "dışa yönlendir";
-actions[Action::Show] = "göster";
+actions[Action::Paste] = "yapistir";
+actions[Action::PipeIn] = "ice yonlendir";
+actions[Action::PipeOut] = "disa yonlendir";
+actions[Action::Show] = "goster";
 actions[Action::Clear] = "temizle";
 
 action_shortcuts[Action::Cut] = "ks";
@@ -127,7 +127,7 @@ action_shortcuts[Action::Paste] = "y";
 action_shortcuts[Action::PipeIn] = "iy";
 action_shortcuts[Action::PipeOut] = "dy";
 action_shortcuts[Action::Clear] = "tmz";
-action_shortcuts[Action::Show] = "gö";
+action_shortcuts[Action::Show] = "go";
 
 doing_action[Action::Cut] = "Kesiliyor";
 doing_action[Action::Copy] = "Kopyalanıyor";
@@ -145,8 +145,8 @@ help_message = "{blue}▏Clipboard %s, komut satırı için, kesme, kopyalama ve
                "{blue}{bold}▏Nasıl kullanılır{blank}\n"
                "{orange}▏clipboard kes (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) keser.){blank}\n"
                "{orange}▏clipboard kopyala (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) kopyalar.){blank}\n"
-               "{orange}▏clipboard yapıştır{blank} {pink}(Bu panodakileri yapıştırır.){blank}\n"
-               "{orange}▏clipboard göster{blank} {pink}(Bu panoda olan öğeleri gösterir.){blank}\n"
+               "{orange}▏clipboard yapistir{blank} {pink}(Bu panodakileri yapıştırır.){blank}\n"
+               "{orange}▏clipboard goster{blank} {pink}(Bu panoda olan öğeleri gösterir.){blank}\n"
                "{orange}▏clipboard temizle{blank} {pink}(Bu pano içerğini temizler.){blank}\n"
                "{blue}▏İşlemlerde uzun uzun yazarak zaman kaybetmemek için \"clipboard\" yerine \"cb\" kullanarak kısaltabilirsiniz.{blank}\n"
                "{blue}▏    Ben ise \"pano\" ismini kullanmanızı öneririm :){blank}\n"
@@ -155,7 +155,7 @@ help_message = "{blue}▏Clipboard %s, komut satırı için, kesme, kopyalama ve
                "{orange}▏pano ks Nükleer_Fırlatma_Kodları.txt kişilerklasörü{blank} {pink}(Bu verilen öğeleri öntanımlı 0. panoya keser){blank}\n"
                "{orange}▏pano kp1 mama.conf{blank} {pink}(Bu verilen öğeleri 1. panoya kopyalar.){blank}\n"
                "{orange}▏pano y1{blank} {pink}(Bu 1. panodakileri yapıştırır){blank}\n"
-               "{orange}▏pano gö4{blank} {pink}(Bu 4. pano içeriğini gösterir, 4.){blank}\n"
+               "{orange}▏pano go4{blank} {pink}(Bu 4. pano içeriğini gösterir, 4.){blank}\n"
                "{orange}▏pano tmz{blank} {pink}(Bu öntanımlı panonun içeriğini temizler.){blank}\n"
                "{blue}▏Bu yardım ekranını herhangi bir zaman şu komutlardan birisiyle görebilirsiniz:{blank}\n"
                "{blue}▏    {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, ya da{bold} clipboard help{blank}{blue}.\n"
@@ -173,11 +173,14 @@ fix_redirection_action_message = "{red}╳ {bold}%s{blank}{red}(ma/me) işlemini
 redirection_no_items_message = "{red}╳ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. {pink}{bold}clipboard [action]{blank}{pink}'dan sonra  gelen öğeleri siliniz.\n";
 paste_success_message = "{green}✓ Yapıştırma başarıyla tamamlandı{blank}\n";
 paste_fail_message = "{red}╳ Yapıştırma başarısız oldu{blank}\n";
+clear_success_message = "{green}✓ Pano temizlendi{blank}\n";
+clear_fail_message = "{red}╳ Pano temizlenemedi{blank}\n";
 clipboard_failed_message = "{red}╳ %s(ma/me) işlemi şu öğeler için başarısız oldu:{blank}\n";
 and_more_fails_message = "{red}▏ ...ve {bold}%i{blank}{red} fazla.{blank}\n";
 and_more_items_message = "{blue}▏ ...ve {bold}%i{blank}{blue} fazla.{blank}\n";
 fix_problem_message = "{pink}▏ Erişime ihtiyacınız varsa şuna bakın, veya\n"
                                        "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.{blank}\n";
+not_enough_storage_message = "{red}╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alalnız yok (%gkB yapıştırılacak, %gkB boş).{blank}{pink} Hangi öğeleri seçtiğinizi iki kez kontrol etmeyi deneyin veya yer açmak için bazı dosyaları silin.{blank}\n";
 working_message = "{yellow}• %s... %i%s{blank}\r";
 pipe_success_message = "{green}✓ %s %i bayt{blank}\n";
 one_item_success_message = "{green}✓ %s %s{blank}\n";
