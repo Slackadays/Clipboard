@@ -208,9 +208,10 @@ void checkFlags(const int argc, char *argv[]) {
 }
 
 void showClipboardStatus() {
-    std::vector<bool> clipboards_with_contents(10, false);
-    for (unsigned int i = 0; i < 10; i++) { //unsigned long long = size optimization
-        if (const fs::path cb = filepath.parent_path() / std::to_string(i); fs::is_directory(cb) && !fs::is_empty(cb)) {
+    std::array<bool, 10> clipboards_with_contents{{false, false, false, false, false, false, false, false, false, false}};
+    for (int i = 0; i < 10; i++) {
+        std::array<char, 2> number{(char)(i + 0x30), 0x00};
+        if (const fs::path cb = filepath.parent_path() / number.data(); fs::is_directory(cb) && !fs::is_empty(cb)) {
             clipboards_with_contents.at(i) = true;
         }
     }
