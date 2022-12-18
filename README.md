@@ -77,9 +77,9 @@ For Windows users. run `make install-win`
 make install-win
 ```
 
-For BSD users. run `make install-bsd`
+For OpenBSD users. run `make install-bsd`
 ```
-make install-bsd
+make install-openbsd
 ```
 # Manual Installation 
 ## Clone
