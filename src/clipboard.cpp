@@ -205,6 +205,8 @@ void setupVariables(const int argc, char *argv[]) {
             setLanguageES();
         } else if (std::locale("").name().substr(0, 2) == "pt") {
             setLanguagePT();
+        } else if (std::locale("").name().substr(0, 2) == "tr") {
+            setLanguageTR();
         }
     } catch (...) {}
 }
