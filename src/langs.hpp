@@ -104,12 +104,13 @@ internal_error_message = "{red}╳ Erro interno: %s\n▏ Isso é provavelmente u
 }
 
 void setLanguageTR() {
-actions[Action::Cut] = "cut";
-actions[Action::Copy] = "copy";
-actions[Action::Paste] = "paste";
-actions[Action::PipeIn] = "pipe in";
-actions[Action::PipeOut] = "pipe out";
-
+actions[Action::Cut] = "kes";
+actions[Action::Copy] = "kopyala";
+actions[Action::Paste] = "yapıştır";
+actions[Action::PipeIn] = "içe yönlendir";
+actions[Action::PipeOut] = "dışa yönlendir";
+actions[Action::Show] = "göster";
+actions[Action::Clear] = "temizle";
 doing_action[Action::Cut] = "Kesiliyor";
 doing_action[Action::Copy] = "Kopyalanıyor";
 doing_action[Action::Paste] = "Yapıştırılıyor";
@@ -124,11 +125,11 @@ did_action[Action::PipeOut] = "Dışa Yönlendirildi";
 
 help_message = "{blue}▏Clipboard %s, komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.{blank}\n"
                "{blue}{bold}▏Nasıl kullanılır{blank}\n"
-               "{orange}▏clipboard cut (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) keser.){blank}\n"
-               "{orange}▏clipboard copy (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) kopyalar.){blank}\n"
-               "{orange}▏clipboard paste{blank} {pink}(Bu panodakileri yapıştırır.){blank}\n"
-               "{orange}▏clipboard show{blank} {pink}(Bu panoda olan öğeleri gösterir.){blank}\n"
-               "{orange}▏clipboard clear{blank} {pink}(Bu pano içerğini temizler.){blank}\n"
+               "{orange}▏clipboard kes (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) keser.){blank}\n"
+               "{orange}▏clipboard kopyala (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) kopyalar.){blank}\n"
+               "{orange}▏clipboard yapıştır{blank} {pink}(Bu panodakileri yapıştırır.){blank}\n"
+               "{orange}▏clipboard göster{blank} {pink}(Bu panoda olan öğeleri gösterir.){blank}\n"
+               "{orange}▏clipboard temizle{blank} {pink}(Bu pano içerğini temizler.){blank}\n"
                "{blue}▏İşlemlerde uzun uzun yazarak zaman kaybetmemek için \"clipboard\" yerine \"cb\" kullanarak kısaltabilirsiniz.{blank}\n"
                "{blue}▏    Ben ise \"pano\" ismini kullanmanızı öneririm :){blank}\n"
                "{blue}▏Ayrıca kommutun sonuna bir sayı ekleyerek 10 farklı panodan birisini seçebilirsiniz.{blank}\n"
