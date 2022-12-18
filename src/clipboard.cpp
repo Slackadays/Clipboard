@@ -122,11 +122,14 @@ std::string_view fix_redirection_action_message = "{red}╳ You can't use the {b
 std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
 std::string_view paste_success_message = "{green}✓ Pasted successfully{blank}\n";
 std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
+std::string_view clear_success_message = "{green}✓ Cleared the clipboard{blank}\n";
+std::string_view clear_fail_message = "{red}╳ Failed to clear the clipboard{blank}\n";
 std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
 std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
 std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
+std::string_view not_enough_storage_message = "{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
 std::string_view working_message = "{yellow}• %s... %i%s{blank}\r";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
@@ -361,7 +364,7 @@ void checkItemSize() {
     if (action == Action::Cut || action == Action::Copy) {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
-            printf(replaceColors("{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n").data(), total_item_size / 1024.0, space_available / 1024.0);
+            printf(replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
             exit(1);
         }
     }
@@ -474,9 +477,9 @@ void pipeOut() {
 
 void clearClipboard() {
     if (fs::is_empty(filepath)) {
-        printf("%s", replaceColors("{green}✓ Cleared the clipboard{blank}\n").data());
+        printf("%s", replaceColors(clear_success_message).data());
     } else {
-        printf("%s", replaceColors("{red}╳ Failed to clear the clipboard{blank}\n").data());
+        printf("%s", replaceColors(clear_fail_message).data());
     }
 }
 

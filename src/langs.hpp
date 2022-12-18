@@ -4,6 +4,8 @@ actions[Action::Copy] = "copy";
 actions[Action::Paste] = "paste";
 actions[Action::PipeIn] = "pipe in";
 actions[Action::PipeOut] = "pipe out";
+actions[Action::Clear] = "clear";
+actions[Action::Show] = "show";
 
 doing_action[Action::Cut] = "Cutting";
 doing_action[Action::Copy] = "Copying";
