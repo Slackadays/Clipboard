@@ -7,6 +7,14 @@ actions[Action::PipeOut] = "pipe out";
 actions[Action::Clear] = "clear";
 actions[Action::Show] = "show";
 
+action_shortcuts[Action::Cut] = "ct";
+action_shortcuts[Action::Copy] = "cp";
+action_shortcuts[Action::Paste] = "p";
+action_shortcuts[Action::PipeIn] = "pin";
+action_shortcuts[Action::PipeOut] = "pout";
+action_shortcuts[Action::Clear] = "clr";
+action_shortcuts[Action::Show] = "sh";
+
 doing_action[Action::Cut] = "Cutting";
 doing_action[Action::Copy] = "Copying";
 doing_action[Action::Paste] = "Pasting";
