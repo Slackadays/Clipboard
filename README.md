@@ -59,28 +59,24 @@ or
 ## Clear
 `clipboard clear`
 
-# Installation using make
+# Installation using the shell script.
 ## Clone
 ```
 git clone https://github.com/slackadays/Clipboard
 ```
 
-## Run make
+## Run the script
 
-For linux users. run `make install-linux` (without sudo)
+For linux/FreeBSD users, run the `install.sh` file.
 ```
-make install-linux
-```
-
-For Windows users. run `make install-win`
-```
-make install-win
+$ ./install.sh
 ```
 
-For OpenBSD users. run `make install-bsd`
+For Windows users, run the `install-win.bat` file.
 ```
-make install-openbsd
+> install-win.bat
 ```
+
 # Manual Installation 
 ## Clone
 ```
