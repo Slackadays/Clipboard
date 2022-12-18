@@ -72,9 +72,9 @@ For linux/FreeBSD users, run the `install.sh` file.
 $ ./install.sh
 ```
 
-For Windows users, run the `install-win.bat` file.
+For Windows users, run the `install.bat` file.
 ```
-> install-win.bat
+> install.bat
 ```
 
 # Manual Installation 
