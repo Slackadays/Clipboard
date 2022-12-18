@@ -112,6 +112,7 @@ internal_error_message = "{red}╳ Erro interno: %s\n▏ Isso é provavelmente u
 }
 
 void setLanguageTR() {
+
 actions[Action::Cut] = "kes";
 actions[Action::Copy] = "kopyala";
 actions[Action::Paste] = "yapıştır";
@@ -119,6 +120,15 @@ actions[Action::PipeIn] = "içe yönlendir";
 actions[Action::PipeOut] = "dışa yönlendir";
 actions[Action::Show] = "göster";
 actions[Action::Clear] = "temizle";
+
+action_shortcuts[Action::Cut] = "ks";
+action_shortcuts[Action::Copy] = "kp";
+action_shortcuts[Action::Paste] = "y";
+action_shortcuts[Action::PipeIn] = "iy";
+action_shortcuts[Action::PipeOut] = "dy";
+action_shortcuts[Action::Clear] = "tmz";
+action_shortcuts[Action::Show] = "gö";
+
 doing_action[Action::Cut] = "Kesiliyor";
 doing_action[Action::Copy] = "Kopyalanıyor";
 doing_action[Action::Paste] = "Yapıştırılıyor";
@@ -142,11 +152,11 @@ help_message = "{blue}▏Clipboard %s, komut satırı için, kesme, kopyalama ve
                "{blue}▏    Ben ise \"pano\" ismini kullanmanızı öneririm :){blank}\n"
                "{blue}▏Ayrıca kommutun sonuna bir sayı ekleyerek 10 farklı panodan birisini seçebilirsiniz.{blank}\n"
                "{blue}{bold}▏Örnekler{blank}\n"
-               "{orange}▏cb ct Nuclear_Launch_Codes.txt contactsfolder{blank} {pink}(Bu verilen öğeleri öntanımlı  0. panoya keser){blank}\n"
-               "{orange}▏clipboard cp1 dogfood.conf{blank} {pink}(Bu verilen öğeleri 1. panoya kopyalar.){blank}\n"
-               "{orange}▏cb p1{blank} {pink}(Bu 1. panodakileri yapıştırır){blank}\n"
-               "{orange}▏cb sh4{blank} {pink}(Bu 4. pano içeriğini gösterir, 4.){blank}\n"
-               "{orange}▏cb clr{blank} {pink}(Bu öntanımlı panonun içeriğini temizler.){blank}\n"
+               "{orange}▏pano ks Nükleer_Fırlatma_Kodları.txt kişilerklasörü{blank} {pink}(Bu verilen öğeleri öntanımlı 0. panoya keser){blank}\n"
+               "{orange}▏pano kp1 mama.conf{blank} {pink}(Bu verilen öğeleri 1. panoya kopyalar.){blank}\n"
+               "{orange}▏pano y1{blank} {pink}(Bu 1. panodakileri yapıştırır){blank}\n"
+               "{orange}▏pano gö4{blank} {pink}(Bu 4. pano içeriğini gösterir, 4.){blank}\n"
+               "{orange}▏pano tmz{blank} {pink}(Bu öntanımlı panonun içeriğini temizler.){blank}\n"
                "{blue}▏Bu yardım ekranını herhangi bir zaman şu komutlardan birisiyle görebilirsiniz:{blank}\n"
                "{blue}▏    {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, ya da{bold} clipboard help{blank}{blue}.\n"
                "{blue}▏Discord sunucumuzdan daha fazla yardım alabilirsiniz: {bold}https://discord.gg/J6asnc3pEG{blank}\n"
@@ -158,12 +168,12 @@ clipboard_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk
 no_clipboard_contents_message = "{blue}• Panoda hiçbir şey yok.{blank}\n";
 clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}%s, %s, {blank}{pink}veya{bold} %s{blank}{pink} ekleyin, {bold}clipboard %s{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";
 no_valid_action_message = "{red}╳ Geçerli bir işlem vermediniz veya işlem vermeyi unuttunuz {pink}Komutunuza {bold}cut, copy, {blank}{pink}ya da {bold}paste{blank}{pink} eklemelisiniz, örneğin {bold}clipboard copy.{blank}\n";
-choose_action_items_message = "{red}╳ %s işlemi için bir öğe seçmeniz gerekmektedir.{pink} %s işleminden sonra öğeler eklemeyi deneyiniz, örneğin {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
-fix_redirection_action_message = "{red}╳ {bold}%s{blank}{red} işlemini burada yeniden yönlendirme ile kullanamazsın. {pink} {bold}%s{blank}{pink} işlemini silin veya {bold}%s{blank}{pink} işlemini kullanın, örneğin {bold}clipboard %s{blank}{pink}.\n";
+choose_action_items_message = "{red}╳ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir.{pink} %s işleminden sonra öğeler eklemeyi deneyiniz, örneğin {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
+fix_redirection_action_message = "{red}╳ {bold}%s{blank}{red}(ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. {pink} {bold}%s{blank}{pink} işlemini silin veya {bold}%s{blank}{pink} işlemini kullanın, örneğin {bold}clipboard %s{blank}{pink}.\n";
 redirection_no_items_message = "{red}╳ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. {pink}{bold}clipboard [action]{blank}{pink}'dan sonra  gelen öğeleri siliniz.\n";
 paste_success_message = "{green}✓ Yapıştırma başarıyla tamamlandı{blank}\n";
 paste_fail_message = "{red}╳ Yapıştırma başarısız oldu{blank}\n";
-clipboard_failed_message = "{red}╳ `%s` işlemi şu öğeler için başarısız oldu:{blank}\n";
+clipboard_failed_message = "{red}╳ %s(ma/me) işlemi şu öğeler için başarısız oldu:{blank}\n";
 and_more_fails_message = "{red}▏ ...ve {bold}%i{blank}{red} fazla.{blank}\n";
 and_more_items_message = "{blue}▏ ...ve {bold}%i{blank}{blue} fazla.{blank}\n";
 fix_problem_message = "{pink}▏ Erişime ihtiyacınız varsa şuna bakın, veya\n"
