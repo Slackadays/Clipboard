@@ -59,7 +59,29 @@ or
 ## Clear
 `clipboard clear`
 
-# Quick Installation
+# Installation using make
+## Clone
+```
+git clone https://github.com/slackadays/Clipboard
+```
+
+## Run make
+
+For linux users. run `make install-linux` (without sudo)
+```
+make install-linux
+```
+
+For Windows users. run `make install-win`
+```
+make install-win
+```
+
+For BSD users. run `make install-bsd`
+```
+make install-bsd
+```
+# Manual Installation 
 ## Clone
 ```
 git clone https://github.com/slackadays/Clipboard
