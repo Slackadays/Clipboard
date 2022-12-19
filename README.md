@@ -12,7 +12,7 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 
 **You can disable colors with the NO_COLOR environment variable.
 
-# How To Use
+# 1 - How To Use
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number from 0 to 9 to the end of the action to choose which clipboard you want to use (the default is 0). 
@@ -59,7 +59,7 @@ or
 ## Clear
 `clipboard clear`
 
-# Installation using the shell script.
+# 2 - Installation using the shell script.
 ## Clone
 ```
 git clone https://github.com/slackadays/Clipboard
@@ -77,7 +77,7 @@ For Windows users, run the `install.bat` file.
 > install.bat
 ```
 
-# Manual Installation 
+# 3 - Manual Installation 
 ## Clone
 ```
 git clone https://github.com/slackadays/Clipboard
@@ -102,7 +102,7 @@ Windows:
 cmake --install .
 ```
 
-## Uninstall
+## 4 - Uninstall
 Platforms where you have `sudo` to uninstall software (Linux, macOS, FreeBSD, OI):
 ```
 sudo xargs rm < install_manifest.txt
