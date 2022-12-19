@@ -12,7 +12,7 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 
 **You can disable colors with the NO_COLOR environment variable.
 
-# 1 - How To Use
+# How To Use
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number from 0 to 9 to the end of the action to choose which clipboard you want to use (the default is 0). 
@@ -24,9 +24,9 @@ That's right, you have 10 different clipboards!
 Examples:
 
 ```
-$ cb copy foo.txt launchcodes.doc
-$ clipboard copy1 MyDirectory
-$ cb copy8 bar.conf AnotherDirectory baz.txt
+cb copy foo.txt launchcodes.doc
+clipboard copy1 MyDirectory
+cb copy8 bar.conf AnotherDirectory baz.txt
 ```
 ## Cut
 `clipboard cut (file) [files]`
@@ -34,9 +34,9 @@ $ cb copy8 bar.conf AnotherDirectory baz.txt
 Examples:
 
 ```bash
-$ cb cut bar.txt baz.docx
-$ clipboard cut5 MyDirectory
-$ cb cut9 bar.conf AnotherDirectory baz.txt
+cb cut bar.txt baz.docx
+clipboard cut5 MyDirectory
+cb cut9 bar.conf AnotherDirectory baz.txt
 ```
 ## Paste
 `clipboard paste`
@@ -59,25 +59,25 @@ or
 ## Clear
 `clipboard clear`
 
-# 2 - Installation using the shell script.
+# Installation using the shell script.
 ## Clone
 ```bash
-$ git clone https://github.com/slackadays/Clipboard
+git clone https://github.com/slackadays/Clipboard
 ```
 
 ## Run the script
 
 For Linux/BSD/Solaris/Mac users, run the `install.sh` file.
 ```bash
-$ ./install.sh
+./install.sh
 ```
 
 For Windows users, run the `install.bat` file.
 ```bash
-> install.bat
+install.bat
 ```
 
-# 3 - Manual Installation 
+# Manual Installation 
 ## Clone
 ```
 $ git clone https://github.com/slackadays/Clipboard
@@ -85,31 +85,31 @@ $ git clone https://github.com/slackadays/Clipboard
 ## Compile
 
 ```bash
-$ cmake Clipboard/src
-$ cmake --build .
+cmake Clipboard/src
+cmake --build .
 ```
 ## Install
 Platforms where you have `sudo` to install software (Linux, macOS, *BSD, OI):
 ```bash
-$ sudo cmake --install .
+sudo cmake --install .
 ```
 OpenBSD:
 ```bash
-$ sudo cmake --install .
+sudo cmake --install .
 ```
 Windows:
 ```bash
-> cmake --install .
+cmake --install .
 ```
 
-## 4 - Uninstall
+## Uninstall
 Platforms where you have `sudo` to uninstall software (Linux, macOS, FreeBSD, OI):
 ```bash
-$ sudo xargs rm < install_manifest.txt
+sudo xargs rm < install_manifest.txt
 ```
 OpenBSD:
 ```bash
-$ doas xargs rm < install_manifest.txt
+doas xargs rm < install_manifest.txt
 ```
 Windows:
 
