@@ -68,3 +68,4 @@ exit 0
 else
 printf "=> ERROR: Unknown OS"
 exit 1
+fi
