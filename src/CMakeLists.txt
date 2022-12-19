@@ -25,6 +25,8 @@ endif()
 if(UNIX AND NOT APPLE)
   find_package(X11)
   include_directories(${X11_INCLUDE_DIR})
+  find_package(PkgConfig)
+  pkg_check_modules(WAYLAND_CLIENT REQUIRED wayland-client)
 endif()
 
 if(X11_FOUND)
@@ -32,6 +34,13 @@ if(X11_FOUND)
   add_compile_definitions(X11_AVAILABLE)
 else()
   message(STATUS "X11 not found, building without X11 support")
+endif()
+
+if(WAYLAND_CLIENT_FOUND)
+  message(STATUS "Found Wayland, building with Wayland support")
+  add_compile_definitions(WAYLAND_AVAILABLE)
+else()
+  message(STATUS "Wayland not found, building without Wayland support")
 endif()
 
 include(CheckIPOSupported)
@@ -62,6 +71,10 @@ endif()
 
 if(X11_FOUND)
   target_link_libraries(clipboard ${X11_LIBRARIES})
+endif()
+
+if(WAYLAND_CLIENT_FOUND)
+  target_link_libraries(clipboard ${WAYLAND_CLIENT_LIBRARIES})
 endif()
 
 if(WIN32)

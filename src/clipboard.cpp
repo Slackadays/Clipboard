@@ -23,6 +23,10 @@
 #include <unistd.h>
 #endif
 
+#if defined(X11_AVAILABLE)
+#include <X11/Xlib.h>
+#endif
+
 namespace fs = std::filesystem;
 
 fs::path filepath;
@@ -126,7 +130,7 @@ std::string_view check_clipboard_status_message = "{blue}• There are items in 
 std::string_view clipboard_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
 std::string_view clipboard_action_prompt = "{pink}Add {bold}%s, %s, {blank}{pink}or{bold} %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
-std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
+std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action (\"%s\"), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
 std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
 std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
@@ -220,10 +224,26 @@ void checkFlags(const int argc, char *argv[]) {
     }
 }
 
+void syncWithGUIClipboard() {
+    #if defined(X11_AVAILABLE)
+
+    #endif
+
+    #if defined(WAYLAND_AVAILABLE)
+
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64)
+    
+    #elif defined(__APPLE__)
+
+    #endif
+}
+
 void showClipboardStatus() {
     std::array<bool, 10> clipboards_with_contents{{false, false, false, false, false, false, false, false, false, false}};
     for (int i = 0; i < 10; i++) {
-        std::array<char, 2> number{(char)(i + 0x30), 0x00};
+        std::array<char, 2> number{(char)(i + '0'), '\0'};
         if (const fs::path cb = filepath.parent_path() / number.data(); fs::is_directory(cb) && !fs::is_empty(cb)) {
             clipboards_with_contents.at(i) = true;
         }
@@ -308,7 +328,7 @@ void setupAction(const int argc, char *argv[]) {
             printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
             exit(0);
         } else {
-            printf("%s", replaceColors(no_valid_action_message).data());
+            printf(replaceColors(no_valid_action_message).data(), argv[1]);
             exit(1);
         }
     } else if (!stdin_is_tty) {
@@ -548,6 +568,8 @@ int main(int argc, char *argv[]) {
         setupVariables(argc, argv);
 
         checkFlags(argc, argv);
+
+        syncWithGUIClipboard();
 
         setupAction(argc, argv);
 

@@ -1,63 +1,68 @@
 void setLanguageES() {
-    actions[Action::Cut] = "cut";
-    actions[Action::Copy] = "copy";
-    actions[Action::Paste] = "paste";
-    actions[Action::PipeIn] = "pipe in";
-    actions[Action::PipeOut] = "pipe out";
-    actions[Action::Clear] = "clear";
-    actions[Action::Show] = "show";
+    actions[Action::Cut] = "cortar";
+    actions[Action::Copy] = "copiar";
+    actions[Action::Paste] = "pegar";
+    actions[Action::PipeIn] = "direccionar hacia adentro";
+    actions[Action::PipeOut] = "direccionar hacia afuera";
+    actions[Action::Clear] = "quitar";
+    actions[Action::Show] = "mostrar";
 
     action_shortcuts[Action::Cut] = "ct";
     action_shortcuts[Action::Copy] = "cp";
     action_shortcuts[Action::Paste] = "p";
-    action_shortcuts[Action::PipeIn] = "pin";
-    action_shortcuts[Action::PipeOut] = "pout";
-    action_shortcuts[Action::Clear] = "clr";
-    action_shortcuts[Action::Show] = "sh";
+    action_shortcuts[Action::PipeIn] = "dad";
+    action_shortcuts[Action::PipeOut] = "daf";
+    action_shortcuts[Action::Clear] = "qt";
+    action_shortcuts[Action::Show] = "ms";
 
-    doing_action[Action::Cut] = "Cutting";
-    doing_action[Action::Copy] = "Copying";
-    doing_action[Action::Paste] = "Pasting";
-    doing_action[Action::PipeIn] = "Piping in";
-    doing_action[Action::PipeOut] = "Piping out";
+    doing_action[Action::Cut] = "Cortando";
+    doing_action[Action::Copy] = "Copiando";
+    doing_action[Action::Paste] = "Pegando";
+    doing_action[Action::PipeIn] = "Direccionando hacia adentro";
+    doing_action[Action::PipeOut] = "Direccionando hacia afuera";
 
-    did_action[Action::Cut] = "Cut";
-    did_action[Action::Copy] = "Copied";
-    did_action[Action::Paste] = "Pasted";
-    did_action[Action::PipeIn] = "Piped in";
-    did_action[Action::PipeOut] = "Piped out";
+    did_action[Action::Cut] = "Cortó";
+    did_action[Action::Copy] = "Copió";
+    did_action[Action::Paste] = "Pegó";
+    did_action[Action::PipeIn] = "Direccionó hacia adentro";
+    did_action[Action::PipeOut] = "Direccionó hacia afuera";
 
-    help_message = "{blue}▏This is Clipboard %s, the {cut}, {copy}, and {paste} system for the command line.{blank}\n"
-                   "{blue}{bold}▏How To Use{blank}\n"
-                   "{orange}▏clipboard cut (item) [items]{blank}\n"
-                   "{orange}▏clipboard copy (item) [items]{blank}\n"
-                   "{orange}▏clipboard paste{blank}\n"
-                   "{blue}▏You can substitute \"cb\" for \"clipboard\" to save time.{blank}\n"
-                   "{blue}{bold}▏Examples{blank}\n"
-                   "{orange}▏clipboard copy dogfood.conf{blank}\n"
-                   "{orange}▏cb cut Nuclear_Launch_Codes.txt contactsfolder{blank}\n"
-                   "{orange}▏cb paste{blank}\n"
-                   "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
+    help_message = "{blue}▏Esto es Clipboard %s, el sistema para cortar, copiar y pegar adentro del terminal.{blank}\n"
+                   "{blue}{bold}▏Cómo usar{blank}\n"
+                   "{orange}▏clipboard cortar (cosa) [cosas]{blank}\n"
+                   "{orange}▏clipboard copiar (cosa) [cosas]{blank}\n"
+                   "{orange}▏clipboard pegar{blank}\n"
+                   "{blue}▏Reemplaza \"cb\" por \"clipboard\" para que gastes menos tiempo.{blank}\n"
+                   "{blue}{bold}▏Ejemplos{blank}\n"
+                   "{orange}▏clipboard copiar cosas.conf{blank}\n"
+                   "{orange}▏cb cortar MisDocumentos.txt nuevacarpeta{blank}\n"
+                   "{orange}▏cb pegar{blank}\n"
+                   "{blue}▏Muestra este mensaje de ayudar en cualquier tiempo que quieras con {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue} o{bold} clipboard help{blank}{blue}.\n"
                    "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                    "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
-    no_valid_action_message = "{red}╳ You did not specify a valid action, or you forgot to include one. {pink}Try using or adding {bold}cut, copy, or paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
-    no_clipboard_contents_message = "{red}╳ You did not specify an action. {pink}Try adding {bold}%s, %s, or %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink}. If you need more help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
-    choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
-    fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
-    redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
-    paste_success_message = "{green}✓ Pasted successfully{blank}\n";
-    paste_fail_message = "{red}╳ Failed to paste{blank}\n";
-    clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items.{blank}\n";
-    and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
-    and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
-    fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
-                          "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
+    no_valid_action_message = "{red}╳ No especificaste ninguna acción válida o se te olvidó. {pink}Inténta usar o añadir {bold}cortar, copiar o pegar{blank}{pink} en su lugar, como {bold}clipboard copiar.{blank}\n";
+    clipboard_contents_message = "{blue}• Aquí están las {bold}%i{blank}{blue} cosas primeras del portapapeles {bold}%s{blank}{blue}: {blank}\n";
+    no_clipboard_contents_message = "{blue}• No hay nada en Clipboard en este momento.{blank}\n";
+    clipboard_action_prompt = "{pink}Añade {bold}%s, %s {blank}{pink}o{bold} %s{blank}{pink} al final, como {bold}clipboard %s{blank}{pink} para comenzar, o si necesitas ayuda, haz {bold}clipboard -h{blank}{pink} para mostrar el mensaje de ayudar.{blank}\n";
+    choose_action_items_message = "{red}╳ Necesitas escoger una cosa para %s.{pink} Inténta añadir las cosas que quieres %s al final, como {bold}clipboard %s contactos.txt miprograma.cpp{blank}\n";
+    fix_redirection_action_message = "{red}╳ No se puede usar la acción {bold}%s{blank}{red} con la redirección. {pink}Inténta sacar {bold}%s{blank}{pink} o usa {bold}%s{blank}{pink} en su lugar, como {bold}clipboard %s{blank}{pink}.\n";
+    redirection_no_items_message = "{red}╳ No se pueden especificar las cosas con redirección. {pink}Inténta sacar las cosas que siguen {bold}clipboard [acción].\n";
+    paste_success_message = "{green}✓ Pegó con éxito{blank}\n";
+    paste_fail_message = "{red}╳ No pudo pegar{blank}\n";
+    clear_success_message = "{green}✓ Quitó el portapapeles{blank}\n";
+    clear_fail_message = "{red}╳ No pudo quitar el portapapeles{blank}\n";
+    clipboard_failed_message = "{red}╳ Clipboard no pudo %s estas cosas.{blank}\n";
+    and_more_fails_message = "{red}▏ ...y {bold}%i{blank}{red} más.{blank}\n";
+    and_more_items_message = "{blue}▏ ...y {bold}%i{blank}{blue} más.{blank}\n";
+    fix_problem_message = "{pink}▏ Verífica si tengas los permisos necesarios, o\n"
+                          "▏ vuelve a revisar el deletro de los archivos o la carpeta en que estás.{blank}\n";
+    not_enough_storage_message = "{red}╳ No habrá espacio suficiente para pegar todas tus cosas (%gkB a pegar, %gkB disponible).{blank}{pink} Vuelve a revisar las cosas que especificaste o saca algunas cosas para hacer más espacio.{blank}\n";
     pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
     one_item_success_message = "{green}✓ %s %s{blank}\n";
-    multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
-    multiple_directories_success_message = "{green}✓ %s %i directories{blank}\n";
-    multiple_files_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
-    internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug.{blank}\n";
+    multiple_files_success_message = "{green}✓ %s %i archivos{blank}\n";
+    multiple_directories_success_message = "{green}✓ %s %i carpetas{blank}\n";
+    multiple_files_directories_success_message = "{green}✓ %s %i archivos y %i carpetas{blank}\n";
+    internal_error_message = "{red}╳ Error internal: %s{blank}\n";
 }
 
 void setLanguagePT() {
@@ -92,7 +97,7 @@ void setLanguagePT() {
                    "{blue}▏Você pode rever esta tela de instruções à qualquer momento com {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue} ou{bold} clipboard help{blank}{blue}.\n"
                    "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                    "{blue}▏Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é bem-vindo a redistribuí-lo sob certas condições.{blank}\n";
-    no_valid_action_message = "{red}╳ Você não especificou uma ação válida, ou esqueceu de incluí-la. {pink}Tente utilizar {bold}recortar, copiar ou colar{blank}{pink}, como em {bold}clipboard copiar.{blank}\n";
+    no_valid_action_message = "{red}╳ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. {pink}Tente utilizar {bold}recortar, copiar ou colar{blank}{pink}, como em {bold}clipboard copiar.{blank}\n";
     no_clipboard_contents_message = "{red}╳ Você não especificou uma ação válida. {pink}Tente adicionar {bold}%s, %s, or %s{blank}{pink} no final, como em {bold}clipboard %s{blank}{pink}. Caso precise de ajuda, tente {bold}clipboard -h{blank}{pink} para mostrar a tela de instruções.{blank}\n";
     choose_action_items_message = "{red}╳ Você precisa especificar algo para %s.{pink} Tenta adicionar os itens que você quer %s ao final, como em {bold}clipboard %s contatos.txt meuprograma.cpp{blank}\n";
     fix_redirection_action_message = "{red}╳ Você não pode {bold}%s{blank}{red} com redirecionamento aqui. {pink}Tente remover {bold}%s{blank}{pink} ou utilizar {bold}%s{blank}{pink}, como em {bold}clipboard %s{blank}{pink}.\n";
@@ -166,7 +171,7 @@ void setLanguageTR() {
     clipboard_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
     no_clipboard_contents_message = "{blue}• Panoda hiçbir şey yok.{blank}\n";
     clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}%s, %s, {blank}{pink}veya{bold} %s{blank}{pink} ekleyin, {bold}clipboard %s{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";
-    no_valid_action_message = "{red}╳ Geçerli bir işlem vermediniz veya işlem vermeyi unuttunuz {pink}Komutunuza {bold}cut, copy, {blank}{pink}ya da {bold}paste{blank}{pink} eklemelisiniz, örneğin {bold}clipboard copy.{blank}\n";
+    no_valid_action_message = "{red}╳ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz {pink}Komutunuza {bold}cut, copy, {blank}{pink}ya da {bold}paste{blank}{pink} eklemelisiniz, örneğin {bold}clipboard copy.{blank}\n";
     choose_action_items_message = "{red}╳ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir.{pink} %s işleminden sonra öğeler eklemeyi deneyiniz, örneğin {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
     fix_redirection_action_message = "{red}╳ {bold}%s{blank}{red}(ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. {pink} {bold}%s{blank}{pink} işlemini silin veya {bold}%s{blank}{pink} işlemini kullanın, örneğin {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. {pink}{bold}clipboard [action]{blank}{pink}'dan sonra  gelen öğeleri siliniz.\n";
