@@ -60,13 +60,9 @@ or
 `clipboard clear`
 
 # Quick Installation
-## Clone
+## Clone, Configure, & Compile 
 ```
 git clone https://github.com/slackadays/Clipboard
-```
-## Compile
-
-```
 cmake Clipboard/src
 cmake --build .
 ```
@@ -97,9 +93,9 @@ Windows:
 
 This is currently WIP
 
-## Install from the AUR
+## AUR Install
 
-Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin) or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
+Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
 
 # Painless Documentation 
 
