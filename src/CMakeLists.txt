@@ -22,11 +22,11 @@ else()
   endif()
 endif()
 
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND (NOT DEFINED ENV{CI}))
   find_package(X11)
   include_directories(${X11_INCLUDE_DIR})
   find_package(PkgConfig)
-  pkg_check_modules(WAYLAND_CLIENT REQUIRED wayland-client)
+  pkg_check_modules(WAYLAND_CLIENT wayland-client)
 endif()
 
 if(X11_FOUND)
