@@ -184,7 +184,7 @@ void setLanguageTR() {
     and_more_items_message = "{blue}▏ ...ve {bold}%i{blank}{blue} fazla.{blank}\n";
     fix_problem_message = "{pink}▏ Erişime ihtiyacınız varsa şuna bakın, veya\n"
                           "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.{blank}\n";
-    not_enough_storage_message = "{red}╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alalnız yok (%gkB yapıştırılacak, %gkB boş).{blank}{pink} Hangi öğeleri seçtiğinizi iki kez kontrol etmeyi deneyin veya yer açmak için bazı dosyaları silin.{blank}\n";
+    not_enough_storage_message = "{red}╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gkB yapıştırılacak, %gkB boş).{blank}{pink} Hangi öğeleri seçtiğinizi ikinci kez kontrol etmeyi deneyin veya yer açmak için bazı dosyaları silin.{blank}\n";
     working_message = "{yellow}• %s... %i%s{blank}\r";
     pipe_success_message = "{green}✓ %s %i bayt{blank}\n";
     one_item_success_message = "{green}✓ %s %s{blank}\n";
