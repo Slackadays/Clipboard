@@ -95,7 +95,7 @@ sudo cmake --install .
 ```
 OpenBSD:
 ```bash
-sudo cmake --install .
+doas cmake --install .
 ```
 Windows:
 ```bash
