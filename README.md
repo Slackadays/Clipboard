@@ -24,19 +24,19 @@ That's right, you have 10 different clipboards!
 Examples:
 
 ```
-cb copy foo.txt launchcodes.doc
-clipboard copy1 MyDirectory
-cb copy8 bar.conf AnotherDirectory baz.txt
+$ cb copy foo.txt launchcodes.doc
+$ clipboard copy1 MyDirectory
+$ cb copy8 bar.conf AnotherDirectory baz.txt
 ```
 ## Cut
 `clipboard cut (file) [files]`
 
 Examples:
 
-```
-cb cut bar.txt baz.docx
-clipboard cut5 MyDirectory
-cb cut9 bar.conf AnotherDirectory baz.txt
+```bash
+$ cb cut bar.txt baz.docx
+$ clipboard cut5 MyDirectory
+$ cb cut9 bar.conf AnotherDirectory baz.txt
 ```
 ## Paste
 `clipboard paste`
@@ -61,55 +61,55 @@ or
 
 # 2 - Installation using the shell script.
 ## Clone
-```
-git clone https://github.com/slackadays/Clipboard
+```bash
+$ git clone https://github.com/slackadays/Clipboard
 ```
 
 ## Run the script
 
 For Linux/BSD/Solaris/Mac users, run the `install.sh` file.
-```
+```bash
 $ ./install.sh
 ```
 
 For Windows users, run the `install.bat` file.
-```
+```bash
 > install.bat
 ```
 
 # 3 - Manual Installation 
 ## Clone
 ```
-git clone https://github.com/slackadays/Clipboard
+$ git clone https://github.com/slackadays/Clipboard
 ```
 ## Compile
 
-```
-cmake Clipboard/src
-cmake --build .
+```bash
+$ cmake Clipboard/src
+$ cmake --build .
 ```
 ## Install
 Platforms where you have `sudo` to install software (Linux, macOS, *BSD, OI):
-```
-sudo cmake --install .
+```bash
+$ sudo cmake --install .
 ```
 OpenBSD:
-```
-doas cmake --install .
+```bash
+$ sudo cmake --install .
 ```
 Windows:
-```
-cmake --install .
+```bash
+> cmake --install .
 ```
 
 ## 4 - Uninstall
 Platforms where you have `sudo` to uninstall software (Linux, macOS, FreeBSD, OI):
-```
-sudo xargs rm < install_manifest.txt
+```bash
+$ sudo xargs rm < install_manifest.txt
 ```
 OpenBSD:
-```
-doas xargs rm < install_manifest.txt
+```bash
+$ doas xargs rm < install_manifest.txt
 ```
 Windows:
 
