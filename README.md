@@ -1,14 +1,14 @@
 # 📋 Clipboard 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the ultimate clipboard system for the command line.
 
-**Clipboard...**
-- **is really tiny**. We're serious about code size; Clipboard rings in at mere kilobytes on most platforms.
-- **is really simple**. We're serious about scope; Clipboard is exactly that, a clipboard.
-- **is really friendly**. We're serious about UX; Clipboard is zero-config and is carefully designed to be friendly to newbies and power users alike.
-- **is really global**. We're serious about localization; Clipboard currently supports English, Spanish, Portuguese, and Turkish locales.
-- **"just works" everywhere**. We're serious about compatibility; Clipboard works on any Windows, Linux, macOS, FreeBSD, OpenBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies.
-- **looks pretty**. We're serious about design; Clipboard has colorful text baked in everywhere.** 🌈 Say adiós to boring black & white!
-- **saves time**. We're serious about productivity; Clipboard frees you from ugly, temporary directories and memorizing file locations!
+**Clipboard is...**
+- **zero-bloat**. Clipboard rings in at mere kilobytes on most platforms.
+- **zero-config**. Clipboard infers everything out of the box.
+- **zero-effort**. Clipboard is carefully designed to be friendly to newbies and power users alike.
+- **zero-dependency**. Clipboard works on any Windows, Linux, macOS, FreeBSD, OpenBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies.
+- **universal**. Clipboard supports English, Spanish, Portuguese, and Turkish locales.
+- **pretty**. Clipboard has colorful text baked in everywhere.** 🌈 Say adiós to boring black & white!
+- **a time-saver**. Clipboard frees you from ugly, temporary directories and memorizing file locations!
 
 **You can disable colors with the NO_COLOR environment variable.
 
