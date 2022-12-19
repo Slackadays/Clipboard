@@ -13,9 +13,8 @@ exec cmake --build .
 printf "=> sudo cmake --install .\n"
 exec sudo cmake --install .
 exit 0
-fi
 
-if [[ "$OSTYPE" == "freebsd"* ]]; then
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
 printf "=> Clipboard for FreeBSD Installer\n"
 printf "=> Made by gentoo-btw\n"
 printf " \n"
@@ -27,9 +26,8 @@ exec cmake --build .
 printf "=> sudo cmake --install .\n"
 exec sudo cmake --install .
 exit 0
-fi
 
-if [[ "$OSTYPE" == "openbsd"* ]]; then
+elif [[ "$OSTYPE" == "openbsd"* ]]; then
 printf "=> Clipboard for OpenBSD Installer\n"
 printf "=> Made by gentoo-btw\n"
 printf " \n"
@@ -41,9 +39,8 @@ exec cmake --build .
 printf "=> doas cmake --install .\n"
 exec sudo cmake --install .
 exit 0
-fi
 
-if [[ "$OSTYPE" == "solaris"* ]]; then
+elif [[ "$OSTYPE" == "solaris"* ]]; then
 printf "=> Clipboard for Solaris Installer\n"
 printf "=> Made by gentoo-btw\n"
 read -p "=> You are about to install Clipboard for Solaris. Press ENTER to install Clipboard.."
@@ -55,9 +52,8 @@ exec cmake --build .
 printf "=> sudo cmake --install .\n"
 exec sudo cmake --install .
 exit 0
-fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+elif [[ "$OSTYPE" == "darwin"* ]]; then
 printf "=> Clipboard for Mac Installer\n"
 printf "=> Made by gentoo-btw\n"
 read -p "=> You are about to install Clipboard for macOS. Press ENTER to install Clipboard.."
@@ -69,4 +65,6 @@ exec cmake --build .
 printf "=> sudo cmake --install .\n"
 exec sudo cmake --install .
 exit 0
-fi
+else
+printf "=> ERROR: Unknown OS"
+exit 1
