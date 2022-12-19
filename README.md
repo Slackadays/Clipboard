@@ -67,7 +67,7 @@ git clone https://github.com/slackadays/Clipboard
 
 ## Run the script
 
-For linux/BSD/solaris/mac users, run the `install.sh` file.
+For Linux/BSD/Solaris/Mac users, run the `install.sh` file.
 ```
 $ ./install.sh
 ```
