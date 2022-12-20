@@ -10,13 +10,12 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **pretty**. Clipboard has colorful text baked in everywhere.** 🌈 Say adiós to boring black & white!
 - **a time-saver**. Clipboard frees you from ugly, temporary directories and memorizing file locations!
 
-**You can disable colors with the NO_COLOR environment variable.
+**Disable colors with the NO_COLOR environment variable.
 
 # How To Use
 
 In all commands, you can substitute `cb` for `clipboard`. 
-Add a number from 0 to 9 to the end of the action to choose which clipboard you want to use (the default is 0). 
-That's right, you have 10 different clipboards!
+Add a number to the end of the action to choose which clipboard you want to use (the default is 0). 
 
 ## Copy
 `clipboard copy (file) [files]`
@@ -26,7 +25,7 @@ Examples:
 ```
 cb copy foo.txt launchcodes.doc
 clipboard copy1 MyDirectory
-cb copy8 bar.conf AnotherDirectory baz.txt
+cb copy800 bar.conf AnotherDirectory baz.txt
 ```
 ## Cut
 `clipboard cut (file) [files]`
@@ -36,7 +35,7 @@ Examples:
 ```
 cb cut bar.txt baz.docx
 clipboard cut5 MyDirectory
-cb cut9 bar.conf AnotherDirectory baz.txt
+cb cut69 bar.conf AnotherDirectory baz.txt
 ```
 ## Paste
 `clipboard paste`
