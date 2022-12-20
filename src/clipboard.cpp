@@ -139,7 +139,6 @@ std::string_view choose_action_items_message = "{red}╳ You need to choose some
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
 std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
 std::string_view paste_success_message = "{green}✓ Pasted successfully{blank}\n";
-std::string_view paste_fail_message = "{red}╳ Failed to paste{blank}\n";
 std::string_view clear_success_message = "{green}✓ Cleared the clipboard{blank}\n";
 std::string_view clear_fail_message = "{red}╳ Failed to clear the clipboard{blank}\n";
 std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
@@ -374,14 +373,25 @@ void checkForNoItems() {
 }
 
 void setupIndicator() {
+    static unsigned int percent_done = 0;
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
-        static unsigned int percent_done = 0;
         static unsigned long items_size = items.size();
         percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
         output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%");
         fflush(stderr);
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
         output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B");
+        fflush(stderr);
+    } else if (action == Action::Paste && stderr_is_tty) {
+        static unsigned long items_size = 0;
+        for (const auto& f : fs::directory_iterator(filepath)) {
+            items_size++;
+        }
+        if (items_size == 0) {
+            items_size = 1;
+        }
+        percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
+        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%");
         fflush(stderr);
     } else if (stderr_is_tty) {
         output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%");
@@ -493,11 +503,27 @@ void removeOldFiles() {
 }
 
 void pasteFiles() {
-    try {
-        fs::copy(filepath, fs::current_path(), opts);
-        printf("%s", replaceColors(paste_success_message).data());
-    } catch (const fs::filesystem_error& e) {
-        printf("%s", replaceColors(paste_fail_message).data());
+    for (const auto& f : fs::directory_iterator(filepath)) {
+        auto pasteItem = [&](const bool use_regular_copy = false) {
+            if (fs::is_directory(f)) {
+                fs::create_directories(fs::current_path() / f);
+                fs::copy(f, fs::current_path(), opts);
+                directories_success++;
+            } else {
+                fs::copy(f, fs::current_path(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
+                files_success++;
+            }
+        };
+        try {
+            pasteItem();
+        } catch (const fs::filesystem_error& e) {
+            try {
+                pasteItem(true);
+            } catch (const fs::filesystem_error& e) {
+                failedItems.emplace_back(f.path().string(), e.code());
+            }
+        }
+        setupIndicator();
     }
     removeOldFiles();
 }
@@ -567,7 +593,11 @@ void showSuccesses() {
         return;
     }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
-        printf(replaceColors(one_item_success_message).data(), did_action[action].data(), items.at(0).string().data());
+        if (action == Action::Copy || action == Action::Cut) {
+            printf(replaceColors(one_item_success_message).data(), did_action[action].data(), items.at(0).string().data());
+        } else if (action == Action::Paste) {
+            printf("%s", replaceColors(paste_success_message).data());
+        }
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
             printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), files_success);

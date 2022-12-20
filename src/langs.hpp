@@ -48,7 +48,6 @@ void setLanguageES() {
     fix_redirection_action_message = "{red}╳ No se puede usar la acción {bold}%s{blank}{red} con la redirección. {pink}Inténta sacar {bold}%s{blank}{pink} o usa {bold}%s{blank}{pink} en su lugar, como {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ No se pueden especificar las cosas con redirección. {pink}Inténta sacar las cosas que siguen {bold}clipboard [acción].\n";
     paste_success_message = "{green}✓ Pegó con éxito{blank}\n";
-    paste_fail_message = "{red}╳ No pudo pegar{blank}\n";
     clear_success_message = "{green}✓ Quitó el portapapeles{blank}\n";
     clear_fail_message = "{red}╳ No pudo quitar el portapapeles{blank}\n";
     clipboard_failed_message = "{red}╳ Clipboard no pudo %s estas cosas.{blank}\n";
@@ -103,7 +102,6 @@ void setLanguagePT() {
     fix_redirection_action_message = "{red}╳ Você não pode {bold}%s{blank}{red} com redirecionamento aqui. {pink}Tente remover {bold}%s{blank}{pink} ou utilizar {bold}%s{blank}{pink}, como em {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ Você não pode especificar itens ao redirecionar. {pink}Tente remover itens que vêm após {bold}clipboard [action].\n";
     paste_success_message = "{green}✓ Colado com sucesso{blank}\n";
-    paste_fail_message = "{red}╳ Não foi possível colar{blank}\n";
     clipboard_failed_message = "{red}╳ Clipboard não pôde %s esses itens.{blank}\n";
     and_more_fails_message = "{red}▏ ...e mais {bold}%i{blank}{red}.{blank}\n";
     and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
@@ -176,7 +174,6 @@ void setLanguageTR() {
     fix_redirection_action_message = "{red}╳ {bold}%s{blank}{red}(ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. {pink} {bold}%s{blank}{pink} işlemini silin veya {bold}%s{blank}{pink} işlemini kullanın, örneğin {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. {pink}{bold}clipboard [action]{blank}{pink}'dan sonra  gelen öğeleri siliniz.\n";
     paste_success_message = "{green}✓ Yapıştırma başarıyla tamamlandı{blank}\n";
-    paste_fail_message = "{red}╳ Yapıştırma başarısız oldu{blank}\n";
     clear_success_message = "{green}✓ Pano temizlendi{blank}\n";
     clear_fail_message = "{red}╳ Pano temizlenemedi{blank}\n";
     clipboard_failed_message = "{red}╳ %s(ma/me) işlemi şu öğeler için başarısız oldu:{blank}\n";
