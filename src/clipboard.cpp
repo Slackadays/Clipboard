@@ -384,11 +384,10 @@ void setupIndicator() {
         fflush(stderr);
     } else if (action == Action::Paste && stderr_is_tty) {
         static unsigned long items_size = 0;
-        for (const auto& f : fs::directory_iterator(filepath)) {
-            items_size++;
-        }
         if (items_size == 0) {
-            items_size = 1;
+            for (const auto& f : fs::directory_iterator(filepath)) {
+                items_size++;
+            }
         }
         percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
         output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%");
