@@ -63,7 +63,7 @@ or
 ## Clone, Configure, & Compile 
 ```
 git clone https://github.com/slackadays/Clipboard
-cmake Clipboard/src
+cmake Clipboard
 cmake --build .
 ```
 ## Install

@@ -15,7 +15,7 @@ jobs:
       - name: Run a multi-line script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
-          cmake src -D TEST=1
+          cmake . -D TEST=1
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
@@ -31,7 +31,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           brew install gcc
-          cmake src -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
+          cmake . -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
           cmake --build .
           cmake --install .
           bash tests/test_redirection.sh
@@ -44,7 +44,7 @@ jobs:
       - name: Run a multi-line script
         shell: bash
         run: |
-          cmake src
+          cmake .
           cmake --build . --config Release
           echo $HOME
           export TMPDIR=/c/Users/runneradmin/AppData/Local/Temp

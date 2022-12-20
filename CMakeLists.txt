@@ -58,7 +58,7 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADD_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
 
-add_executable(clipboard clipboard.cpp)
+add_executable(clipboard src/clipboard.cpp)
 
 if(lto_supported)
   set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE) 

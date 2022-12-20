@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y g++-12
-          cmake src -D CMAKE_CXX_COMPILER=g++-12
+          cmake . -D CMAKE_CXX_COMPILER=g++-12
           cmake --build .
       - uses: actions/upload-artifact@v2
         with:
@@ -31,7 +31,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           brew install gcc
-          cmake src -D CMAKE_CXX_COMPILER=g++-12
+          cmake . -D CMAKE_CXX_COMPILER=g++-12
           cmake --build .
       - uses: actions/upload-artifact@v2
         with:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          cmake src
+          cmake .
           cmake --build . --config Release
       - uses: actions/upload-artifact@v2
         with:

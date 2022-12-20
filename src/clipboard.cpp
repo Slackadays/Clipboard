@@ -33,7 +33,7 @@ fs::path filepath;
 fs::path original_filepaths;
 fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
 std::vector<fs::path> items;
-std::vector<std::pair<std::string, std::string>> failedItems;
+std::vector<std::pair<std::string, std::error_code>> failedItems;
 std::string clipboard_name = "0";
 
 unsigned int output_length = 0;
@@ -195,7 +195,7 @@ void setupVariables(const int argc, char *argv[]) {
     original_filepaths = filepath.parent_path() / (clipboard_name + ".files");
 
     for (int i = 2; i < argc; i++) {
-        items.emplace_back(argv[i]);
+        items.push_back(argv[i]);
     }
 
     if (getenv("NO_COLOR") != nullptr && getenv("FORCE_COLOR") == nullptr) {
@@ -243,7 +243,7 @@ void syncWithGUIClipboard() {
 void showClipboardStatus() {
     std::array<bool, 10> clipboards_with_contents{{false, false, false, false, false, false, false, false, false, false}};
     for (int i = 0; i < 10; i++) {
-        std::array<char, 2> number{(char)(i + '0'), '\0'};
+        std::array<char, 2> number{static_cast<char>(i + '0'), '\0'};
         if (const fs::path cb = filepath.parent_path() / number.data(); fs::is_directory(cb) && !fs::is_empty(cb)) {
             clipboards_with_contents.at(i) = true;
         }
@@ -268,20 +268,18 @@ void showClipboardStatus() {
 
 void showClipboardContents() {
     if (fs::is_directory(filepath) && !fs::is_empty(filepath)) {
+        unsigned int total_items = 0;
         for (const auto& entry : fs::directory_iterator(filepath)) {
-            if (entry.is_directory()) {
-                directories_success++;
-            } else {
-                files_success++;
-            }
-            items.emplace_back(entry.path());
+            total_items++;
         }
-        printf(replaceColors(clipboard_contents_message).data(), std::min((unsigned long)(20), files_success + directories_success), clipboard_name.data());
-        for (int i = 0; i < std::min(20, int(items.size())); i++) {
-            printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), items.at(i).filename().string().data());
-            if (i == 19 && items.size() > 20) {
-                printf(replaceColors(and_more_items_message).data(), int(items.size() - 20));
+        printf(replaceColors(clipboard_contents_message).data(), std::min(static_cast<unsigned int>(20), total_items), clipboard_name.data());
+        auto it = fs::directory_iterator(filepath);
+        for (int i = 0; i < std::min(static_cast<unsigned int>(20), total_items); i++) {
+            printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), it->path().filename().string().data());
+            if (i == 19 && total_items > 20) {
+                printf(replaceColors(and_more_items_message).data(), total_items - 20);
             }
+            it++;
         }
     } else {
         printf(replaceColors(no_clipboard_contents_message).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
@@ -447,7 +445,7 @@ void copyFiles() {
             try {
                 copyItem(true);
             } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(f.string(), e.code().message());
+                failedItems.emplace_back(f.string(), e.code());
             }
         }
         setupIndicator();
@@ -462,7 +460,7 @@ void removeOldFiles() {
             try {
                 fs::remove_all(line);
             } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(line, e.code().message());
+                failedItems.emplace_back(line, e.code());
             }
         }
         files.close();
@@ -527,16 +525,13 @@ void performAction() {
     } else if (action == Action::Clear) {
         clearClipboard();
     }
-    for (const auto& f : failedItems) {
-        items.erase(std::remove(items.begin(), items.end(), f.first), items.end());
-    }
 }
 
 void showFailures() {
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
-        for (int i = 0; i < std::min(5, int(failedItems.size())); i++) {
-            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), failedItems.at(i).first.data(), failedItems.at(i).second.data());
+        for (int i = 0; i < std::min(5, static_cast<int>(failedItems.size())); i++) {
+            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), failedItems.at(i).first.data(), failedItems.at(i).second.message().data());
             if (i == 4 && failedItems.size() > 5) {
                 printf(replaceColors(and_more_fails_message).data(), int(failedItems.size() - 5));
             }
