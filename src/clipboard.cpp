@@ -505,8 +505,7 @@ void pasteFiles() {
     for (const auto& f : fs::directory_iterator(filepath)) {
         auto pasteItem = [&](const bool use_regular_copy = false) {
             if (fs::is_directory(f)) {
-                fs::create_directories(fs::current_path() / f);
-                fs::copy(f, fs::current_path(), opts);
+                fs::copy(f, fs::current_path() / f.path().filename(), opts);
                 directories_success++;
             } else {
                 fs::copy(f, fs::current_path(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
