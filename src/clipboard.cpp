@@ -27,6 +27,10 @@
 #include <X11/Xlib.h>
 #endif
 
+#if defined(WAYLAND_AVAILABLE)
+#include <wayland-client-core.h>
+#endif
+
 namespace fs = std::filesystem;
 
 fs::path filepath;
@@ -231,6 +235,18 @@ void checkFlags(const int argc, char *argv[]) {
 
 void syncWithGUIClipboard() {
     #if defined(X11_AVAILABLE)
+    Display* dpy;
+    Window root;
+    int screen;
+    Atom selection;
+
+    dpy = XOpenDisplay(NULL);
+    if (dpy == NULL) {
+        return;
+    }
+    screen = DefaultScreen(dpy);
+    root = RootWindow(dpy, screen);
+    selection = XInternAtom(dpy, "CLIPBOARD", False);
 
     #endif
 
