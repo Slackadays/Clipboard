@@ -181,9 +181,14 @@ void setupVariables(const int argc, char *argv[]) {
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
 
-    if (argc >= 2 && argv[1][strlen(argv[1]) - 1] >= '0' && argv[1][strlen(argv[1]) - 1] <= '9') { //check the end of argv[1] and see if it is equal to a number from 0-9
-        clipboard_name = argv[1][strlen(argv[1]) - 1];
-        argv[1][strlen(argv[1]) - 1] = '\0'; //remove the number from the end of argv[1]
+    if (argc >= 2) {
+        clipboard_name = argv[1];
+        clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
+        if (clipboard_name.empty()) {
+            clipboard_name = "0";
+        } else {
+            argv[1][strlen(argv[1]) - clipboard_name.length()] = '\0';
+        }
     }
 
     if (getenv("TMPDIR") != nullptr) {
