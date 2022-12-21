@@ -232,6 +232,12 @@ void checkFlags(const int argc, char *argv[]) {
     }
 }
 
+void setupTempDirectory() {
+    if (!fs::is_directory(filepath)) {
+        fs::create_directories(filepath);
+    }
+}
+
 void syncWithGUIClipboard() {
     #if defined(X11_AVAILABLE)
     Display* dpy;
@@ -370,6 +376,10 @@ void checkForNoItems() {
         printf(replaceColors(choose_action_items_message).data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(1);
     }
+    if (action == Action::Paste && fs::is_empty(filepath)) {
+        showClipboardStatus();
+        exit(0);
+    }
 }
 
 void setupIndicator() {
@@ -387,6 +397,9 @@ void setupIndicator() {
         if (items_size == 0) {
             for (const auto& f : fs::directory_iterator(filepath)) {
                 items_size++;
+            }
+            if (items_size == 0) {
+                items_size = 1;
             }
         }
         percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
@@ -430,19 +443,16 @@ void checkItemSize() {
     }
 }
 
-void setupTempDirectory() {
+void clearTempDirectory() {
     if (action != Action::Paste) {
         fs::remove(original_filepaths);
     }
-    if (fs::is_directory(filepath)) {
-        if (action != Action::Paste && action != Action::PipeOut) {
-            for (const auto& entry : fs::directory_iterator(filepath)) {
-                fs::remove_all(entry.path());
-            }
+    if (action != Action::Paste && action != Action::PipeOut) {
+        for (const auto& entry : fs::directory_iterator(filepath)) {
+            fs::remove_all(entry.path());
         }
-    } else {
-        fs::create_directories(filepath);
     }
+    
 }
 
 void copyFiles() {
@@ -508,7 +518,7 @@ void pasteFiles() {
                 fs::copy(f, fs::current_path() / f.path().filename(), opts);
                 directories_success++;
             } else {
-                fs::copy(f, fs::current_path(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
+                fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
                 files_success++;
             }
         };
@@ -518,7 +528,7 @@ void pasteFiles() {
             try {
                 pasteItem(true);
             } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(f.path().string(), e.code());
+                failedItems.emplace_back(f.path().filename().string(), e.code());
             }
         }
         setupIndicator();
@@ -591,10 +601,10 @@ void showSuccesses() {
         return;
     }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
-        if (action == Action::Copy || action == Action::Cut) {
-            printf(replaceColors(one_item_success_message).data(), did_action[action].data(), items.at(0).string().data());
-        } else if (action == Action::Paste) {
+        if (action == Action::Paste) {
             printf("%s", replaceColors(paste_success_message).data());
+        } else {
+            printf(replaceColors(one_item_success_message).data(), did_action[action].data(), items.at(0).string().data());
         }
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
@@ -613,6 +623,8 @@ int main(int argc, char *argv[]) {
 
         checkFlags(argc, argv);
 
+        setupTempDirectory();
+
         syncWithGUIClipboard();
 
         setupAction(argc, argv);
@@ -621,7 +633,7 @@ int main(int argc, char *argv[]) {
 
         setupIndicator();
 
-        setupTempDirectory();
+        clearTempDirectory();
 
         checkItemSize();
 
