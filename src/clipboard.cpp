@@ -70,7 +70,7 @@ template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
 public:
     T& operator[](Action index) {
-        return std::array<T, N>::operator[](std::to_underlying(index));
+        return std::array<T, N>::operator[](static_cast<unsigned int>(index)); //switch to std::to_underlying when available
     }
 };
 
@@ -166,6 +166,14 @@ std::string replaceColors(const std::string_view& str) {
         }
     }
     return temp;
+}
+
+void setupSignals() {
+    signal(SIGINT, [](int) {
+        fprintf(stderr, "\r%*s\r", output_length, "");
+        fprintf(stderr, replaceColors("{green}✓ Cancelled %s{blank}\n").data(), actions[action].data());
+        exit(0);
+    });
 }
 
 void setupVariables(const int argc, char *argv[]) {
@@ -620,11 +628,7 @@ void showSuccesses() {
 
 int main(int argc, char *argv[]) {
     try {
-        signal(SIGINT, [](int) {
-            fprintf(stderr, "\r%*s\r", output_length, "");
-            fprintf(stderr, replaceColors("{green}✓ Cancelled %s{blank}\n").data(), actions[action].data());
-            exit(0);
-        });
+        setupSignals();
 
         setupVariables(argc, argv);
 
