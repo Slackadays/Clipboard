@@ -12,6 +12,7 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
+#include <csignal>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -35,7 +36,7 @@ namespace fs = std::filesystem;
 
 fs::path filepath;
 fs::path original_filepaths;
-fs::copy_options opts = fs::copy_options::recursive | fs::copy_options::copy_symlinks | fs::copy_options::overwrite_existing;
+fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::error_code>> failedItems;
 std::string clipboard_name = "0";
@@ -232,7 +233,7 @@ void checkFlags(const int argc, char *argv[]) {
     }
 }
 
-void setupTempDirectory() {
+void createTempDirectory() {
     if (!fs::is_directory(filepath)) {
         fs::create_directories(filepath);
     }
@@ -619,11 +620,17 @@ void showSuccesses() {
 
 int main(int argc, char *argv[]) {
     try {
+        signal(SIGINT, [](int) {
+            fprintf(stderr, "\r%*s\r", output_length, "");
+            fprintf(stderr, replaceColors("{green}✓ Cancelled %s{blank}\n").data(), actions[action].data());
+            exit(0);
+        });
+
         setupVariables(argc, argv);
 
         checkFlags(argc, argv);
 
-        setupTempDirectory();
+        createTempDirectory();
 
         syncWithGUIClipboard();
 

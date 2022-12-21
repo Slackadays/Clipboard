@@ -6,11 +6,9 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **zero-config**. Clipboard infers everything out of the box.
 - **zero-effort**. Clipboard is carefully designed to be friendly to newbies and power users alike.
 - **zero-dependency**. Clipboard works on any Windows, Linux, macOS, FreeBSD, OpenBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies.
+- **zero-legacy**. Clipboard carries no legacy baggage from the software of yore.
 - **universal**. Clipboard supports English, Spanish, Portuguese, and Turkish locales.
-- **pretty**. Clipboard has colorful text baked in everywhere.** 🌈 Say adiós to boring black & white!
 - **a time-saver**. Clipboard frees you from ugly, temporary directories and memorizing file locations!
-
-**Disable colors with the NO_COLOR environment variable.
 
 # How To Use
 
