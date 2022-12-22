@@ -464,7 +464,7 @@ void checkItemSize() {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
             printf(replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
-            exit(1);
+            throw "itemsize";
         }
     }
 }
@@ -654,9 +654,9 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        checkItemSize();
-
         std::jthread indicator(setupIndicator);
+
+        checkItemSize();
 
         clearTempDirectory();
 
@@ -675,6 +675,8 @@ int main(int argc, char *argv[]) {
         showSuccesses();
     } catch (const std::exception& e) {
         fprintf(stderr, replaceColors(internal_error_message).data(), e.what());
+        exit(1);
+    } catch (...) {
         exit(1);
     }
     return 0;
