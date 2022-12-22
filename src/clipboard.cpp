@@ -654,11 +654,11 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
+        checkItemSize();
+
         std::jthread indicator(setupIndicator);
 
         clearTempDirectory();
-
-        checkItemSize();
 
         performAction();
 
