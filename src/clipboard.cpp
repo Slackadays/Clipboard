@@ -13,6 +13,9 @@
 #include <chrono>
 #include <iostream>
 #include <csignal>
+#include <thread>
+#include <condition_variable>
+#include <mutex>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -40,6 +43,9 @@ fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options:
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::error_code>> failedItems;
 std::string clipboard_name = "0";
+
+std::condition_variable cv;
+std::mutex m;
 
 unsigned int output_length = 0;
 unsigned long files_success = 0;
@@ -148,7 +154,7 @@ std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 std::string_view not_enough_storage_message = "{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
-std::string_view working_message = "{yellow}• %s... %i%s{blank}\r";
+std::string_view working_message = "{yellow}• %s... %i%s %s{blank}\r";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -391,16 +397,24 @@ void checkForNoItems() {
     }
 }
 
-void setupIndicator() {
+void setupIndicator(std::stop_token stop_token) {
+    std::unique_lock<std::mutex> lock(m);
+    const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
         static unsigned long items_size = items.size();
-        percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
-        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%");
-        fflush(stderr);
+        for (int i = 0; !stop_token.stop_requested(); i == 9 ? i = 0 : i++) {
+            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
+            fflush(stderr);
+            cv.wait_for(lock, std::chrono::milliseconds(50));
+        }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B");
-        fflush(stderr);
+        for (int i = 0; !stop_token.stop_requested(); i == 9 ? i = 0 : i++) {
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
+            fflush(stderr);
+            cv.wait_for(lock, std::chrono::milliseconds(50));
+        }
     } else if (action == Action::Paste && stderr_is_tty) {
         static unsigned long items_size = 0;
         if (items_size == 0) {
@@ -411,11 +425,14 @@ void setupIndicator() {
                 items_size = 1;
             }
         }
-        percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
-        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%");
-        fflush(stderr);
+        for (int i = 0; !stop_token.stop_requested(); i == 9 ? i = 0 : i++) {
+            percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
+            fflush(stderr);
+            cv.wait_for(lock, std::chrono::milliseconds(50));
+        }
     } else if (stderr_is_tty) {
-        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%");
+        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%", "");
         fflush(stderr);
     }
 }
@@ -461,7 +478,6 @@ void clearTempDirectory() {
             fs::remove_all(entry.path());
         }
     }
-    
 }
 
 void copyFiles() {
@@ -497,7 +513,6 @@ void copyFiles() {
                 failedItems.emplace_back(f.string(), e.code());
             }
         }
-        setupIndicator();
     }
 }
 
@@ -540,7 +555,6 @@ void pasteFiles() {
                 failedItems.emplace_back(f.path().filename().string(), e.code());
             }
         }
-        setupIndicator();
     }
     removeOldFiles();
 }
@@ -551,7 +565,6 @@ void pipeIn() {
     while (std::getline(std::cin, line)) {
         file << line << std::endl;
         bytes_success += line.size() + 1;
-        setupIndicator();
     }
     file.close();
 }
@@ -563,7 +576,6 @@ void pipeOut() {
         while (std::getline(file, line)) {
             printf("%s\n", line.data());
             bytes_success += line.size() + 1;
-            setupIndicator();
         }
         file.close();
     }
@@ -642,13 +654,16 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        setupIndicator();
+        std::jthread indicator(setupIndicator);
 
         clearTempDirectory();
 
         checkItemSize();
 
         performAction();
+
+        indicator.request_stop();
+        cv.notify_one();
 
         if (stderr_is_tty) {
             fprintf(stderr, "\r%*s\r", output_length, "");
