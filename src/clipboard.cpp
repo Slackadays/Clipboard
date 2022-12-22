@@ -397,20 +397,20 @@ void checkForNoItems() {
     }
 }
 
-void setupIndicator(std::stop_token stop_token) {
+void setupIndicator(std::stop_token st) {
     std::unique_lock<std::mutex> lock(m);
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
         static unsigned long items_size = items.size();
-        for (int i = 0; !stop_token.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
         }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        for (int i = 0; !stop_token.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
@@ -425,7 +425,7 @@ void setupIndicator(std::stop_token stop_token) {
                 items_size = 1;
             }
         }
-        for (int i = 0; !stop_token.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);

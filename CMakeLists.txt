@@ -22,6 +22,10 @@ else()
   endif()
 endif()
 
+set(CMAKE_THREAD_PREFER_PTHREAD True)
+set(THREADS_PREFER_PTHREAD_FLAG True)
+find_package(Threads REQUIRED)
+
 if(UNIX AND NOT APPLE AND (NOT DEFINED ENV{CI}))
   find_package(X11)
   include_directories(${X11_INCLUDE_DIR})
@@ -68,6 +72,8 @@ if(lto_supported)
 else()
     message(STATUS "IPO/LTO not supported: ${lto_error}")
 endif()
+
+target_link_libraries(clipboard Threads::Threads)
 
 if(X11_FOUND)
   target_link_libraries(clipboard ${X11_LIBRARIES})
