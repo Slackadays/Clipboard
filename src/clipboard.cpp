@@ -177,10 +177,12 @@ std::string replaceColors(const std::string_view& str) {
 }
 
 void setupSignals() {
-    signal(SIGINT, [](int) {
+    signal(SIGINT, [](int dummy) {
+        spinner_done = true;
         fprintf(stderr, "\r%*s\r", output_length, "");
         fprintf(stderr, replaceColors("{green}✓ Cancelled %s{blank}\n").data(), actions[action].data());
-        exit(0);
+        fflush(stderr);
+        exit(1);
     });
 }
 
@@ -568,10 +570,15 @@ void pasteFiles() {
 
 void pipeIn() {
     std::ofstream file(filepath / "clipboard.txt");
+    std::string buffer;
     std::string line;
-    while (std::getline(std::cin, line)) {
-        file << line << std::endl;
+    for (int i = 0; std::getline(std::cin, line); i == 19 ? i = 0 : i++) {
+        buffer += line + "\n";
         bytes_success += line.size() + 1;
+        if (i == 19) {
+            file << buffer;
+            buffer = "";
+        }
     }
     file.close();
 }
