@@ -46,6 +46,8 @@ std::string clipboard_name = "0";
 
 std::condition_variable cv;
 std::mutex m;
+std::thread indicator;
+std::atomic<bool> spinner_done = false;
 
 unsigned int output_length = 0;
 unsigned long files_success = 0;
@@ -352,8 +354,7 @@ void setupAction(const int argc, char *argv[]) {
                 exit(1);
             }
         } else if (!strcmp(argv[1], actions[Action::Show].data()) || !strcmp(argv[1], action_shortcuts[Action::Show].data())) {
-            showClipboardContents();
-            exit(0);
+            action = Action::Show;
         } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], action_shortcuts[Action::Clear].data())) {
             action = Action::Clear;
             if (!stdin_is_tty) {
@@ -397,20 +398,20 @@ void checkForNoItems() {
     }
 }
 
-void setupIndicator(std::stop_token st) {
+void setupIndicator() {
     std::unique_lock<std::mutex> lock(m);
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
         static unsigned long items_size = items.size();
-        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; !spinner_done; i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
         }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; !spinner_done; i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
@@ -425,7 +426,7 @@ void setupIndicator(std::stop_token st) {
                 items_size = 1;
             }
         }
-        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; !spinner_done; i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
@@ -440,20 +441,24 @@ void setupIndicator(std::stop_token st) {
 unsigned long long calculateTotalItemSize() {
     unsigned long long total_item_size = 0;
     for (const auto& i : items) {
-        if (fs::is_directory(i)) {
-            for (const auto& entry : fs::recursive_directory_iterator(i)) {
-                if (fs::is_regular_file(entry)) {
-                    total_item_size += fs::file_size(entry);
-                } else {
-                    total_item_size += 16;
+        try {
+            if (fs::is_directory(i)) {
+                for (const auto& entry : fs::recursive_directory_iterator(i)) {
+                    if (fs::is_regular_file(entry)) {
+                        total_item_size += fs::file_size(entry);
+                    } else {
+                        total_item_size += 16;
+                    }
                 }
+            } else if (fs::is_regular_file(i)) {
+                total_item_size += fs::file_size(i);
+            } else {
+                total_item_size += 16;
             }
-        } else if (fs::is_regular_file(i)) {
-            total_item_size += fs::file_size(i);
-        } else {
-            total_item_size += 16;
+        } catch (const fs::filesystem_error& e) {
+            failedItems.emplace_back(i, e.code());
         }
-    }
+    }   
     return total_item_size;
 }
 
@@ -464,7 +469,9 @@ void checkItemSize() {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
             printf(replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
-            throw "itemsize";
+            spinner_done = true;
+            cv.notify_one();
+            exit(1);
         }
     }
 }
@@ -473,7 +480,7 @@ void clearTempDirectory() {
     if (action != Action::Paste) {
         fs::remove(original_filepaths);
     }
-    if (action != Action::Paste && action != Action::PipeOut) {
+    if (action == Action::Copy || action == Action::Cut || action == Action::PipeIn || action == Action::Clear) {
         for (const auto& entry : fs::directory_iterator(filepath)) {
             fs::remove_all(entry.path());
         }
@@ -600,6 +607,8 @@ void performAction() {
         pipeOut();
     } else if (action == Action::Clear) {
         clearClipboard();
+    } else if (action == Action::Show) {
+        showClipboardContents();
     }
 }
 
@@ -654,7 +663,7 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        std::jthread indicator(setupIndicator);
+        std::thread indicator(setupIndicator);
 
         checkItemSize();
 
@@ -662,8 +671,9 @@ int main(int argc, char *argv[]) {
 
         performAction();
 
-        indicator.request_stop();
+        spinner_done = true;
         cv.notify_one();
+        indicator.join();
 
         if (stderr_is_tty) {
             fprintf(stderr, "\r%*s\r", output_length, "");
@@ -675,8 +685,9 @@ int main(int argc, char *argv[]) {
         showSuccesses();
     } catch (const std::exception& e) {
         fprintf(stderr, replaceColors(internal_error_message).data(), e.what());
-        exit(1);
-    } catch (...) {
+        spinner_done = true;
+        cv.notify_one();
+        indicator.join();
         exit(1);
     }
     return 0;
