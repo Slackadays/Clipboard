@@ -456,7 +456,7 @@ unsigned long long calculateTotalItemSize() {
                 total_item_size += 16;
             }
         } catch (const fs::filesystem_error& e) {
-            failedItems.emplace_back(i, e.code());
+            failedItems.emplace_back(i.string(), e.code());
         }
     }   
     return total_item_size;
