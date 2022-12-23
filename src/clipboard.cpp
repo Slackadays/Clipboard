@@ -621,6 +621,9 @@ void pipeIn() {
             buffer = "";
         }
     }
+    if (buffer != "") {
+        file << buffer;
+    }
     file.close();
 }
 
