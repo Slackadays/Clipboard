@@ -543,7 +543,28 @@ void removeOldFiles() {
     }
 }
 
+int getUserDecision(const std::string& item) {
+    fprintf(stderr, replaceColors("{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ").data(), item.data());
+    std::string decision;
+    while (true) {
+        std::getline(std::cin, decision);
+        fprintf(stderr, "%s", replaceColors("{blank}").data());
+        if (decision == "y" || decision == "yes") {
+            return 1;
+        } else if (decision == "ya" || decision == "yesall") {
+            return 2;
+        } else if (decision == "n" || decision == "no") {
+            return -1;
+        } else if (decision == "na" || decision == "noall") {
+            return -2;
+        } else {
+            fprintf(stderr, "%s", replaceColors("{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ").data());
+        }
+    }
+}
+
 void pasteFiles() {
+    int user_decision = 0;
     for (const auto& f : fs::directory_iterator(filepath)) {
         auto pasteItem = [&](const bool use_regular_copy = false) {
             if (fs::is_directory(f)) {
@@ -555,6 +576,27 @@ void pasteFiles() {
             }
         };
         try {
+            if (fs::exists(fs::current_path() / f.path().filename())) {
+                switch (user_decision) {
+                    case -2:
+                        return;
+                    case -1:
+                    case 0:
+                    case 1:
+                        indicator.request_stop();
+                        user_decision = getUserDecision(f.path().filename());
+                        indicator = std::jthread(setupIndicator);
+                        break;
+                    case 2:
+                        break;
+                }
+                switch (user_decision) {
+                    case -1:
+                        return;
+                    case 1:
+                        break;
+                }
+            }
             pasteItem();
         } catch (const fs::filesystem_error& e) {
             try {
@@ -669,7 +711,7 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        std::jthread indicator(setupIndicator);
+        indicator = std::jthread(setupIndicator);
 
         checkItemSize();
 
