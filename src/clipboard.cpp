@@ -584,7 +584,7 @@ void pasteFiles() {
                     case 0:
                     case 1:
                         indicator.request_stop();
-                        user_decision = getUserDecision(f.path().filename());
+                        user_decision = getUserDecision(f.path().filename().string());
                         indicator = std::jthread(setupIndicator);
                         break;
                     case 2:
