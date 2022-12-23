@@ -202,6 +202,13 @@ void setupVariables(const int argc, char *argv[]) {
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
 
+    std::string home_directory;
+    #if !defined(_WIN64) && !defined (_WIN32)
+    home_directory = getenv("HOME");
+    #else
+    home_directory = getenv("USERPROFILE");
+    #endif
+
     if (argc >= 2) {
         clipboard_name = argv[1];
         clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
@@ -270,6 +277,9 @@ void syncWithGUIClipboard() {
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
     selection = XInternAtom(dpy, "CLIPBOARD", False);
+    
+
+
 
     #endif
 
@@ -403,7 +413,7 @@ void setupIndicator(std::stop_token st) {
     std::unique_lock<std::mutex> lock(m);
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
-    if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
+    if ((action == Action::Cut || action == Action::Copy) && stderr_is_tty) {
         static unsigned long items_size = items.size();
         for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
@@ -411,7 +421,7 @@ void setupIndicator(std::stop_token st) {
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
         }
-    } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
+    } else if ((action == Action::PipeIn || action == Action::PipeOut) && stderr_is_tty) {
         for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
             fflush(stderr);
@@ -648,18 +658,26 @@ void clearClipboard() {
 }
 
 void performAction() {
-    if (action == Action::Copy || action == Action::Cut) {
-        copyFiles();
-    } else if (action == Action::Paste) {
-        pasteFiles();
-    } else if (action == Action::PipeIn) {
-        pipeIn();
-    } else if (action == Action::PipeOut) {
-        pipeOut();
-    } else if (action == Action::Clear) {
-        clearClipboard();
-    } else if (action == Action::Show) {
-        showClipboardContents();
+    switch (action) {
+        case Action::Copy:
+        case Action::Cut:
+            copyFiles();
+            break;
+        case Action::Paste:
+            pasteFiles();
+            break;
+        case Action::PipeIn:
+            pipeIn();
+            break;
+        case Action::PipeOut:
+            pipeOut();
+            break;
+        case Action::Clear:
+            clearClipboard();
+            break;
+        case Action::Show:
+            showClipboardContents();
+            break;
     }
 }
 
