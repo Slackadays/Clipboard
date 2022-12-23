@@ -46,8 +46,7 @@ std::string clipboard_name = "0";
 
 std::condition_variable cv;
 std::mutex m;
-std::thread indicator;
-std::atomic<bool> spinner_done = false;
+std::jthread indicator;
 
 unsigned int output_length = 0;
 unsigned long files_success = 0;
@@ -178,7 +177,7 @@ std::string replaceColors(const std::string_view& str) {
 
 void setupSignals() {
     signal(SIGINT, [](int dummy) {
-        spinner_done = true;
+        indicator.request_stop();
         fprintf(stderr, "\r%*s\r", output_length, "");
         fprintf(stderr, replaceColors("{green}✓ Cancelled %s{blank}\n").data(), actions[action].data());
         fflush(stderr);
@@ -400,20 +399,20 @@ void checkForNoItems() {
     }
 }
 
-void setupIndicator() {
+void setupIndicator(std::stop_token st) {
     std::unique_lock<std::mutex> lock(m);
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if (action == Action::Cut || action == Action::Copy && stderr_is_tty) {
         static unsigned long items_size = items.size();
-        for (int i = 0; !spinner_done; i == 9 ? i = 0 : i++) {
+        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
         }
     } else if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        for (int i = 0; !spinner_done; i == 9 ? i = 0 : i++) {
+        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50));
@@ -428,7 +427,7 @@ void setupIndicator() {
                 items_size = 1;
             }
         }
-        for (int i = 0; !spinner_done; i == 9 ? i = 0 : i++) {
+        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
@@ -471,7 +470,7 @@ void checkItemSize() {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
             printf(replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
-            spinner_done = true;
+            indicator.request_stop();
             cv.notify_one();
             exit(1);
         }
@@ -670,7 +669,7 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        std::thread indicator(setupIndicator);
+        std::jthread indicator(setupIndicator);
 
         checkItemSize();
 
@@ -678,9 +677,8 @@ int main(int argc, char *argv[]) {
 
         performAction();
 
-        spinner_done = true;
+        indicator.request_stop();
         cv.notify_one();
-        indicator.join();
 
         if (stderr_is_tty) {
             fprintf(stderr, "\r%*s\r", output_length, "");
@@ -692,9 +690,8 @@ int main(int argc, char *argv[]) {
         showSuccesses();
     } catch (const std::exception& e) {
         fprintf(stderr, replaceColors(internal_error_message).data(), e.what());
-        spinner_done = true;
+        indicator.request_stop();
         cv.notify_one();
-        indicator.join();
         exit(1);
     }
     return 0;
