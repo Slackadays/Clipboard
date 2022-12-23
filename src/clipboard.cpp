@@ -554,6 +554,9 @@ void removeOldFiles() {
 }
 
 int getUserDecision(const std::string& item) {
+    if (!stderr_is_tty || !stdin_is_tty || !stdout_is_tty) {
+        return 2;
+    }
     fprintf(stderr, replaceColors("{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ").data(), item.data());
     std::string decision;
     while (true) {
@@ -589,7 +592,7 @@ void pasteFiles() {
             if (fs::exists(fs::current_path() / f.path().filename())) {
                 switch (user_decision) {
                     case -2:
-                        return;
+                        break;
                     case -1:
                     case 0:
                     case 1:
@@ -598,16 +601,16 @@ void pasteFiles() {
                         indicator = std::jthread(setupIndicator);
                         break;
                     case 2:
+                        pasteItem();
                         break;
                 }
                 switch (user_decision) {
                     case -1:
-                        return;
-                    case 1:
                         break;
+                    case 1:
+                        pasteItem();
                 }
             }
-            pasteItem();
         } catch (const fs::filesystem_error& e) {
             try {
                 pasteItem(true);
