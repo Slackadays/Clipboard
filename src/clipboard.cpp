@@ -439,13 +439,13 @@ void setupIndicator(std::stop_token st) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50));
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return st.stop_requested(); });
         }
     } else if ((action == Action::PipeIn || action == Action::PipeOut) && stderr_is_tty) {
         for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50));
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return st.stop_requested(); });
         }
     } else if (action == Action::Paste && stderr_is_tty) {
         static unsigned long items_size = 0;
@@ -461,7 +461,7 @@ void setupIndicator(std::stop_token st) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50));
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return st.stop_requested(); });
         }
     } else if (stderr_is_tty) {
         output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%", "");
