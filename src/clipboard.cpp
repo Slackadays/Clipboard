@@ -275,6 +275,9 @@ void createTempDirectory() {
     if (!fs::is_directory(filepath)) {
         fs::create_directories(filepath);
     }
+    if (!fs::is_directory(home_directory / ".clipboard")) {
+        fs::create_directories(home_directory / ".clipboard");
+    }
 }
 
 void syncWithGUIClipboard() {

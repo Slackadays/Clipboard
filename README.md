@@ -1,14 +1,15 @@
 # 📋 Clipboard 
-Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the ultimate clipboard system for the command line.
+Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the missing clipboard system for the command line.
 
-**Clipboard is...**
-- **zero-bloat**. Clipboard rings in at mere kilobytes on most platforms.
-- **zero-config**. Clipboard infers everything out of the box.
-- **zero-effort**. Clipboard is carefully designed to be friendly to newbies and power users alike.
-- **zero-dependency**. Clipboard works on any up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies. Yes, really!
-- **zero-legacy**. Clipboard carries zero (0) legacy baggage from the software of yore.
-- **universal**. Clipboard supports English, Spanish, Portuguese, and Turkish locales.
-- **a time-saver**. Clipboard frees you from ugly, temporary directories and memorizing file locations!
+- **Zero-bloat:** Clipboard rings in at mere kilobytes on most platforms.
+- **Zero-config:** Clipboard infers everything out of the box.
+- **Zero-effort:** Clipboard is carefully designed to be friendly to newbies and power users alike.
+- **Zero-dependency:** Clipboard works on any up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies. Yes, really!
+- **Zero-legacy:** Clipboard carries zero (0) legacy baggage from the software of yore.
+- **Universal:** Clipboard supports English, Spanish, Portuguese, and Turkish locales.
+- **A time-saver:** Clipboard frees you from ugly, temporary directories and memorizing file locations!
+
+![Clipboard Demo Image](CBDemo.png)
 
 # How To Use
 
