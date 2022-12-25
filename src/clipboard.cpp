@@ -38,11 +38,12 @@
 namespace fs = std::filesystem;
 
 fs::path filepath;
-fs::path original_filepaths;
+fs::path original_files_path;
+fs::path home_directory;
 fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::error_code>> failedItems;
-std::string clipboard_name = "0";
+std::string clipboard_name;
 
 std::condition_variable cv;
 std::mutex m;
@@ -202,30 +203,43 @@ void setupVariables(const int argc, char *argv[]) {
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
 
-    std::string home_directory;
-    #if !defined(_WIN64) && !defined (_WIN32)
-    home_directory = getenv("HOME");
-    #else
+    fs::path perma_directory;
+
+    bool use_perma_clip = false;
+
+    #if defined(_WIN64) || defined (_WIN32)
     home_directory = getenv("USERPROFILE");
+    #else
+    home_directory = getenv("HOME");
     #endif
 
     if (argc >= 2) {
         clipboard_name = argv[1];
-        clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
+        if (clipboard_name.find_first_of("-_:;|") != std::string::npos) {
+            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("-_:;|") + 1);
+            use_perma_clip = true;
+        } else {
+            clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
+        }
+        
         if (clipboard_name.empty()) {
             clipboard_name = "0";
         } else {
-            argv[1][strlen(argv[1]) - clipboard_name.length()] = '\0';
+            argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
         }
     }
 
-    if (getenv("TMPDIR") != nullptr) {
-        filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
+    if (use_perma_clip) {
+        filepath = home_directory / ".clipboard" / clipboard_name / perma_directory;
     } else {
-        filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
+        if (getenv("TMPDIR") != nullptr) {
+            filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
+        } else {
+            filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
+        }
     }
 
-    original_filepaths = filepath.parent_path() / (clipboard_name + ".files");
+    original_files_path = filepath.parent_path() / (clipboard_name + ".files");
 
     for (int i = 2; i < argc; i++) {
         items.push_back(argv[i]);
@@ -295,24 +309,27 @@ void syncWithGUIClipboard() {
 }
 
 void showClipboardStatus() {
-    std::array<bool, 10> clipboards_with_contents{{false, false, false, false, false, false, false, false, false, false}};
-    for (int i = 0; i < 10; i++) {
-        std::array<char, 2> number{static_cast<char>(i + '0'), '\0'};
-        if (const fs::path cb = filepath.parent_path() / number.data(); fs::is_directory(cb) && !fs::is_empty(cb)) {
-            clipboards_with_contents.at(i) = true;
+    std::vector<std::pair<std::string, bool>> clipboards_with_contents;
+    for (const auto& entry : fs::directory_iterator(filepath.parent_path())) {
+        if (fs::is_directory(entry) && !fs::is_empty(entry)) {
+            clipboards_with_contents.push_back({entry.path().filename().string(), false});
         }
     }
-    if (std::none_of(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const bool& v) { return v; })) {
+    for (const auto& entry : fs::directory_iterator(home_directory / ".clipboard")) {
+        if (fs::is_directory(entry) && !fs::is_empty(entry)) {
+            clipboards_with_contents.push_back({entry.path().filename().string(), true});
+        }
+    }
+    std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
+    if (clipboards_with_contents.empty()) {
         printf("%s", replaceColors(no_clipboard_contents_message).data());
         printf(replaceColors(clipboard_action_prompt).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
     } else {
         printf("%s", replaceColors(check_clipboard_status_message).data());
-        for (int clipboard = 0; clipboard < 10; clipboard++) {
-            if (clipboards_with_contents.at(clipboard)) {
-                printf(replaceColors("{bold}%i{blank}{blue}").data(), clipboard);
-                if (clipboard != 9 && std::any_of(clipboards_with_contents.begin() + clipboard + 1, clipboards_with_contents.end(), [](bool v) { return v; })) {
-                    printf(", ");
-                }
+        for (int clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
+            printf(replaceColors("{bold}%s{blank}{blue}").data(), (clipboards_with_contents.at(clipboard).first + (clipboards_with_contents.at(clipboard).second ? " (perma)" : "")).data());
+            if (clipboard != clipboards_with_contents.size() - 1) {
+                printf(", ");
             }
         }
         printf("\n");
@@ -489,7 +506,7 @@ void checkItemSize() {
 
 void clearTempDirectory() {
     if (action != Action::Paste) {
-        fs::remove(original_filepaths);
+        fs::remove(original_files_path);
     }
     if (action == Action::Copy || action == Action::Cut || action == Action::PipeIn || action == Action::Clear) {
         for (const auto& entry : fs::directory_iterator(filepath)) {
@@ -501,7 +518,7 @@ void clearTempDirectory() {
 void copyFiles() {
     std::ofstream originalFiles;
     if (action == Action::Cut) {
-        originalFiles.open(original_filepaths);
+        originalFiles.open(original_files_path);
     }
     for (const auto& f : items) {
         auto copyItem = [&](const bool use_regular_copy = false) {
@@ -535,8 +552,8 @@ void copyFiles() {
 }
 
 void removeOldFiles() {
-    if (fs::is_regular_file(original_filepaths)) {
-        std::ifstream files(original_filepaths);
+    if (fs::is_regular_file(original_files_path)) {
+        std::ifstream files(original_files_path);
         std::string line;
         while (std::getline(files, line)) {
             try {
@@ -547,7 +564,7 @@ void removeOldFiles() {
         }
         files.close();
         if (failedItems.size() == 0) {
-            fs::remove(original_filepaths);
+            fs::remove(original_files_path);
         }
         action = Action::Cut;
     }
@@ -589,7 +606,7 @@ void pasteFiles() {
             }
         };
         try {
-            if (fs::exists(fs::current_path() / f.path().filename())) {
+            if (fs::exists(fs::current_path() / f)) {
                 switch (user_decision) {
                     case -2:
                         break;
