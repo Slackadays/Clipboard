@@ -43,7 +43,7 @@ fs::path home_directory;
 fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
 std::vector<fs::path> items;
 std::vector<std::pair<std::string, std::error_code>> failedItems;
-std::string clipboard_name;
+std::string clipboard_name = "0";
 
 std::condition_variable cv;
 std::mutex m;
