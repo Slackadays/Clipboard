@@ -606,7 +606,7 @@ void pasteFiles() {
             }
         };
         try {
-            if (fs::exists(fs::current_path() / f)) {
+            if (fs::exists(fs::current_path() / f.path().filename())) {
                 switch (user_decision) {
                     case -2:
                         break;
@@ -627,6 +627,8 @@ void pasteFiles() {
                     case 1:
                         pasteItem();
                 }
+            } else {
+                pasteItem();
             }
         } catch (const fs::filesystem_error& e) {
             try {
