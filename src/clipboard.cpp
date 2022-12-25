@@ -37,6 +37,7 @@
 
 namespace fs = std::filesystem;
 
+bool use_perma_clip = false;
 fs::path filepath;
 fs::path original_files_path;
 fs::path home_directory;
@@ -186,6 +187,23 @@ void setupSignals() {
     });
 }
 
+void setClipboardName(const int argc, char *argv[]) {
+    if (argc >= 2) {
+        clipboard_name = argv[1];
+        if (clipboard_name.find_first_of("-_:;|") != std::string::npos) {
+            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("-_:;|") + 1);
+            use_perma_clip = true;
+        } else {
+            clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
+        }
+        if (clipboard_name.empty()) {
+            clipboard_name = "0";
+        } else {
+            argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
+        }
+    }
+}
+
 void setupVariables(const int argc, char *argv[]) {
     #if defined(_WIN64) || defined (_WIN32)
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
@@ -203,34 +221,16 @@ void setupVariables(const int argc, char *argv[]) {
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
 
-    fs::path perma_directory;
-
-    bool use_perma_clip = false;
-
     #if defined(_WIN64) || defined (_WIN32)
     home_directory = getenv("USERPROFILE");
     #else
     home_directory = getenv("HOME");
     #endif
 
-    if (argc >= 2) {
-        clipboard_name = argv[1];
-        if (clipboard_name.find_first_of("-_:;|") != std::string::npos) {
-            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("-_:;|") + 1);
-            use_perma_clip = true;
-        } else {
-            clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
-        }
-        
-        if (clipboard_name.empty()) {
-            clipboard_name = "0";
-        } else {
-            argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
-        }
-    }
+    setClipboardName(argc, argv);
 
     if (use_perma_clip) {
-        filepath = home_directory / ".clipboard" / clipboard_name / perma_directory;
+        filepath = home_directory / ".clipboard" / clipboard_name;
     } else {
         if (getenv("TMPDIR") != nullptr) {
             filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
@@ -327,7 +327,7 @@ void showClipboardStatus() {
     } else {
         printf("%s", replaceColors(check_clipboard_status_message).data());
         for (int clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
-            printf(replaceColors("{bold}%s{blank}{blue}").data(), (clipboards_with_contents.at(clipboard).first + (clipboards_with_contents.at(clipboard).second ? " (perma)" : "")).data());
+            printf(replaceColors("{bold}%s{blank}{blue}").data(), (clipboards_with_contents.at(clipboard).first + (clipboards_with_contents.at(clipboard).second ? " (p)" : "")).data());
             if (clipboard != clipboards_with_contents.size() - 1) {
                 printf(", ");
             }
@@ -570,8 +570,18 @@ void removeOldFiles() {
     }
 }
 
-int getUserDecision(const std::string& item) {
+bool userIsARobot() {
     if (!stderr_is_tty || !stdin_is_tty || !stdout_is_tty) {
+        return true;
+    }
+    if (getenv("CI") != nullptr) {
+        return true;
+    }  
+    return false;
+}
+
+int getUserDecision(const std::string& item) {
+    if (userIsARobot()) {
         return 2;
     }
     fprintf(stderr, replaceColors("{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ").data(), item.data());
@@ -597,6 +607,14 @@ void pasteFiles() {
     int user_decision = 0;
     for (const auto& f : fs::directory_iterator(filepath)) {
         auto pasteItem = [&](const bool use_regular_copy = false) {
+            if (fs::equivalent(f, fs::current_path() / f.path().filename())) {
+                if (fs::is_directory(f)) {
+                    directories_success++;
+                } else {
+                    files_success++;
+                }
+                return;
+            }
             if (fs::is_directory(f)) {
                 fs::copy(f, fs::current_path() / f.path().filename(), opts);
                 directories_success++;
