@@ -5,7 +5,6 @@
 #include <utility>
 #include <string_view>
 #include <locale>
-#include <iostream>
 #include <fstream>
 #include <unordered_map>
 #include <array>
@@ -59,7 +58,7 @@ bool stdin_is_tty = true;
 bool stdout_is_tty = true;
 bool stderr_is_tty = true;
 
-constexpr std::string_view clipboard_version = "0.1.3";
+constexpr std::string_view clipboard_version = "0.1.4";
 
 std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
@@ -129,13 +128,18 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{orange}▏clipboard show{blank} {pink}(This shows what's in a clipboard.){blank}\n"
                                 "{orange}▏clipboard clear{blank} {pink}(This clears a clipboard's contents.){blank}\n"
                                 "{blue}▏You can substitute \"cb\" for \"clipboard\" and use various shorthands for the actions to save time.{blank}\n"
-                                "{blue}▏You can also choose which of the 10 clipboards that you have available you want to use by adding a number to the end.{blank}\n"
+                                "{blue}▏You can also choose which clipboard you want to use by adding a number to the end, or {bold}-{blank}{blue} to use a permanent clipboard.{blank}\n"
                                 "{blue}{bold}▏Examples{blank}\n"
                                 "{orange}▏cb ct Nuclear_Launch_Codes.txt contactsfolder{blank} {pink}(This cuts the following items into the default clipboard, 0.){blank}\n"
                                 "{orange}▏clipboard cp1 dogfood.conf{blank} {pink}(This copies the following items into clipboard 1.){blank}\n"
                                 "{orange}▏cb p1{blank} {pink}(This pastes clipboard 1.){blank}\n"
                                 "{orange}▏cb sh4{blank} {pink}(This shows the contents of clipboard 4.){blank}\n"
                                 "{orange}▏cb clr{blank} {pink}(This clears the contents of the default clipboard.){blank}\n"
+                                "{blue}{bold}▏Configuration{blank}\n"
+                                "{orange}▏CI: {pink}Set to make Clipboard overwrite existing items without a user prompt when pasting.{blank}\n"
+                                "{orange}▏FORCE_COLOR: {pink}Set to make Clipboard always show color regardless of what you set NO_COLOR to.{blank}\n"
+                                "{orange}▏TMPDIR: {pink}Set to the directory that Clipboard will use to hold the items you cut or copy.{blank}\n"
+                                "{orange}▏NO_COLOR: {pink}Set to make Clipboard not show color.{blank}\n"
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
                                 "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
@@ -157,7 +161,10 @@ std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue
 std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 std::string_view not_enough_storage_message = "{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
+std::string_view item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ";
+std::string_view bad_response_message = "{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ";
 std::string_view working_message = "{yellow}• %s... %i%s %s{blank}\r";
+std::string_view cancelled_message = "{green}✓ Cancelled %s{blank}\n";
 std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
 std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
@@ -181,10 +188,19 @@ void setupSignals() {
     signal(SIGINT, [](int dummy) {
         indicator.request_stop();
         fprintf(stderr, "\r%*s\r", output_length, "");
-        fprintf(stderr, replaceColors("{green}✓ Cancelled %s{blank}\n").data(), actions[action].data());
+        fprintf(stderr, replaceColors(cancelled_message).data(), actions[action].data());
         fflush(stderr);
         exit(1);
     });
+}
+
+void checkFlags(const int argc, char *argv[]) {
+    for (int i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
+            printf(replaceColors(help_message).data(), clipboard_version.data());
+            exit(0);
+        }
+    }
 }
 
 void setClipboardName(const int argc, char *argv[]) {
@@ -202,6 +218,18 @@ void setClipboardName(const int argc, char *argv[]) {
             argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
         }
     }
+
+    if (use_perma_clip) {
+        filepath = home_directory / ".clipboard" / clipboard_name;
+    } else {
+        if (getenv("TMPDIR") != nullptr) {
+            filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
+        } else {
+            filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
+        }
+    }
+
+    original_files_path = filepath.parent_path() / (clipboard_name + ".files");
 }
 
 void setupVariables(const int argc, char *argv[]) {
@@ -227,20 +255,6 @@ void setupVariables(const int argc, char *argv[]) {
     home_directory = getenv("HOME");
     #endif
 
-    setClipboardName(argc, argv);
-
-    if (use_perma_clip) {
-        filepath = home_directory / ".clipboard" / clipboard_name;
-    } else {
-        if (getenv("TMPDIR") != nullptr) {
-            filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
-        } else {
-            filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
-        }
-    }
-
-    original_files_path = filepath.parent_path() / (clipboard_name + ".files");
-
     for (int i = 2; i < argc; i++) {
         items.push_back(argv[i]);
     }
@@ -260,15 +274,6 @@ void setupVariables(const int argc, char *argv[]) {
             setLanguageTR();
         }
     } catch (...) {}
-}
-
-void checkFlags(const int argc, char *argv[]) {
-    for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
-            printf(replaceColors(help_message).data(), clipboard_version.data());
-            exit(0);
-        }
-    }
 }
 
 void createTempDirectory() {
@@ -469,6 +474,11 @@ void setupIndicator(std::stop_token st) {
     }
 }
 
+void deduplicateItems() {
+    std::sort(items.begin(), items.end());
+    items.erase(std::unique(items.begin(), items.end()), items.end());
+}
+
 unsigned long long calculateTotalItemSize() {
     unsigned long long total_item_size = 0;
     for (const auto& i : items) {
@@ -587,7 +597,7 @@ int getUserDecision(const std::string& item) {
     if (userIsARobot()) {
         return 2;
     }
-    fprintf(stderr, replaceColors("{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ").data(), item.data());
+    fprintf(stderr, replaceColors(item_already_exists_message).data(), item.data());
     std::string decision;
     while (true) {
         std::getline(std::cin, decision);
@@ -601,7 +611,7 @@ int getUserDecision(const std::string& item) {
         } else if (decision == "na" || decision == "noall") {
             return -2;
         } else {
-            fprintf(stderr, "%s", replaceColors("{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ").data());
+            fprintf(stderr, "%s", replaceColors(bad_response_message).data());
         }
     }
 }
@@ -724,6 +734,10 @@ void performAction() {
     }
 }
 
+void updateGUIClipboard() {
+
+}
+
 void showFailures() {
     if (failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
@@ -767,6 +781,8 @@ int main(int argc, char *argv[]) {
 
         checkFlags(argc, argv);
 
+        setClipboardName(argc, argv);
+
         createTempDirectory();
 
         syncWithGUIClipboard();
@@ -777,11 +793,15 @@ int main(int argc, char *argv[]) {
 
         indicator = std::jthread(setupIndicator);
 
+        deduplicateItems();
+
         checkItemSize();
 
         clearTempDirectory();
 
         performAction();
+
+        updateGUIClipboard();
 
         indicator.request_stop();
         cv.notify_one();

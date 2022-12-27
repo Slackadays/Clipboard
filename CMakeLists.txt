@@ -14,7 +14,7 @@ if(TEST)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
   endif()
 else()
-  if(NOT CMAKE_BUILD_TYPE)
+  if(NOT CMAKE_BUILD_TYPE AND NOT WIN32)
     set(CMAKE_BUILD_TYPE MinSizeRel)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -s") # strip the binary for reduced size

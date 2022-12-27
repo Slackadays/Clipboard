@@ -91,9 +91,31 @@ Windows:
 
 This is currently WIP
 
+## Actions Install
+
+You can also install Clipboard by downloading the latest build from GitHub Actions.
+
 ## AUR Install
 
 Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
+
+# (Really) Simple Configuration
+
+## `CI`
+
+Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+
+## `FORCE_COLOR`
+
+Set this environment variable to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+
+## `TMPDIR`
+
+Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
+
+## `NO_COLOR`
+
+Set this environment variable to make Clipboard not show any colors.
 
 # Painless Documentation 
 

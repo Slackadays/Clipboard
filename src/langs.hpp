@@ -57,7 +57,6 @@ void setLanguageES() {
                           "▏ vuelve a revisar el deletro de los archivos o la carpeta en que estás.{blank}\n";
     not_enough_storage_message = "{red}╳ No habrá espacio suficiente para pegar todas tus cosas (%gkB a pegar, %gkB disponible).{blank}{pink} Vuelve a revisar las cosas que especificaste o saca algunas cosas para hacer más espacio.{blank}\n";
     pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
-    one_item_success_message = "{green}✓ %s %s{blank}\n";
     multiple_files_success_message = "{green}✓ %s %i archivos{blank}\n";
     multiple_directories_success_message = "{green}✓ %s %i carpetas{blank}\n";
     multiple_files_directories_success_message = "{green}✓ %s %i archivos y %i carpetas{blank}\n";
@@ -183,7 +182,6 @@ void setLanguageTR() {
                           "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.{blank}\n";
     not_enough_storage_message = "{red}╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gkB yapıştırılacak, %gkB boş).{blank}{pink} Hangi öğeleri seçtiğinizi ikinci kez kontrol etmeyi deneyin veya yer açmak için bazı dosyaları silin.{blank}\n";
     pipe_success_message = "{green}✓ %s %i bayt{blank}\n";
-    one_item_success_message = "{green}✓ %s %s{blank}\n";
     multiple_files_success_message = "{green}✓ %s %i dosya{blank}\n";
     multiple_directories_success_message = "{green}✓ %s %i dizin{blank}\n";
     multiple_files_directories_success_message = "{green}✓ %s %i dosya ve %i dizin{blank}\n";
