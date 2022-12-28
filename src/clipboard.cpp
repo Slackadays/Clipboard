@@ -1,3 +1,17 @@
+/*  Clipboard - Cut, copy, and paste anything, anywhere, all from the terminal.
+    Copyright (C) 2022 Jackson Huff and other contributors on GitHub.com
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <vector>
 #include <cstring>
 #include <filesystem>
@@ -36,7 +50,10 @@
 namespace fs = std::filesystem;
 
 bool use_perma_clip = false;
-fs::path filepath;
+bool use_safe_copy = false;
+fs::path main_filepath;
+fs::path temporary_filepath;
+fs::path persistent_filepath;
 fs::path original_files_path;
 fs::path home_directory;
 fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
@@ -139,6 +156,9 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{orange}▏FORCE_COLOR: {pink}Set to make Clipboard always show color regardless of what you set NO_COLOR to.{blank}\n"
                                 "{orange}▏TMPDIR: {pink}Set to the directory that Clipboard will use to hold the items you cut or copy.{blank}\n"
                                 "{orange}▏NO_COLOR: {pink}Set to make Clipboard not show color.{blank}\n"
+                                "{blue}{bold}▏Other Info{blank}\n"
+                                "{orange}▏%s: {pink}The directory Clipboard uses to store temporary data.{blank}\n"
+                                "{orange}▏%s: {pink}The directory Clipboard uses to store persistent data.{blank}\n"
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
                                 "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
@@ -205,22 +225,22 @@ void setLocale() {
     } catch (...) {}
 }
 
-void checkFlags(const int argc, char *argv[]) {
-    for (int i = 1; i < argc; i++) {
+void showHelpMessage(int& argc, char *argv[]) {
+    for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
-            printf(replaceColors(help_message).data(), clipboard_version.data());
+            printf(replaceColors(help_message).data(), clipboard_version.data(), temporary_filepath.parent_path().string().data(), persistent_filepath.parent_path().string().data());
             exit(0);
         }
     }
 }
 
-void setupItems(const int argc, char *argv[]) {
-    for (int i = 2; i < argc; i++) {
+void setupItems(int& argc, char *argv[]) {
+    for (int i = 1; i < argc; i++) {
         items.push_back(argv[i]);
     }
 }
 
-void setClipboardName(const int argc, char *argv[]) {
+void setClipboardName(int& argc, char *argv[]) {
     if (argc >= 2) {
         clipboard_name = argv[1];
         if (clipboard_name.find_first_of("_:;|") != std::string::npos) {
@@ -239,28 +259,37 @@ void setClipboardName(const int argc, char *argv[]) {
     if (argc >= 3) {
         if (!strcmp(argv[2], "-c") && argc >= 4) {
             clipboard_name = argv[3];
-            items.erase(items.begin());
-            items.erase(items.begin());
+            for (int i = 2; i < argc - 2; i++) {
+                argv[i] = argv[i + 2];
+            }
+            argc -= 2;
         } else if (!strncmp(argv[2], "--clipboard=", 12)) {
             clipboard_name = argv[2] + 12;
-            items.erase(items.begin());
+            for (int i = 2; i < argc - 1; i++) {
+                argv[i] = argv[i + 1];
+            }
+            argc -= 1;
         }
     }
+    
+    if (getenv("TMPDIR") != nullptr) {
+        temporary_filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
+    } else {
+        temporary_filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
+    }
+
+    persistent_filepath = home_directory / ".clipboard" / clipboard_name;
 
     if (use_perma_clip) {
-        filepath = home_directory / ".clipboard" / clipboard_name;
+        main_filepath = persistent_filepath;
     } else {
-        if (getenv("TMPDIR") != nullptr) {
-            filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
-        } else {
-            filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
-        }
+        main_filepath = temporary_filepath;
     }
 
-    original_files_path = filepath.parent_path() / (std::string(clipboard_name) + ".files");
+    original_files_path = main_filepath.parent_path() / (std::string(clipboard_name) + ".files");
 }
 
-void setupVariables(const int argc, char *argv[]) {
+void setupVariables(int& argc, char *argv[]) {
     #if defined(_WIN64) || defined (_WIN32)
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
 	DWORD dwMode = 0;
@@ -291,8 +320,8 @@ void setupVariables(const int argc, char *argv[]) {
 }
 
 void createTempDirectory() {
-    if (!fs::is_directory(filepath)) {
-        fs::create_directories(filepath);
+    if (!fs::is_directory(main_filepath)) {
+        fs::create_directories(main_filepath);
     }
     if (!fs::is_directory(home_directory / ".clipboard")) {
         fs::create_directories(home_directory / ".clipboard");
@@ -330,7 +359,7 @@ void syncWithGUIClipboard() {
 
 void showClipboardStatus() {
     std::vector<std::pair<std::string, bool>> clipboards_with_contents;
-    for (const auto& entry : fs::directory_iterator(filepath.parent_path())) {
+    for (const auto& entry : fs::directory_iterator(main_filepath.parent_path())) {
         if (fs::is_directory(entry) && !fs::is_empty(entry)) {
             clipboards_with_contents.push_back({entry.path().filename().string(), false});
         }
@@ -358,13 +387,13 @@ void showClipboardStatus() {
 }
 
 void showClipboardContents() {
-    if (fs::is_directory(filepath) && !fs::is_empty(filepath)) {
+    if (fs::is_directory(main_filepath) && !fs::is_empty(main_filepath)) {
         unsigned int total_items = 0;
-        for (const auto& entry : fs::directory_iterator(filepath)) {
+        for (const auto& entry : fs::directory_iterator(main_filepath)) {
             total_items++;
         }
         printf(replaceColors(clipboard_contents_message).data(), std::min(static_cast<unsigned int>(20), total_items), clipboard_name.data());
-        auto it = fs::directory_iterator(filepath);
+        auto it = fs::directory_iterator(main_filepath);
         for (int i = 0; i < std::min(static_cast<unsigned int>(20), total_items); i++) {
             printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), it->path().filename().string().data());
             if (i == 19 && total_items > 20) {
@@ -377,15 +406,27 @@ void showClipboardContents() {
     }
 }
 
-void setupAction(const int argc, char *argv[]) {
+void setupAction(int& argc, char *argv[]) {
+    auto flagIsPresent = [&](const std::string_view& flag){
+        for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
+            if (!strcmp(argv[i], flag.data())) {
+                for (int j = i; j < argc - 1; j++) {
+                    argv[j] = argv[j + 1];
+                }
+                argc--;
+                return true;
+            }
+        }
+        return false;
+    };
     if (argc >= 2) {
-        if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], action_shortcuts[Action::Cut].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Cut])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Cut])).data())) { //replace with join_with_view when C++23 becomes available
+        if (flagIsPresent(actions[Action::Cut]) || flagIsPresent(action_shortcuts[Action::Cut]) || flagIsPresent("--" + std::string(actions[Action::Cut])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Cut]))) { //replace with join_with_view when C++23 becomes available
             action = Action::Cut;
             if (!stdin_is_tty || !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Copy].data()) || !strcmp(argv[1], action_shortcuts[Action::Copy].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Copy])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Copy])).data())) {
+        } else if (flagIsPresent(actions[Action::Copy]) || flagIsPresent(action_shortcuts[Action::Copy]) || flagIsPresent("--" + std::string(actions[Action::Copy])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Copy]))) {
             action = Action::Copy;
             if (!stdin_is_tty) {
                 action = Action::PipeIn;
@@ -393,7 +434,7 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Paste].data()) || !strcmp(argv[1], action_shortcuts[Action::Paste].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Paste])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Paste])).data())) {
+        } else if (flagIsPresent(actions[Action::Paste]) || flagIsPresent(action_shortcuts[Action::Paste]) || flagIsPresent("--" + std::string(actions[Action::Paste])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Paste]))) {
             action = Action::Paste;
             if (!stdout_is_tty) {
                 action = Action::PipeOut;
@@ -401,9 +442,9 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Show].data()) || !strcmp(argv[1], action_shortcuts[Action::Show].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Show])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Show])).data())) {
+        } else if (flagIsPresent(actions[Action::Show]) || flagIsPresent(action_shortcuts[Action::Show]) || flagIsPresent("--" + std::string(actions[Action::Show])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Show]))) {
             action = Action::Show;
-        } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], action_shortcuts[Action::Clear].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Clear])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Clear])).data())) {
+        } else if (flagIsPresent(actions[Action::Clear]) || flagIsPresent(action_shortcuts[Action::Clear]) || flagIsPresent("--" + std::string(actions[Action::Clear])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Clear]))) {
             action = Action::Clear;
             if (!stdin_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
@@ -412,12 +453,24 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], "ee")) {
+        } else if (flagIsPresent("ee")) {
             printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
             exit(0);
         } else {
             printf(replaceColors(no_valid_action_message).data(), argv[1]);
             exit(1);
+        }
+        if (flagIsPresent("--safe-copy") || flagIsPresent("-sc")) {
+            use_safe_copy = true;
+        }
+        for (int i = 1; i < argc; i++) {
+            if (!strcmp(argv[i], "--")) {
+                for (int j = i; j < argc; j++) {
+                    argv[j] = argv[j + 1];
+                }
+                argc--;
+                break;
+            }
         }
     } else if (!stdin_is_tty) {
         action = Action::PipeIn;
@@ -440,7 +493,7 @@ void checkForNoItems() {
         printf(replaceColors(choose_action_items_message).data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(1);
     }
-    if (action == Action::Paste && fs::is_empty(filepath)) {
+    if (action == Action::Paste && fs::is_empty(main_filepath)) {
         showClipboardStatus();
         exit(0);
     }
@@ -467,7 +520,7 @@ void setupIndicator(std::stop_token st) {
     } else if (action == Action::Paste && stderr_is_tty) {
         static unsigned long items_size = 0;
         if (items_size == 0) {
-            for (const auto& f : fs::directory_iterator(filepath)) {
+            for (const auto& f : fs::directory_iterator(main_filepath)) {
                 items_size++;
             }
             if (items_size == 0) {
@@ -516,7 +569,7 @@ unsigned long long calculateTotalItemSize() {
 }
 
 void checkItemSize() {
-    const unsigned long long space_available = fs::space(filepath).available;
+    const unsigned long long space_available = fs::space(main_filepath).available;
     unsigned long long total_item_size = 0;
     if (action == Action::Cut || action == Action::Copy) {
         total_item_size = calculateTotalItemSize();
@@ -534,7 +587,7 @@ void clearTempDirectory() {
         fs::remove(original_files_path);
     }
     if (action == Action::Copy || action == Action::Cut || action == Action::PipeIn || action == Action::Clear) {
-        for (const auto& entry : fs::directory_iterator(filepath)) {
+        for (const auto& entry : fs::directory_iterator(main_filepath)) {
             fs::remove_all(entry.path());
         }
     }
@@ -546,18 +599,18 @@ void copyFiles() {
         originalFiles.open(original_files_path);
     }
     for (const auto& f : items) {
-        auto copyItem = [&](const bool use_regular_copy = false) {
+        auto copyItem = [&](const bool use_regular_copy = use_safe_copy) {
             if (fs::is_directory(f)) {
                 if (f.filename() == "") {
-                    fs::create_directories(filepath / f.parent_path().filename());
-                    fs::copy(f, filepath / f.parent_path().filename(), opts);
+                    fs::create_directories(main_filepath / f.parent_path().filename());
+                    fs::copy(f, main_filepath / f.parent_path().filename(), opts);
                 } else {
-                    fs::create_directories(filepath / f.filename());
-                    fs::copy(f, filepath / f.filename(), opts);
+                    fs::create_directories(main_filepath / f.filename());
+                    fs::copy(f, main_filepath / f.filename(), opts);
                 }
                 directories_success++;
             } else {
-                fs::copy(f, filepath / f.filename(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
+                fs::copy(f, main_filepath / f.filename(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
                 files_success++;
             }
             if (action == Action::Cut) {
@@ -567,9 +620,13 @@ void copyFiles() {
         try {
             copyItem();
         } catch (const fs::filesystem_error& e) {
-            try {
-                copyItem(true);
-            } catch (const fs::filesystem_error& e) {
+            if (!use_safe_copy) {
+                try {
+                    copyItem(true);
+                } catch (const fs::filesystem_error& e) {
+                    failedItems.emplace_back(f.string(), e.code());
+                }
+            } else {
                 failedItems.emplace_back(f.string(), e.code());
             }
         }
@@ -630,7 +687,7 @@ int getUserDecision(const std::string& item) {
 
 void pasteFiles() {
     int user_decision = 0;
-    for (const auto& f : fs::directory_iterator(filepath)) {
+    for (const auto& f : fs::directory_iterator(main_filepath)) {
         auto pasteItem = [&](const bool use_regular_copy = false) {
             if (fs::equivalent(f, fs::current_path() / f.path().filename())) {
                 if (fs::is_directory(f)) {
@@ -685,7 +742,7 @@ void pasteFiles() {
 }
 
 void pipeIn() {
-    std::ofstream file(filepath / "clipboard.txt");
+    std::ofstream file(main_filepath / "clipboard.txt");
     std::string buffer;
     std::string line;
     for (int i = 0; std::getline(std::cin, line); i == 19 ? i = 0 : i++) {
@@ -704,7 +761,7 @@ void pipeIn() {
 
 void pipeOut() {
     std::string line;
-    for (const auto& entry : fs::recursive_directory_iterator(filepath)) {
+    for (const auto& entry : fs::recursive_directory_iterator(main_filepath)) {
         std::ifstream file(entry.path());
         while (std::getline(file, line)) {
             printf("%s\n", line.data());
@@ -715,7 +772,7 @@ void pipeOut() {
 }
 
 void clearClipboard() {
-    if (fs::is_empty(filepath)) {
+    if (fs::is_empty(main_filepath)) {
         printf("%s", replaceColors(clear_success_message).data());
     } else {
         printf("%s", replaceColors(clear_fail_message).data());
@@ -793,17 +850,17 @@ int main(int argc, char *argv[]) {
 
         setLocale();
 
-        checkFlags(argc, argv);
-
-        setupItems(argc, argv);
-
         setClipboardName(argc, argv);
+
+        showHelpMessage(argc, argv);
 
         createTempDirectory();
 
         syncWithGUIClipboard();
 
         setupAction(argc, argv);
+
+        setupItems(argc, argv);
 
         checkForNoItems();
 
