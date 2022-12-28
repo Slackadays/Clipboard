@@ -13,8 +13,6 @@ clipboard(1) -- cut, copy, and paste in the terminal
 
 **clipboard** [paste|p][(id)] > (file)
 
-**clipboard**
-
 ## DESCRIPTION
 
 **clipboard** lets you cut, copy, and paste files and piped data in the terminal. It lacks dependencies on any GUI clipboard system, although they can be enabled if you want. If available, you can substitute **cb** for **clipboard** as a shortcut.

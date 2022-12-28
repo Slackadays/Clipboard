@@ -11,39 +11,35 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 
 ![Clipboard Demo Image](CBDemo.png)
 
-# How To Use
+## How To Use
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number to the end of the action to choose which clipboard you want to use (the default is 0). 
 
-## Copy
+---
+
+### Copy
 `clipboard copy (file) [files]`
 
-Examples:
+---
 
-```
-cb copy foo.txt launchcodes.doc
-clipboard copy1 MyDirectory
-cb copy800 bar.conf AnotherDirectory baz.txt
-```
-## Cut
+### Cut
 `clipboard cut (file) [files]`
 
-Examples:
+---
 
-```
-cb cut bar.txt baz.docx
-clipboard cut5 MyDirectory
-cb cut69 bar.conf AnotherDirectory baz.txt
-```
-## Paste
+### Paste
 `clipboard paste`
 
-## Pipe In
+---
+
+### Pipe In
 
 `(something) | clipboard [copy]`
 
-## Pipe Out
+---
+
+### Pipe Out
 
 `clipboard [paste] | (something)`
 
@@ -51,20 +47,37 @@ or
 
 `clipboard [paste] > (some file)`
 
-## Show Contents
+---
+
+### Show Contents
 `clipboard show`
 
-## Clear
+---
+
+### Clear
 `clipboard clear`
 
-# Quick Installation
-## Clone, Configure, & Compile 
+---
+
+### Examples
+
+```
+cb copy foo.txt launchcodes.doc
+clipboard cut1 MyDirectory
+cb cp800 bar.conf AnotherDirectory baz.txt
+```
+
+## Quick Installation
+### Clone, Configure, & Compile 
 ```
 git clone https://github.com/slackadays/Clipboard
 cmake Clipboard
 cmake --build .
 ```
-## Install
+
+---
+
+### Install
 Platforms where you have `sudo` to install software (Linux, macOS, *BSD, OI):
 ```
 sudo cmake --install .
@@ -78,7 +91,9 @@ Windows:
 cmake --install .
 ```
 
-## Uninstall
+---
+
+### Uninstall
 Platforms where you have `sudo` to uninstall software (Linux, macOS, FreeBSD, OI):
 ```
 sudo xargs rm < install_manifest.txt
@@ -89,38 +104,48 @@ doas xargs rm < install_manifest.txt
 ```
 Windows:
 
-This is currently WIP
+You may need to individually remove all the files in install_manifest.txt.
 
-## Actions Install
+---
 
-You can also install Clipboard by downloading the latest build from GitHub Actions.
+### Actions
 
-## AUR Install
+You can also download Clipboard builds from GitHub Actions.
+
+---
+
+### AUR
 
 Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
 
-# (Really) Simple Configuration
+## (Really) Simple Configuration
 
-## `CI`
+### `CI`
 
 Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
-## `FORCE_COLOR`
+---
+
+### `FORCE_COLOR`
 
 Set this environment variable to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
-## `TMPDIR`
+---
+
+### `TMPDIR`
 
 Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
 
-## `NO_COLOR`
+---
+
+### `NO_COLOR`
 
 Set this environment variable to make Clipboard not show any colors.
 
-# Painless Documentation 
+## Painless Documentation 
 
 [Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
 
-# Fast Support
+## Fast Support
 
 [Click here](https://discord.gg/J6asnc3pEG) to go to our Discord group.
