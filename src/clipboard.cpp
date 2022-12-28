@@ -237,7 +237,7 @@ void setClipboardName(const int argc, char *argv[]) {
     }
 
     if (argc >= 3) {
-        if (!strcmp(argv[2], "-n") && argc >= 4) {
+        if (!strcmp(argv[2], "-c") && argc >= 4) {
             clipboard_name = argv[3];
             items.erase(items.begin());
             items.erase(items.begin());
