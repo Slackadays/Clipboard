@@ -6,7 +6,6 @@
 #include <string_view>
 #include <locale>
 #include <fstream>
-#include <unordered_map>
 #include <array>
 #include <atomic>
 #include <chrono>
@@ -148,7 +147,7 @@ std::string_view check_clipboard_status_message = "{blue}• There are items in 
 std::string_view clipboard_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
 std::string_view clipboard_action_prompt = "{pink}Add {bold}%s, %s, {blank}{pink}or{bold} %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
-std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action (\"%s\"), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
+std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action ({bold}\"%s\"{blank}{red}), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
 std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
 std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
@@ -194,6 +193,18 @@ void setupSignals() {
     });
 }
 
+void setLocale() {
+    try {
+        if (std::locale("").name().substr(0, 2) == "es") {
+            setLanguageES();
+        } else if (std::locale("").name().substr(0, 2) == "pt") {
+            setLanguagePT();
+        } else if (std::locale("").name().substr(0, 2) == "tr") {
+            setLanguageTR();
+        }
+    } catch (...) {}
+}
+
 void checkFlags(const int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
@@ -203,11 +214,17 @@ void checkFlags(const int argc, char *argv[]) {
     }
 }
 
+void setupItems(const int argc, char *argv[]) {
+    for (int i = 2; i < argc; i++) {
+        items.push_back(argv[i]);
+    }
+}
+
 void setClipboardName(const int argc, char *argv[]) {
     if (argc >= 2) {
         clipboard_name = argv[1];
-        if (clipboard_name.find_first_of("-_:;|") != std::string::npos) {
-            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("-_:;|") + 1);
+        if (clipboard_name.find_first_of("_:;|") != std::string::npos) {
+            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("_:;|") + 1);
             use_perma_clip = true;
         } else {
             clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
@@ -216,6 +233,14 @@ void setClipboardName(const int argc, char *argv[]) {
             clipboard_name = "0";
         } else {
             argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
+        }
+    }
+
+    if (argc >= 3) {
+        if (!strcmp(argv[2], "-n") && argc >= 4) {
+            clipboard_name = argv[3];
+            items.erase(items.begin());
+            items.erase(items.begin());
         }
     }
 
@@ -229,7 +254,7 @@ void setClipboardName(const int argc, char *argv[]) {
         }
     }
 
-    original_files_path = filepath.parent_path() / (clipboard_name + ".files");
+    original_files_path = filepath.parent_path() / (std::string(clipboard_name) + ".files");
 }
 
 void setupVariables(const int argc, char *argv[]) {
@@ -255,25 +280,11 @@ void setupVariables(const int argc, char *argv[]) {
     home_directory = getenv("HOME");
     #endif
 
-    for (int i = 2; i < argc; i++) {
-        items.push_back(argv[i]);
-    }
-
     if (getenv("NO_COLOR") != nullptr && getenv("FORCE_COLOR") == nullptr) {
         for (auto& key : colors) {
             key.second = "";
         }
     }
-
-    try {
-        if (std::locale("").name().substr(0, 2) == "es") {
-            setLanguageES();
-        } else if (std::locale("").name().substr(0, 2) == "pt") {
-            setLanguagePT();
-        } else if (std::locale("").name().substr(0, 2) == "tr") {
-            setLanguageTR();
-        }
-    } catch (...) {}
 }
 
 void createTempDirectory() {
@@ -300,8 +311,6 @@ void syncWithGUIClipboard() {
     root = RootWindow(dpy, screen);
     selection = XInternAtom(dpy, "CLIPBOARD", False);
     
-
-
 
     #endif
 
@@ -367,13 +376,13 @@ void showClipboardContents() {
 
 void setupAction(const int argc, char *argv[]) {
     if (argc >= 2) {
-        if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], action_shortcuts[Action::Cut].data())) {
+        if (!strcmp(argv[1], actions[Action::Cut].data()) || !strcmp(argv[1], action_shortcuts[Action::Cut].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Cut])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Cut])).data())) { //replace with join_with_view when C++23 becomes available
             action = Action::Cut;
             if (!stdin_is_tty || !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Copy].data()) || !strcmp(argv[1], action_shortcuts[Action::Copy].data())) {
+        } else if (!strcmp(argv[1], actions[Action::Copy].data()) || !strcmp(argv[1], action_shortcuts[Action::Copy].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Copy])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Copy])).data())) {
             action = Action::Copy;
             if (!stdin_is_tty) {
                 action = Action::PipeIn;
@@ -381,7 +390,7 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Paste].data()) || !strcmp(argv[1], action_shortcuts[Action::Paste].data())) {
+        } else if (!strcmp(argv[1], actions[Action::Paste].data()) || !strcmp(argv[1], action_shortcuts[Action::Paste].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Paste])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Paste])).data())) {
             action = Action::Paste;
             if (!stdout_is_tty) {
                 action = Action::PipeOut;
@@ -389,9 +398,9 @@ void setupAction(const int argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (!strcmp(argv[1], actions[Action::Show].data()) || !strcmp(argv[1], action_shortcuts[Action::Show].data())) {
+        } else if (!strcmp(argv[1], actions[Action::Show].data()) || !strcmp(argv[1], action_shortcuts[Action::Show].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Show])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Show])).data())) {
             action = Action::Show;
-        } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], action_shortcuts[Action::Clear].data())) {
+        } else if (!strcmp(argv[1], actions[Action::Clear].data()) || !strcmp(argv[1], action_shortcuts[Action::Clear].data()) || !strcmp(argv[1], ("--" + std::string(actions[Action::Clear])).data()) || !strcmp(argv[1], ("-" + std::string(action_shortcuts[Action::Clear])).data())) {
             action = Action::Clear;
             if (!stdin_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
@@ -779,7 +788,11 @@ int main(int argc, char *argv[]) {
 
         setupVariables(argc, argv);
 
+        setLocale();
+
         checkFlags(argc, argv);
+
+        setupItems(argc, argv);
 
         setClipboardName(argc, argv);
 
