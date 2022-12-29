@@ -19,7 +19,8 @@ jobs:
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/test_files.sh
+          bash tests/test_copy.sh
+          bash tests/test_cut.sh
           bash tests/test_redirection.sh
           bash tests/test_files_and_redirection.sh
   test-macos-amd64:
