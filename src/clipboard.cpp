@@ -77,6 +77,7 @@ bool stderr_is_tty = true;
 
 constexpr std::string_view clipboard_version = "0.1.4";
 constexpr std::string_view pipe_file = "clipboard.txt";
+constexpr std::string_view default_clipboard_name = "0";
 
 std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
@@ -195,6 +196,25 @@ std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This
 
 #include "langs.hpp"
 
+#if defined(_WIN64) || defined (_WIN32)
+void onWindowsError(const std::string_view function) {
+    auto errorCode = GetLastError();
+
+    char* errorMessage;
+    FormatMessageA(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+            nullptr,
+            errorCode,
+            0,
+            static_cast<LPTSTR>(static_cast<void*>(&errorMessage)),
+            0,
+            nullptr
+    );
+    std::cerr << function << ": " << errorMessage << std::endl;
+    exit(EXIT_FAILURE);
+}
+#endif
+
 std::string replaceColors(const std::string_view& str) {
     std::string temp(str); //a string to do scratch work on
     for (const auto& key : colors) { //iterate over all the possible colors to replace
@@ -203,6 +223,13 @@ std::string replaceColors(const std::string_view& str) {
         }
     }
     return temp;
+}
+
+void forceClearTempDirectory() {
+    fs::remove(original_files_path);
+    for (const auto& entry : fs::directory_iterator(main_filepath)) {
+        fs::remove_all(entry.path());
+    }
 }
 
 void setupSignals() {
@@ -252,7 +279,7 @@ void setClipboardName(int& argc, char *argv[]) {
             clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
         }
         if (clipboard_name.empty()) {
-            clipboard_name = "0";
+            clipboard_name = default_clipboard_name;
         } else {
             argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
         }
@@ -330,6 +357,91 @@ void createTempDirectory() {
     }
 }
 
+
+#if defined(_WIN32) || defined(_WIN64)
+
+template<typename char_t>
+void decodeWindowsDropfilesPaths(void* filesList, std::vector<fs::path>& paths) {
+
+    auto data = static_cast<char_t*>(filesList);
+    std::vector<char_t> currentPath;
+
+    while (true) {
+        auto c = *data++;
+        currentPath.push_back(c);
+
+        if (c == 0) {
+            if (currentPath.size() == 1) {
+                break;
+            }
+
+            paths.emplace_back(&currentPath[0]);
+            currentPath.clear();
+        }
+    }
+}
+
+void getWindowsClipboardDataFiles(void* clipboardPointer) {
+    auto dropfiles = static_cast<DROPFILES*>(clipboardPointer);
+    auto offset = dropfiles->pFiles;
+
+    auto filesList = static_cast<void*>(static_cast<char*>(clipboardPointer) + offset);
+    std::vector<fs::path> paths;
+
+    if (dropfiles->fWide == TRUE) {
+        decodeWindowsDropfilesPaths<wchar_t>(filesList, paths);
+    } else {
+        decodeWindowsDropfilesPaths<char>(filesList, paths);
+    }
+
+    for (const auto& path : paths) {
+        try {
+            fs::copy(path, main_filepath / path.filename(), opts | fs::copy_options::create_hard_links);
+        } catch (const fs::filesystem_error& e) {
+            fs::copy(path, main_filepath / path.filename(), opts);
+        }
+    }
+}
+
+void getWindowsClipboardDataPipe(void* clipboardPointer) {
+    auto utf16 = static_cast<wchar_t*>(clipboardPointer);
+
+    auto utf8Len = WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        utf16,
+        -1,
+        nullptr,
+        0,
+        nullptr,
+        nullptr
+    );
+    if (utf8Len <= 0) {
+        onWindowsError("WideCharToMultiByte");
+    }
+
+    std::vector<char> utf8Buffer(utf8Len);
+    auto bytesWritten = WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        utf16,
+        -1,
+        &utf8Buffer[0],
+        utf8Len,
+        nullptr,
+        nullptr
+    );
+    if (bytesWritten <= 0) {
+        onWindowsError("WideCharToMultiByte");
+    }
+
+    std::string utf8(&utf8Buffer[0]);
+
+    std::ofstream output(main_filepath / pipe_file);
+    output << utf8;
+}
+#endif
+
 void syncWithGUIClipboard() {
     //check if the clipboard number is the default ("0")
     //if it is, check if the system clipboard is newer than main_filepath (check the last write time)
@@ -357,7 +469,48 @@ void syncWithGUIClipboard() {
     #endif
 
     #if defined(_WIN32) || defined(_WIN64)
-    
+
+    if (OpenClipboard(nullptr) == 0) {
+        onWindowsError("OpenClipboard");
+    }
+
+    auto hasFiles = IsClipboardFormatAvailable(CF_HDROP) != 0;
+    auto hasText = IsClipboardFormatAvailable(CF_UNICODETEXT) != 0;
+    auto hasAny = hasFiles || hasText;
+
+    if (hasAny) {
+        forceClearTempDirectory();
+
+        HANDLE clipboardHandle;
+        if (hasFiles) {
+            clipboardHandle = GetClipboardData(CF_HDROP);
+        } else {
+            clipboardHandle = GetClipboardData(CF_UNICODETEXT);
+        }
+
+        if (clipboardHandle == nullptr) {
+            onWindowsError("GetClipboardData");
+        }
+
+        auto clipboardPointer = GlobalLock(clipboardHandle);
+        if (clipboardPointer == nullptr) {
+            onWindowsError("GlobalLock");
+        }
+
+        if (hasFiles) {
+            getWindowsClipboardDataFiles(clipboardPointer);
+        } else {
+            getWindowsClipboardDataPipe(clipboardPointer);
+        }
+
+        if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
+            onWindowsError("GlobalUnlock");
+        }
+    }
+
+    if (CloseClipboard() == 0) {
+        onWindowsError("CloseClipboard");
+    }
     #elif defined(__APPLE__)
 
     #endif
@@ -695,7 +848,7 @@ void pasteFiles() {
     int user_decision = 0;
     for (const auto& f : fs::directory_iterator(main_filepath)) {
         auto pasteItem = [&](const bool use_regular_copy = use_safe_copy) {
-            if (fs::equivalent(f, fs::current_path() / f.path().filename())) {
+            if (fs::exists(fs::current_path() / f.path().filename()) && fs::equivalent(f, fs::current_path() / f.path().filename())) {
                 if (fs::is_directory(f)) {
                     directories_success++;
                 } else {
@@ -814,23 +967,6 @@ void performAction() {
 }
 
 #if defined(_WIN32) || defined(_WIN64)
-void onWindowsError(const std::string_view function) {
-    auto errorCode = GetLastError();
-
-    char* errorMessage;
-    FormatMessageA(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-        nullptr,
-        errorCode,
-        0,
-        static_cast<LPTSTR>(static_cast<void*>(&errorMessage)),
-        0,
-        nullptr
-    );
-    std::cerr << function << ": " << errorMessage << std::endl;
-    exit(EXIT_FAILURE);
-}
-
 void setWindowsClipboardDataPipe() {
     std::ifstream file(main_filepath / pipe_file);
     std::vector<char> utf8Data(
@@ -1000,7 +1136,9 @@ int main(int argc, char *argv[]) {
 
         createTempDirectory();
 
-        syncWithGUIClipboard();
+        if (clipboard_name == default_clipboard_name) {
+            syncWithGUIClipboard();
+        }
 
         setupAction(argc, argv);
 
