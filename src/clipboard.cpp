@@ -51,7 +51,7 @@
 namespace fs = std::filesystem;
 
 bool use_perma_clip = false;
-bool use_safe_copy = false;
+bool use_safe_copy = true;
 fs::path main_filepath;
 fs::path temporary_filepath;
 fs::path persistent_filepath;
@@ -64,7 +64,7 @@ std::string clipboard_name = "0";
 
 std::condition_variable cv;
 std::mutex m;
-std::jthread indicator;
+std::jthread indicator; //If this fails to compile, then you need C++20!
 
 unsigned int output_length = 0;
 unsigned long files_success = 0;
@@ -331,6 +331,7 @@ void createTempDirectory() {
 }
 
 void syncWithGUIClipboard() {
+
     #if defined(X11_AVAILABLE)
     Display* dpy;
     Window root;
@@ -344,7 +345,6 @@ void syncWithGUIClipboard() {
     screen = DefaultScreen(dpy);
     root = RootWindow(dpy, screen);
     selection = XInternAtom(dpy, "CLIPBOARD", False);
-    
 
     #endif
 
@@ -353,6 +353,8 @@ void syncWithGUIClipboard() {
     #endif
 
     #if defined(_WIN32) || defined(_WIN64)
+
+    //decide if we should set use_own_clipboard to false or not
     
     #elif defined(__APPLE__)
 
@@ -462,8 +464,8 @@ void setupAction(int& argc, char *argv[]) {
             printf(replaceColors(no_valid_action_message).data(), argv[1]);
             exit(1);
         }
-        if (flagIsPresent("--safe-copy") || flagIsPresent("-sc")) {
-            use_safe_copy = true;
+        if (flagIsPresent("--fast-copy") || flagIsPresent("-fc")) {
+            use_safe_copy = false;
         }
         for (int i = 1; i < argc; i++) {
             if (!strcmp(argv[i], "--")) {
@@ -690,7 +692,7 @@ int getUserDecision(const std::string& item) {
 void pasteFiles() {
     int user_decision = 0;
     for (const auto& f : fs::directory_iterator(main_filepath)) {
-        auto pasteItem = [&](const bool use_regular_copy = false) {
+        auto pasteItem = [&](const bool use_regular_copy = use_safe_copy) {
             if (fs::equivalent(f, fs::current_path() / f.path().filename())) {
                 if (fs::is_directory(f)) {
                     directories_success++;
@@ -733,9 +735,13 @@ void pasteFiles() {
                 pasteItem();
             }
         } catch (const fs::filesystem_error& e) {
-            try {
-                pasteItem(true);
-            } catch (const fs::filesystem_error& e) {
+            if (!use_safe_copy) {
+                try {
+                    pasteItem(true);
+                } catch (const fs::filesystem_error& e) {
+                    failedItems.emplace_back(f.path().filename().string(), e.code());
+                }
+            } else {
                 failedItems.emplace_back(f.path().filename().string(), e.code());
             }
         }
