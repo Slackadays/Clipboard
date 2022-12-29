@@ -3,15 +3,15 @@ clipboard(1) -- cut, copy, and paste in the terminal
 
 ## SYNOPSIS
 
-**clipboard** [copy|cp][(id)] [cut|ct][id] [paste|p][(id)] (files)
+**clipboard** [--fast-copy|-fc] ([--]copy|[-]cp][(id)])|([--]cut|[-]ct[(id)])|([--]paste|[-p][(id)]) (files)
 
-**clipboard** [show|sh][(id)] [clear|clr][(id)]
+**clipboard** ([--]show|[-]sh][id])|([--]clear|[-]clr][(id)])
 
-(stdout/stderr) | **clipboard** [copy|cp][(id)]
+(stdout/stderr) | **clipboard** [[--]copy|[-]cp][(id)]
 
-**clipboard** [paste|p][(id)] | (stdin)
+**clipboard** [[--]paste|[-]p][(id)] | (stdin)
 
-**clipboard** [paste|p][(id)] > (file)
+**clipboard** [[--]paste|[-]p][(id)] > (file)
 
 ## DESCRIPTION
 
@@ -40,6 +40,10 @@ Set this environment variable to the directory that Clipboard will use to hold t
 ### **NO_COLOR**
 
 Set this environment variable to make Clipboard not show any colors.
+
+### **\-\-fast-copy**, **-fc**
+
+Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
 ## EXAMPLES
 

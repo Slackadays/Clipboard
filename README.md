@@ -142,6 +142,10 @@ Set this environment variable to the directory that Clipboard will use to hold t
 
 Set this environment variable to make Clipboard not show any colors.
 
+### `--fast-copy`, `-fc`
+
+Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+
 ## Painless Documentation 
 
 [Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.

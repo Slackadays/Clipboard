@@ -5,17 +5,18 @@
 .SH clipboard(1) \[en] cut, copy, and paste in the terminal
 .SS SYNOPSIS
 .PP
-\f[B]clipboard\f[R] [copy|cp][(id)] [cut|ct][id] [paste|p][(id)] (files)
-.PP
-\f[B]clipboard\f[R] [show|sh][(id)] [clear|clr][(id)]
-.PP
-(stdout/stderr) | \f[B]clipboard\f[R] [copy|cp][(id)]
-.PP
-\f[B]clipboard\f[R] [paste|p][(id)] | (stdin)
-.PP
-\f[B]clipboard\f[R] [paste|p][(id)] > (file)
+\f[B]clipboard\f[R] [\[en]fast-copy|-fc]
+([\[en]]copy|[-]cp][(id)])|([\[en]]cut|[-]ct[(id)])|([\[en]]paste|[-p][(id)])
+(files)
 .PP
 \f[B]clipboard\f[R]
+([\[en]]show|[-]sh][id])|([\[en]]clear|[-]clr][(id)])
+.PP
+(stdout/stderr) | \f[B]clipboard\f[R] [[\[en]]copy|[-]cp][(id)]
+.PP
+\f[B]clipboard\f[R] [[\[en]]paste|[-]p][(id)] | (stdin)
+.PP
+\f[B]clipboard\f[R] [[\[en]]paste|[-]p][(id)] > (file)
 .SS DESCRIPTION
 .PP
 \f[B]clipboard\f[R] lets you cut, copy, and paste files and piped data
@@ -52,6 +53,11 @@ to hold the items you cut or copy.
 .SS \f[B]NO_COLOR\f[R]
 .PP
 Set this environment variable to make Clipboard not show any colors.
+.SS \f[B]--fast-copy\f[R], \f[B]-fc\f[R]
+.PP
+Add this flag to use links when copying, cutting, or pasting.
+If you modify the items that you used with this flag, then the items you
+paste will have the same changes.
 .SS EXAMPLES
 .IP
 .nf
