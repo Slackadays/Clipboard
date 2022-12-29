@@ -331,6 +331,10 @@ void createTempDirectory() {
 }
 
 void syncWithGUIClipboard() {
+    //check if the clipboard number is the default ("0")
+    //if it is, check if the system clipboard is newer than main_filepath (check the last write time)
+    //if it's newer, write the contents of the system clipboard to main_filepath
+    //if it's older, do nothing
 
     #if defined(X11_AVAILABLE)
     Display* dpy;
@@ -353,8 +357,6 @@ void syncWithGUIClipboard() {
     #endif
 
     #if defined(_WIN32) || defined(_WIN64)
-
-    //decide if we should set use_own_clipboard to false or not
     
     #elif defined(__APPLE__)
 
