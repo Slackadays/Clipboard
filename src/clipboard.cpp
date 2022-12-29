@@ -1010,7 +1010,7 @@ int main(int argc, char *argv[]) {
 
         performAction();
 
-        if (action == Action::Cut || action == Action::Copy || action == Action::PipeIn) {
+        if (action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear) { //only update GUI clipboard on write operations
             updateGUIClipboard();
         }
 
