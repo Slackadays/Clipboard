@@ -33,6 +33,7 @@
 #include <io.h>
 #define NOMINMAX
 #include <Windows.h>
+#include <Shlobj.h>
 #define isatty _isatty
 #define fileno _fileno
 #else
@@ -75,6 +76,7 @@ bool stdout_is_tty = true;
 bool stderr_is_tty = true;
 
 constexpr std::string_view clipboard_version = "0.1.4";
+constexpr std::string_view pipe_file = "clipboard.txt";
 
 std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
@@ -271,7 +273,7 @@ void setClipboardName(int& argc, char *argv[]) {
             argc -= 1;
         }
     }
-    
+
     if (getenv("TMPDIR") != nullptr) {
         temporary_filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
     } else {
@@ -742,7 +744,7 @@ void pasteFiles() {
 }
 
 void pipeIn() {
-    std::ofstream file(main_filepath / "clipboard.txt");
+    std::ofstream file(main_filepath / pipe_file);
     std::string buffer;
     std::string line;
     for (int i = 0; std::getline(std::cin, line); i == 19 ? i = 0 : i++) {
@@ -803,9 +805,143 @@ void performAction() {
     }
 }
 
-void updateGUIClipboard() {
+#if defined(_WIN32) || defined(_WIN64)
+void onWindowsError(const std::string_view function) {
+    auto errorCode = GetLastError();
 
+    char* errorMessage;
+    FormatMessageA(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+        nullptr,
+        errorCode,
+        0,
+        static_cast<LPTSTR>(static_cast<void*>(&errorMessage)),
+        0,
+        nullptr
+    );
+    std::cerr << function << ": " << errorMessage << std::endl;
+    exit(EXIT_FAILURE);
 }
+
+void setWindowsClipboardDataPipe() {
+    std::ifstream file(main_filepath / pipe_file);
+    std::vector<char> utf8Data(
+        (std::istreambuf_iterator<char>(file)),
+        (std::istreambuf_iterator<char>())
+    );
+
+    auto utf16Len = MultiByteToWideChar(
+        CP_UTF8,
+        0,
+        &utf8Data[0],
+        utf8Data.size(),
+        nullptr,
+        0
+    );
+    if (utf16Len <= 0) {
+        onWindowsError("MultiByteToWideChar");
+    }
+
+    auto bufferLen = utf16Len + 1;
+
+    auto bufferSize = bufferLen * sizeof(wchar_t);
+
+    HGLOBAL clipboardHandle = GlobalAlloc(GMEM_MOVEABLE, bufferSize);
+    if (clipboardHandle == nullptr) {
+        onWindowsError("GlobalAlloc");
+    }
+
+    auto clipboardPointer = static_cast<wchar_t*>(GlobalLock(clipboardHandle));
+    if (clipboardPointer == nullptr) {
+        onWindowsError("GlobalLock");
+    }
+
+    ZeroMemory(clipboardPointer, bufferSize);
+    auto bytesWritten = MultiByteToWideChar(
+        CP_UTF8,
+        0,
+        &utf8Data[0],
+        utf8Data.size(),
+        clipboardPointer,
+        bufferLen
+    );
+    if (bytesWritten <= 0) {
+        onWindowsError("MultiByteToWideChar");
+    }
+
+    if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
+        onWindowsError("GlobalUnlock");
+    }
+    if (SetClipboardData(CF_UNICODETEXT, clipboardHandle) == nullptr) {
+        onWindowsError("SetClipboardData");
+    }
+}
+
+void setWindowsClipboardDataFiles() {
+
+    std::vector<wchar_t> data;
+    for (const auto& entry : fs::directory_iterator(main_filepath)) {
+        for (const auto& c : entry.path().wstring()) {
+            data.push_back(c);
+        }
+
+        data.push_back(0);
+    }
+
+    data.push_back(0);
+
+    size_t clipboardSize = sizeof(DROPFILES) + data.size() * sizeof(wchar_t);
+    HGLOBAL clipboardHandle = GlobalAlloc(GMEM_MOVEABLE, clipboardSize);
+    if (clipboardHandle == nullptr) {
+        onWindowsError("GlobalAlloc");
+    }
+
+    auto clipboardPointer = GlobalLock(clipboardHandle);
+    if (clipboardPointer == nullptr) {
+        onWindowsError("GlobalLock");
+    }
+
+    ZeroMemory(clipboardPointer, clipboardSize);
+
+    auto dropfiles = static_cast<DROPFILES*>(clipboardPointer);
+    dropfiles->pFiles = sizeof(DROPFILES);
+    dropfiles->fWide = TRUE;
+
+    auto fileList = static_cast<void*>(static_cast<char*>(clipboardPointer) + sizeof(DROPFILES));
+    std::memcpy(fileList, &data[0], data.size() * sizeof(wchar_t));
+
+    if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
+        onWindowsError("GlobalUnlock");
+    }
+
+    if (SetClipboardData(CF_HDROP, clipboardHandle) == nullptr) {
+        onWindowsError("SetClipboardData");
+    }
+}
+#endif
+
+void updateGUIClipboard() {
+#if defined(_WIN32) || defined(_WIN64)
+    if (OpenClipboard(nullptr) == 0) {
+        onWindowsError("OpenClipboard");
+    }
+    if (EmptyClipboard() == 0) {
+        onWindowsError("EmptyClipboard");
+    }
+
+    if (fs::is_regular_file(main_filepath / pipe_file)) {
+        setWindowsClipboardDataPipe();
+
+    } else {
+        setWindowsClipboardDataFiles();
+    }
+
+    if (CloseClipboard() == 0) {
+        onWindowsError("CloseClipboard");
+    }
+#endif
+}
+
 
 void showFailures() {
     if (failedItems.size() > 0) {
