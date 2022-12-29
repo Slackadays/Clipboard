@@ -1,4 +1,5 @@
 # 📋 Clipboard 
+
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the missing clipboard system for the command line.
 
 - **Zero-bloat:** Clipboard rings in at mere kilobytes on most platforms.
@@ -9,6 +10,7 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **Universal:** Clipboard supports English, Spanish, Portuguese, and Turkish locales.
 - **A time-saver:** Clipboard frees you from ugly, temporary directories and memorizing file locations!
 
+![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 ![Clipboard Demo Image](CBDemo.png)
 
 ## How To Use
