@@ -1,4 +1,4 @@
-# 📋 Clipboard 
+![Clipboard Banner](CBBanner.png)
 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the missing clipboard system for the command line.
 
