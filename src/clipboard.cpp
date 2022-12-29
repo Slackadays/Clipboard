@@ -1010,7 +1010,9 @@ int main(int argc, char *argv[]) {
 
         performAction();
 
-        updateGUIClipboard();
+        if (action == Action::Cut || action == Action::Copy || action == Action::PipeIn) {
+            updateGUIClipboard();
+        }
 
         indicator.request_stop();
         cv.notify_one();
