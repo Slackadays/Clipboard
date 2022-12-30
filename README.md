@@ -72,7 +72,8 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 ### Clone, Configure, & Compile 
 ```
 git clone https://github.com/slackadays/Clipboard
-cmake Clipboard
+cd Clipboard
+cmake .
 cmake --build .
 ```
 
