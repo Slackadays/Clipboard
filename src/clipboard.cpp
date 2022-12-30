@@ -1143,7 +1143,7 @@ int main(int argc, char *argv[]) {
         createTempDirectory();
 
         if (clipboard_name == default_clipboard_name) {
-            //syncWithGUIClipboard();
+            syncWithGUIClipboard();
         }
 
         setupAction(argc, argv);
