@@ -335,6 +335,12 @@ void setupVariables(int& argc, char *argv[]) {
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
 
+    if(getenv("IS_ACTUALLY_A_TTY") != nullptr) { //add test compatibility where isatty returns false, but there is actually a tty
+        stdin_is_tty = true;
+        stdout_is_tty = true;
+        stderr_is_tty = true;
+    }
+
     #if defined(_WIN64) || defined (_WIN32)
     home_directory = getenv("USERPROFILE");
     #else
