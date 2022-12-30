@@ -1143,7 +1143,7 @@ int main(int argc, char *argv[]) {
         createTempDirectory();
 
         if (clipboard_name == default_clipboard_name) {
-            syncWithGUIClipboard();
+            //syncWithGUIClipboard();
         }
 
         setupAction(argc, argv);
@@ -1163,7 +1163,7 @@ int main(int argc, char *argv[]) {
         performAction();
 
         if (action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear) { //only update GUI clipboard on write operations
-            //updateGUIClipboard();
+            updateGUIClipboard();
         }
 
         indicator.request_stop();
