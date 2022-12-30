@@ -400,16 +400,43 @@ void getWindowsClipboardDataFiles(void* clipboardPointer) {
         decodeWindowsDropfilesPaths<char>(filesList, paths);
     }
 
+    // Only clear the temp directory if all files in the clipboard are outside the temp directory
+    // This avoids the situation where we delete the very files we're trying to copy
+    auto allOutsideFilepath = std::all_of(paths.begin(), paths.end(), [](auto& path) {
+        auto relative = fs::relative(path, main_filepath);
+        auto firstElement = *(relative.begin());
+        return firstElement == fs::path("..");
+    });
+
+    if (allOutsideFilepath) {
+        forceClearTempDirectory();
+    }
+
     for (const auto& path : paths) {
+        if (!fs::exists(path)) {
+            continue;
+        }
+
+        auto target = main_filepath / path.filename();
+        if (fs::exists(target) && fs::equivalent(path, target)) {
+            continue;
+        }
+
         try {
-            fs::copy(path, main_filepath / path.filename(), opts | fs::copy_options::create_hard_links);
+            fs::copy(path, target, opts | fs::copy_options::create_hard_links);
         } catch (const fs::filesystem_error& e) {
-            fs::copy(path, main_filepath / path.filename(), opts);
+            try {
+                fs::copy(path, target, opts);
+            } catch (const fs::filesystem_error& e) {
+                // Give up
+            }
         }
     }
 }
 
 void getWindowsClipboardDataPipe(void* clipboardPointer) {
+    forceClearTempDirectory();
+
     auto utf16 = static_cast<wchar_t*>(clipboardPointer);
 
     auto utf8Len = WideCharToMultiByte(
@@ -485,8 +512,6 @@ void syncWithGUIClipboard() {
     auto hasAny = hasFiles || hasText;
 
     if (hasAny) {
-        forceClearTempDirectory();
-
         HANDLE clipboardHandle;
         if (hasFiles) {
             clipboardHandle = GetClipboardData(CF_HDROP);
@@ -1143,7 +1168,7 @@ int main(int argc, char *argv[]) {
         createTempDirectory();
 
         if (clipboard_name == default_clipboard_name) {
-            //syncWithGUIClipboard();
+            syncWithGUIClipboard();
         }
 
         setupAction(argc, argv);
