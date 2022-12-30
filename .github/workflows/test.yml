@@ -43,14 +43,15 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run a multi-line script
-        shell: bash
         run: |
           cmake .
           cmake --build . --config Release
-          echo $HOME
-          export TMPDIR=/c/Users/runneradmin/AppData/Local/Temp
+          $env:HOME
+          $env:TMPDIR = "C:\Users\runneradmin\AppData\Local\Temp"
           cmake --install .
-          #installs to C:/Program Files (x86)/Clipboard/bin/clipboard.exe
+          #installs to C:\Program Files (x86)/Clipboard/bin/clipboard.exe
           #add to path
-          export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
-          bash tests/test_redirection.sh
+          $env:Path += ";C:\Program Files (x86)\Clipboard\bin"
+          Invoke-Expression "bash tests/test_redirection.sh"
+          Invoke-Expression "bash tests/test_cut.sh"
+          Invoke-Expression "bash tests/test_copy.sh"
