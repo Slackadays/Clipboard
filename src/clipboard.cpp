@@ -159,9 +159,6 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{orange}▏FORCE_COLOR: {pink}Set to make Clipboard always show color regardless of what you set NO_COLOR to.{blank}\n"
                                 "{orange}▏TMPDIR: {pink}Set to the directory that Clipboard will use to hold the items you cut or copy.{blank}\n"
                                 "{orange}▏NO_COLOR: {pink}Set to make Clipboard not show color.{blank}\n"
-                                "{blue}{bold}▏Other Info{blank}\n"
-                                "{orange}▏%s: {pink}The directory Clipboard uses to store temporary data.{blank}\n"
-                                "{orange}▏%s: {pink}The directory Clipboard uses to store persistent data.{blank}\n"
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
                                 "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
@@ -257,7 +254,7 @@ void setLocale() {
 void showHelpMessage(int& argc, char *argv[]) {
     for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
-            printf(replaceColors(help_message).data(), clipboard_version.data(), temporary_filepath.parent_path().string().data(), persistent_filepath.parent_path().string().data());
+            printf(replaceColors(help_message).data(), clipboard_version.data());
             exit(0);
         }
     }
