@@ -75,7 +75,7 @@ bool stdin_is_tty = true;
 bool stdout_is_tty = true;
 bool stderr_is_tty = true;
 
-constexpr std::string_view clipboard_version = "0.1.4";
+constexpr std::string_view clipboard_version = "0.2.0";
 constexpr std::string_view pipe_file = "clipboard.txt";
 constexpr std::string_view default_clipboard_name = "0";
 
