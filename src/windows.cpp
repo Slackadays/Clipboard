@@ -8,8 +8,6 @@
 #include "clipboard.hpp"
 #include "windows.hpp"
 
-
-
 void onWindowsError(const std::string_view function) {
     auto errorCode = GetLastError();
 
@@ -114,7 +112,7 @@ void getWindowsClipboardDataPipe(void* clipboardPointer) {
     output << utf8;
 }
 
-oid setWindowsClipboardDataPipe() {
+void setWindowsClipboardDataPipe() {
     std::ifstream file(main_filepath / pipe_file);
     std::vector<char> utf8Data(
         (std::istreambuf_iterator<char>(file)),
