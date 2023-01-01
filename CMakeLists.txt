@@ -64,6 +64,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
 
 add_executable(clipboard src/clipboard.cpp)
 
+if(WIN32)
+  target_sources(clipboard PRIVATE src/windows.cpp)
+endif()
+
 if(lto_supported)
   set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE) 
   if(CMAKE_COMPILER_IS_GNUCXX)

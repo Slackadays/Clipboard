@@ -1,4 +1,4 @@
-![Clipboard Banner](readme_assets/CBBanner.png)
+![Clipboard Banner](readme_assets/en/CBBanner.png)
 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The unified clipboard powertool for the command line.
 
@@ -10,9 +10,9 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **A time-saver.** Clipboard frees you from ugly, temporary directories and memorizing file locations!
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
-![Clipboard Demo Image](readme_assets/CBDemo.png)
+![Clipboard Demo Image](readme_assets/en/CBDemo.png)
 
-![How To Use](readme_assets/CBHowToUse.png)
+![How To Use](readme_assets/en/CBHowToUse.png)
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number to the end of the action to choose which clipboard you want to use (the default is 0). 
@@ -68,7 +68,7 @@ clipboard cut1 MyDirectory
 cb cp800 bar.conf AnotherDirectory baz.txt
 ```
 
-![Quick Installation](readme_assets/CBQuickInstallation.png)
+![Quick Installation](readme_assets/en/CBQuickInstallation.png)
 ### Clone, Configure, & Compile 
 ```
 git clone https://github.com/slackadays/Clipboard
@@ -120,7 +120,9 @@ You can also download Clipboard builds from GitHub Actions.
 
 Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
 
-![Simple Configuration](readme_assets/CBSimpleConfiguration.png)
+---
+
+![Simple Configuration](readme_assets/en/CBSimpleConfiguration.png)
 
 ### `CI`
 
@@ -144,14 +146,16 @@ Set this environment variable to the directory that Clipboard will use to hold t
 
 Set this environment variable to make Clipboard not show any colors.
 
+---
+
 ### `--fast-copy`, `-fc`
 
 Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
-![Painless Documentation](readme_assets/CBPainlessDocumentation.png)
+![Painless Documentation](readme_assets/en/CBPainlessDocumentation.png)
 
 [Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
 
-![Fast Support](readme_assets/CBFastSupport.png)
+![Fast Support](readme_assets/en/CBFastSupport.png)
 
 [Click here](https://discord.gg/J6asnc3pEG) to go to our Discord group.
