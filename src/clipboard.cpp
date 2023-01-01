@@ -445,7 +445,7 @@ void setupIndicator() {
         }
     } else if ((action == Action::PipeIn || action == Action::PipeOut) && stderr_is_tty) {
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), (int)bytes_success, "B", spinner_steps.at(i).data());
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), static_cast<int>(bytes_success), "B", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
@@ -796,7 +796,7 @@ void showFailures() {
 
 void showSuccesses() {
     if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), (int)bytes_success);
+        fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), static_cast<int>(bytes_success));
         return;
     }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
@@ -807,11 +807,11 @@ void showSuccesses() {
         }
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
-            printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), (int)files_success);
+            printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), static_cast<int>(files_success));
         } else if ((files_success == 0) && (directories_success > 1)) {
-            printf(replaceColors(multiple_directories_success_message).data(), did_action[action].data(), (int)directories_success);
+            printf(replaceColors(multiple_directories_success_message).data(), did_action[action].data(), static_cast<int>(directories_success));
         } else if ((files_success >= 1) && (directories_success >= 1)) {
-            printf(replaceColors(multiple_files_directories_success_message).data(), did_action[action].data(), (int)files_success, (int)directories_success);
+            printf(replaceColors(multiple_files_directories_success_message).data(), did_action[action].data(), static_cast<int>(files_success), static_cast<int>(directories_success));
         }
     }
 }
