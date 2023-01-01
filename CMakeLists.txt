@@ -26,7 +26,7 @@ set(CMAKE_THREAD_PREFER_PTHREAD True)
 set(THREADS_PREFER_PTHREAD_FLAG True)
 find_package(Threads REQUIRED)
 
-if(UNIX AND NOT APPLE AND (NOT DEFINED ENV{CI}))
+if(UNIX AND NOT APPLE AND (NOT DEFINED ENV{CI} OR TEST))
   find_package(X11)
   include_directories(${X11_INCLUDE_DIR})
   find_package(PkgConfig)

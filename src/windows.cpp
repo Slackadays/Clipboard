@@ -22,6 +22,68 @@
 #include "clipboard.hpp"
 #include "windows.hpp"
 
+void syncWithWindowsClipboard() {
+    if (OpenClipboard(nullptr) == 0) {
+        onWindowsError("OpenClipboard");
+    }
+
+    auto hasFiles = IsClipboardFormatAvailable(CF_HDROP) != 0;
+    auto hasText = IsClipboardFormatAvailable(CF_UNICODETEXT) != 0;
+    auto hasAny = hasFiles || hasText;
+
+    if (hasAny) {
+        HANDLE clipboardHandle;
+        if (hasFiles) {
+            clipboardHandle = GetClipboardData(CF_HDROP);
+        } else {
+            clipboardHandle = GetClipboardData(CF_UNICODETEXT);
+        }
+
+        if (clipboardHandle == nullptr) {
+            onWindowsError("GetClipboardData");
+        }
+
+        auto clipboardPointer = GlobalLock(clipboardHandle);
+        if (clipboardPointer == nullptr) {
+            onWindowsError("GlobalLock");
+        }
+
+        if (hasFiles) {
+            getWindowsClipboardDataFiles(clipboardPointer);
+        } else {
+            getWindowsClipboardDataPipe(clipboardPointer);
+        }
+
+        if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
+            onWindowsError("GlobalUnlock");
+        }
+    }
+
+    if (CloseClipboard() == 0) {
+        onWindowsError("CloseClipboard");
+    }
+}
+
+void updateWindowsClipboard() {
+    if (OpenClipboard(nullptr) == 0) {
+        onWindowsError("OpenClipboard");
+    }
+    if (EmptyClipboard() == 0) {
+        onWindowsError("EmptyClipboard");
+    }
+
+    if (fs::is_regular_file(main_filepath / pipe_file)) {
+        setWindowsClipboardDataPipe();
+
+    } else {
+        setWindowsClipboardDataFiles();
+    }
+
+    if (CloseClipboard() == 0) {
+        onWindowsError("CloseClipboard");
+    }
+}
+
 void onWindowsError(const std::string_view function) {
     auto errorCode = GetLastError();
 

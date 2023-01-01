@@ -45,3 +45,5 @@ void getWindowsClipboardDataFiles(void* clipboardPointer);
 void getWindowsClipboardDataPipe(void* clipboardPointer);
 void setWindowsClipboardDataPipe();
 void setWindowsClipboardDataFiles();
+void syncWithWindowsClipboard();
+void updateWindowsClipboard();
