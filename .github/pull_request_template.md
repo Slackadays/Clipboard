@@ -17,3 +17,5 @@ This might seem obvious, but all PRs must pass all the automated tests that we'v
 All PRs must be "feature complete." This means that you can't replace a feature with a TODO or remove it altogether, unless the PR is all about mofifying that feature.
 
 # Thanks for your contributions! 👋
+
+Replace all this text with your PR after you've reviewed it.
