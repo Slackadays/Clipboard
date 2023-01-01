@@ -1,6 +1,6 @@
 ![Clipboard Banner](readme_assets/en/CBBanner.png)
 
-Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The unified clipboard powertool for the command line.
+Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The clipboard powertool for the command line.
 
 - **Zero-bloat.** Clipboard rings in at mere kilobytes on most platforms.
 - **Zero-config.** Clipboard doesn't require any configuration to use.
@@ -20,43 +20,43 @@ Add a number to the end of the action to choose which clipboard you want to use 
 ---
 
 ### Copy
-`clipboard copy (file) [files]`
+`clipboard [--](copy|cp) (file) [files]`
 
 ---
 
 ### Cut
-`clipboard cut (file) [files]`
+`clipboard [--](cut|ct) (file) [files]`
 
 ---
 
 ### Paste
-`clipboard paste`
+`clipboard [--](paste|p)`
 
 ---
 
 ### Pipe In
 
-`(something) | clipboard [copy]`
+`(something) | clipboard [[--](copy|cp)]`
 
 ---
 
 ### Pipe Out
 
-`clipboard [paste] | (something)`
+`clipboard [[--](paste|p] | (something)`
 
 or
 
-`clipboard [paste] > (some file)`
+`clipboard [[--](paste|p)] > (some file)`
 
 ---
 
 ### Show Contents
-`clipboard show`
+`clipboard [--](show|sh)`
 
 ---
 
 ### Clear
-`clipboard clear`
+`clipboard [--](clear|clr)`
 
 ---
 
@@ -80,7 +80,7 @@ cmake --build .
 ---
 
 ### Install
-Platforms where you have `sudo` to install software (Linux, macOS, *BSD, OI):
+Linux, macOS, all BSD except OpenBSD, OpenIndiana:
 ```
 sudo cmake --install .
 ```
@@ -96,7 +96,7 @@ cmake --install .
 ---
 
 ### Uninstall
-Platforms where you have `sudo` to uninstall software (Linux, macOS, FreeBSD, OI):
+Linux, macOS, all BSD except OpenBSD, OpenIndiana:
 ```
 sudo xargs rm < install_manifest.txt
 ```
@@ -151,6 +151,8 @@ Set this environment variable to make Clipboard not show any colors.
 ### `--fast-copy`, `-fc`
 
 Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+
+---
 
 ![Painless Documentation](readme_assets/en/CBPainlessDocumentation.png)
 
