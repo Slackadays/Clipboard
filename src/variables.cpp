@@ -37,9 +37,9 @@ std::string clipboard_name = "0";
 
 std::condition_variable cv;
 std::mutex m;
-std::jthread indicator; //If this fails to compile, then you need C++20!
+std::atomic<SpinnerState> spinner_state = SpinnerState::Done;
+std::thread indicator;
 
-unsigned int output_length = 0;
 std::atomic<unsigned long> files_success = 0;
 std::atomic<unsigned long> directories_success = 0;
 std::atomic<unsigned long long> bytes_success = 0;
