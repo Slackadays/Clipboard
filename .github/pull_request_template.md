@@ -1,7 +1,6 @@
 # Pull Request Requirements
 
 We're always accepting pull requests for contributions to Clipboard. 
-
 To keep Clipboard's quality high and the PRs flowing smoothly, we have three very simple rules that all PRs must follow.
 
 ### Use Clipboard's Existing Code Style
@@ -18,4 +17,4 @@ All PRs must be "feature complete." This means that you can't replace a feature 
 
 # Thanks for your contributions! 👋
 
-Replace all this text with your PR after you've reviewed it.
+Replace all this text (including the sections above) with your PR after you've reviewed it.
