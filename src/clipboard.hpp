@@ -36,14 +36,16 @@ extern std::vector<fs::path> items;
 extern std::vector<std::pair<std::string, std::error_code>> failedItems;
 extern std::string clipboard_name;
 
+enum class SpinnerState : int { Done, Active, Cancel };
+
 extern std::condition_variable cv;
 extern std::mutex m;
-extern std::jthread indicator; //If this fails to compile, then you need C++20!
+extern std::atomic<SpinnerState> spinner_state;
+extern std::thread indicator;
 
-extern unsigned int output_length;
-extern unsigned long files_success;
-extern unsigned long directories_success;
-extern unsigned long long bytes_success;
+extern std::atomic<unsigned long> files_success;
+extern std::atomic<unsigned long> directories_success;
+extern std::atomic<unsigned long long> bytes_success;
 
 extern bool stdin_is_tty;
 extern bool stdout_is_tty;
@@ -116,7 +118,10 @@ void showClipboardStatus();
 void showClipboardContents();
 void setupAction(int& argc, char *argv[]);
 void checkForNoItems();
-void setupIndicator(std::stop_token st);
+bool cancelIndicator();
+bool stopIndicator();
+void startIndicator();
+void setupIndicator();
 void deduplicateItems();
 unsigned long long calculateTotalItemSize();
 void checkItemSize();

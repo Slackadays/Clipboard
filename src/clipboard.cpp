@@ -71,13 +71,29 @@ void forceClearTempDirectory() {
     }
 }
 
+bool cancelIndicator() {
+    return spinner_state.exchange(SpinnerState::Cancel) == SpinnerState::Active;
+}
+
+bool stopIndicator() {
+    SpinnerState expect = SpinnerState::Active;
+    if (!spinner_state.compare_exchange_strong(expect, SpinnerState::Done)) {
+        return false;
+    }
+    cv.notify_one();
+    indicator.join();
+    return true;
+}
+
 void setupSignals() {
     signal(SIGINT, [](int dummy) {
-        indicator.request_stop();
-        fprintf(stderr, "\r%*s\r", output_length, "");
-        fprintf(stderr, replaceColors(cancelled_message).data(), actions[action].data());
-        fflush(stderr);
-        exit(1);
+        if (!cancelIndicator()) {
+            // Indicator thread is not currently running. TODO: Write an
+            // unbuffered newline, and maybe a cancelation message, directly to
+            // standard error. Note: There is no standard C++ interface for
+            // this, so this requires OS call.
+            _exit(1);
+        }
     });
 }
 
@@ -414,23 +430,24 @@ void checkForNoItems() {
     }
 }
 
-void setupIndicator(std::stop_token st) {
+void setupIndicator() {
     std::unique_lock<std::mutex> lock(m);
+    int output_length = 0;
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if ((action == Action::Cut || action == Action::Copy) && stderr_is_tty) {
         static unsigned long items_size = items.size();
-        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return st.stop_requested(); });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     } else if ((action == Action::PipeIn || action == Action::PipeOut) && stderr_is_tty) {
-        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), bytes_success, "B", spinner_steps.at(i).data());
+        for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), static_cast<int>(bytes_success), "B", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return st.stop_requested(); });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     } else if (action == Action::Paste && stderr_is_tty) {
         static unsigned long items_size = 0;
@@ -442,16 +459,36 @@ void setupIndicator(std::stop_token st) {
                 items_size = 1;
             }
         }
-        for (int i = 0; !st.stop_requested(); i == 9 ? i = 0 : i++) {
+        for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((files_success + directories_success + failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return st.stop_requested(); });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     } else if (stderr_is_tty) {
-        output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%", "");
-        fflush(stderr);
+        while (spinner_state == SpinnerState::Active) {
+            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%", "");
+            fflush(stderr);
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
+        }
     }
+    if (stderr_is_tty) {
+        fprintf(stderr, "\r%*s\r", output_length, "");
+    }
+    if (spinner_state == SpinnerState::Cancel) {
+        fprintf(stderr, replaceColors(cancelled_message).data(), actions[action].data());
+        fflush(stderr);
+        _exit(1);
+    }
+    fflush(stderr);
+}
+
+void startIndicator()
+{
+    // If cancelled, leave cancelled
+    SpinnerState expect = SpinnerState::Done;
+    spinner_state.compare_exchange_strong(expect, SpinnerState::Active);
+    indicator = std::thread(setupIndicator);
 }
 
 void deduplicateItems() {
@@ -489,9 +526,8 @@ void checkItemSize() {
     if (action == Action::Cut || action == Action::Copy) {
         total_item_size = calculateTotalItemSize();
         if (total_item_size > (space_available / 2)) {
-            printf(replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
-            indicator.request_stop();
-            cv.notify_one();
+            stopIndicator();
+            fprintf(stderr, replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
             exit(1);
         }
     }
@@ -628,9 +664,9 @@ void pasteFiles() {
                     case -1:
                     case 0:
                     case 1:
-                        indicator.request_stop();
+                        stopIndicator();
                         user_decision = getUserDecision(f.path().filename().string());
-                        indicator = std::jthread(setupIndicator);
+                        startIndicator();
                         break;
                     case 2:
                         pasteItem();
@@ -760,7 +796,7 @@ void showFailures() {
 
 void showSuccesses() {
     if (action == Action::PipeIn || action == Action::PipeOut && stderr_is_tty) {
-        fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), bytes_success);
+        fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), static_cast<int>(bytes_success));
         return;
     }
     if ((files_success == 1 && directories_success == 0) || (files_success == 0 && directories_success == 1)) {
@@ -771,11 +807,11 @@ void showSuccesses() {
         }
     } else {
         if ((files_success > 1) && (directories_success == 0)) {
-            printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), files_success);
+            printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), static_cast<int>(files_success));
         } else if ((files_success == 0) && (directories_success > 1)) {
-            printf(replaceColors(multiple_directories_success_message).data(), did_action[action].data(), directories_success);
+            printf(replaceColors(multiple_directories_success_message).data(), did_action[action].data(), static_cast<int>(directories_success));
         } else if ((files_success >= 1) && (directories_success >= 1)) {
-            printf(replaceColors(multiple_files_directories_success_message).data(), did_action[action].data(), files_success, directories_success);
+            printf(replaceColors(multiple_files_directories_success_message).data(), did_action[action].data(), static_cast<int>(files_success), static_cast<int>(directories_success));
         }
     }
 }
@@ -804,7 +840,7 @@ int main(int argc, char *argv[]) {
 
         checkForNoItems();
 
-        indicator = std::jthread(setupIndicator);
+        startIndicator();
 
         deduplicateItems();
 
@@ -818,21 +854,15 @@ int main(int argc, char *argv[]) {
             updateGUIClipboard();
         }
 
-        indicator.request_stop();
-        cv.notify_one();
-
-        if (stderr_is_tty) {
-            fprintf(stderr, "\r%*s\r", output_length, "");
-            fflush(stderr);
-        }
+        stopIndicator();
 
         showFailures();
 
         showSuccesses();
     } catch (const std::exception& e) {
-        fprintf(stderr, replaceColors(internal_error_message).data(), e.what());
-        indicator.request_stop();
-        cv.notify_one();
+        if (stopIndicator()) {
+            fprintf(stderr, replaceColors(internal_error_message).data(), e.what());
+        }
         exit(1);
     }
     return 0;
