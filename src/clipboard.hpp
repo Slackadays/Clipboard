@@ -53,11 +53,8 @@ public:
 };
 
 extern ActionArray<std::string_view, 7> actions;
-
 extern ActionArray<std::string_view, 7> action_shortcuts;
-
 extern ActionArray<std::string_view, 7> doing_action;
-
 extern ActionArray<std::string_view, 7> did_action;
 
 extern std::string_view help_message;

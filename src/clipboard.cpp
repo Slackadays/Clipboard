@@ -28,6 +28,7 @@
 #include <thread>
 #include <condition_variable>
 #include <mutex>
+#include "clipboard.hpp"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -48,8 +49,6 @@
 #if defined(WAYLAND_AVAILABLE)
 #include <wayland-client-core.h>
 #endif
-
-#include "clipboard.hpp"
 
 namespace fs = std::filesystem;
 
