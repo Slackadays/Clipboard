@@ -85,6 +85,9 @@ extern std::string_view multiple_directories_success_message;
 extern std::string_view multiple_files_directories_success_message;
 extern std::string_view internal_error_message;
 
+void setLanguagePT();
+void setLanguageTR();
+void setLanguageES();
 std::string replaceColors(const std::string_view& str);
 void forceClearTempDirectory();
 void setupSignals();

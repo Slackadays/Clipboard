@@ -62,7 +62,10 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADD_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
 
-add_executable(clipboard src/clipboard.cpp)
+add_executable(clipboard 
+  src/clipboard.cpp
+  src/messages.cpp  
+)
 
 if(WIN32)
   target_sources(clipboard PRIVATE src/windows.cpp)
