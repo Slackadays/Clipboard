@@ -1,4 +1,3 @@
-#pragma once
 #include <filesystem>
 #include <vector>
 #include <string_view>
