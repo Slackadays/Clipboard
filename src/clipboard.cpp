@@ -71,7 +71,7 @@ void forceClearTempDirectory() {
     }
 }
 
-bool cancelIndicator() {
+bool cancelIndicator() { // we cannot use mutex in signal handlers, so we use a simple atomic exchange instead
     return spinner_state.exchange(SpinnerState::Cancel) == SpinnerState::Active;
 }
 
@@ -221,7 +221,6 @@ void syncWithGUIClipboard() {
     //if it is, check if the system clipboard is newer than main_filepath (check the last write time)
     //if it's newer, write the contents of the system clipboard to main_filepath
     //if it's older, do nothing
-
     #if defined(X11_AVAILABLE)
     Display* dpy;
     Window root;
@@ -338,9 +337,9 @@ void showClipboardContents() {
 }
 
 void setupAction(int& argc, char *argv[]) {
-    auto flagIsPresent = [&](const std::string_view& flag){
+    auto flagIsPresent = [&](const std::string_view& flag, const std::string& shortcut = ""){
         for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
-            if (!strcmp(argv[i], flag.data())) {
+            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (shortcut + std::string(flag)).data())) {
                 for (int j = i; j < argc - 1; j++) {
                     argv[j] = argv[j + 1];
                 }
@@ -351,13 +350,13 @@ void setupAction(int& argc, char *argv[]) {
         return false;
     };
     if (argc >= 2) {
-        if (flagIsPresent(actions[Action::Cut]) || flagIsPresent(action_shortcuts[Action::Cut]) || flagIsPresent("--" + std::string(actions[Action::Cut])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Cut]))) { //replace with join_with_view when C++23 becomes available
+        if (flagIsPresent(actions[Action::Cut], "--") || flagIsPresent(action_shortcuts[Action::Cut], "-")) { //replace with join_with_view when C++23 becomes available
             action = Action::Cut;
             if (!stdin_is_tty || !stdout_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (flagIsPresent(actions[Action::Copy]) || flagIsPresent(action_shortcuts[Action::Copy]) || flagIsPresent("--" + std::string(actions[Action::Copy])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Copy]))) {
+        } else if (flagIsPresent(actions[Action::Copy], "--") || flagIsPresent(action_shortcuts[Action::Copy], "-")) {
             action = Action::Copy;
             if (!stdin_is_tty) {
                 action = Action::PipeIn;
@@ -365,7 +364,7 @@ void setupAction(int& argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(1);
             }
-        } else if (flagIsPresent(actions[Action::Paste]) || flagIsPresent(action_shortcuts[Action::Paste]) || flagIsPresent("--" + std::string(actions[Action::Paste])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Paste]))) {
+        } else if (flagIsPresent(actions[Action::Paste], "--") || flagIsPresent(action_shortcuts[Action::Paste], "-")) {
             action = Action::Paste;
             if (!stdout_is_tty) {
                 action = Action::PipeOut;
@@ -373,9 +372,9 @@ void setupAction(int& argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(1);
             }
-        } else if (flagIsPresent(actions[Action::Show]) || flagIsPresent(action_shortcuts[Action::Show]) || flagIsPresent("--" + std::string(actions[Action::Show])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Show]))) {
+        } else if (flagIsPresent(actions[Action::Show], "--") || flagIsPresent(action_shortcuts[Action::Show], "-")) {
             action = Action::Show;
-        } else if (flagIsPresent(actions[Action::Clear]) || flagIsPresent(action_shortcuts[Action::Clear]) || flagIsPresent("--" + std::string(actions[Action::Clear])) || flagIsPresent("-" + std::string(action_shortcuts[Action::Clear]))) {
+        } else if (flagIsPresent(actions[Action::Clear], "--") || flagIsPresent(action_shortcuts[Action::Clear], "-")) {
             action = Action::Clear;
             if (!stdin_is_tty) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
@@ -483,9 +482,7 @@ void setupIndicator() {
     fflush(stderr);
 }
 
-void startIndicator()
-{
-    // If cancelled, leave cancelled
+void startIndicator() { // If cancelled, leave cancelled
     SpinnerState expect = SpinnerState::Done;
     spinner_state.compare_exchange_strong(expect, SpinnerState::Active);
     indicator = std::thread(setupIndicator);

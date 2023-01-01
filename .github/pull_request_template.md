@@ -17,4 +17,4 @@ All PRs must be "feature complete." This means that you can't replace a feature 
 
 # Thanks for your contributions! 👋
 
-Replace all this text (including the sections above) with your PR after you've reviewed it.
+Replace all this text with your PR after you've reviewed it.
