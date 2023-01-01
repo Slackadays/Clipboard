@@ -41,9 +41,9 @@ extern std::mutex m;
 extern std::jthread indicator; //If this fails to compile, then you need C++20!
 
 extern unsigned int output_length;
-extern unsigned long files_success;
-extern unsigned long directories_success;
-extern unsigned long long bytes_success;
+extern std::atomic<unsigned long> files_success;
+extern std::atomic<unsigned long> directories_success;
+extern std::atomic<unsigned long long> bytes_success;
 
 extern bool stdin_is_tty;
 extern bool stdout_is_tty;

@@ -40,9 +40,9 @@ std::mutex m;
 std::jthread indicator; //If this fails to compile, then you need C++20!
 
 unsigned int output_length = 0;
-unsigned long files_success = 0;
-unsigned long directories_success = 0;
-unsigned long long bytes_success = 0;
+std::atomic<unsigned long> files_success = 0;
+std::atomic<unsigned long> directories_success = 0;
+std::atomic<unsigned long long> bytes_success = 0;
 
 bool stdin_is_tty = true;
 bool stdout_is_tty = true;
