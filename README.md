@@ -94,7 +94,7 @@ Windows:
 cmake --install .
 ```
 
-You can change the installation prefix with the `-DCMAKE_INSTALL_PREFIX` flag, i.e.:
+Change the installation prefix with the `-DCMAKE_INSTALL_PREFIX` flag.
 ```bash
 cmake -DCMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX .
 sudo cmake --install .
