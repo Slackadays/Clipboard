@@ -81,18 +81,24 @@ cmake --build .
 
 ### Install
 Linux, macOS, all BSD except OpenBSD, OpenIndiana:
-```
+```bash
 sudo cmake --install .
 ```
 OpenBSD:
-```
+```bash
 doas cmake --install .
 ```
+
 Windows:
-```
+```bash
 cmake --install .
 ```
 
+Change the installation prefix with the `-DCMAKE_INSTALL_PREFIX` flag.
+```bash
+cmake -DCMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX .
+sudo cmake --install .
+```
 ---
 
 ### Uninstall
