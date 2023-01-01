@@ -65,6 +65,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
 add_executable(clipboard 
   src/clipboard.cpp
   src/messages.cpp  
+  src/variables.cpp
 )
 
 if(WIN32)

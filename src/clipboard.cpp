@@ -52,44 +52,6 @@
 
 namespace fs = std::filesystem;
 
-bool use_perma_clip = false;
-bool use_safe_copy = true;
-fs::path main_filepath;
-fs::path temporary_filepath;
-fs::path persistent_filepath;
-fs::path original_files_path;
-fs::path home_directory;
-fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
-std::vector<fs::path> items;
-std::vector<std::pair<std::string, std::error_code>> failedItems;
-std::string clipboard_name = "0";
-
-std::condition_variable cv;
-std::mutex m;
-std::jthread indicator; //If this fails to compile, then you need C++20!
-
-unsigned int output_length = 0;
-unsigned long files_success = 0;
-unsigned long directories_success = 0;
-unsigned long long bytes_success = 0;
-
-bool stdin_is_tty = true;
-bool stdout_is_tty = true;
-bool stderr_is_tty = true;
-
-std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
-    {"{red}", "\033[38;5;196m"},
-    {"{green}", "\033[38;5;40m"},
-    {"{yellow}", "\033[38;5;214m"},
-    {"{blue}", "\033[38;5;51m"},
-    {"{orange}", "\033[38;5;208m"},
-    {"{pink}", "\033[38;5;219m"},
-    {"{bold}", "\033[1m"},
-    {"{blank}", "\033[0m"}
-}};
-
-Action action;
-
 std::string replaceColors(const std::string_view& str) {
     std::string temp(str); //a string to do scratch work on
     for (const auto& key : colors) { //iterate over all the possible colors to replace
@@ -194,18 +156,6 @@ void setClipboardName(int& argc, char *argv[]) {
 }
 
 void setupVariables(int& argc, char *argv[]) {
-    #if defined(_WIN64) || defined (_WIN32)
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
-	DWORD dwMode = 0;
-	GetConsoleMode(hOut, &dwMode);
-	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
-        for (auto& key : colors) {
-            key.second = "";
-        }
-	}
-	SetConsoleOutputCP(CP_UTF8); //fix broken accents on Windows
-    #endif
-
     stdin_is_tty = isatty(fileno(stdin));
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
@@ -217,6 +167,16 @@ void setupVariables(int& argc, char *argv[]) {
     }
 
     #if defined(_WIN64) || defined (_WIN32)
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility
+	DWORD dwMode = 0;
+	GetConsoleMode(hOut, &dwMode);
+	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
+        for (auto& key : colors) {
+            key.second = "";
+        }
+	}
+	SetConsoleOutputCP(CP_UTF8); //fix broken accents on Windows
+
     home_directory = getenv("USERPROFILE");
     #else
     home_directory = getenv("HOME");
