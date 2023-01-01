@@ -31,9 +31,11 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
+#ifndef NOMINMAX
 #define NOMINMAX
-#include <Windows.h>
-#include <Shlobj.h>
+#endif
+#include <windows.h>
+#include <shlobj.h>
 #define isatty _isatty
 #define fileno _fileno
 #else
