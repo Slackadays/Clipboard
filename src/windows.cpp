@@ -1,8 +1,14 @@
 #include <io.h>
 #include <Windows.h>
 #include <Shlobj.h>
-#include "windows.hpp"
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <vector>
 #include "clipboard.hpp"
+#include "windows.hpp"
+
+
 
 void onWindowsError(const std::string_view function) {
     auto errorCode = GetLastError();

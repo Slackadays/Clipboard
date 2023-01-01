@@ -1,4 +1,8 @@
+#include <filesystem>
+#include <vector>
 #include "clipboard.hpp"
+
+namespace fs = std::filesystem;
 
 template<typename char_t>
 void decodeWindowsDropfilesPaths(void* filesList, std::vector<fs::path>& paths) {
