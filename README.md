@@ -39,17 +39,12 @@ cmake -DCMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX .
 ---
 
 ### Uninstall
-Linux, macOS, all BSD except OpenBSD, OpenIndiana:
 ```
-sudo xargs rm < install_manifest.txt
+xargs rm < install_manifest.txt
 ```
-OpenBSD:
-```
-doas xargs rm < install_manifest.txt
-```
-Windows:
+Add `sudo` to the beginning for Linux, macOS, all BSDs except OpenBSD, and OpenIndiana, and `doas` for OpenBSD.
 
-You may need to individually remove all the files in install_manifest.txt.
+For Windows, you may need to individually remove all the files in install_manifest.txt.
 
 ---
 
@@ -68,35 +63,35 @@ Add a number to the end of the action to choose which clipboard you want to use 
 
 ---
 
-### **Copy** &emsp; `clipboard ([--]copy|[-]cp) (file) [files]`
+**Copy** &emsp; `clipboard ([--]copy|[-]cp) (file) [files]`
 
 ---
 
-### **Cut** &emsp; `clipboard ([--]cut|[-]ct) (file) [files]`
+**Cut** &emsp; `clipboard ([--]cut|[-]ct) (file) [files]`
 
 ---
 
-### **Paste** &emsp; `clipboard ([--]paste|[-]p)`
+**Paste** &emsp; `clipboard ([--]paste|[-]p)`
 
 ---
 
-### **Pipe In** &emsp; `(something) | clipboard [([--]copy|[-]cp)]`
+**Pipe In** &emsp; `(something) | clipboard [([--]copy|[-]cp)]`
 
 ---
 
-### **Pipe Out** &emsp; `clipboard [([--]paste|[-]p] | (something)` or `clipboard [([--]paste|[-]p)] > (some file)`
+**Pipe Out** &emsp; `clipboard [([--]paste|[-]p] | (something)` or `clipboard [([--]paste|[-]p)] > (some file)`
 
 ---
 
-### **Show Contents** &emsp; `clipboard ([--]show|[-]sh)`
+**Show Contents** &emsp; `clipboard ([--]show|[-]sh)`
 
 ---
 
-### **Clear Contents** &emsp; `clipboard ([--]clear|[-]clr)`
+**Clear Contents** &emsp; `clipboard ([--]clear|[-]clr)`
 
 ---
 
-### Examples
+**Examples**
 
 ```
 cb copy foo.txt launchcodes.doc
@@ -104,25 +99,29 @@ clipboard cut1 MyDirectory
 cb cp800 bar.conf AnotherDirectory baz.txt
 ```
 
+---
+
 ![Simple Configuration](readme_assets/CBSimpleConfiguration.png)
 
-### **`CI`** &emsp; Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+---
+
+**`CI`** &emsp; Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
 ---
 
-### **`FORCE_COLOR`** &emsp; Set this environment variable to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+**`FORCE_COLOR`** &emsp; Set this environment variable to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
 ---
 
-### **`TMPDIR`** &emsp; Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
+**`TMPDIR`** &emsp; Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
 
 ---
 
-### **`NO_COLOR`** &emsp; Set this environment variable to make Clipboard not show any colors.
+**`NO_COLOR`** &emsp; Set this environment variable to make Clipboard not show any colors.
 
 ---
 
-### **`--fast-copy`, `-fc`** &emsp; Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+**`--fast-copy`, `-fc`** &emsp; Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
 ---
 
