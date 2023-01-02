@@ -45,7 +45,7 @@
 #endif
 
 #if defined(X11_AVAILABLE)
-#include <X11/Xlib.h>
+#include "x11.hpp"
 #endif
 
 #if defined(WAYLAND_AVAILABLE)
@@ -222,19 +222,12 @@ void syncWithGUIClipboard() {
     //if it's newer, write the contents of the system clipboard to main_filepath
     //if it's older, do nothing
     #if defined(X11_AVAILABLE)
-    Display* dpy;
-    Window root;
-    int screen;
-    Atom selection;
-
-    dpy = XOpenDisplay(NULL);
-    if (dpy == NULL) { 
-        return;
+    auto text = getX11Clipboard();
+    if (text.has_value()) {
+        forceClearTempDirectory();
+        std::ofstream file(main_filepath / pipe_file);
+        file << *text;
     }
-    screen = DefaultScreen(dpy);
-    root = RootWindow(dpy, screen);
-    selection = XInternAtom(dpy, "CLIPBOARD", False);
-
     #endif
 
     #if defined(WAYLAND_AVAILABLE)
