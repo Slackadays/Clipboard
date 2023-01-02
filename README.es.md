@@ -1,75 +1,78 @@
-![Clipboard Banner](readme_assets/en/CBBanner.png)
+![Clipboard Banner](readme_assets/es/CBBanner.png)
 
-Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The clipboard powertool for the command line.
+[<img src="readme_assets/English.png" width="15%" />](README.md)
+[<img src="readme_assets/español.png" width="15%" />](README.es.md)
 
-- **Zero-bloat.** Clipboard rings in at mere kilobytes on most platforms.
-- **Zero-config.** Clipboard doesn't require any configuration to use.
-- **Zero-effort.** Clipboard is friendly to newbies and power users alike.
-- **Zero-dependency.** Clipboard works on any up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies. Yes, really!
-- **Universal.** Clipboard supports English, Spanish, Portuguese, and Turkish locales.
-- **A time-saver.** Clipboard frees you from ugly, temporary directories and memorizing file locations!
+Corta, copia y pega absolutamente cualquier cosa en cualquier lugar que quisieras, mientras usas el terminal. Esta es la herramienta definitiva para el portapapeles.
+
+- **Sin hinchazón.** Clipboard cuenta a los kilobytes con muchas plataformas.
+- **Sin configuración.** Clipboard no necesita ninguna configuración para usarlo.
+- **Sin esfuerzo.** Clipboard parece fácil a los novatos y a los profesionales por igual.
+- **Sin dependencias.** Clipboard funciona con las plataformas Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD o OpenIndiana, o cualquiera que funciona con C++20, sin dependencias. ¡De veras!
+- **Universal.** Clipboard soporta el inglés, el español, el portugués y el turco.
+- **Ahorrador de tiempo.** Clipboard te libera de las carpetas temporales feas y del memorizar de los archivos.
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
-![Clipboard Demo Image](readme_assets/en/CBDemo.png)
+![Imagen Para Demonstrar Clipboard](readme_assets/es/CBDemo.png)
 
-![How To Use](readme_assets/en/CBHowToUse.png)
+![Cómo Usar](readme_assets/es/CBHowToUse.png)
 
-In all commands, you can substitute `cb` for `clipboard`. 
-Add a number to the end of the action to choose which clipboard you want to use (the default is 0). 
-
----
-
-### Copy
-`clipboard [--](copy|cp) (file) [files]`
+Puedes reemplazar `cb` por `clipboard` en todos los comandos.
+Añade un número al final para escoger cualquier portapapeles que quisieras usar.
 
 ---
 
-### Cut
-`clipboard [--](cut|ct) (file) [files]`
+### Copiar
+`clipboard ([--]copiar|[-]cp) (archivo) [archivos]`
 
 ---
 
-### Paste
-`clipboard [--](paste|p)`
+### Cortar
+`clipboard ([--]cortar|[-]ct) (archivo) [archivos]`
 
 ---
 
-### Pipe In
-
-`(something) | clipboard [[--](copy|cp)]`
-
----
-
-### Pipe Out
-
-`clipboard [[--](paste|p] | (something)`
-
-or
-
-`clipboard [[--](paste|p)] > (some file)`
+### Pegar
+`clipboard ([--]pegar|[-]p)`
 
 ---
 
-### Show Contents
-`clipboard [--](show|sh)`
+### Direccionar Por Adentro
+
+`(algo) | clipboard [([-]dad)]`
 
 ---
 
-### Clear
-`clipboard [--](clear|clr)`
+### Direccionar Por Afuera
+
+`clipboard [([--]pegar|[-]p] | (algo)`
+
+o
+
+`clipboard [([--]pegar|[-]p)] > (algún archivo)`
 
 ---
 
-### Examples
+### Mostrar El Contenido
+`clipboard ([--]mostrar|[-]ms)`
+
+---
+
+### Quitar
+`clipboard ([--]quitar|[-]qt)`
+
+---
+
+### Ejemplos
 
 ```
-cb copy foo.txt launchcodes.doc
-clipboard cut1 MyDirectory
-cb cp800 bar.conf AnotherDirectory baz.txt
+cb copiar foo.txt bla.doc
+clipboard cortar1 MiCarpeta
+cb cp800 bar.conf OtraCarpeta baz.txt
 ```
 
-![Quick Installation](readme_assets/en/CBQuickInstallation.png)
-### Linux, macOS, all BSDs, and OI:
+![Instalación Rápida](readme_assets/es/CBQuickInstallation.png)
+### Linux, macOS, todos los BSDs y OI:
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh > sh
 ```
@@ -80,7 +83,7 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 
 ---
 
-### Clone, Configure, Compile, and Install Manually
+### Clonar, Configurar, Compilar y Instalar A Mano
 ```bash
 git clone https://github.com/slackadays/Clipboard
 cd Clipboard
@@ -88,14 +91,14 @@ cmake .
 cmake --build .
 cmake --install .
 ```
-Change the installation prefix with the `-DCMAKE_INSTALL_PREFIX` flag.
+Puedes escoger el prefijo de instalación con el indicador `-DCMAKE_INSTALL_PREFIX`.
 ```bash
-cmake -DCMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX .
+cmake -DCMAKE_INSTALL_PREFIX=/PREFIJO .
 ```
 ---
 
-### Uninstall
-Linux, macOS, all BSD except OpenBSD, OpenIndiana:
+### Desinstalar
+Linux, macOS, todos los BSDs salvo OpenBSD y OpenIndiana:
 ```
 sudo xargs rm < install_manifest.txt
 ```
@@ -105,58 +108,58 @@ doas xargs rm < install_manifest.txt
 ```
 Windows:
 
-You may need to individually remove all the files in install_manifest.txt.
+Desinstala todos los archivos en install_manifest.txt.
 
 ---
 
 ### Actions
 
-You can also download Clipboard builds from GitHub Actions.
+Graba las últimas versiones de Clipboard desde GitHub Actions.
 
 ---
 
 ### AUR
 
-Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
+Los usuarios de Arch-Linux pueden instalar [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin) o [clipboard-git](https://aur.archlinux.org/packages/clipboard-git).
 
 ---
 
-![Simple Configuration](readme_assets/en/CBSimpleConfiguration.png)
+![Configuración Simple](readme_assets/es/CBSimpleConfiguration.png)
 
 ### `CI`
 
-Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+Pon esta variable ambiente para que Clipboard sobrescriba los archivos existentes sin preguntar al usuario cuando pegue. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
 ---
 
 ### `FORCE_COLOR`
 
-Set this environment variable to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+Pon esta variable ambiente para que Clipboard muestre los colores siempre independientemente del estado de `NO_COLOR`.
 
 ---
 
 ### `TMPDIR`
 
-Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
+Pon esta variable ambiente a la carpeta que quisieras que Clipboard use para contener las cosas que copias o cortas.
 
 ---
 
 ### `NO_COLOR`
 
-Set this environment variable to make Clipboard not show any colors.
+Pon esta variable ambiente to make Clipboard not show any colors.
 
 ---
 
 ### `--fast-copy`, `-fc`
 
-Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+Añade este indicador para usar los enlaces para copiar, cortar o pegar. Si cambies las cosas que usaste con este indiciador, las cosas que pegues tendrán los mismos cambios.
 
 ---
 
-![Painless Documentation](readme_assets/en/CBPainlessDocumentation.png)
+![Documentación Simple](readme_assets/es/CBPainlessDocumentation.png)
 
-[Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
+[Haz clic aquí](https://github.com/Slackadays/Clipboard/wiki) para acceder el Clipboard Wiki.
 
-![Fast Support](readme_assets/en/CBFastSupport.png)
+![Soporte Útil](readme_assets/es/CBFastSupport.png)
 
-[Click here](https://discord.gg/J6asnc3pEG) to go to our Discord group.
+[Haz clic aquí](https://discord.gg/J6asnc3pEG) para unirte a nuestro grupo Discord.

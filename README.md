@@ -1,5 +1,8 @@
 ![Clipboard Banner](readme_assets/en/CBBanner.png)
 
+[<img src="readme_assets/English.png" width="15%" />](README.md)
+[<img src="readme_assets/español.png" width="15%" />](README.es.md)
+
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The clipboard powertool for the command line.
 
 - **Zero-bloat.** Clipboard rings in at mere kilobytes on most platforms.
@@ -20,43 +23,43 @@ Add a number to the end of the action to choose which clipboard you want to use 
 ---
 
 ### Copy
-`clipboard [--](copy|cp) (file) [files]`
+`clipboard ([--]copy|[-]cp) (file) [files]`
 
 ---
 
 ### Cut
-`clipboard [--](cut|ct) (file) [files]`
+`clipboard ([--]cut|[-]ct) (file) [files]`
 
 ---
 
 ### Paste
-`clipboard [--](paste|p)`
+`clipboard ([--]paste|[-]p)`
 
 ---
 
 ### Pipe In
 
-`(something) | clipboard [[--](copy|cp)]`
+`(something) | clipboard [([--]copy|[-]cp)]`
 
 ---
 
 ### Pipe Out
 
-`clipboard [[--](paste|p] | (something)`
+`clipboard [([--]paste|[-]p] | (something)`
 
 or
 
-`clipboard [[--](paste|p)] > (some file)`
+`clipboard [([--]paste|[-]p)] > (some file)`
 
 ---
 
 ### Show Contents
-`clipboard [--](show|sh)`
+`clipboard ([--]show|[-]sh)`
 
 ---
 
 ### Clear
-`clipboard [--](clear|clr)`
+`clipboard ([--]clear|[-]clr)`
 
 ---
 
