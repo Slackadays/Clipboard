@@ -71,7 +71,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 ![Quick Installation](readme_assets/en/CBQuickInstallation.png)
 ### Linux, macOS, all BSDs, and OI:
 ```bash
-curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh > sh
+curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
 ```
 ### Windows:
 ```powershell
@@ -109,13 +109,9 @@ You may need to individually remove all the files in install_manifest.txt.
 
 ---
 
-### Actions
+### Premade Builds
 
-You can also download Clipboard builds from GitHub Actions.
-
----
-
-### AUR
+You can download Clipboard directly from GitHub Actions.
 
 Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
 
