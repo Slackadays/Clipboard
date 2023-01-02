@@ -191,6 +191,7 @@ enum class X11PropertyMode : int {
 
 class X11Property {
 private:
+    X11Atom const& m_name;
     X11Atom const& m_type;
     X11PropertyFormat const m_format;
 
@@ -198,22 +199,26 @@ private:
     std::size_t const m_size8;
 
 public:
-    X11Property(X11Atom const& type, std::u8string_view data)
-        : m_type(type)
+    X11Property(X11Atom const& name, X11Atom const& type, std::u8string_view data)
+        : m_name(name)
+        , m_type(type)
         , m_format(X11PropertyFormat::Format8)
         , m_data8(reinterpret_cast<uint8_t const*>(data.data()))
         , m_size8(data.size()) {}
 
     X11Property(
+            X11Atom const& name,
             X11Atom const& type,
             X11PropertyFormat format,
             std::unique_ptr<std::uint8_t[]>&& data8,
             std::size_t size8)
-        : m_type(type)
+        : m_name(name)
+        , m_type(type)
         , m_format(format)
         , m_data8(std::move(data8))
         , m_size8(size8) {}
 
+    [[nodiscard]] inline X11Atom const& name() const { return m_name; }
     [[nodiscard]] inline X11Atom const& type() const { return m_type; }
     [[nodiscard]] inline X11PropertyFormat format() const { return m_format; }
 
@@ -279,13 +284,14 @@ public:
     [[nodiscard]] Time queryCurrentTime();
     [[nodiscard]] std::optional<XEvent> checkTypedWindowEvent(int eventType);
     [[nodiscard]] std::optional<XEvent> checkMaskEvent(int eventMask);
-    void changeProperty(X11Atom const&, X11PropertyMode, X11Property&);
+    void changeProperty(X11PropertyMode, X11Property&);
     void deleteProperty(X11Atom const&);
     [[nodiscard]] X11Property getProperty(X11Atom const&, bool delet = false);
     [[nodiscard]] X11Property convertSelection(X11Atom const& selection, X11Atom const& target);
 
     [[nodiscard]] std::vector<std::reference_wrapper<X11Atom const>> queryClipboardTargets();
     [[nodiscard]] X11Property convertClipboard(X11Atom const& target);
+    [[nodiscard]] std::vector<char> getClipboardData(X11Atom const& target);
 
     template<typename predicate_t>
     XEvent waitForEvent(int eventType, predicate_t predicate);
@@ -556,12 +562,12 @@ std::optional<XEvent> X11Window::checkMaskEvent(int eventMask) {
     return {};
 }
 
-void X11Window::changeProperty(X11Atom const& name, X11PropertyMode mode, X11Property& value) {
+void X11Window::changeProperty(X11PropertyMode mode, X11Property& value) {
     throwIfDestroyed();
     X_CALL(XChangeProperty,
         display(),
         window(),
-        name.value(),
+        value.name().value(),
         value.type().value(),
         value.format().value(),
         static_cast<int>(mode),
@@ -616,10 +622,10 @@ Time X11Window::queryCurrentTime() {
     throwIfDestroyed();
 
     auto&& name = atom("GETCURRENTTIME");
-    X11Property value { atom("text/plain"), u8"getcurrenttime"sv };
+    X11Property value { name, atom("text/plain"), u8"getcurrenttime"sv };
 
     deleteProperty(name);
-    changeProperty(name, X11PropertyMode::Replace, value);
+    changeProperty(X11PropertyMode::Replace, value);
 
     auto const event = waitForEvent(PropertyNotify, [&name](XEvent& event) {
         return event.xproperty.atom == name.value() && event.xproperty.state == PropertyNewValue;
@@ -700,9 +706,9 @@ X11Property X11Window::getProperty(X11Atom const& name, bool delet) {
     std::memcpy(data.get(), x11Data.get(), size);
 
     return X11Property {
+        name,
         type,
         format,
-
         std::move(data),
         size
     };
@@ -724,6 +730,46 @@ std::vector<std::reference_wrapper<X11Atom const>> X11Window::queryClipboardTarg
         result.emplace_back(atom(atomValue));
     }
 
+    return result;
+}
+
+std::vector<char> X11Window::getClipboardData(X11Atom const& target) {
+    throwIfDestroyed();
+
+    std::vector<char> result;
+    auto addToResult = [&result](X11Property const& x) {
+        for (auto&& c : x) {
+            result.push_back(c);
+        }
+    };
+
+    auto firstResult = convertClipboard(target);
+    if (firstResult.type() != atom(atomIncr)) {
+        debugStream << "Got a regular non-INCR result" << std::endl;
+        addToResult(firstResult);
+        return std::move(result);
+    }
+
+    debugStream << "Got an INCR result" << std::endl;
+
+    // The value of INCR should be a lower bound on the size of the full data
+    result.reserve(*firstResult.begin());
+
+    while (true) {
+        waitForEvent(PropertyNotify, [&](XEvent const& event) {
+            return event.xproperty.atom == firstResult.name().value()
+                && event.xproperty.state == PropertyNewValue;
+        });
+        auto prop = getProperty(firstResult.name(), true);
+        if (prop.size() <= 0) {
+            break;
+        }
+
+        debugStream << "Got a chunk of " << prop.size() << " bytes" << std::endl;
+        addToResult(prop);
+    }
+
+    debugStream << "DONE! Received a total of " << result.size() << " bytes" << std::endl;
     return result;
 }
 
@@ -761,15 +807,9 @@ static std::optional<std::string> getX11ClipboardInternal() {
     }
 
     debugStream << "Chosen target: " << target->name() << std::endl;
-    auto result = window.convertClipboard(*target);
-    if (result.type().name() == atomIncr) {
-        // TODO: Implement large data transfers
-        // https://tronche.com/gui/x/icccm/sec-2.html#s-2.5
-        debugStream << "INCR large data transfer not implement yet, aborting" << std::endl;
-        return {};
-    }
 
-    return reinterpret_cast<char const*>(result.data8());
+    auto const data = window.getClipboardData(*target);
+    return {{ data.begin(), data.end() }};
 }
 
 std::optional<std::string> getX11Clipboard() {
