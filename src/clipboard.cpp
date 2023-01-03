@@ -206,15 +206,60 @@ void createTempDirectory() {
     fs::create_directories(persistent_filepath);
 }
 
+void syncWithGUIClipboard(std::string const& text) {
+    forceClearTempDirectory();
+    std::ofstream output(main_filepath / pipe_file);
+    output << text;
+}
+
+void syncWithGUIClipboard(ClipboardPaths const& clipboard) {
+    // Only clear the temp directory if all files in the clipboard are outside the temp directory
+    // This avoids the situation where we delete the very files we're trying to copy
+    auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
+        auto relative = fs::relative(path, main_filepath);
+        auto firstElement = *(relative.begin());
+        return firstElement == fs::path("..");
+    });
+
+    if (allOutsideFilepath) {
+        forceClearTempDirectory();
+    }
+
+    for (auto&& path : clipboard.paths()) {
+        if (!fs::exists(path)) {
+            continue;
+        }
+
+        auto target = main_filepath / path.filename();
+        if (fs::exists(target) && fs::equivalent(path, target)) {
+            continue;
+        }
+
+        try {
+            fs::copy(path, target, opts | fs::copy_options::create_hard_links);
+        } catch (const fs::filesystem_error& e) {
+            try {
+                fs::copy(path, target, opts);
+            } catch (const fs::filesystem_error& e) {
+                // Give up
+            }
+        }
+    }
+
+    if (clipboard.action() == ClipboardPathsAction::Cut) {
+        std::ofstream originalFiles { original_files_path };
+        for (auto&& path : clipboard.paths()) {
+            originalFiles << path.string() << std::endl;
+        }
+    }
+}
+
 void syncWithGUIClipboard() { 
     if (clipboard_name == default_clipboard_name) { //also check if the system clipboard is newer than main_filepath (check the last write time), and if it is newer, write the contents of the system clipboard to main_filepath
+        ClipboardContent guiClipboard;
+
         #if defined(X11_AVAILABLE)
-        /*auto text = getX11Clipboard();
-        if (text.has_value()) {
-            forceClearTempDirectory();
-            std::ofstream file(main_filepath / pipe_file);
-            file << *text;
-        }*/
+        guiClipboard = getX11Clipboard();
         #endif
 
         #if defined(WAYLAND_AVAILABLE)
@@ -222,10 +267,17 @@ void syncWithGUIClipboard() {
         #endif
 
         #if defined(_WIN32) || defined(_WIN64)
-        syncWithWindowsClipboard();
+        guiClipboard = syncWithWindowsClipboard();
         #elif defined(__APPLE__)
 
         #endif
+
+        if (guiClipboard.type() == ClipboardContentType::Text) {
+            syncWithGUIClipboard(guiClipboard.text());
+
+        } else if (guiClipboard.type() == ClipboardContentType::Paths) {
+            syncWithGUIClipboard(guiClipboard.paths());
+        }
     }
 }
 

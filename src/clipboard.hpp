@@ -22,6 +22,8 @@
 #include <condition_variable>
 #include <mutex>
 
+#include "gui.hpp"
+
 namespace fs = std::filesystem;
 
 extern bool use_perma_clip;
@@ -113,6 +115,8 @@ void setupItems(int& argc, char *argv[]);
 void setClipboardName(int& argc, char *argv[]);
 void setupVariables(int& argc, char *argv[]);
 void createTempDirectory();
+void syncWithGUIClipboard(std::string const& text);
+void syncWithGUIClipboard(ClipboardPaths const& clipboard);
 void syncWithGUIClipboard();
 void showClipboardStatus();
 void showClipboardContents();

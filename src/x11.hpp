@@ -14,7 +14,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
+#include "gui.hpp"
+
 #include <string>
 #include <optional>
 
-std::optional<std::string> getX11Clipboard();
+ClipboardContent getX11Clipboard();
