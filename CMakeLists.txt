@@ -86,7 +86,7 @@ if(WAYLAND_CLIENT_FOUND)
 endif()
 
 if(APPLE)
-  target_sources(clipboard PRIVATE src/macos.mm)
+  #target_sources(clipboard PRIVATE src/macos.mm)
 endif()
 
 if(lto_supported)
