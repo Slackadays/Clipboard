@@ -154,19 +154,11 @@ void setClipboardName(int& argc, char *argv[]) {
         }
     }
 
-    if (getenv("TMPDIR") != nullptr) {
-        temporary_filepath = fs::path(getenv("TMPDIR")) / "Clipboard" / clipboard_name;
-    } else {
-        temporary_filepath = fs::temp_directory_path() / "Clipboard" / clipboard_name;
-    }
+    temporary_filepath = (getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / "Clipboard" / clipboard_name; //set temporary_filepath to TMPDIR if it exists, otherwise use the system's temporary directory
 
     persistent_filepath = home_directory / ".clipboard" / clipboard_name;
-
-    if (use_perma_clip) {
-        main_filepath = persistent_filepath;
-    } else {
-        main_filepath = temporary_filepath;
-    }
+    
+    main_filepath = use_perma_clip ? persistent_filepath : temporary_filepath;
 
     original_files_path = main_filepath.parent_path() / (clipboard_name + ".files");
 }
@@ -176,7 +168,7 @@ void setupVariables(int& argc, char *argv[]) {
     stdout_is_tty = isatty(fileno(stdout));
     stderr_is_tty = isatty(fileno(stderr));
 
-    if(getenv("IS_ACTUALLY_A_TTY") != nullptr) { //add test compatibility where isatty returns false, but there is actually a tty
+    if(getenv("IS_ACTUALLY_A_TTY")) { //add test compatibility where isatty returns false, but there is actually a tty
         stdin_is_tty = true;
         stdout_is_tty = true;
         stderr_is_tty = true;
@@ -198,7 +190,7 @@ void setupVariables(int& argc, char *argv[]) {
     home_directory = getenv("HOME");
     #endif
 
-    if (getenv("NO_COLOR") != nullptr && getenv("FORCE_COLOR") == nullptr) {
+    if (getenv("NO_COLOR") && !getenv("FORCE_COLOR")) {
         for (auto& key : colors) {
             key.second = "";
         }
@@ -206,12 +198,8 @@ void setupVariables(int& argc, char *argv[]) {
 }
 
 void createTempDirectory() {
-    if (!fs::is_directory(main_filepath)) {
-        fs::create_directories(main_filepath);
-    }
-    if (!fs::is_directory(home_directory / ".clipboard")) {
-        fs::create_directories(home_directory / ".clipboard");
-    }
+    fs::create_directories(temporary_filepath);
+    fs::create_directories(persistent_filepath);
 }
 
 void syncWithGUIClipboard() {
@@ -238,21 +226,19 @@ void syncWithGUIClipboard() {
 }
 
 void showClipboardStatus() {
-    std::vector<std::pair<std::string_view, bool>> clipboards_with_contents;
-    for (const auto& entry : fs::directory_iterator(temporary_filepath.parent_path())) {
-        if (fs::is_directory(entry) && !fs::is_empty(entry)) {
-            clipboards_with_contents.push_back({entry.path().filename().string(), false});
+    std::vector<std::pair<std::string, bool>> clipboards_with_contents;
+    auto iterateClipboards = [&](const fs::path& path, bool persistent) {
+        for (const auto& entry : fs::directory_iterator(path)) {
+            if (fs::is_directory(entry) && !fs::is_empty(entry)) {
+                clipboards_with_contents.push_back({entry.path().filename().string(), persistent});
+            }
         }
-    }
-    for (const auto& entry : fs::directory_iterator(persistent_filepath.parent_path())) {
-        if (fs::is_directory(entry) && !fs::is_empty(entry)) {
-            clipboards_with_contents.push_back({entry.path().filename().string(), true});
-        }
-    }
+    };
+    iterateClipboards(temporary_filepath.parent_path(), false);
+    iterateClipboards(persistent_filepath.parent_path(), true);
     std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
     if (clipboards_with_contents.empty()) {
         printf("%s", replaceColors(no_clipboard_contents_message).data());
-        printf(replaceColors(clipboard_action_prompt).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
     } else {
         printf("%s", replaceColors(check_clipboard_status_message).data());
         for (int clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
@@ -262,8 +248,8 @@ void showClipboardStatus() {
             }
         }
         printf("\n");
-        printf("%s", replaceColors(clipboard_action_prompt).data());
     }
+    printf("%s", replaceColors(clipboard_action_prompt).data());
 }
 
 void showClipboardContents() {
@@ -551,13 +537,7 @@ void removeOldFiles() {
 }
 
 bool userIsARobot() {
-    if (!stderr_is_tty || !stdin_is_tty || !stdout_is_tty) {
-        return true;
-    }
-    if (getenv("CI") != nullptr) {
-        return true;
-    }  
-    return false;
+    return !stderr_is_tty || !stdin_is_tty || !stdout_is_tty || getenv("CI");
 }
 
 int getUserDecision(const std::string& item) {
