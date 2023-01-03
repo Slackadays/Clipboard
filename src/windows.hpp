@@ -1,5 +1,5 @@
 /*  Clipboard - Cut, copy, and paste anything, anywhere, all from the terminal.
-    Copyright (C) 2022 Jackson Huff and other contributors on GitHub.com
+    Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
