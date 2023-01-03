@@ -44,8 +44,6 @@
 #include <unistd.h>
 #endif
 
-#undef X11_AVAILABLE
-
 #if defined(X11_AVAILABLE)
 #include "x11.hpp"
 #endif
@@ -545,7 +543,7 @@ void removeOldFiles() {
             }
         }
         files.close();
-        if (failedItems.size() == 0) {
+        if (failedItems.empty()) {
             fs::remove(original_files_path);
         }
         action = Action::Cut;
