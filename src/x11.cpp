@@ -28,8 +28,6 @@
 #include <thread>
 #include <variant>
 #include <vector>
-#include <sstream>
-#include <memory>
 #include <limits>
 
 #include <X11/Xlib.h>
@@ -48,15 +46,8 @@ constexpr auto atomClipboard = "CLIPBOARD";
 constexpr auto atomTargets = "TARGETS";
 constexpr auto atomIncr = "INCR";
 
-static std::vector<std::string_view> const textTypes {
-    "text/plain;charset=utf-8"sv,
-    "UTF8_STRING"sv,
-    "text/plain"sv,
-    "STRING"sv,
-    "TEXT"sv
-};
-
 // Forward declarations
+class X11ClipboardType;
 class X11Exception;
 class X11Atom;
 class X11Connection;
@@ -76,6 +67,42 @@ template<typename T>
 X11Pointer<T> capture(T* ptr) {
     return { ptr, &XFree };
 }
+
+class X11ClipboardType {
+private:
+    unsigned int const m_priority;
+    char const* const m_name;
+    ClipboardContentType const m_type;
+
+public:
+    X11ClipboardType(
+        unsigned int priority,
+        char const* const name,
+        ClipboardContentType type)
+        : m_priority(priority)
+        , m_name(name)
+        , m_type(type) { }
+
+    [[nodiscard]] inline unsigned int priority() const { return m_priority; }
+    [[nodiscard]] inline char const* const name() const { return m_name; }
+    [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
+
+private:
+    inline static std::map<std::string_view, X11ClipboardType> s_typesByName {};
+    inline static std::vector<std::pair<char const* const, ClipboardContentType>> const s_knownTypes {
+        { "x-special/gnome-copied-files", ClipboardContentType::Paths },
+        { "text/uri-list", ClipboardContentType::Paths },
+        { "text/plain;charset=utf-8", ClipboardContentType::Text },
+        { "UTF8_STRING", ClipboardContentType::Text },
+        { "text/plain", ClipboardContentType::Text },
+        { "STRING", ClipboardContentType::Text },
+        { "TEXT", ClipboardContentType::Text },
+    };
+
+    static void tryPopulateTypesByName();
+public:
+    static std::optional<X11ClipboardType> findBest(std::vector<std::reference_wrapper<X11Atom const>> const&);
+};
 
 class X11Exception : public std::exception {
 private:
@@ -302,6 +329,40 @@ public:
     }
 };
 
+void X11ClipboardType::tryPopulateTypesByName() {
+    if (!s_typesByName.empty()) {
+        return;
+    }
+
+    unsigned int priority = 0;
+    for (auto&& [ name, type ] : s_knownTypes) {
+        s_typesByName.insert({ name, { priority++, name, type } });
+    }
+}
+
+std::optional<X11ClipboardType> X11ClipboardType::findBest(std::vector<std::reference_wrapper<const X11Atom>> const& targets) {
+    tryPopulateTypesByName();
+
+    std::optional<X11ClipboardType> best {};
+    for (auto&& target : targets) {
+        debugStream << "Advertised target: " << target.get().name() << std::endl;
+
+        auto&& it = s_typesByName.find(target.get().name());
+        if (it == s_typesByName.end()) {
+            continue;
+        }
+
+        X11ClipboardType found = it->second;
+        if (best.has_value() && best->priority() <= found.priority()) {
+            continue;
+        }
+
+        best.emplace(found);
+    }
+
+    return best;
+}
+
 std::string_view X11Atom::name() const {
     return std::visit([](auto&& name) -> char const* {
         using T = std::decay_t<decltype(name)>;
@@ -349,7 +410,6 @@ int X11Connection::localErrorHandler(Display* const errorDisplay, XErrorEvent* c
     m_pendingXCallException.emplace(message.str());
     return 0;
 }
-
 
 template<typename F, typename... Args>
 inline auto X11Connection::doXCall(std::string_view callName, F callLambda, Args... args) {
@@ -773,24 +833,86 @@ std::vector<char> X11Window::getClipboardData(X11Atom const& target) {
     return result;
 }
 
+static std::string urlDecode(std::string const& value) {
+    auto tryConvertByte = [](std::string const& str) -> std::optional<char> {
+        std::size_t pos = 0;
+        unsigned long result;
+        try {
+            result = std::stoul(str, &pos, 16);
+        } catch (std::invalid_argument&) {
+            return {};
+        }
 
-static X11Atom const* getBestTextTarget(X11Window& window) {
-    auto bestIt = textTypes.end();
-    X11Atom const* bestAtom = nullptr;
+        if (pos != 2) {
+            return {};
+        }
 
-    for (auto&& target : window.queryClipboardTargets()) {
-        debugStream << "Supported target: " << target.get().name() << std::endl;
-        auto it = std::find(textTypes.begin(), textTypes.end(), target.get().name());
-        if (it < bestIt) {
-            bestIt = it;
-            bestAtom = &target.get();
+        return static_cast<char>(result);
+    };
+
+    std::vector<char> result;
+
+    for (std::size_t i = 0; i < value.size(); i++) {
+        if (value[i] != '%' || i >= value.size() - 2) {
+            result.push_back(value[i]);
+            continue;
+        }
+
+        auto possibleByte = tryConvertByte({ &value[i + 1], 2 });
+        if (possibleByte.has_value()) {
+            result.push_back(possibleByte.value());
+            i += 2;
+        } else {
+            result.push_back('%');
         }
     }
 
-    return bestAtom;
+    return { result.begin(), result.end() };
 }
 
-static std::optional<std::string> getX11ClipboardInternal() {
+static std::string parseText(std::vector<char> const& data) {
+    return { data.begin(), data.end() };
+}
+
+static ClipboardPaths parseFiles(std::vector<char> const& data) {
+    std::string dataStr { data.begin(), data.end() };
+    std::istringstream stream { dataStr };
+
+    ClipboardPathsAction action = ClipboardPathsAction::Copy;
+    std::vector<fs::path> paths {};
+    while (!stream.eof()) {
+        std::string line;
+        std::getline(stream, line);
+
+        if (line.empty()) {
+            continue;
+        }
+
+        if (line == "copy"sv) {
+            action = ClipboardPathsAction::Copy;
+            debugStream << "Action: copy" << std::endl;
+            continue;
+        }
+
+        if (line == "cut"sv) {
+            action = ClipboardPathsAction::Cut;
+            debugStream << "Action: cut" << std::endl;
+            continue;
+        }
+
+        if (line.starts_with("file://"sv)) {
+            line.erase(0, "file://"sv.size());
+            line = urlDecode(line);
+        }
+
+        debugStream << "file: " << line << std::endl;
+        paths.emplace_back(line);
+    }
+
+    return { action, std::move(paths) };
+}
+
+static ClipboardContent getX11ClipboardInternal() {
     X11Connection conn;
     if (!conn.isClipboardOwned()) {
         debugStream << "No selection owner, aborting" << std::endl;
@@ -798,21 +920,24 @@ static std::optional<std::string> getX11ClipboardInternal() {
     }
 
     auto window = conn.createWindow();
-    // TODO: Implement file copying
-    auto target = getBestTextTarget(window);
+    auto target = X11ClipboardType::findBest(window.queryClipboardTargets());
 
-    if (target == nullptr) {
-        debugStream << "No supported target, aborting" << std::endl;
+    if (!target) {
+        debugStream << "No supported target was advertised, aborting" << std::endl;
         return {};
     }
 
     debugStream << "Chosen target: " << target->name() << std::endl;
+    auto const data = window.getClipboardData(conn.atom(target->name()));
 
-    auto const data = window.getClipboardData(*target);
-    return {{ data.begin(), data.end() }};
+    if (target->type() == ClipboardContentType::Text) {
+        return { parseText(data) };
+    }
+
+    return { parseFiles(data) };
 }
 
-std::optional<std::string> getX11Clipboard() {
+ClipboardContent getX11Clipboard() {
     try {
         return getX11ClipboardInternal();
     } catch (X11Exception const& e) {
