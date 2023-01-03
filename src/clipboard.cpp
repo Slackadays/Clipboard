@@ -44,6 +44,8 @@
 #include <unistd.h>
 #endif
 
+#undef X11_AVAILABLE
+
 #if defined(X11_AVAILABLE)
 #include "x11.hpp"
 #endif
@@ -88,10 +90,8 @@ bool stopIndicator() {
 void setupSignals() {
     signal(SIGINT, [](int dummy) {
         if (!cancelIndicator()) {
-            // Indicator thread is not currently running. TODO: Write an
-            // unbuffered newline, and maybe a cancelation message, directly to
-            // standard error. Note: There is no standard C++ interface for
-            // this, so this requires OS call.
+            /* Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation message, directly to
+               standard error. Note: There is no standard C++ interface for this, so this requires an OS call. */
             _exit(1);
         }
     });
@@ -170,7 +170,7 @@ void setClipboardName(int& argc, char *argv[]) {
         main_filepath = temporary_filepath;
     }
 
-    original_files_path = main_filepath.parent_path() / (std::string(clipboard_name) + ".files");
+    original_files_path = main_filepath.parent_path() / (clipboard_name + ".files");
 }
 
 void setupVariables(int& argc, char *argv[]) {
@@ -218,9 +218,7 @@ void createTempDirectory() {
 
 void syncWithGUIClipboard() {
     //check if the clipboard number is the default ("0")
-    //if it is, check if the system clipboard is newer than main_filepath (check the last write time)
-    //if it's newer, write the contents of the system clipboard to main_filepath
-    //if it's older, do nothing
+    //if it is, check if the system clipboard is newer than main_filepath (check the last write time), and if it is newer, write the contents of the system clipboard to main_filepath
     #if defined(X11_AVAILABLE)
     auto text = getX11Clipboard();
     if (text.has_value()) {
@@ -242,13 +240,13 @@ void syncWithGUIClipboard() {
 }
 
 void showClipboardStatus() {
-    std::vector<std::pair<std::string, bool>> clipboards_with_contents;
-    for (const auto& entry : fs::directory_iterator(main_filepath.parent_path())) {
+    std::vector<std::pair<std::string_view, bool>> clipboards_with_contents;
+    for (const auto& entry : fs::directory_iterator(temporary_filepath.parent_path())) {
         if (fs::is_directory(entry) && !fs::is_empty(entry)) {
             clipboards_with_contents.push_back({entry.path().filename().string(), false});
         }
     }
-    for (const auto& entry : fs::directory_iterator(home_directory / ".clipboard")) {
+    for (const auto& entry : fs::directory_iterator(persistent_filepath.parent_path())) {
         if (fs::is_directory(entry) && !fs::is_empty(entry)) {
             clipboards_with_contents.push_back({entry.path().filename().string(), true});
         }
@@ -260,13 +258,13 @@ void showClipboardStatus() {
     } else {
         printf("%s", replaceColors(check_clipboard_status_message).data());
         for (int clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
-            printf(replaceColors("{bold}%s{blank}{blue}").data(), (clipboards_with_contents.at(clipboard).first + (clipboards_with_contents.at(clipboard).second ? " (p)" : "")).data());
+            printf(replaceColors("{bold}%s%s{blank}{blue}").data(), clipboards_with_contents.at(clipboard).first.data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
             if (clipboard != clipboards_with_contents.size() - 1) {
                 printf(", ");
             }
         }
         printf("\n");
-        printf(replaceColors(clipboard_action_prompt).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
+        printf("%s", replaceColors(clipboard_action_prompt).data());
     }
 }
 
@@ -291,9 +289,9 @@ void showClipboardContents() {
 }
 
 void setupAction(int& argc, char *argv[]) {
-    auto flagIsPresent = [&](const std::string_view& flag, const std::string& shortcut = ""){
+    auto flagIsPresent = [&](const std::string_view& flag, const std::string_view& shortcut = ""){
         for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
-            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (shortcut + std::string(flag)).data())) {
+            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(flag).append(shortcut)).data())) {
                 for (int j = i; j < argc - 1; j++) {
                     argv[j] = argv[j + 1];
                 }

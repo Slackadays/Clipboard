@@ -79,7 +79,7 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
 std::string_view check_clipboard_status_message = "{blue}• There are items in these clipboards: ";
 std::string_view clipboard_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
-std::string_view clipboard_action_prompt = "{pink}Add {bold}%s, %s, {blank}{pink}or{bold} %s{blank}{pink} to the end, like {bold}clipboard %s{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
+std::string_view clipboard_action_prompt = "{pink}Add {bold}cut, copy, {blank}{pink}or{bold} paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
 std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action ({bold}\"%s\"{blank}{red}), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
 std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
 std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
@@ -149,7 +149,7 @@ void setLanguageES() {
     no_valid_action_message = "{red}╳ No especificaste ninguna acción válida o se te olvidó. {pink}Inténta usar o añadir {bold}cortar, copiar o pegar{blank}{pink} en su lugar, como {bold}clipboard copiar.{blank}\n";
     clipboard_contents_message = "{blue}• Aquí están las {bold}%i{blank}{blue} cosas primeras del portapapeles {bold}%s{blank}{blue}: {blank}\n";
     no_clipboard_contents_message = "{blue}• No hay nada en Clipboard en este momento.{blank}\n";
-    clipboard_action_prompt = "{pink}Añade {bold}%s, %s {blank}{pink}o{bold} %s{blank}{pink} al final, como {bold}clipboard %s{blank}{pink} para comenzar, o si necesitas ayuda, haz {bold}clipboard -h{blank}{pink} para mostrar el mensaje de ayudar.{blank}\n";
+    clipboard_action_prompt = "{pink}Añade {bold}cortar, copiar {blank}{pink}o{bold} pegar{blank}{pink} al final, como {bold}clipboard copiar{blank}{pink} para comenzar, o si necesitas ayuda, haz {bold}clipboard -h{blank}{pink} para mostrar el mensaje de ayudar.{blank}\n";
     choose_action_items_message = "{red}╳ Necesitas escoger una cosa para %s.{pink} Inténta añadir las cosas que quieres %s al final, como {bold}clipboard %s contactos.txt miprograma.cpp{blank}\n";
     fix_redirection_action_message = "{red}╳ No se puede usar la acción {bold}%s{blank}{red} con la redirección. {pink}Inténta sacar {bold}%s{blank}{pink} o usa {bold}%s{blank}{pink} en su lugar, como {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ No se pueden especificar las cosas con redirección. {pink}Inténta sacar las cosas que siguen {bold}clipboard [acción].\n";
@@ -202,7 +202,7 @@ void setLanguagePT() {
                    "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                    "{blue}▏Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é bem-vindo a redistribuí-lo sob certas condições.{blank}\n";
     no_valid_action_message = "{red}╳ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. {pink}Tente utilizar {bold}recortar, copiar ou colar{blank}{pink}, como em {bold}clipboard copiar.{blank}\n";
-    no_clipboard_contents_message = "{red}╳ Você não especificou uma ação válida. {pink}Tente adicionar {bold}%s, %s, or %s{blank}{pink} no final, como em {bold}clipboard %s{blank}{pink}. Caso precise de ajuda, tente {bold}clipboard -h{blank}{pink} para mostrar a tela de instruções.{blank}\n";
+    no_clipboard_contents_message = "{red}╳ Você não especificou uma ação válida. {pink}Tente adicionar {bold}recortar, copiar, or colar{blank}{pink} no final, como em {bold}clipboard copiar{blank}{pink}. Caso precise de ajuda, tente {bold}clipboard -h{blank}{pink} para mostrar a tela de instruções.{blank}\n";
     choose_action_items_message = "{red}╳ Você precisa especificar algo para %s.{pink} Tenta adicionar os itens que você quer %s ao final, como em {bold}clipboard %s contatos.txt meuprograma.cpp{blank}\n";
     fix_redirection_action_message = "{red}╳ Você não pode {bold}%s{blank}{red} com redirecionamento aqui. {pink}Tente remover {bold}%s{blank}{pink} ou utilizar {bold}%s{blank}{pink}, como em {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ Você não pode especificar itens ao redirecionar. {pink}Tente remover itens que vêm após {bold}clipboard [action].\n";
@@ -273,7 +273,7 @@ void setLanguageTR() {
     check_clipboard_status_message = "{blue}• Pano içeriği şunlardır: ";
     clipboard_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
     no_clipboard_contents_message = "{blue}• Panoda hiçbir şey yok.{blank}\n";
-    clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}%s, %s, {blank}{pink}veya{bold} %s{blank}{pink} ekleyin, {bold}clipboard %s{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";
+    clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}kes, kopyala, {blank}{pink}veya{bold} yapistir{blank}{pink} ekleyin, {bold}clipboard kopyala{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";
     no_valid_action_message = "{red}╳ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz {pink}Komutunuza {bold}cut, copy, {blank}{pink}ya da {bold}paste{blank}{pink} eklemelisiniz, örneğin {bold}clipboard copy.{blank}\n";
     choose_action_items_message = "{red}╳ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir.{pink} %s işleminden sonra öğeler eklemeyi deneyiniz, örneğin {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
     fix_redirection_action_message = "{red}╳ {bold}%s{blank}{red}(ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. {pink} {bold}%s{blank}{pink} işlemini silin veya {bold}%s{blank}{pink} işlemini kullanın, örneğin {bold}clipboard %s{blank}{pink}.\n";

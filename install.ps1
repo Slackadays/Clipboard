@@ -1,17 +1,15 @@
-$clone_command = "git clone https://github.com/slackadays/Clipboard"
-Write-Host $clone_command
-Invoke-Expression $clone_command
+function Show-Exec {
+    param (
+        $Command
+    )
+    Write-Host $Command
+    Invoke-Expression $Command
+}
 
-cd Clipboard
+Show-Exec -Command "git clone https://github.com/slackadays/Clipboard"
 
-$configure_command = "cmake ."
-Write-Host $configure_command
-Invoke-Expression $configure_command
+Set-Location Clipboard
 
-$build_command = "cmake --build . --config Release"
-Write-Host $build_command
-Invoke-Expression $build_command
-
-$install_command = "cmake --install . --config Release"
-Write-Host $install_command
-Invoke-Expression $install_command
+Show-Exec -Command "cmake ."
+Show-Exec -Command "cmake --build . --config Release"
+Show-Exec -Command "cmake --install . --config Release"

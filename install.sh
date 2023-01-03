@@ -1,24 +1,18 @@
-clone_command="git clone https://github.com/slackadays/Clipboard"
-echo $clone_command
-$clone_command
+print_exec() {
+    echo "$1"
+    $1
+}
+
+print_exec "git clone https://github.com/slackadays/Clipboard"
 
 cd Clipboard
 
-configure_command="cmake ."
-echo $configure_command
-$configure_command
+print_exec "cmake ."
+print_exec "cmake --build ."
 
-build_command="cmake --build ."
-echo $build_command
-$build_command
-
-#check if OpenBSD
-if [ "$(uname)" = "OpenBSD" ]
+if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
 then
-    install_command="doas cmake --install ."
+    print_exec "doas cmake --install ."
 else
-    install_command="sudo cmake --install ."
+    print_exec "sudo cmake --install ."
 fi
-
-echo $install_command
-$install_command
