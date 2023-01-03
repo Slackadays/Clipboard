@@ -202,27 +202,27 @@ void createTempDirectory() {
     fs::create_directories(persistent_filepath);
 }
 
-void syncWithGUIClipboard() {
-    //check if the clipboard number is the default ("0")
-    //if it is, check if the system clipboard is newer than main_filepath (check the last write time), and if it is newer, write the contents of the system clipboard to main_filepath
-    #if defined(X11_AVAILABLE)
-    auto text = getX11Clipboard();
-    if (text.has_value()) {
-        forceClearTempDirectory();
-        std::ofstream file(main_filepath / pipe_file);
-        file << *text;
+void syncWithGUIClipboard() { 
+    if (clipboard_name == default_clipboard_name) { //also check if the system clipboard is newer than main_filepath (check the last write time), and if it is newer, write the contents of the system clipboard to main_filepath
+        #if defined(X11_AVAILABLE)
+        /*auto text = getX11Clipboard();
+        if (text.has_value()) {
+            forceClearTempDirectory();
+            std::ofstream file(main_filepath / pipe_file);
+            file << *text;
+        }*/
+        #endif
+
+        #if defined(WAYLAND_AVAILABLE)
+
+        #endif
+
+        #if defined(_WIN32) || defined(_WIN64)
+        syncWithWindowsClipboard();
+        #elif defined(__APPLE__)
+
+        #endif
     }
-    #endif
-
-    #if defined(WAYLAND_AVAILABLE)
-
-    #endif
-
-    #if defined(_WIN32) || defined(_WIN64)
-    syncWithWindowsClipboard();
-    #elif defined(__APPLE__)
-
-    #endif
 }
 
 void showClipboardStatus() {
@@ -741,9 +741,7 @@ int main(int argc, char *argv[]) {
 
         createTempDirectory();
 
-        if (clipboard_name == default_clipboard_name) {
-            syncWithGUIClipboard();
-        }
+        syncWithGUIClipboard();
 
         setupAction(argc, argv);
 
