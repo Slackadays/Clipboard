@@ -1,4 +1,4 @@
-![Clipboard Banner](readme_assets/CBBanner.webp)
+![Clipboard Banner](readme_assets/CBBanner.png)
 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! This is the clipboard powertool for the command line.
 
@@ -12,7 +12,7 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 ![Clipboard Demo Image](readme_assets/CBDemo.png)
 
-![Quick Installation](readme_assets/CBQuickInstallation.webp)
+![Quick Installation](readme_assets/CBQuickInstallation.png)
 ### Linux, macOS, all BSDs, and OI:
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
@@ -54,7 +54,7 @@ Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/
 
 ---
 
-![How To Use](readme_assets/CBHowToUse.webp)
+![How To Use](readme_assets/CBHowToUse.png)
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number to the end of the action to choose which clipboard you want to use (the default is 0). 
@@ -99,7 +99,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-![Simple Configuration](readme_assets/CBSimpleConfiguration.webp)
+![Simple Configuration](readme_assets/CBSimpleConfiguration.png)
 
 ---
 
@@ -123,10 +123,10 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-![Painless Documentation](readme_assets/CBPainlessDocumentation.webp)
+![Painless Documentation](readme_assets/CBPainlessDocumentation.png)
 
 [Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
 
-![Fast Support](readme_assets/CBFastSupport.webp)
+![Fast Support](readme_assets/CBFastSupport.png)
 
 [Click here](https://discord.gg/J6asnc3pEG) to go to our Discord group.
