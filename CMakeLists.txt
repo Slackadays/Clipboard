@@ -26,10 +26,6 @@ set(CMAKE_THREAD_PREFER_PTHREAD True)
 set(THREADS_PREFER_PTHREAD_FLAG True)
 find_package(Threads REQUIRED)
 
-if(APPLE)
-  set(CMAKE_CXX_FLAGS "-x objective-c++")
-endif()
-
 if(UNIX AND NOT APPLE AND (NOT DEFINED ENV{CI} OR TEST))
   find_package(X11)
   include_directories(${X11_INCLUDE_DIR})
@@ -87,6 +83,7 @@ endif()
 
 if(APPLE)
   #target_sources(clipboard PRIVATE src/macos.mm)
+  #set_source_files_properties(src/macos.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 endif()
 
 if(lto_supported)
