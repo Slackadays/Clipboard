@@ -291,7 +291,7 @@ void showClipboardContents() {
 void setupAction(int& argc, char *argv[]) {
     auto flagIsPresent = [&](const std::string_view& flag, const std::string_view& shortcut = ""){
         for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
-            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(flag).append(shortcut)).data())) {
+            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(shortcut).append(flag)).data())) {
                 for (int j = i; j < argc - 1; j++) {
                     argv[j] = argv[j + 1];
                 }
