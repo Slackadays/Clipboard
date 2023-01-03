@@ -52,7 +52,7 @@ extern bool stdout_is_tty;
 extern bool stderr_is_tty;
 
 constexpr std::string_view clipboard_version = "0.2.0";
-constexpr std::string_view pipe_file = "clipboard.txt";
+constexpr std::string_view pipe_file = "clipboard.rawdata";
 constexpr std::string_view default_clipboard_name = "0";
 
 extern std::array<std::pair<std::string_view, std::string_view>, 8> colors;

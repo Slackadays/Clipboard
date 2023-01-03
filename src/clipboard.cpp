@@ -61,7 +61,7 @@ namespace fs = std::filesystem;
 std::string replaceColors(const std::string_view& str) {
     std::string temp(str); //a string to do scratch work on
     for (const auto& key : colors) { //iterate over all the possible colors to replace
-        for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) { //
+        for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
             temp.replace(i, key.first.length(), key.second);
         }
     }

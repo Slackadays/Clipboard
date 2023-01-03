@@ -25,7 +25,7 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 ---
 
 ### Clone, Configure, Compile, and Install Manually
-Replace `git clone` with `git clone --branch "0.2.0"` to get the latest release (0.2.0). Otherwise, you will get the latest commit.
+Replace `git clone` with `git clone --branch 0.2.0` to get the latest release (0.2.0). Otherwise, you will get the latest commit. Change the installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/YOUR/CUSTOM/PREFIX/HERE` to `cmake .`.
 ```bash
 git clone https://github.com/slackadays/Clipboard 
 cd Clipboard
@@ -33,17 +33,14 @@ cmake .
 cmake --build .
 cmake --install .
 ```
-Change the installation prefix with the `-DCMAKE_INSTALL_PREFIX` flag.
-```bash
-cmake -DCMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX .
-```
+
 ---
 
 ### Uninstall
 ```
 xargs rm < install_manifest.txt
 ```
-Add `sudo` to the beginning for Linux, macOS, all BSDs except OpenBSD, and OpenIndiana, and `doas` for OpenBSD.
+Add `sudo` to the beginning for Linux, macOS, all BSDs except OpenBSD, and OpenIndiana, and add `doas` for OpenBSD.
 
 For Windows, you may need to individually remove all the files in install_manifest.txt.
 
