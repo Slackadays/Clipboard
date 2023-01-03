@@ -1,6 +1,6 @@
 #test copying contents piped in
 echo "Bleh" | clipboard
-if [ ! -f "$TMPDIR"/Clipboard/0/clipboard.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/clipboard.rawdata ]; then
   echo did not copy contents piped in
   exit 1
 fi
@@ -13,7 +13,7 @@ fi
 
 #test copying contents piped in to clipboard 1
 echo "Bleh" | clipboard copy1
-if [ ! -f "$TMPDIR"/Clipboard/1/clipboard.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/clipboard.rawdata ]; then
   echo did not copy contents piped in to cb 1
   exit 1
 fi
