@@ -40,6 +40,8 @@ public:
     ClipboardContent() : m_type(ClipboardContentType::Empty), m_data(nullptr) { }
     ClipboardContent(std::string&& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
     ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
+    ClipboardContent(ClipboardPathsAction action, std::vector<fs::path>&& paths)
+        : ClipboardContent(ClipboardPaths(action, std::move(paths))) { }
 
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
     [[nodiscard]] inline std::string const& text() { return std::get<std::string>(m_data); }

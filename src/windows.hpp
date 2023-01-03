@@ -16,6 +16,7 @@
 #include <vector>
 #include <string_view>
 #include "clipboard.hpp"
+#include "gui.hpp"
 
 namespace fs = std::filesystem;
 
@@ -41,9 +42,9 @@ void decodeWindowsDropfilesPaths(void* filesList, std::vector<fs::path>& paths) 
 }
 
 void onWindowsError(const std::string_view function);
-void getWindowsClipboardDataFiles(void* clipboardPointer);
-void getWindowsClipboardDataPipe(void* clipboardPointer);
+std::vector<fs::path> getWindowsClipboardDataFiles(void* clipboardPointer);
+std::string getWindowsClipboardDataPipe(void* clipboardPointer);
 void setWindowsClipboardDataPipe();
 void setWindowsClipboardDataFiles();
-void syncWithWindowsClipboard();
+ClipboardContent syncWithWindowsClipboard();
 void updateWindowsClipboard();

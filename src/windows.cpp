@@ -22,7 +22,7 @@
 #include "clipboard.hpp"
 #include "windows.hpp"
 
-void syncWithWindowsClipboard() {
+ClipboardContent syncWithWindowsClipboard() {
     if (OpenClipboard(nullptr) == 0) {
         onWindowsError("OpenClipboard");
     }
@@ -31,6 +31,7 @@ void syncWithWindowsClipboard() {
     auto hasText = IsClipboardFormatAvailable(CF_UNICODETEXT) != 0;
     auto hasAny = hasFiles || hasText;
 
+    ClipboardContent clipboard;
     if (hasAny) {
         HANDLE clipboardHandle;
         if (hasFiles) {
@@ -49,9 +50,10 @@ void syncWithWindowsClipboard() {
         }
 
         if (hasFiles) {
-            getWindowsClipboardDataFiles(clipboardPointer);
+            auto files = getWindowsClipboardDataFiles(clipboardPointer);
+            clipboard = { ClipboardPathsAction::Copy, std::move(files) };
         } else {
-            getWindowsClipboardDataPipe(clipboardPointer);
+            clipboard = { getWindowsClipboardDataPipe(clipboardPointer) };
         }
 
         if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
@@ -62,6 +64,8 @@ void syncWithWindowsClipboard() {
     if (CloseClipboard() == 0) {
         onWindowsError("CloseClipboard");
     }
+
+    return clipboard;
 }
 
 void updateWindowsClipboard() {
@@ -101,7 +105,7 @@ void onWindowsError(const std::string_view function) {
     exit(EXIT_FAILURE);
 }
 
-void getWindowsClipboardDataFiles(void* clipboardPointer) {
+std::vector<fs::path> getWindowsClipboardDataFiles(void* clipboardPointer) {
     auto dropfiles = static_cast<DROPFILES*>(clipboardPointer);
     auto offset = dropfiles->pFiles;
 
@@ -114,43 +118,10 @@ void getWindowsClipboardDataFiles(void* clipboardPointer) {
         decodeWindowsDropfilesPaths<char>(filesList, paths);
     }
 
-    // Only clear the temp directory if all files in the clipboard are outside the temp directory
-    // This avoids the situation where we delete the very files we're trying to copy
-    auto allOutsideFilepath = std::all_of(paths.begin(), paths.end(), [](auto& path) {
-        auto relative = fs::relative(path, main_filepath);
-        auto firstElement = *(relative.begin());
-        return firstElement == fs::path("..");
-    });
-
-    if (allOutsideFilepath) {
-        forceClearTempDirectory();
-    }
-
-    for (const auto& path : paths) {
-        if (!fs::exists(path)) {
-            continue;
-        }
-
-        auto target = main_filepath / path.filename();
-        if (fs::exists(target) && fs::equivalent(path, target)) {
-            continue;
-        }
-
-        try {
-            fs::copy(path, target, opts | fs::copy_options::create_hard_links);
-        } catch (const fs::filesystem_error& e) {
-            try {
-                fs::copy(path, target, opts);
-            } catch (const fs::filesystem_error& e) {
-                // Give up
-            }
-        }
-    }
+    return std::move(paths);
 }
 
-void getWindowsClipboardDataPipe(void* clipboardPointer) {
-    forceClearTempDirectory();
-
+std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
     auto utf16 = static_cast<wchar_t*>(clipboardPointer);
 
     auto utf8Len = WideCharToMultiByte(
@@ -182,10 +153,7 @@ void getWindowsClipboardDataPipe(void* clipboardPointer) {
         onWindowsError("WideCharToMultiByte");
     }
 
-    std::string utf8(&utf8Buffer[0]);
-
-    std::ofstream output(main_filepath / pipe_file);
-    output << utf8;
+    return { utf8Buffer.begin(), utf8Buffer.end() };
 }
 
 void setWindowsClipboardDataPipe() {

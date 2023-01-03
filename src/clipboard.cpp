@@ -267,7 +267,7 @@ void syncWithGUIClipboard() {
         #endif
 
         #if defined(_WIN32) || defined(_WIN64)
-        syncWithWindowsClipboard();
+        guiClipboard = syncWithWindowsClipboard();
         #elif defined(__APPLE__)
 
         #endif
