@@ -49,7 +49,11 @@
 #endif
 
 #if defined(WAYLAND_AVAILABLE)
-#include <wayland-client-core.h>
+#include "wayland.hpp"
+#endif
+
+#if defined(__APPLE__)
+#include "macos.hpp"
 #endif
 
 namespace fs = std::filesystem;
