@@ -35,12 +35,15 @@ struct Filepath {
 };
 extern Filepath filepath;
 
-extern bool use_perma_clip;
-extern bool use_safe_copy;
+struct Copying {
+    bool use_perma_clip = false;
+    bool use_safe_copy = true;
+    fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
+    std::vector<fs::path> items;
+    std::vector<std::pair<std::string, std::error_code>> failedItems;
+};
+extern Copying copying;
 
-extern fs::copy_options opts;
-extern std::vector<fs::path> items;
-extern std::vector<std::pair<std::string, std::error_code>> failedItems;
 extern std::string clipboard_name;
 
 enum class SpinnerState : int { Done, Active, Cancel };
@@ -64,11 +67,15 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-constexpr std::string_view clipboard_version = "0.2.0";
-constexpr std::string_view pipe_file = "clipboard.rawdata";
-constexpr std::string_view default_clipboard_name = "0";
-
-extern std::array<std::pair<std::string_view, std::string_view>, 8> colors;
+struct Constants {
+    std::string_view clipboard_version = "0.2.0";
+    std::string_view pipe_file = "clipboard.rawdata";
+    std::string_view default_clipboard_name = "0";
+    std::string_view temporary_directory_name = "Clipboard";
+    std::string_view persistent_directory_name = ".clipboard";
+    std::string_view original_files_extension = ".files";
+};
+constexpr Constants constants;
 
 enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show };
 extern Action action;
@@ -133,8 +140,7 @@ void showClipboardStatus();
 void showClipboardContents();
 void setupAction(int& argc, char *argv[]);
 void checkForNoItems();
-bool cancelIndicator();
-bool stopIndicator();
+bool stopIndicator(bool change_condition_variable);
 void startIndicator();
 void setupIndicator();
 void deduplicateItems();

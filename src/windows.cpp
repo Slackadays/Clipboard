@@ -76,7 +76,7 @@ void updateWindowsClipboard() {
         onWindowsError("EmptyClipboard");
     }
 
-    if (fs::is_regular_file(filepath.main / pipe_file)) {
+    if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
         setWindowsClipboardDataPipe();
 
     } else {
@@ -157,7 +157,7 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
 }
 
 void setWindowsClipboardDataPipe() {
-    std::ifstream file(filepath.main / pipe_file);
+    std::ifstream file(filepath.main / constants.pipe_file);
     std::vector<char> utf8Data(
         (std::istreambuf_iterator<char>(file)),
         (std::istreambuf_iterator<char>())

@@ -58,12 +58,6 @@
 
 namespace fs = std::filesystem;
 
-Filepath filepath;
-bool use_perma_clip = false;
-bool use_safe_copy = true;
-fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
-std::vector<fs::path> items;
-std::vector<std::pair<std::string, std::error_code>> failedItems;
 std::string clipboard_name = "0";
 
 std::condition_variable cv;
@@ -71,9 +65,11 @@ std::mutex m;
 std::atomic<SpinnerState> spinner_state = SpinnerState::Done;
 std::thread indicator;
 
+Copying copying;
+Filepath filepath;
 Successes successes;
-
 IsTTY is_tty;
+Action action;
 
 std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
@@ -85,8 +81,6 @@ std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{bold}", "\033[1m"},
     {"{blank}", "\033[0m"}
 }};
-
-Action action;
 
 std::string replaceColors(const std::string_view& str) {
     std::string temp(str); //a string to do scratch work on
@@ -105,12 +99,11 @@ void forceClearTempDirectory() {
     }
 }
 
-bool cancelIndicator() { // we cannot use mutex in signal handlers, so we use a simple atomic exchange instead
-    return spinner_state.exchange(SpinnerState::Cancel) == SpinnerState::Active;
-}
-
-bool stopIndicator() {
+bool stopIndicator(bool change_condition_variable = true) {
     SpinnerState expect = SpinnerState::Active;
+    if (!change_condition_variable) {
+        return spinner_state.exchange(SpinnerState::Cancel) == expect;
+    }
     if (!spinner_state.compare_exchange_strong(expect, SpinnerState::Done)) {
         return false;
     }
@@ -121,7 +114,7 @@ bool stopIndicator() {
 
 void setupSignals() {
     signal(SIGINT, [](int dummy) {
-        if (!cancelIndicator()) {
+        if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation message, directly to standard error. Note: There is no standard C++ interface for this, so this requires an OS call.
             _exit(1);
         }
@@ -143,7 +136,7 @@ void setLocale() {
 void showHelpMessage(int& argc, char *argv[]) {
     for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
-            printf(replaceColors(help_message).data(), clipboard_version.data());
+            printf(replaceColors(help_message).data(), constants.clipboard_version.data());
             exit(0);
         }
     }
@@ -151,7 +144,7 @@ void showHelpMessage(int& argc, char *argv[]) {
 
 void setupItems(int& argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
-        items.push_back(argv[i]);
+        copying.items.push_back(argv[i]);
     }
 }
 
@@ -160,14 +153,14 @@ void setClipboardName(int& argc, char *argv[]) {
         clipboard_name = argv[1];
         if (clipboard_name.find_first_of("_:;|") != std::string::npos) {
             clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("_:;|") + 1);
-            use_perma_clip = true;
+            copying.use_perma_clip = true;
         } else {
             clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
         }
         if (clipboard_name.empty()) {
-            clipboard_name = default_clipboard_name;
+            clipboard_name = constants.default_clipboard_name;
         } else {
-            argv[1][strlen(argv[1]) - (clipboard_name.length() + use_perma_clip)] = '\0';
+            argv[1][strlen(argv[1]) - (clipboard_name.length() + copying.use_perma_clip)] = '\0';
         }
     }
 
@@ -187,13 +180,13 @@ void setClipboardName(int& argc, char *argv[]) {
         }
     }
 
-    filepath.temporary = (getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / "Clipboard" / clipboard_name; //set filepath.temporary to TMPDIR if it exists, otherwise use the system's temporary directory
+    filepath.temporary = (getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name / clipboard_name; //set filepath.temporary to TMPDIR if it exists, otherwise use the system's temporary directory
 
-    filepath.persistent = filepath.home / ".clipboard" / clipboard_name;
+    filepath.persistent = filepath.home / constants.persistent_directory_name / clipboard_name;
     
-    filepath.main = use_perma_clip ? filepath.persistent : filepath.temporary;
+    filepath.main = copying.use_perma_clip ? filepath.persistent : filepath.temporary;
 
-    filepath.original_files = filepath.main.parent_path() / (clipboard_name + ".files");
+    filepath.original_files = filepath.main.parent_path() / (clipboard_name.append(constants.original_files_extension));
 }
 
 void setupVariables(int& argc, char *argv[]) {
@@ -237,7 +230,7 @@ void createTempDirectory() {
 
 void syncWithGUIClipboard(const std::string& text) {
     forceClearTempDirectory();
-    std::ofstream output(filepath.main / pipe_file);
+    std::ofstream output(filepath.main / constants.pipe_file);
     output << text;
 }
 
@@ -265,10 +258,10 @@ void syncWithGUIClipboard(const ClipboardPaths& clipboard) {
         }
 
         try {
-            fs::copy(path, target, opts | fs::copy_options::create_hard_links);
+            fs::copy(path, target, copying.opts | fs::copy_options::create_hard_links);
         } catch (const fs::filesystem_error& e) {
             try {
-                fs::copy(path, target, opts);
+                fs::copy(path, target, copying.opts);
             } catch (const fs::filesystem_error& e) {
                 // Give up
             }
@@ -284,7 +277,7 @@ void syncWithGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 void syncWithGUIClipboard() { 
-    if (clipboard_name == default_clipboard_name) { //also check if the system clipboard is newer than filepath.main (check the last write time), and if it is newer, write the contents of the system clipboard to filepath.main
+    if (clipboard_name == constants.default_clipboard_name) { //also check if the system clipboard is newer than filepath.main (check the last write time), and if it is newer, write the contents of the system clipboard to filepath.main
         ClipboardContent guiClipboard;
 
         #if defined(X11_AVAILABLE)
@@ -298,7 +291,7 @@ void syncWithGUIClipboard() {
         #if defined(_WIN32) || defined(_WIN64)
         guiClipboard = syncWithWindowsClipboard();
         #elif defined(__APPLE__)
-
+        //guiClipboard = syncWithMacClipboard();
         #endif
 
         if (guiClipboard.type() == ClipboardContentType::Text) {
@@ -412,7 +405,7 @@ void setupAction(int& argc, char *argv[]) {
             exit(1);
         }
         if (flagIsPresent("--fast-copy") || flagIsPresent("-fc")) {
-            use_safe_copy = false;
+            copying.use_safe_copy = false;
         }
         for (int i = 1; i < argc; i++) {
             if (!strcmp(argv[i], "--")) {
@@ -440,7 +433,7 @@ void setupAction(int& argc, char *argv[]) {
 }
 
 void checkForNoItems() {
-    if ((action == Action::Cut || action == Action::Copy) && items.size() < 1) {
+    if ((action == Action::Cut || action == Action::Copy) && copying.items.size() < 1) {
         printf(replaceColors(choose_action_items_message).data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(1);
     }
@@ -456,9 +449,9 @@ void setupIndicator() {
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if ((action == Action::Cut || action == Action::Copy) && is_tty.stderr) {
-        static unsigned long items_size = items.size();
+        static unsigned long items_size = copying.items.size();
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
-            percent_done = ((successes.files + successes.directories + failedItems.size()) * 100) / items_size;
+            percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
@@ -480,7 +473,7 @@ void setupIndicator() {
             }
         }
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
-            percent_done = ((successes.files + successes.directories + failedItems.size()) * 100) / items_size;
+            percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
@@ -510,13 +503,13 @@ void startIndicator() { // If cancelled, leave cancelled
 }
 
 void deduplicateItems() {
-    std::sort(items.begin(), items.end());
-    items.erase(std::unique(items.begin(), items.end()), items.end());
+    std::sort(copying.items.begin(), copying.items.end());
+    copying.items.erase(std::unique(copying.items.begin(), copying.items.end()), copying.items.end());
 }
 
 unsigned long long calculateTotalItemSize() {
     unsigned long long total_item_size = 0;
-    for (const auto& i : items) {
+    for (const auto& i : copying.items) {
         try {
             if (fs::is_directory(i)) {
                 for (const auto& entry : fs::recursive_directory_iterator(i)) {
@@ -532,7 +525,7 @@ unsigned long long calculateTotalItemSize() {
                 total_item_size += 16;
             }
         } catch (const fs::filesystem_error& e) {
-            failedItems.emplace_back(i.string(), e.code());
+            copying.failedItems.emplace_back(i.string(), e.code());
         }
     }   
     return total_item_size;
@@ -567,19 +560,19 @@ void copyFiles() {
     if (action == Action::Cut) {
         originalFiles.open(filepath.original_files);
     }
-    for (const auto& f : items) {
-        auto copyItem = [&](const bool use_regular_copy = use_safe_copy) {
+    for (const auto& f : copying.items) {
+        auto copyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
             if (fs::is_directory(f)) {
                 if (f.filename() == "") {
                     fs::create_directories(filepath.main / f.parent_path().filename());
-                    fs::copy(f, filepath.main / f.parent_path().filename(), opts);
+                    fs::copy(f, filepath.main / f.parent_path().filename(), copying.opts);
                 } else {
                     fs::create_directories(filepath.main / f.filename());
-                    fs::copy(f, filepath.main / f.filename(), opts);
+                    fs::copy(f, filepath.main / f.filename(), copying.opts);
                 }
                 successes.directories++;
             } else {
-                fs::copy(f, filepath.main / f.filename(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
+                fs::copy(f, filepath.main / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
                 successes.files++;
             }
             if (action == Action::Cut) {
@@ -589,14 +582,14 @@ void copyFiles() {
         try {
             copyItem();
         } catch (const fs::filesystem_error& e) {
-            if (!use_safe_copy) {
+            if (!copying.use_safe_copy) {
                 try {
                     copyItem(true);
                 } catch (const fs::filesystem_error& e) {
-                    failedItems.emplace_back(f.string(), e.code());
+                    copying.failedItems.emplace_back(f.string(), e.code());
                 }
             } else {
-                failedItems.emplace_back(f.string(), e.code());
+                copying.failedItems.emplace_back(f.string(), e.code());
             }
         }
     }
@@ -610,11 +603,11 @@ void removeOldFiles() {
             try {
                 fs::remove_all(line);
             } catch (const fs::filesystem_error& e) {
-                failedItems.emplace_back(line, e.code());
+                copying.failedItems.emplace_back(line, e.code());
             }
         }
         files.close();
-        if (failedItems.empty()) {
+        if (copying.failedItems.empty()) {
             fs::remove(filepath.original_files);
         }
         action = Action::Cut;
@@ -651,7 +644,7 @@ int getUserDecision(const std::string& item) {
 void pasteFiles() {
     int user_decision = 0;
     for (const auto& f : fs::directory_iterator(filepath.main)) {
-        auto pasteItem = [&](const bool use_regular_copy = use_safe_copy) {
+        auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
             if (fs::exists(fs::current_path() / f.path().filename()) && fs::equivalent(f, fs::current_path() / f.path().filename())) {
                 if (fs::is_directory(f)) {
                     successes.directories++;
@@ -661,10 +654,10 @@ void pasteFiles() {
                 return;
             }
             if (fs::is_directory(f)) {
-                fs::copy(f, fs::current_path() / f.path().filename(), opts);
+                fs::copy(f, fs::current_path() / f.path().filename(), copying.opts);
                 successes.directories++;
             } else {
-                fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy ? opts : opts | fs::copy_options::create_hard_links);
+                fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
                 successes.files++;
             }
         };
@@ -694,14 +687,14 @@ void pasteFiles() {
                 pasteItem();
             }
         } catch (const fs::filesystem_error& e) {
-            if (!use_safe_copy) {
+            if (!copying.use_safe_copy) {
                 try {
                     pasteItem(true);
                 } catch (const fs::filesystem_error& e) {
-                    failedItems.emplace_back(f.path().filename().string(), e.code());
+                    copying.failedItems.emplace_back(f.path().filename().string(), e.code());
                 }
             } else {
-                failedItems.emplace_back(f.path().filename().string(), e.code());
+                copying.failedItems.emplace_back(f.path().filename().string(), e.code());
             }
         }
     }
@@ -709,7 +702,7 @@ void pasteFiles() {
 }
 
 void pipeIn() {
-    std::ofstream file(filepath.main / pipe_file);
+    std::ofstream file(filepath.main / constants.pipe_file);
     std::string buffer;
     std::string line;
     for (int i = 0; std::getline(std::cin, line); i == 19 ? i = 0 : i++) {
@@ -778,12 +771,12 @@ void updateGUIClipboard() {
 
 
 void showFailures() {
-    if (failedItems.size() > 0) {
+    if (copying.failedItems.size() > 0) {
         printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
-        for (int i = 0; i < std::min(5, static_cast<int>(failedItems.size())); i++) {
-            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), failedItems.at(i).first.data(), failedItems.at(i).second.message().data());
-            if (i == 4 && failedItems.size() > 5) {
-                printf(replaceColors(and_more_fails_message).data(), int(failedItems.size() - 5));
+        for (int i = 0; i < std::min(5, static_cast<int>(copying.failedItems.size())); i++) {
+            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+            if (i == 4 && copying.failedItems.size() > 5) {
+                printf(replaceColors(and_more_fails_message).data(), int(copying.failedItems.size() - 5));
             }
         }
         printf("%s", replaceColors(fix_problem_message).data());
@@ -799,7 +792,7 @@ void showSuccesses() {
         if (action == Action::Paste) {
             printf("%s", replaceColors(paste_success_message).data());
         } else {
-            printf(replaceColors(one_item_success_message).data(), did_action[action].data(), items.at(0).string().data());
+            printf(replaceColors(one_item_success_message).data(), did_action[action].data(), copying.items.at(0).string().data());
         }
     } else {
         if ((successes.files > 1) && (successes.directories == 0)) {
