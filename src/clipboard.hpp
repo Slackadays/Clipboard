@@ -26,13 +26,18 @@
 
 namespace fs = std::filesystem;
 
+struct Filepath {
+    fs::path main;
+    fs::path temporary;
+    fs::path persistent;
+    fs::path original_files;
+    fs::path home;
+};
+extern Filepath filepath;
+
 extern bool use_perma_clip;
 extern bool use_safe_copy;
-extern fs::path main_filepath;
-extern fs::path temporary_filepath;
-extern fs::path persistent_filepath;
-extern fs::path original_files_path;
-extern fs::path home_directory;
+
 extern fs::copy_options opts;
 extern std::vector<fs::path> items;
 extern std::vector<std::pair<std::string, std::error_code>> failedItems;
@@ -45,13 +50,19 @@ extern std::mutex m;
 extern std::atomic<SpinnerState> spinner_state;
 extern std::thread indicator;
 
-extern std::atomic<unsigned long> files_success;
-extern std::atomic<unsigned long> directories_success;
-extern std::atomic<unsigned long long> bytes_success;
+struct Successes {
+    std::atomic<unsigned long> files;
+    std::atomic<unsigned long> directories;
+    std::atomic<unsigned long long> bytes;
+};
+extern Successes successes;
 
-extern bool stdin_is_tty;
-extern bool stdout_is_tty;
-extern bool stderr_is_tty;
+struct IsTTY {
+    bool stdin = true;
+    bool stdout = true;
+    bool stderr = true;
+};
+extern IsTTY is_tty;
 
 constexpr std::string_view clipboard_version = "0.2.0";
 constexpr std::string_view pipe_file = "clipboard.rawdata";
