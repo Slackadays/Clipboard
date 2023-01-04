@@ -39,7 +39,7 @@ if(X11_FOUND)
     message(STATUS "Building with X11 support")
     add_compile_definitions(X11_AVAILABLE)
   else()
-    message(STATUS "Building without X11 support"
+    message(STATUS "Building without X11 support")
   endif()
 else()
   message(STATUS "X11 not found, building without X11 support")
