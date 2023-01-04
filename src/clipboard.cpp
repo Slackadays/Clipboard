@@ -280,23 +280,22 @@ void syncWithGUIClipboard() {
     if (clipboard_name == constants.default_clipboard_name) { //also check if the system clipboard is newer than filepath.main (check the last write time), and if it is newer, write the contents of the system clipboard to filepath.main
         ClipboardContent guiClipboard;
 
-        #if defined(X11_AVAILABLE)
+        #if defined(X11_AVAILABLE) && !defined(NOGUI)
         guiClipboard = getX11Clipboard();
         #endif
 
-        #if defined(WAYLAND_AVAILABLE)
+        #if defined(WAYLAND_AVAILABLE) && !defined(NOGUI)
 
         #endif
 
-        #if defined(_WIN32) || defined(_WIN64)
+        #if defined(_WIN32) || defined(_WIN64) && !defined(NOGUI)
         guiClipboard = syncWithWindowsClipboard();
-        #elif defined(__APPLE__)
+        #elif defined(__APPLE__) && !defined(NOGUI)
         //guiClipboard = syncWithMacClipboard();
         #endif
 
         if (guiClipboard.type() == ClipboardContentType::Text) {
             syncWithGUIClipboard(guiClipboard.text());
-
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
             syncWithGUIClipboard(guiClipboard.paths());
         }
