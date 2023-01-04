@@ -61,9 +61,9 @@ struct Successes {
 extern Successes successes;
 
 struct IsTTY {
-    bool stdin = true;
-    bool stdout = true;
-    bool stderr = true;
+    bool std_in = true;
+    bool std_out = true;
+    bool std_err = true;
 };
 extern IsTTY is_tty;
 
