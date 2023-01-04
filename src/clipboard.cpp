@@ -186,7 +186,7 @@ void setClipboardName(int& argc, char *argv[]) {
     
     filepath.main = copying.use_perma_clip ? filepath.persistent : filepath.temporary;
 
-    filepath.original_files = filepath.main.parent_path() / (clipboard_name.append(constants.original_files_extension));
+    filepath.original_files = filepath.main.parent_path() / (clipboard_name + std::string(constants.original_files_extension));
 }
 
 void setupVariables(int& argc, char *argv[]) {
@@ -332,11 +332,22 @@ void showClipboardStatus() {
 
 void showClipboardContents() {
     if (fs::is_directory(filepath.main) && !fs::is_empty(filepath.main)) {
+        if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
+            std::ifstream input(filepath.main / constants.pipe_file);
+            std::string line;
+            std::getline(input, line, '\0');
+            printf(replaceColors(clipboard_text_contents_message).data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(line.size())), clipboard_name.data());
+            printf(replaceColors("{bold}{blue}%s\n{blank}").data(), line.substr(0, 250).data());
+            if (line.size() > 250) {
+                printf(replaceColors(and_more_items_message).data(), line.size() - 250);
+            }
+            return;
+        }
         unsigned int total_items = 0;
         for (const auto& entry : fs::directory_iterator(filepath.main)) {
             total_items++;
         }
-        printf(replaceColors(clipboard_contents_message).data(), std::min(static_cast<unsigned int>(20), total_items), clipboard_name.data());
+        printf(replaceColors(clipboard_item_contents_message).data(), std::min(static_cast<unsigned int>(20), total_items), clipboard_name.data());
         auto it = fs::directory_iterator(filepath.main);
         for (int i = 0; i < std::min(static_cast<unsigned int>(20), total_items); i++) {
             printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), it->path().filename().string().data());

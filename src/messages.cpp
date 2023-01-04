@@ -77,7 +77,8 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
 std::string_view check_clipboard_status_message = "{blue}• There are items in these clipboards: ";
-std::string_view clipboard_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
+std::string_view clipboard_item_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
+std::string_view clipboard_text_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} bytes in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
 std::string_view clipboard_action_prompt = "{pink}Add {bold}cut, copy, {blank}{pink}or{bold} paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
 std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action ({bold}\"%s\"{blank}{red}), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
@@ -147,7 +148,7 @@ void setLanguageES() {
                    "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                    "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
     no_valid_action_message = "{red}╳ No especificaste ninguna acción válida o se te olvidó. {pink}Inténta usar o añadir {bold}cortar, copiar o pegar{blank}{pink} en su lugar, como {bold}clipboard copiar.{blank}\n";
-    clipboard_contents_message = "{blue}• Aquí están las {bold}%i{blank}{blue} cosas primeras del portapapeles {bold}%s{blank}{blue}: {blank}\n";
+    clipboard_item_contents_message = "{blue}• Aquí están las {bold}%i{blank}{blue} cosas primeras del portapapeles {bold}%s{blank}{blue}: {blank}\n";
     no_clipboard_contents_message = "{blue}• No hay nada en Clipboard en este momento.{blank}\n";
     clipboard_action_prompt = "{pink}Añade {bold}cortar, copiar {blank}{pink}o{bold} pegar{blank}{pink} al final, como {bold}clipboard copiar{blank}{pink} para comenzar, o si necesitas ayuda, haz {bold}clipboard -h{blank}{pink} para mostrar el mensaje de ayudar.{blank}\n";
     choose_action_items_message = "{red}╳ Necesitas escoger una cosa para %s.{pink} Inténta añadir las cosas que quieres %s al final, como {bold}clipboard %s contactos.txt miprograma.cpp{blank}\n";
@@ -271,7 +272,7 @@ void setLanguageTR() {
                    "{blue}▏                                 GPLv3 altında lisanslanmıştır.{blank}\n"
                    "{blue}▏Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli koşullar altında yeniden dağıtabilirsiniz.{blank}\n";
     check_clipboard_status_message = "{blue}• Pano içeriği şunlardır: ";
-    clipboard_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
+    clipboard_item_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
     no_clipboard_contents_message = "{blue}• Panoda hiçbir şey yok.{blank}\n";
     clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}kes, kopyala, {blank}{pink}veya{bold} yapistir{blank}{pink} ekleyin, {bold}clipboard kopyala{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";
     no_valid_action_message = "{red}╳ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz {pink}Komutunuza {bold}cut, copy, {blank}{pink}ya da {bold}paste{blank}{pink} eklemelisiniz, örneğin {bold}clipboard copy.{blank}\n";

@@ -95,7 +95,8 @@ extern ActionArray<std::string_view, 7> did_action;
 
 extern std::string_view help_message;
 extern std::string_view check_clipboard_status_message;
-extern std::string_view clipboard_contents_message;
+extern std::string_view clipboard_item_contents_message;
+extern std::string_view clipboard_text_contents_message;
 extern std::string_view no_clipboard_contents_message;
 extern std::string_view clipboard_action_prompt;
 extern std::string_view no_valid_action_message;
