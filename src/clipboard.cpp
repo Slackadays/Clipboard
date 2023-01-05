@@ -281,16 +281,16 @@ void syncWithGUIClipboard() {
         ClipboardContent guiClipboard = getGUIClipboard();
         if (guiClipboard.type() == ClipboardContentType::Text) {
             std::string blah = guiClipboard.text();
-            std::cout << "type is text, content = " << blah << std::endl;
+            //std::cout << "type is text, content = " << blah << std::endl;
             syncWithGUIClipboard(guiClipboard.text());
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
-            std::cout << "type is paths" << std::endl;
+            //std::cout << "type is paths" << std::endl;
             for (const auto& path : guiClipboard.paths().paths()) {
-                std::cout << "path = " << path.string() << std::endl;
+            //    std::cout << "path = " << path.string() << std::endl;
             }
             syncWithGUIClipboard(guiClipboard.paths());
         }
-        std::cout << "type is unknown" << std::endl;
+        //std::cout << "type is unknown" << std::endl;
     }
 }
 
