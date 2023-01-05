@@ -46,5 +46,5 @@ std::vector<fs::path> getWindowsClipboardDataFiles(void* clipboardPointer);
 std::string getWindowsClipboardDataPipe(void* clipboardPointer);
 void setWindowsClipboardDataPipe();
 void setWindowsClipboardDataFiles();
-ClipboardContent syncWithWindowsClipboard();
+ClipboardContent getGUIClipboard();
 void updateWindowsClipboard();

@@ -22,7 +22,7 @@
 #include "clipboard.hpp"
 #include "windows.hpp"
 
-ClipboardContent syncWithWindowsClipboard() {
+ClipboardContent getGUIClipboard() {
     if (OpenClipboard(nullptr) == 0) {
         onWindowsError("OpenClipboard");
     }

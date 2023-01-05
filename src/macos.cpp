@@ -12,11 +12,26 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#pragma once
+#include <iostream>
 
-#include "gui.hpp"
+#include "macos.hpp"
+extern "C" {
+    #include "macos.h"
+}
 
-#include <string>
-#include <optional>
-
-ClipboardContent getGUIClipboard();
+ClipboardContent getGUIClipboard() {
+    if (thisClipboardHoldsText()) {
+        std::string text(getClipboardText());
+        std::cout << "Text: " << text << std::endl;
+    }
+    if (thisClipboardHoldsFiles()) {
+        char** files = getClipboardFiles();
+        std::vector<fs::path> fileVector;
+        for (int i = 0; files[i] != NULL; i++) {
+            fileVector.push_back(files[i]);
+        }
+        ClipboardPaths paths(ClipboardPathsAction::Copy, fileVector);
+        return ClipboardContent(paths);
+    }
+    return ClipboardContent();
+}

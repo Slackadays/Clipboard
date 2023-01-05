@@ -40,20 +40,20 @@
 #define isatty _isatty
 #define fileno _fileno
 #include "windows.hpp"
-#else
-#include <unistd.h>
-#endif
-
-#if defined(X11_AVAILABLE)
+#elif defined(X11_AVAILABLE) && !defined(WAYLAND_AVAILABLE)
 #include "x11.hpp"
-#endif
-
-#if defined(WAYLAND_AVAILABLE)
+#elif defined(WAYLAND_AVAILABLE)
 #include "wayland.hpp"
+#elif defined(__APPLE__)
+#include "macos.hpp"
+#else
+ClipboardContent getGUIClipboard() {
+    return ClipboardContent();
+}
 #endif
 
-#if defined(__APPLE__)
-#include "macos.hpp"
+#if !defined(_WIN32) && !defined(_WIN64)
+#include <unistd.h>
 #endif
 
 namespace fs = std::filesystem;
@@ -277,28 +277,24 @@ void syncWithGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 void syncWithGUIClipboard() { 
-    if (clipboard_name == constants.default_clipboard_name) { //also check if the system clipboard is newer than filepath.main (check the last write time), and if it is newer, write the contents of the system clipboard to filepath.main
+    if (clipboard_name == constants.default_clipboard_name) {
         ClipboardContent guiClipboard;
-
-        #if defined(X11_AVAILABLE) && !defined(NOGUI)
-        guiClipboard = getX11Clipboard();
-        #endif
-
-        #if defined(WAYLAND_AVAILABLE) && !defined(NOGUI)
-
-        #endif
-
-        #if defined(_WIN32) || defined(_WIN64) && !defined(NOGUI)
-        guiClipboard = syncWithWindowsClipboard();
-        #elif defined(__APPLE__) && !defined(NOGUI)
-        //guiClipboard = syncWithMacClipboard();
-        #endif
-
+        guiClipboard = getGUIClipboard();
         if (guiClipboard.type() == ClipboardContentType::Text) {
-            syncWithGUIClipboard(guiClipboard.text());
+            std::string blah = guiClipboard.text();
+            std::cout << "type is text, content = " << blah << std::endl;
+            exit(0);
+            //syncWithGUIClipboard(guiClipboard.text());
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
-            syncWithGUIClipboard(guiClipboard.paths());
+            std::cout << "type is paths" << std::endl;
+            for (const auto& path : guiClipboard.paths().paths()) {
+                std::cout << "path = " << path.string() << std::endl;
+            }
+            exit(0);
+            //syncWithGUIClipboard(guiClipboard.paths());
         }
+        std::cout << "type is unknown" << std::endl;
+        exit(0);
     }
 }
 

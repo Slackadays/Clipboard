@@ -937,7 +937,7 @@ static ClipboardContent getX11ClipboardInternal() {
     return { parseFiles(data) };
 }
 
-ClipboardContent getX11Clipboard() {
+ClipboardContent getGUIClipboard() {
     try {
         return getX11ClipboardInternal();
     } catch (X11Exception const& e) {

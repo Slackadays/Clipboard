@@ -34,6 +34,8 @@ private:
 public:
     ClipboardPaths(ClipboardPathsAction action, std::vector<fs::path>&& paths)
         : m_action(action), m_paths(paths) { }
+    ClipboardPaths(ClipboardPathsAction action, std::vector<fs::path>& paths)
+        : m_action(action), m_paths(paths) { }
 
     [[nodiscard]] inline ClipboardPathsAction action() const { return m_action; }
     [[nodiscard]] inline std::vector<fs::path> const& paths() const { return m_paths; }
@@ -52,7 +54,9 @@ private:
 
 public:
     ClipboardContent() : m_type(ClipboardContentType::Empty), m_data(nullptr) { }
+    ClipboardContent(std::string& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
     ClipboardContent(std::string&& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
+    ClipboardContent(ClipboardPaths& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
     ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
     ClipboardContent(ClipboardPathsAction action, std::vector<fs::path>&& paths)
         : ClipboardContent(ClipboardPaths(action, std::move(paths))) { }
