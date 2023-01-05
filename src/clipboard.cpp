@@ -278,9 +278,9 @@ void syncWithGUIClipboard() {
     if (clipboard_name == constants.default_clipboard_name) {
         ClipboardContent guiClipboard = getGUIClipboard();
         if (guiClipboard.type() == ClipboardContentType::Text) {
-            syncWithGUIClipboard(guiClipboard.text());
+            readDataFromGUIClipboard(guiClipboard.text());
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
-            syncWithGUIClipboard(guiClipboard.paths());
+            readDataFromGUIClipboard(guiClipboard.paths());
         }
     }
 }

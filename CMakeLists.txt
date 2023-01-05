@@ -35,8 +35,10 @@ endif()
 
 if(X11_FOUND)
   message(STATUS "Found X11")
-  message(STATUS "Building with X11 support")
-  add_compile_definitions(X11_AVAILABLE)
+  if(NOT WAYLAND_CLIENT_FOUND)
+    message(STATUS "Building with X11 support")
+    add_compile_definitions(X11_AVAILABLE)
+  endif()
 else()
   message(STATUS "X11 not found, building without X11 support")
 endif()
@@ -74,7 +76,7 @@ if(WIN32)
   target_sources(clipboard PRIVATE src/windows.cpp)
 endif()
 
-if(X11_FOUND)
+if(X11_FOUND AND NOT WAYLAND_CLIENT_FOUND)
   target_sources(clipboard PRIVATE src/x11.cpp)
 endif()
 
@@ -99,7 +101,7 @@ endif()
 
 target_link_libraries(clipboard Threads::Threads)
 
-if(X11_FOUND)
+if(X11_FOUND AND NOT WAYLAND_CLIENT_FOUND)
   target_link_libraries(clipboard ${X11_LIBRARIES})
 endif()
 
