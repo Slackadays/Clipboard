@@ -284,7 +284,7 @@ void syncWithGUIClipboard() {
             std::string blah = guiClipboard.text();
             std::cout << "type is text, content = " << blah << std::endl;
             exit(0);
-            //syncWithGUIClipboard(guiClipboard.text());
+            ///syncWithGUIClipboard(guiClipboard.text());
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
             std::cout << "type is paths" << std::endl;
             for (const auto& path : guiClipboard.paths().paths()) {
