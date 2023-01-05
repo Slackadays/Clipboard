@@ -226,13 +226,13 @@ void createTempDirectory() {
     fs::create_directories(filepath.persistent);
 }
 
-void syncWithGUIClipboard(const std::string& text) {
+void readDataFromGUIClipboard(const std::string& text) {
     forceClearTempDirectory();
     std::ofstream output(filepath.main / constants.pipe_file);
     output << text;
 }
 
-void syncWithGUIClipboard(const ClipboardPaths& clipboard) {
+void readDataFromGUIClipboard(const ClipboardPaths& clipboard) {
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
     auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
