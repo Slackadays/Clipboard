@@ -36,7 +36,7 @@ struct Filepath {
 extern Filepath filepath;
 
 struct Copying {
-    bool use_perma_clip = false;
+    bool is_persistent = false;
     bool use_safe_copy = true;
     fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
     std::vector<fs::path> items;

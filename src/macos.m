@@ -12,62 +12,63 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "macos.h"
 #include <AppKit/AppKit.h>
 #include <stdbool.h>
 
-bool thisClipboardHoldsText() {
+bool holdsText() {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
     NSDictionary *options = [NSDictionary dictionary];
     return [pasteboard canReadObjectForClasses:classes options:options];
 }
 
-char* getClipboardText() {
+char* getText() {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
     NSDictionary *options = [NSDictionary dictionary];
+
     if ([pasteboard canReadObjectForClasses:classes options:options]) {
-        //get the text from the clipboard
+
         NSString *text = [pasteboard stringForType:NSPasteboardTypeString];
-        //convert the text to a C string
-        const char *cString = [text UTF8String];
-        //get the length of the C string
-        int length = strlen(cString);
-        //make a new C string
-        char *newCString = malloc(length + 1);
-        //copy the C string to the new C string
-        strcpy(newCString, cString);
-        return newCString;
+        const char *string = [text UTF8String];
+        int length = strlen(string);
+        char *newstring = malloc(length + 1);
+        strcpy(newstring, string);
+        return newstring;
+
     } else {
         return "";
     }
 }
 
-bool thisClipboardHoldsFiles() {
+bool holdsFiles() {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
     NSDictionary *options = [NSDictionary dictionary];
     return [pasteboard canReadObjectForClasses:classes options:options];
 }
 
-char** getClipboardFiles() {
+char** getFiles() {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
     NSDictionary *options = [NSDictionary dictionary];
+
     if ([pasteboard canReadObjectForClasses:classes options:options]) {
+
         NSArray *files = [pasteboard readObjectsForClasses:classes options:options];
         int numberOfFiles = [files count];
-        char** newCStringArray = malloc(numberOfFiles * sizeof(char*));
+        char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
         for (int i = 0; i < numberOfFiles; i++) {
             NSURL *file = [files objectAtIndex:i];
-            const char* cString = [[file path] UTF8String];
-            int length = strlen(cString);
-            char* newCString = malloc(length + 1);
-            strcpy(newCString, cString);
-            newCStringArray[i] = newCString;
+            const char* filepath = [[file path] UTF8String];
+            int length = strlen(filepath);
+            char* Cfilepath = malloc(length + 1);
+            strcpy(Cfilepath, filepath);
+            stringArray[i] = Cfilepath;
         }
-        return newCStringArray;
+        stringArray[numberOfFiles] = NULL;
+        return stringArray;
+
     } else {
         return NULL;
     }

@@ -3,15 +3,15 @@ clipboard(1) -- cut, copy, and paste in the terminal
 
 ## SYNOPSIS
 
-**clipboard** [--fast-copy|-fc] ([--]copy|[-]cp][(id)])|([--]cut|[-]ct[(id)])|([--]paste|[-p][(id)]) (files)
+**clipboard** [--fast-copy|-fc] ([--]copy|[-]cp])|([--]cut|[-]ct)|([--]paste|[-p])([--]copy|[-]cp)[(num)|_(id)] (files)
 
-**clipboard** ([--]show|[-]sh][id])|([--]clear|[-]clr][(id)])
+**clipboard** ([--]show|[-]sh])|([--]clear|[-]clr])[(num)|_(id)]
 
-(stdout/stderr) | **clipboard** [[--]copy|[-]cp][(id)]
+(stdout/stderr) | **clipboard** [[--]copy|[-]cp][(num)|_(id)]
 
-**clipboard** [[--]paste|[-]p][(id)] | (stdin)
+**clipboard** [[--]paste|[-]p][(num)|_(id)] | (stdin)
 
-**clipboard** [[--]paste|[-]p][(id)] > (file)
+**clipboard** [[--]paste|[-]p][(num)|_(id)] > (file)
 
 ## DESCRIPTION
 
@@ -35,7 +35,19 @@ Set this environment variable to make Clipboard always show color regardless of 
 
 ### **TMPDIR**
 
-Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
+Set this environment variable to the directory that Clipboard (and other programs) will use to hold the items you cut or copy into temporary clipboards.
+
+### **CLIPBOARD_TMPDIR**
+
+Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
+
+### **CLIPBOARD_PERSISTDIR** 
+
+Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
+
+### **CLIPBOARD_ALWAYS_PERSIST**
+
+Set this environment variable to make Clipboard always use persistent clipboards.
 
 ### **NO_COLOR**
 

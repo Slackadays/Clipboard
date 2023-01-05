@@ -16,22 +16,31 @@
 
 #include "macos.hpp"
 extern "C" {
-    #include "macos.h"
+    bool holdsText();
+    char* getText();
+
+    bool holdsFiles();
+    char** getFiles();
 }
 
 ClipboardContent getGUIClipboard() {
-    if (thisClipboardHoldsText()) {
-        std::string text(getClipboardText());
-        std::cout << "Text: " << text << std::endl;
-    }
-    if (thisClipboardHoldsFiles()) {
-        char** files = getClipboardFiles();
+    bool thisClipboardHoldsText = holdsText();
+    bool thisClipboardHoldsFiles = holdsFiles();
+    
+    if (thisClipboardHoldsFiles) {
+        char** files = getFiles();
         std::vector<fs::path> fileVector;
-        for (int i = 0; files[i] != NULL; i++) {
+        for (int i = 0; files[i] != nullptr; i++) {
             fileVector.push_back(files[i]);
         }
         ClipboardPaths paths(ClipboardPathsAction::Copy, fileVector);
         return ClipboardContent(paths);
     }
+    if (thisClipboardHoldsText) {
+        std::string text(getText());
+        //std::cout << "Text: " << text << std::endl;
+        return ClipboardContent(text);
+    }
+
     return ClipboardContent();
 }

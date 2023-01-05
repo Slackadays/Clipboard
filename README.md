@@ -25,7 +25,7 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 ---
 
 ### Clone, Configure, Compile, and Install Manually
-Get the latest commit by removing `--branch 0.2.0` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, enable Debug Mode by adding `-D TEST=1`, and disable GUI clipboard support by adding `-D NOGUI=1` to `cmake .`.
+Get the latest commit by removing `--branch 0.2.0` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
 ```bash
 git clone --branch 0.2.0 https://github.com/slackadays/Clipboard 
 cd Clipboard
@@ -57,35 +57,35 @@ Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/
 ![How To Use](readme_assets/CBHowToUse.png)
 
 In all commands, you can substitute `cb` for `clipboard`. 
-Add a number to the end of the action to choose which clipboard you want to use (the default is 0). 
+Add a number to the end of the action to choose which clipboard you want to use (the default is 0) or `_` to use a persistent clipboard. 
 
 ---
 
-**Copy** &emsp; `clipboard ([--]copy|[-]cp) (file) [files]`
+**Copy** &emsp; `clipboard ([--]copy|[-]cp)[(num)|_(id)] (file) [files]`
 
 ---
 
-**Cut** &emsp; `clipboard ([--]cut|[-]ct) (file) [files]`
+**Cut** &emsp; `clipboard ([--]cut|[-]ct)[(num)|_(id)] (file) [files]`
 
 ---
 
-**Paste** &emsp; `clipboard ([--]paste|[-]p)`
+**Paste** &emsp; `clipboard ([--]paste|[-]p)[(num)|_(id)]`
 
 ---
 
-**Pipe In** &emsp; `(something) | clipboard [([--]copy|[-]cp)]`
+**Pipe In** &emsp; `(something) | clipboard [([--]copy|[-]cp)][(num)|_(id)]`
 
 ---
 
-**Pipe Out** &emsp; `clipboard [([--]paste|[-]p] | (something)` or `clipboard [([--]paste|[-]p)] > (some file)`
+**Pipe Out** &emsp; `clipboard [([--]paste|[-]p][(num)|_(id)] | (something)` or `clipboard [([--]paste|[-]p)][(num)|_(id)] > (some file)`
 
 ---
 
-**Show Contents** &emsp; `clipboard ([--]show|[-]sh)`
+**Show Contents** &emsp; `clipboard ([--]show|[-]sh)[(num)|_(id)]`
 
 ---
 
-**Clear Contents** &emsp; `clipboard ([--]clear|[-]clr)`
+**Clear Contents** &emsp; `clipboard ([--]clear|[-]clr)[(num)|_(id)]`
 
 ---
 
@@ -111,7 +111,19 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-**`TMPDIR`** &emsp; Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy.
+**`TMPDIR`** &emsp; Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy into a temporary directory. Other programs use `TMPDIR` as well, so be careful about changing this.
+
+---
+
+**`CLIPBOARD_TMPDIR`** &emsp; Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
+
+---
+
+**`CLIPBOARD_PERSISTDIR`** &emsp; Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
+
+---
+
+**`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this environment variable to make Clipboard always use persistent clipboards.
 
 ---
 

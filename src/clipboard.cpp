@@ -47,9 +47,7 @@
 #elif defined(__APPLE__)
 #include "macos.hpp"
 #else
-ClipboardContent getGUIClipboard() {
-    return ClipboardContent();
-}
+ClipboardContent getGUIClipboard() { return ClipboardContent(); }
 #endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -151,16 +149,16 @@ void setupItems(int& argc, char *argv[]) {
 void setClipboardName(int& argc, char *argv[]) {
     if (argc >= 2) {
         clipboard_name = argv[1];
-        if (clipboard_name.find_first_of("_:;|") != std::string::npos) {
-            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("_:;|") + 1);
-            copying.use_perma_clip = true;
+        if (clipboard_name.find_first_of("_") != std::string::npos) {
+            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("_") + 1);
+            copying.is_persistent = true;
         } else {
             clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
         }
         if (clipboard_name.empty()) {
             clipboard_name = constants.default_clipboard_name;
         } else {
-            argv[1][strlen(argv[1]) - (clipboard_name.length() + copying.use_perma_clip)] = '\0';
+            argv[1][strlen(argv[1]) - (clipboard_name.length() + copying.is_persistent)] = '\0';
         }
     }
 
@@ -180,11 +178,11 @@ void setClipboardName(int& argc, char *argv[]) {
         }
     }
 
-    filepath.temporary = (getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name / clipboard_name; //set filepath.temporary to TMPDIR if it exists, otherwise use the system's temporary directory
+    filepath.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR") : getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name / clipboard_name;
 
-    filepath.persistent = filepath.home / constants.persistent_directory_name / clipboard_name;
+    filepath.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : filepath.home) / constants.persistent_directory_name / clipboard_name;
     
-    filepath.main = copying.use_perma_clip ? filepath.persistent : filepath.temporary;
+    filepath.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? filepath.persistent : filepath.temporary;
 
     filepath.original_files = filepath.main.parent_path() / (clipboard_name + std::string(constants.original_files_extension));
 }
@@ -280,17 +278,10 @@ void syncWithGUIClipboard() {
     if (clipboard_name == constants.default_clipboard_name) {
         ClipboardContent guiClipboard = getGUIClipboard();
         if (guiClipboard.type() == ClipboardContentType::Text) {
-            std::string blah = guiClipboard.text();
-            //std::cout << "type is text, content = " << blah << std::endl;
             syncWithGUIClipboard(guiClipboard.text());
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
-            //std::cout << "type is paths" << std::endl;
-            for (const auto& path : guiClipboard.paths().paths()) {
-            //    std::cout << "path = " << path.string() << std::endl;
-            }
             syncWithGUIClipboard(guiClipboard.paths());
         }
-        //std::cout << "type is unknown" << std::endl;
     }
 }
 
