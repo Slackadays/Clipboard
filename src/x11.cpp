@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "x11_wayland.hpp"
+#include "gui.hpp"
 #include "logging.hpp"
 
 #include <chrono>

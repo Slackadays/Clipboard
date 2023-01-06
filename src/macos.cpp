@@ -14,7 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <iostream>
 
-#include "macos.hpp"
+#include "gui.hpp"
+
 extern "C" {
     bool holdsText();
     char* getText();
