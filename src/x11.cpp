@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "unix.hpp"
+#include "x11_wayland.hpp"
 #include "logging.hpp"
 
 #include <chrono>
@@ -911,7 +911,7 @@ static ClipboardPaths parseFiles(std::vector<char> const& data) {
     return { std::move(paths), action };
 }
 
-static ClipboardContent getX11ClipboardInternal() {
+ClipboardContent getX11ClipboardInternal() {
     X11Connection conn;
     if (!conn.isClipboardOwned()) {
         debugStream << "No selection owner, aborting" << std::endl;
@@ -934,17 +934,4 @@ static ClipboardContent getX11ClipboardInternal() {
     }
 
     return { parseFiles(data) };
-}
-
-ClipboardContent getGUIClipboard() {
-    try {
-        return getX11ClipboardInternal();
-    } catch (X11Exception const& e) {
-        debugStream << "Error getting data from X11: " << e.what() << std::endl;
-        return {};
-    }
-}
-
-void writeToGUIClipboard(const ClipboardContent& clipboard) {
-    
 }

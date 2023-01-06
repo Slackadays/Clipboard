@@ -79,7 +79,15 @@ if(WIN32)
 endif()
 
 if(X11_FOUND OR WAYLAND_CLIENT_FOUND)
-  target_sources(clipboard PRIVATE src/unix.cpp)
+  target_sources(clipboard PRIVATE src/x11_wayland.cpp)
+endif()
+
+if(X11_FOUND)
+  target_sources(clipboard PRIVATE src/x11.cpp)
+endif()
+
+if(WAYLAND_CLIENT_FOUND)
+  target_sources(clipboard PRIVATE src/wayland.cpp)
 endif()
 
 if(APPLE)

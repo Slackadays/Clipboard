@@ -41,7 +41,7 @@
 #define fileno _fileno
 #include "windows.hpp"
 #elif defined(X11_AVAILABLE) || defined(WAYLAND_AVAILABLE)
-#include "unix.hpp"
+#include "x11_wayland.hpp"
 #elif defined(__APPLE__)
 #include "macos.hpp"
 #else
