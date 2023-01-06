@@ -42,10 +42,10 @@
 #include "windows.hpp"
 #elif defined(X11_AVAILABLE) || defined(WAYLAND_AVAILABLE) || defined(__APPLE__)
 ClipboardContent getGUIClipboard();
-void writeToGUIClipboard(const ClipboardContent& clipboard);
+void writeToGUIClipboard(ClipboardContent& clipboard);
 #else
 ClipboardContent getGUIClipboard() { return ClipboardContent(); }
-void writeToGUIClipboard(const ClipboardContent& clipboard) { };
+void writeToGUIClipboard(ClipboardContent& clipboard) { };
 #endif
 
 #if !defined(_WIN32) && !defined(_WIN64)

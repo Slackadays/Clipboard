@@ -36,6 +36,6 @@ ClipboardContent getGUIClipboard() {
     #endif
 }
 
-void writeToGUIClipboard(const ClipboardContent& clipboard) {
+void writeToGUIClipboard(ClipboardContent& clipboard) {
     
 }
