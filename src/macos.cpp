@@ -21,12 +21,14 @@ extern "C" {
 
     bool holdsFiles();
     char** getFiles();
+
+    void writeText(const char* text);
+    void writeFiles(const char** files);
 }
 
 ClipboardContent getGUIClipboard() {
     bool thisClipboardHoldsText = holdsText();
     bool thisClipboardHoldsFiles = holdsFiles();
-    
     if (thisClipboardHoldsFiles) {
         char** files = getFiles();
         std::vector<fs::path> fileVector;
@@ -34,17 +36,27 @@ ClipboardContent getGUIClipboard() {
             fileVector.push_back(files[i]);
         }
         ClipboardPaths paths(fileVector);
+        delete[] files;
         return ClipboardContent(paths);
     }
     if (thisClipboardHoldsText) {
         std::string text(getText());
-        //std::cout << "Text: " << text << std::endl;
         return ClipboardContent(text);
     }
-
     return ClipboardContent();
 }
 
-void writeToGUIClipboard(const ClipboardContent& clipboard) {
-    
+void writeToGUIClipboard(ClipboardContent& clipboard) {
+    if (clipboard.type() == ClipboardContentType::Text) {
+        writeText(clipboard.text().c_str());
+    } else if (clipboard.type() == ClipboardContentType::Paths) {
+        std::vector<fs::path> paths(clipboard.paths().paths());
+        const char** files = new const char*[paths.size() + 1];
+        for (int i = 0; i < paths.size(); i++) {
+            files[i] = paths[i].c_str();
+        }
+        files[paths.size()] = nullptr;
+        writeFiles(files);
+        delete[] files;
+    }
 }

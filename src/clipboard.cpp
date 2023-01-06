@@ -148,7 +148,11 @@ ClipboardContent getThisClipboard() {
     if (!copying.buffer.empty()) {
         return ClipboardContent(copying.buffer);
     } else if (!copying.items.empty()) {
-        return ClipboardContent(ClipboardPaths(copying.items));
+        std::vector<fs::path> files;
+        for (const auto& entry : fs::directory_iterator(filepath.main)) {
+            files.push_back(entry.path());
+        }
+        return ClipboardContent(ClipboardPaths(files));
     }
     return ClipboardContent();
 }
@@ -808,7 +812,7 @@ int main(int argc, char *argv[]) {
 
         createTempDirectory();
 
-        //syncWithGUIClipboard();
+        syncWithGUIClipboard();
 
         setupAction(argc, argv);
 
