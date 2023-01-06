@@ -812,7 +812,7 @@ int main(int argc, char *argv[]) {
 
         createTempDirectory();
 
-        syncWithGUIClipboard();
+        //syncWithGUIClipboard();
 
         setupAction(argc, argv);
 
