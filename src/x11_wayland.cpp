@@ -13,29 +13,53 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "gui.hpp"
+#include "logging.hpp"
 
 #if defined(X11_AVAILABLE)
 ClipboardContent getX11ClipboardInternal();
+void setX11ClipboardInternal(ClipboardContent const&);
 #endif
 
 #if defined(WAYLAND_AVAILABLE)
-ClipboardContent getWaylandClipboardInternal() { return ClipboardContent(); }
+ClipboardContent getWaylandClipboardInternal() { return {}; }
+void setWaylandClipboardInternal(ClipboardContent const&) { }
 #endif
 
 ClipboardContent getGUIClipboard() {
-    #if defined(X11_AVAILABLE)
-    //try {
-        return getX11ClipboardInternal();
-    //} catch (X11Exception const& e) { //X11Exception is not available from bringing getGUIClipboard over
-    //    debugStream << "Error getting data from X11: " << e.what() << std::endl;
-    //    return {};
-    //}
-    #endif
-    #if defined(WAYLAND_AVAILABLE)
-    return getWaylandClipboardInternal();
-    #endif
+    try {
+        ClipboardContent clipboard;
+
+        #if defined(X11_AVAILABLE)
+        if (clipboard.type() == ClipboardContentType::Empty) {
+            clipboard = getX11ClipboardInternal();
+        }
+        #endif
+
+        #if defined(WAYLAND_AVAILABLE)
+        if (clipboard.type() == ClipboardContentType::Empty) {
+            clipboard =  getWaylandClipboardInternal();
+        }
+        #endif
+
+        return clipboard;
+
+    } catch (std::exception const& e) {
+        debugStream << "Error getting clipboard data: " << e.what() << std::endl;
+        return {};
+    }
 }
 
-void writeToGUIClipboard(ClipboardContent& clipboard) {
-    
+void writeToGUIClipboard(ClipboardContent const& clipboard) {
+    try {
+        #if defined(X11_AVAILABLE)
+        setX11ClipboardInternal(clipboard);
+        #endif
+
+        #if defined(WAYLAND_AVAILABLE)
+        setWaylandClipboardInternal(clipboard);
+        #endif
+
+    } catch (std::exception const& e) {
+        debugStream << "Error setting clipboard data: " << e.what() << std::endl;
+    }
 }

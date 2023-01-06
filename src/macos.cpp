@@ -47,7 +47,7 @@ ClipboardContent getGUIClipboard() {
     return ClipboardContent();
 }
 
-void writeToGUIClipboard(ClipboardContent& clipboard) {
+void writeToGUIClipboard(ClipboardContent const& clipboard) {
     if (clipboard.type() == ClipboardContentType::Text) {
         writeText(clipboard.text().c_str());
     } else if (clipboard.type() == ClipboardContentType::Paths) {
