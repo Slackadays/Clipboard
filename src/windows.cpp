@@ -242,7 +242,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
 
     if (clipboard.type() == ClipboardContentType::Text) {
         setWindowsClipboardDataPipe();
-    } else if (clipboard.type() == ClipboardContentType::Files) {
+    } else if (clipboard.type() == ClipboardContentType::Paths) {
         setWindowsClipboardDataFiles();
     }
 
