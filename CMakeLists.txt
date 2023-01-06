@@ -78,7 +78,7 @@ if(WIN32)
   target_sources(clipboard PRIVATE src/windows.cpp)
 endif()
 
-if(X11_FOUND OR WAYLAND_CLIENT_FOUND)
+if(UNIX AND NOT APPLE)
   target_sources(clipboard PRIVATE src/x11_wayland.cpp)
 endif()
 

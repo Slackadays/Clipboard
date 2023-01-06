@@ -33,8 +33,8 @@ private:
 
 public:
     ClipboardPaths(std::vector<fs::path>&& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
-        : m_action(action), m_paths(paths) { }
-    ClipboardPaths(std::vector<fs::path>& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
+        : m_action(action), m_paths(std::move(paths)) { }
+    ClipboardPaths(std::vector<fs::path> const& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
         : m_action(action), m_paths(paths) { }
 
     [[nodiscard]] inline ClipboardPathsAction action() const { return m_action; }
@@ -54,18 +54,22 @@ private:
 
 public:
     ClipboardContent() : m_type(ClipboardContentType::Empty), m_data(nullptr) { }
-    ClipboardContent(std::string& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
+
+    ClipboardContent(std::string const& text) : m_type(ClipboardContentType::Text), m_data(text) { }
     ClipboardContent(std::string&& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
-    ClipboardContent(ClipboardPaths& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
+
+    ClipboardContent(ClipboardPaths const& paths) : m_type(ClipboardContentType::Paths), m_data(paths) { }
     ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
+
     ClipboardContent(std::vector<fs::path>&& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
         : ClipboardContent(ClipboardPaths(std::move(paths), action)) { }
+    ClipboardContent(std::vector<fs::path> const& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
+        : ClipboardContent(ClipboardPaths(paths, action)) { }
 
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
-    [[nodiscard]] inline std::string const& text() { return std::get<std::string>(m_data); }
-    [[nodiscard]] inline ClipboardPaths const& paths() { return std::get<ClipboardPaths>(m_data); }
+    [[nodiscard]] inline std::string const& text() const { return std::get<std::string>(m_data); }
+    [[nodiscard]] inline ClipboardPaths const& paths() const { return std::get<ClipboardPaths>(m_data); }
 };
 
-void readDataFromGUIClipboard(const std::string& text);
-void readDataFromGUIClipboard(const ClipboardPaths& clipboard);
-ClipboardContent getThisClipboard();
+ClipboardContent getGUIClipboard();
+void writeToGUIClipboard(ClipboardContent const& clipboard);

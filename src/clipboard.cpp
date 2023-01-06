@@ -40,12 +40,6 @@
 #define isatty _isatty
 #define fileno _fileno
 #include "windows.hpp"
-#elif defined(X11_AVAILABLE) || defined(WAYLAND_AVAILABLE) || defined(__APPLE__)
-ClipboardContent getGUIClipboard();
-void writeToGUIClipboard(ClipboardContent& clipboard);
-#else
-ClipboardContent getGUIClipboard() { return ClipboardContent(); }
-void writeToGUIClipboard(ClipboardContent& clipboard) { };
 #endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -144,16 +138,35 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 ClipboardContent getThisClipboard() {
-    if (!copying.buffer.empty()) {
-        return ClipboardContent(copying.buffer);
-    } else if (!copying.items.empty()) {
+    if (fs::exists(filepath.original_files)) {
+        std::ifstream originalFiles { filepath.original_files };
         std::vector<fs::path> files;
-        for (const auto& entry : fs::directory_iterator(filepath.main)) {
-            files.push_back(entry.path());
+
+        std::string line;
+        while (!originalFiles.eof()) {
+            std::getline(originalFiles, line);
+            if (!line.empty()) {
+                files.emplace_back(line);
+            }
         }
-        return ClipboardContent(ClipboardPaths(files));
+
+        return { std::move(files), ClipboardPathsAction::Cut };
     }
-    return ClipboardContent();
+
+    if (!copying.buffer.empty()) {
+        return { copying.buffer };
+    }
+
+    if (!copying.items.empty()) {
+        std::vector<fs::path> paths;
+        for (auto&& item : copying.items) {
+            paths.emplace_back(fs::absolute(item));
+        }
+
+        return { std::move(paths) };
+    }
+
+    return {};
 }
 
 bool stopIndicator(bool change_condition_variable = true) {
@@ -811,7 +824,7 @@ int main(int argc, char *argv[]) {
 
         createTempDirectory();
 
-        //syncWithGUIClipboard();
+        syncWithGUIClipboard();
 
         setupAction(argc, argv);
 
