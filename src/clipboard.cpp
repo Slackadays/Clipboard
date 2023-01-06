@@ -150,6 +150,7 @@ ClipboardContent getThisClipboard() {
     } else if (!copying.items.empty()) {
         return ClipboardContent(ClipboardPaths(copying.items));
     }
+    return ClipboardContent();
 }
 
 bool stopIndicator(bool change_condition_variable = true) {
