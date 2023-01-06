@@ -41,6 +41,7 @@ struct Copying {
     fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
     std::vector<fs::path> items;
     std::vector<std::pair<std::string, std::error_code>> failedItems;
+    std::string buffer;
 };
 extern Copying copying;
 
@@ -126,7 +127,6 @@ void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
 std::string replaceColors(const std::string_view& str);
-void forceClearTempDirectory();
 void setupSignals();
 void setLocale();
 void showHelpMessage(int& argc, char *argv[]);
@@ -147,7 +147,7 @@ void setupIndicator();
 void deduplicateItems();
 unsigned long long calculateTotalItemSize();
 void checkItemSize();
-void clearTempDirectory();
+void clearTempDirectory(bool force_clear);
 void copyFiles();
 void removeOldFiles();
 bool userIsARobot();

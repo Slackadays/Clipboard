@@ -89,10 +89,66 @@ std::string replaceColors(const std::string_view& str) {
     return temp;
 }
 
-void forceClearTempDirectory() {
-    fs::remove(filepath.original_files);
-    for (const auto& entry : fs::directory_iterator(filepath.main)) {
-        fs::remove_all(entry.path());
+void clearTempDirectory(bool force_clear = false) {
+    if (force_clear || (action != Action::Paste && action != Action::PipeOut && action != Action::Show)) {
+        fs::remove(filepath.original_files);
+        for (const auto& entry : fs::directory_iterator(filepath.main)) {
+            fs::remove_all(entry.path());
+        }
+    }
+}
+
+void convertFromGUIClipboard(const std::string& text) {
+    clearTempDirectory(true);
+    std::ofstream output(filepath.main / constants.pipe_file);
+    output << text;
+}
+
+void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
+    // Only clear the temp directory if all files in the clipboard are outside the temp directory
+    // This avoids the situation where we delete the very files we're trying to copy
+    auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
+        auto relative = fs::relative(path, filepath.main);
+        auto firstElement = *(relative.begin());
+        return firstElement == fs::path("..");
+    });
+
+    if (allOutsideFilepath) {
+        clearTempDirectory(true);
+    }
+
+    for (auto&& path : clipboard.paths()) {
+        if (!fs::exists(path)) {
+            continue;
+        }
+
+        auto target = filepath.main / path.filename();
+        if (fs::exists(target) && fs::equivalent(path, target)) {
+            continue;
+        }
+
+        try {
+            fs::copy(path, target, copying.opts | fs::copy_options::create_hard_links);
+        } catch (const fs::filesystem_error& e) {
+            try {
+                fs::copy(path, target, copying.opts);
+            } catch (const fs::filesystem_error& e) {} // Give up
+        }
+    }
+
+    if (clipboard.action() == ClipboardPathsAction::Cut) {
+        std::ofstream originalFiles { filepath.original_files };
+        for (auto&& path : clipboard.paths()) {
+            originalFiles << path.string() << std::endl;
+        }
+    }
+}
+
+ClipboardContent getThisClipboard() {
+    if (!copying.buffer.empty()) {
+        return ClipboardContent(copying.buffer);
+    } else if (!copying.items.empty()) {
+        return ClipboardContent(ClipboardPaths(copying.items));
     }
 }
 
@@ -229,9 +285,9 @@ void syncWithGUIClipboard() {
     if (clipboard_name == constants.default_clipboard_name) {
         ClipboardContent guiClipboard = getGUIClipboard();
         if (guiClipboard.type() == ClipboardContentType::Text) {
-            readDataFromGUIClipboard(guiClipboard.text());
+            convertFromGUIClipboard(guiClipboard.text());
         } else if (guiClipboard.type() == ClipboardContentType::Paths) {
-            readDataFromGUIClipboard(guiClipboard.paths());
+            convertFromGUIClipboard(guiClipboard.paths());
         }
     }
 }
@@ -264,15 +320,18 @@ void showClipboardStatus() {
 }
 
 void showClipboardContents() {
+    stopIndicator();
     if (fs::is_directory(filepath.main) && !fs::is_empty(filepath.main)) {
         if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
+            std::string content;
             std::ifstream input(filepath.main / constants.pipe_file);
-            std::string line;
-            std::getline(input, line, '\0');
-            printf(replaceColors(clipboard_text_contents_message).data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(line.size())), clipboard_name.data());
-            printf(replaceColors("{bold}{blue}%s\n{blank}").data(), line.substr(0, 250).data());
-            if (line.size() > 250) {
-                printf(replaceColors(and_more_items_message).data(), line.size() - 250);
+            std::stringstream buffer;
+            buffer << input.rdbuf();
+            content = buffer.str();
+            printf(replaceColors(clipboard_text_contents_message).data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(content.size())), clipboard_name.data());
+            printf(replaceColors("{bold}{blue}%s\n{blank}").data(), content.substr(0, 250).data());
+            if (content.size() > 250) {
+                printf(replaceColors(and_more_items_message).data(), content.size() - 250);
             }
             return;
         }
@@ -488,17 +547,6 @@ void checkItemSize() {
     }
 }
 
-void clearTempDirectory() {
-    if (action != Action::Paste) {
-        fs::remove(filepath.original_files);
-    }
-    if (action == Action::Copy || action == Action::Cut || action == Action::PipeIn || action == Action::Clear) {
-        for (const auto& entry : fs::directory_iterator(filepath.main)) {
-            fs::remove_all(entry.path());
-        }
-    }
-}
-
 void copyFiles() {
     std::ofstream originalFiles;
     if (action == Action::Cut) {
@@ -647,20 +695,16 @@ void pasteFiles() {
 
 void pipeIn() {
     std::ofstream file(filepath.main / constants.pipe_file);
-    std::string buffer;
     std::string line;
-    for (int i = 0; std::getline(std::cin, line); i == 19 ? i = 0 : i++) {
-        buffer += line + "\n";
+    while (std::getline(std::cin, line)) {
         successes.bytes += line.size() + 1;
-        if (i == 19) {
-            file << buffer;
-            buffer = "";
+        copying.buffer.append(line + "\n");
+        if (copying.buffer.size() >= 32000000) {
+            file << copying.buffer;
+            copying.buffer.clear();
         }
     }
-    if (buffer != "") {
-        file << buffer;
-    }
-    file.close();
+    file << copying.buffer;
 }
 
 void pipeOut() {
@@ -763,7 +807,7 @@ int main(int argc, char *argv[]) {
 
         createTempDirectory();
 
-        syncWithGUIClipboard();
+        //syncWithGUIClipboard();
 
         setupAction(argc, argv);
 

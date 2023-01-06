@@ -908,7 +908,7 @@ static ClipboardPaths parseFiles(std::vector<char> const& data) {
         paths.emplace_back(line);
     }
 
-    return { action, std::move(paths) };
+    return { std::move(paths), action };
 }
 
 static ClipboardContent getX11ClipboardInternal() {

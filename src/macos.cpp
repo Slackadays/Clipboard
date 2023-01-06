@@ -33,7 +33,7 @@ ClipboardContent getGUIClipboard() {
         for (int i = 0; files[i] != nullptr; i++) {
             fileVector.push_back(files[i]);
         }
-        ClipboardPaths paths(ClipboardPathsAction::Copy, fileVector);
+        ClipboardPaths paths(fileVector);
         return ClipboardContent(paths);
     }
     if (thisClipboardHoldsText) {

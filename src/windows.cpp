@@ -51,7 +51,7 @@ ClipboardContent getGUIClipboard() {
 
         if (hasFiles) {
             auto files = getWindowsClipboardDataFiles(clipboardPointer);
-            clipboard = { ClipboardPathsAction::Copy, std::move(files) };
+            clipboard = { std::move(files) };
         } else {
             clipboard = { getWindowsClipboardDataPipe(clipboardPointer) };
         }

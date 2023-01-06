@@ -32,9 +32,9 @@ private:
     std::vector<fs::path> m_paths;
 
 public:
-    ClipboardPaths(ClipboardPathsAction action, std::vector<fs::path>&& paths)
+    ClipboardPaths(std::vector<fs::path>&& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
         : m_action(action), m_paths(paths) { }
-    ClipboardPaths(ClipboardPathsAction action, std::vector<fs::path>& paths)
+    ClipboardPaths(std::vector<fs::path>& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
         : m_action(action), m_paths(paths) { }
 
     [[nodiscard]] inline ClipboardPathsAction action() const { return m_action; }
@@ -58,8 +58,8 @@ public:
     ClipboardContent(std::string&& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
     ClipboardContent(ClipboardPaths& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
     ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
-    ClipboardContent(ClipboardPathsAction action, std::vector<fs::path>&& paths)
-        : ClipboardContent(ClipboardPaths(action, std::move(paths))) { }
+    ClipboardContent(std::vector<fs::path>&& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
+        : ClipboardContent(ClipboardPaths(std::move(paths), action)) { }
 
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
     [[nodiscard]] inline std::string const& text() { return std::get<std::string>(m_data); }

@@ -68,7 +68,6 @@ add_executable(clipboard
   src/clipboard.cpp
   src/messages.cpp
   src/logging.cpp
-  src/gui.cpp
 )
 
 if(WIN32)
