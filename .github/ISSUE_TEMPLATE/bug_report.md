@@ -23,3 +23,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Before you post**
+Please make sure you check previous bug reports before filing a new one.
+ This will help keep the Issues section less cluttered. :)
