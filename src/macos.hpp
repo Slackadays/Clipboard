@@ -14,3 +14,4 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "gui.hpp"
 ClipboardContent getGUIClipboard();
+void writeToGUIClipboard(const ClipboardContent& clipboard);

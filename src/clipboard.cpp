@@ -40,14 +40,13 @@
 #define isatty _isatty
 #define fileno _fileno
 #include "windows.hpp"
-#elif defined(X11_AVAILABLE) && !defined(WAYLAND_AVAILABLE)
-#include "x11.hpp"
-#elif defined(WAYLAND_AVAILABLE)
-#include "wayland.hpp"
+#elif defined(X11_AVAILABLE) || defined(WAYLAND_AVAILABLE)
+#include "unix.hpp"
 #elif defined(__APPLE__)
 #include "macos.hpp"
 #else
 ClipboardContent getGUIClipboard() { return ClipboardContent(); }
+void writeToGUIClipboard(const ClipboardContent& clipboard) { };
 #endif
 
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -224,54 +223,6 @@ void setupVariables(int& argc, char *argv[]) {
 void createTempDirectory() {
     fs::create_directories(filepath.temporary);
     fs::create_directories(filepath.persistent);
-}
-
-void readDataFromGUIClipboard(const std::string& text) {
-    forceClearTempDirectory();
-    std::ofstream output(filepath.main / constants.pipe_file);
-    output << text;
-}
-
-void readDataFromGUIClipboard(const ClipboardPaths& clipboard) {
-    // Only clear the temp directory if all files in the clipboard are outside the temp directory
-    // This avoids the situation where we delete the very files we're trying to copy
-    auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
-        auto relative = fs::relative(path, filepath.main);
-        auto firstElement = *(relative.begin());
-        return firstElement == fs::path("..");
-    });
-
-    if (allOutsideFilepath) {
-        forceClearTempDirectory();
-    }
-
-    for (auto&& path : clipboard.paths()) {
-        if (!fs::exists(path)) {
-            continue;
-        }
-
-        auto target = filepath.main / path.filename();
-        if (fs::exists(target) && fs::equivalent(path, target)) {
-            continue;
-        }
-
-        try {
-            fs::copy(path, target, copying.opts | fs::copy_options::create_hard_links);
-        } catch (const fs::filesystem_error& e) {
-            try {
-                fs::copy(path, target, copying.opts);
-            } catch (const fs::filesystem_error& e) {
-                // Give up
-            }
-        }
-    }
-
-    if (clipboard.action() == ClipboardPathsAction::Cut) {
-        std::ofstream originalFiles { filepath.original_files };
-        for (auto&& path : clipboard.paths()) {
-            originalFiles << path.string() << std::endl;
-        }
-    }
 }
 
 void syncWithGUIClipboard() {
@@ -757,11 +708,11 @@ void performAction() {
 }
 
 void updateGUIClipboard() {
-    #if defined(_WIN32) || defined(_WIN64)
-    updateWindowsClipboard();
-    #endif
+    if (action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear) { //only update GUI clipboard on write operations
+        ClipboardContent thisClipboard = getThisClipboard();
+        writeToGUIClipboard(thisClipboard);
+    }
 }
-
 
 void showFailures() {
     if (copying.failedItems.size() > 0) {
@@ -830,9 +781,7 @@ int main(int argc, char *argv[]) {
 
         performAction();
 
-        if (action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear) { //only update GUI clipboard on write operations
-            updateGUIClipboard();
-        }
+        updateGUIClipboard();
 
         stopIndicator();
 

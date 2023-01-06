@@ -68,26 +68,6 @@ ClipboardContent getGUIClipboard() {
     return clipboard;
 }
 
-void updateWindowsClipboard() {
-    if (OpenClipboard(nullptr) == 0) {
-        onWindowsError("OpenClipboard");
-    }
-    if (EmptyClipboard() == 0) {
-        onWindowsError("EmptyClipboard");
-    }
-
-    if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
-        setWindowsClipboardDataPipe();
-
-    } else {
-        setWindowsClipboardDataFiles();
-    }
-
-    if (CloseClipboard() == 0) {
-        onWindowsError("CloseClipboard");
-    }
-}
-
 void onWindowsError(const std::string_view function) {
     auto errorCode = GetLastError();
 
@@ -249,5 +229,24 @@ void setWindowsClipboardDataFiles() {
 
     if (SetClipboardData(CF_HDROP, clipboardHandle) == nullptr) {
         onWindowsError("SetClipboardData");
+    }
+}
+
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
+    if (OpenClipboard(nullptr) == 0) {
+        onWindowsError("OpenClipboard");
+    }
+    if (EmptyClipboard() == 0) {
+        onWindowsError("EmptyClipboard");
+    }
+
+    if (clipboard.type() == ClipboardContentType::Text) {
+        setWindowsClipboardDataPipe();
+    } else if (clipboard.type() == ClipboardContentType::Files) {
+        setWindowsClipboardDataFiles();
+    }
+
+    if (CloseClipboard() == 0) {
+        onWindowsError("CloseClipboard");
     }
 }

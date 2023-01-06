@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "x11.hpp"
+#include "unix.hpp"
 #include "logging.hpp"
 
 #include <chrono>
@@ -528,7 +528,6 @@ void X11Connection::throwIfDestroyed() const {
     }
 }
 
-
 Window X11Connection::getSelectionOwner(const X11Atom& selection) {
     throwIfDestroyed();
     return X_CALL(XGetSelectionOwner, display(), selection.value());
@@ -944,4 +943,8 @@ ClipboardContent getGUIClipboard() {
         debugStream << "Error getting data from X11: " << e.what() << std::endl;
         return {};
     }
+}
+
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
+    
 }

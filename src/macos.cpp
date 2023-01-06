@@ -44,3 +44,7 @@ ClipboardContent getGUIClipboard() {
 
     return ClipboardContent();
 }
+
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
+    
+}

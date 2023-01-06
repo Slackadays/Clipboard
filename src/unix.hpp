@@ -12,6 +12,12 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
+#pragma once
+
 #include "gui.hpp"
 
-ClipboardContent getGUIClipboard() { return ClipboardContent(); }
+#include <string>
+#include <optional>
+
+ClipboardContent getGUIClipboard();
+void writeToGUIClipboard(const ClipboardContent& clipboard);

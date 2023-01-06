@@ -65,3 +65,7 @@ public:
     [[nodiscard]] inline std::string const& text() { return std::get<std::string>(m_data); }
     [[nodiscard]] inline ClipboardPaths const& paths() { return std::get<ClipboardPaths>(m_data); }
 };
+
+void readDataFromGUIClipboard(const std::string& text);
+void readDataFromGUIClipboard(const ClipboardPaths& clipboard);
+ClipboardContent getThisClipboard();
