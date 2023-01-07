@@ -19,10 +19,7 @@ jobs:
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/copy.sh
-          bash tests/cut.sh
-          bash tests/redirection.sh
-          bash tests/files_and_redirection.sh
+          bash tests/suite.sh
   test-linux_x11-amd64:
     runs-on: ubuntu-22.04
 
@@ -38,10 +35,7 @@ jobs:
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/copy.sh
-          bash tests/cut.sh
-          bash tests/redirection.sh
-          bash tests/files_and_redirection.sh
+          bash tests/suite.sh
   test-linux_wayland-amd64:
     runs-on: ubuntu-22.04
 
@@ -57,10 +51,7 @@ jobs:
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/copy.sh
-          bash tests/cut.sh
-          bash tests/redirection.sh
-          bash tests/files_and_redirection.sh
+          bash tests/suite.sh
   test-linux_x11_wayland-amd64:
     runs-on: ubuntu-22.04
 
@@ -76,10 +67,7 @@ jobs:
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/copy.sh
-          bash tests/cut.sh
-          bash tests/redirection.sh
-          bash tests/files_and_redirection.sh
+          bash tests/suite.sh
   test-macos-amd64:
     runs-on: macos-11
 
@@ -92,9 +80,7 @@ jobs:
           cmake . -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
           cmake --build .
           cmake --install .
-          IS_ACTUALLY_A_TTY=1 bash tests/copy.sh
-          IS_ACTUALLY_A_TTY=1 bash tests/cut.sh
-          bash tests/redirection.sh
+          bash tests/suite.sh
   test-windows-amd64:
     runs-on: windows-latest
 
@@ -112,6 +98,4 @@ jobs:
           #installs to C:/Program Files (x86)/Clipboard/bin/clipboard.exe
           #add to path
           export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
-          IS_ACTUALLY_A_TTY=1 bash tests/copy.sh
-          IS_ACTUALLY_A_TTY=1 bash tests/cut.sh
-          bash tests/redirection.sh
+          bash tests/suite.sh

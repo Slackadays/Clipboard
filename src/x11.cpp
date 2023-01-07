@@ -12,6 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
+#include "clipboard.hpp"
 #include "gui.hpp"
 #include "logging.hpp"
 
@@ -1757,6 +1758,8 @@ void setX11ClipboardInternal(ClipboardContent const& clipboard) {
         debugStream << "Successfully spawned X11 paste daemon" << std::endl;
         return;
     }
+
+    stopIndicator(true);
 
     debugStream << "We are the X11 paste daemon, hijacking operation" << std::endl;
     try {

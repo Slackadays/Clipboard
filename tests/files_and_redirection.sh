@@ -1,12 +1,16 @@
 #setup
+mkdir fandr_test
+
+cd fandr_test
+
 echo "Foobar" > copyme.txt
 
 echo "Foobar" > cutme.txt
 
 #test copying a file
-clipboard copy copyme.txt
+IS_ACTUALLY_A_TTY=1 clipboard copy copyme.txt
 if [ ! -f "$TMPDIR"/Clipboard/0/copyme.txt ]; then
-echo did not copy file
+  echo did not copy file
   exit 1
 fi
 
@@ -17,7 +21,7 @@ if [ "$(clipboard paste)" != "Foobar" ]; then
 fi
 
 #test cutting a file
-clipboard cut cutme.txt
+IS_ACTUALLY_A_TTY=1 clipboard cut cutme.txt
 if [ ! -f "$TMPDIR"/Clipboard/0/cutme.txt ]; then
   echo did not cut file
   exit 1
@@ -29,4 +33,4 @@ if [ "$(clipboard paste)" != "Foobar" ]; then
   exit 1
 fi
 
-echo "Test passed"
+echo "FandR test passed"
