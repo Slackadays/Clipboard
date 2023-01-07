@@ -1,4 +1,4 @@
-![Clipboard Banner](readme_assets/CBBanner.png)
+![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The ultimate file powertool for the command line.
 
@@ -10,9 +10,9 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **A time-saver.** Clipboard frees you from ugly temporary directories and memorizing file locations!
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
-![Clipboard Demo Image](readme_assets/CBDemo.png)
+![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
 
-![Quick Installation](readme_assets/CBQuickInstallation.png)
+![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 ### Linux, macOS, all BSDs, and OI:
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
@@ -25,9 +25,9 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 ---
 
 ### Clone, Configure, Compile, and Install Manually
-Get the latest commit by removing `--branch 0.2.0` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
+Get the latest commit by removing `--branch 0.2.1` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
 ```bash
-git clone --branch 0.2.0 https://github.com/slackadays/Clipboard 
+git clone --branch 0.2.1 https://github.com/slackadays/Clipboard 
 cd Clipboard
 cmake .
 cmake --build .
@@ -54,7 +54,7 @@ Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/
 
 ---
 
-![How To Use](readme_assets/CBHowToUse.png)
+![How To Use](documentation/readme-banners/CBHowToUse.png)
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number to the end of the action to choose which clipboard you want to use (the default is 0) or `_` to use a persistent clipboard. 
@@ -99,7 +99,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-![Simple Configuration](readme_assets/CBSimpleConfiguration.png)
+![Simple Configuration](documentation/readme-banners/CBSimpleConfiguration.png)
 
 ---
 
@@ -139,10 +139,10 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-![Painless Documentation](readme_assets/CBPainlessDocumentation.png)
+![Painless Documentation](documentation/readme-banners/CBPainlessDocumentation.png)
 
 [Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
 
-![Fast Support](readme_assets/CBFastSupport.png)
+![Fast Support](documentation/readme-banners/CBFastSupport.png)
 
 [Click here](https://discord.gg/J6asnc3pEG) to go to our Discord group.

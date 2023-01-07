@@ -1,4 +1,4 @@
-name: Clipboard Tests
+name: Functional Tests
 
 on:
   push:
