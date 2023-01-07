@@ -32,11 +32,12 @@ ClipboardContent getGUIClipboard() {
     bool thisClipboardHoldsText = holdsText();
     bool thisClipboardHoldsFiles = holdsFiles();
     if (thisClipboardHoldsFiles) {
-        std::unique_ptr<char*[]> files(getFiles());
         std::vector<fs::path> fileVector;
+        char** files = getFiles();
         for (int i = 0; files[i] != nullptr; i++) {
             fileVector.push_back(files[i]);
         }
+        delete[] files;
         ClipboardPaths paths(fileVector);
         return ClipboardContent(paths);
     }
