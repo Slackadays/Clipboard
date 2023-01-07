@@ -141,10 +141,5 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-![Painless Documentation](documentation/readme-banners/CBPainlessDocumentation.png)
-
-[Click here](https://github.com/Slackadays/Clipboard/wiki) to go the Clipboard Wiki.
-
-![Fast Support](documentation/readme-banners/CBFastSupport.png)
-
-[Click here](https://discord.gg/J6asnc3pEG) to go to our Discord group.
+[<img src="documentation/readme-banners/TheCBWiki.png" width="48%" alt="The Clipboard Wiki" />](https://github.com/Slackadays/Clipboard/wiki)
+[<img src="documentation/readme-banners/DiscordSupport.png" width="48%" alt="Discord Support" />](https://discord.gg/J6asnc3pEG)
