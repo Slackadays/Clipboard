@@ -26,16 +26,13 @@ char* getText() {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
     NSDictionary *options = [NSDictionary dictionary];
-
     if ([pasteboard canReadObjectForClasses:classes options:options]) {
-
         NSString *text = [pasteboard stringForType:NSPasteboardTypeString];
         const char *string = [text UTF8String];
         int length = strlen(string);
         char *newstring = malloc(length + 1);
         strcpy(newstring, string);
         return newstring;
-
     } else {
         return "";
     }
@@ -52,9 +49,7 @@ char** getFiles() {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
     NSDictionary *options = [NSDictionary dictionary];
-
     if ([pasteboard canReadObjectForClasses:classes options:options]) {
-
         NSArray *files = [pasteboard readObjectsForClasses:classes options:options];
         int numberOfFiles = [files count];
         char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
@@ -68,7 +63,6 @@ char** getFiles() {
         }
         stringArray[numberOfFiles] = NULL;
         return stringArray;
-
     } else {
         return NULL;
     }

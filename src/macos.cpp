@@ -13,6 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <iostream>
+#include <memory>
 
 #include "gui.hpp"
 
@@ -31,13 +32,12 @@ ClipboardContent getGUIClipboard() {
     bool thisClipboardHoldsText = holdsText();
     bool thisClipboardHoldsFiles = holdsFiles();
     if (thisClipboardHoldsFiles) {
-        char** files = getFiles();
+        std::unique_ptr<char*[]> files(getFiles());
         std::vector<fs::path> fileVector;
         for (int i = 0; files[i] != nullptr; i++) {
             fileVector.push_back(files[i]);
         }
         ClipboardPaths paths(fileVector);
-        delete[] files;
         return ClipboardContent(paths);
     }
     if (thisClipboardHoldsText) {
@@ -52,12 +52,11 @@ void writeToGUIClipboard(ClipboardContent const& clipboard) {
         writeText(clipboard.text().c_str());
     } else if (clipboard.type() == ClipboardContentType::Paths) {
         std::vector<fs::path> paths(clipboard.paths().paths());
-        const char** files = new const char*[paths.size() + 1];
+        std::unique_ptr<const char*[]> files = std::make_unique<const char*[]>(paths.size() + 1);
         for (int i = 0; i < paths.size(); i++) {
             files[i] = paths[i].c_str();
         }
         files[paths.size()] = nullptr;
-        writeFiles(files);
-        delete[] files;
+        writeFiles(files.get());
     }
 }
