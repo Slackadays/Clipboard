@@ -48,9 +48,11 @@ For Windows, you may need to individually remove all the files in install_manife
 
 ### Premade Builds
 
-You can download Clipboard directly from GitHub Actions.
+<a>
+    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status">
+</a>
 
-Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
+You can also download Clipboard directly from GitHub Actions.
 
 ---
 

@@ -3,7 +3,7 @@ print_exec() {
     $1
 }
 
-print_exec "git clone --depth 1 --branch 0.2.0 https://github.com/slackadays/Clipboard"
+print_exec "git clone --depth 1 --branch 0.2.1 https://github.com/slackadays/Clipboard"
 
 cd Clipboard
 
