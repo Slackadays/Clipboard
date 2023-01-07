@@ -6,7 +6,7 @@ function Show-Exec {
     Invoke-Expression $Command
 }
 
-Show-Exec -Command "git clone --depth 1 --branch 0.2.0 https://github.com/slackadays/Clipboard"
+Show-Exec -Command "git clone --depth 1 https://github.com/slackadays/Clipboard"
 
 Set-Location Clipboard
 
