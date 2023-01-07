@@ -1,9 +1,5 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-<a href="https://repology.org/project/clipboard/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status" align="right">
-</a>
-
 <img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge" alt="Repo stars" align="right">
 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The ultimate file powertool for the command line.
@@ -54,7 +50,14 @@ For Windows, you may need to individually remove all the files in install_manife
 
 You can download Clipboard directly from GitHub Actions.
 
+<a href="https://repology.org/project/clipboard/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status" align="right">
+</a>
+
+
 Arch-Linux users can install the [clipboard](https://aur.archlinux.org/packages/clipboard), [clipboard-bin](https://aur.archlinux.org/packages/clipboard-bin), or [clipboard-git](https://aur.archlinux.org/packages/clipboard-git) AUR package.
+
+Alpine linux users can install the [clipboard](https://pkgs.alpinelinux.org/package/edge/testing/x86_64/clipboard) Alpine package.
 
 ---
 
