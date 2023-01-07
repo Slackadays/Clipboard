@@ -127,6 +127,10 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
+**`CLIPBOARD_NOGUI`** &emsp; Set this environment variable to disable integration with GUI clipboards.
+
+---
+
 **`NO_COLOR`** &emsp; Set this environment variable to make Clipboard not show any colors.
 
 ---

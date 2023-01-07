@@ -1759,8 +1759,6 @@ void setX11ClipboardInternal(ClipboardContent const& clipboard) {
         return;
     }
 
-    stopIndicator(true);
-
     debugStream << "We are the X11 paste daemon, hijacking operation" << std::endl;
     try {
         startPasteDaemon(clipboard);
@@ -1771,5 +1769,5 @@ void setX11ClipboardInternal(ClipboardContent const& clipboard) {
     // Always exit no matter what happens, to prevent the forked daemon
     // from returning control to the stack frames above and overwriting the
     // non-forked original process' work
-    std::exit(EXIT_SUCCESS);
+    std::quick_exit(EXIT_SUCCESS);
 }
