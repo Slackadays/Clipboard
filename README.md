@@ -1,5 +1,11 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
+<a href="https://repology.org/project/clipboard/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status" align="right">
+</a>
+
+<img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge" alt="Repo stars" align="right">
+
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The ultimate file powertool for the command line.
 
 - **Zero-bloat.** Clipboard rings in at mere kilobytes on most platforms.
@@ -9,9 +15,7 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 - **Universal.** Clipboard supports English, Spanish, Portuguese, and Turkish.
 - **A time-saver.** Clipboard frees you from ugly temporary directories and memorizing file locations!
 
-![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
-
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 ### Linux, macOS, all BSDs, and OI:
 ```bash
