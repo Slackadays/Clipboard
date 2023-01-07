@@ -74,6 +74,7 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{orange}▏CLIPBOARD_TMPDIR: {pink}Set to the directory that only Clipboard will use to hold the items you cut or copy into temporary clipboards.{blank}\n"
                                 "{orange}▏CLIPBOARD_PERSISTDIR: {pink}Set to the directory that only Clipboard will use to hold the items you cut or copy into persistent clipboards.{blank}\n"
                                 "{orange}▏CLIPBOARD_ALWAYS_PERSIST: {pink}Set to make Clipboard always use persistent clipboards.{blank}\n"
+                                "{orange}▏CLIPBOARD_NOGUI: {pink}Set to disable GUI clipboard integration.{blank}\n"
                                 "{orange}▏NO_COLOR: {pink}Set to make Clipboard not show color.{blank}\n"
                                 "{blue}▏You can show this help screen anytime with {bold}clipboard -h{blank}{blue}, {bold}clipboard --help{blank}{blue}, or{bold} clipboard help{blank}{blue}.\n"
                                 "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"

@@ -49,6 +49,10 @@ Set this environment variable to the directory that only Clipboard will use to h
 
 Set this environment variable to make Clipboard always use persistent clipboards.
 
+### **CLIPBOARD_NOGUI**
+
+Set this environment variable to disable GUI clipboard integration.
+
 ### **NO_COLOR**
 
 Set this environment variable to make Clipboard not show any colors.
