@@ -69,7 +69,7 @@ struct IsTTY {
 extern IsTTY is_tty;
 
 struct Constants {
-    std::string_view clipboard_version = "0.2.1";
+    std::string_view clipboard_version = "0.2.1r1";
     std::string_view pipe_file = "clipboard.rawdata";
     std::string_view default_clipboard_name = "0";
     std::string_view temporary_directory_name = "Clipboard";

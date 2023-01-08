@@ -25,11 +25,12 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 ---
 
 ### Clone, Configure, Compile, and Install Manually
-Get the latest commit by removing `--branch 0.2.1` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
+Get the latest commit by removing `--branch 0.2.1r1` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
 ```bash
-git clone --branch 0.2.1 https://github.com/slackadays/Clipboard 
-cd Clipboard
-cmake .
+git clone --branch 0.2.1r1 https://github.com/slackadays/Clipboard 
+mkdir Clipboard/build
+cd Clipboard/build
+cmake ..
 cmake --build .
 cmake --install .
 ```

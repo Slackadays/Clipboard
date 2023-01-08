@@ -29,7 +29,7 @@ elseif(POSIX)
     PROPERTY INSTALL_RPATH
     "${CMAKE_INSTALL_PREFIX_LIB}"
   )
-  target_link_options(clipboard PRIVATE -z origin)
+  target_link_options(clipboard PRIVATE -z origin) # set the rpath to $ORIGIN
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD True)
@@ -39,10 +39,6 @@ target_link_libraries(clipboard Threads::Threads)
 
 if(WIN32)
   install(TARGETS clipboard DESTINATION bin)
-elseif(APPLE)
-  install(TARGETS clipboard
-    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
-  install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX_BIN}/clipboard ${CMAKE_INSTALL_PREFIX_BIN}/cb)")
 else()
   install(TARGETS clipboard
     RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
@@ -50,13 +46,10 @@ else()
 endif()
 
 include(CheckIPOSupported)
-check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
-
+check_ipo_supported(RESULT lto_supported)
 if(lto_supported)
   set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   if(CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
   endif()
-else()
-  message(STATUS "IPO/LTO not supported: ${lto_error}")
 endif()

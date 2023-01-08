@@ -1,12 +1,11 @@
 #!/bin/bash
 set -euxo pipefail
 
-git clone --depth 1 --branch 0.2.1 https://github.com/slackadays/Clipboard
-pushd Clipboard
+git clone --depth 1 --branch 0.2.1r1 https://github.com/slackadays/Clipboard
 
-mkdir build
-pushd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+mkdir Clipboard/build
+pushd Clipboard/build
+cmake ..
 cmake --build .
 
 if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD

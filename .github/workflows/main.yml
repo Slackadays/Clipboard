@@ -6,60 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  build-linux-amd64:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        run: |
-          sudo apt update
-          sudo apt install -y g++-12
-          mkdir build
-          cd build
-          cmake .. -D CMAKE_CXX_COMPILER=g++-12 -D NO_X11=1 -D NO_WAYLAND=1
-          cmake --build .
-      - uses: actions/upload-artifact@v3
-        with:
-          name: clipboard-linux-amd64
-          path: build/output
-  build-linux_x11-amd64:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        run: |
-          sudo apt update
-          sudo apt install -y g++-12 libx11-dev
-          mkdir build
-          cd build
-          cmake .. -D CMAKE_CXX_COMPILER=g++-12 -D NO_WAYLAND=1
-          cmake --build .
-      - uses: actions/upload-artifact@v3
-        with:
-          name: clipboard-linux_x11-amd64
-          path: build/output
-  build-linux_wayland-amd64:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        run: |
-          sudo apt update
-          sudo apt install -y g++-12 libwayland-dev
-          mkdir build
-          cd build
-          cmake .. -D CMAKE_CXX_COMPILER=g++-12 -D NO_X11=1
-          cmake --build .
-      - uses: actions/upload-artifact@v3
-        with:
-          name: clipboard-linux_wayland-amd64
-          path: build/output
   build-linux_x11_wayland-amd64:
     runs-on: ubuntu-22.04
 
