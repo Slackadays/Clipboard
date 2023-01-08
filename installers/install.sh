@@ -3,7 +3,6 @@ set -euxo pipefail
 
 git clone --depth 1 --branch 0.2.1r1 https://github.com/slackadays/Clipboard
 
-mkdir Clipboard/build
 pushd Clipboard/build
 cmake ..
 cmake --build .

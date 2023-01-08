@@ -15,7 +15,6 @@ jobs:
       - name: Run a multi-line script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
-          mkdir build
           cd build
           cmake .. -D TEST=1 -D NO_X11=1 -D NO_WAYLAND=1
           cmake --build .
@@ -33,7 +32,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libx11-dev
-          mkdir build
           cd build
           cmake .. -D TEST=1 -D NO_WAYLAND=1
           cmake --build .
@@ -51,7 +49,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libwayland-dev
-          mkdir build
           cd build
           cmake .. -D TEST=1 -D NO_X11=1
           cmake --build .
@@ -69,7 +66,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libx11-dev libwayland-dev
-          mkdir build
           cd build
           cmake .. -D TEST=1
           cmake --build .
@@ -85,7 +81,6 @@ jobs:
       - name: Run a multi-line script
         run: |
           brew install gcc
-          mkdir build
           cd build
           cmake .. -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
           cmake --build .
@@ -100,7 +95,6 @@ jobs:
       - name: Run a multi-line script
         shell: bash
         run: |
-          mkdir build
           cd build
           cmake ..
           cmake --build . --config Release

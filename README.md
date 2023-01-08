@@ -15,11 +15,11 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 ### Linux, macOS, all BSDs, and OI:
 ```bash
-curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
+curl -sSL https://github.com/Slackadays/Clipboard/raw/main/installers/install.sh | sh
 ```
 ### Windows:
 ```powershell
-Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/install.ps1 | powershell
+Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/installers/install.ps1 | powershell
 ```
 
 ---
@@ -28,7 +28,6 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 Get the latest commit by removing `--branch 0.2.1r1` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
 ```bash
 git clone --branch 0.2.1r1 https://github.com/slackadays/Clipboard 
-mkdir Clipboard/build
 cd Clipboard/build
 cmake ..
 cmake --build .

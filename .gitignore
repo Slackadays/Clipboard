@@ -1,13 +1,10 @@
 /clipboard
 /CMakeCache.txt
 /CMakeFiles
-/cmake_install.cmake
-/install_manifest.txt
 /.vscode/*
 /dummy1/*
 /dummy1
 /dummy*
-/build
 /release
 /blah
 /gmon.out
@@ -16,7 +13,8 @@
 /Clipboard
 /.vscode/
 /.idea/
-/build/
+build/*
 cmake_install.cmake
+install_manifest.txt
 Makefile
 CMakeFiles/

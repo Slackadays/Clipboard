@@ -16,7 +16,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y g++-12 libx11-dev libwayland-dev
-          mkdir build
           cd build
           cmake .. -D CMAKE_CXX_COMPILER=g++-12
           cmake --build .
@@ -33,7 +32,6 @@ jobs:
       - name: Run a multi-line script
         run: |
           brew install gcc
-          mkdir build
           cd build
           cmake .. -D CMAKE_CXX_COMPILER=g++-12
           cmake --build .
@@ -49,7 +47,6 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          mkdir build
           cd build
           cmake ..
           cmake --build . --config Release

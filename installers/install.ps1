@@ -3,10 +3,8 @@ $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 
 git clone --depth 1 --branch 0.2.1r1 https://github.com/slackadays/Clipboard
-Push-Location Clipboard
 
-New-Item -Type Directory -Path build
-Push-Location build
+Push-Location Clipboard\build
 
 cmake ..
 cmake --build . --config Release
