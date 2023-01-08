@@ -141,5 +141,5 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-[<img src="documentation/readme-banners/TheCBWiki.png" width="49%" alt="The Clipboard Wiki" />](https://github.com/Slackadays/Clipboard/wiki)
-[<img src="documentation/readme-banners/DiscordSupport.png" width="49%" alt="Discord Support" />](https://discord.gg/J6asnc3pEG)
+[<img src="documentation/readme-banners/TheCBWiki.png" width="49%" alt="The Clipboard Wiki" align="left"/>](https://github.com/Slackadays/Clipboard/wiki)
+[<img src="documentation/readme-banners/DiscordSupport.png" width="49%" alt="Discord Support" align="right"/>](https://discord.gg/J6asnc3pEG)
