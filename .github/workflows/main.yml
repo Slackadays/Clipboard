@@ -22,7 +22,7 @@ jobs:
           cmake --build .
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-linux_x11_wayland-amd64
+          name: clipboard-linux-amd64
           path: build/output
   build-macos-amd64:
     runs-on: macos-11
