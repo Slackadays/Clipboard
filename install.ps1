@@ -6,6 +6,7 @@ git clone --depth 1 --branch 0.2.1 https://github.com/slackadays/Clipboard
 Push-Location Clipboard
 
 New-Item -Type Directory -Path build
+Push-Location build
 
 cmake ..
 cmake --build . --config Release
