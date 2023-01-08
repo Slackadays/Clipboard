@@ -1,30 +1,25 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! The ultimate file powertool for the command line.
+Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! Clipboard saves you time and effort by being the unified and polished file powertool for the command line.
 
-- **Zero-bloat.** Clipboard rings in at mere kilobytes on most platforms.
-- **Zero-config.** Clipboard doesn't require any configuration to use.
+- **Zero-bloat.** Clipboard is mere tens of kilobytes on most platforms.
+- **Zero-config.** Clipboard requires zero configuration to use.
 - **Zero-effort.** Clipboard is friendly to newbies and power users alike.
-- **Zero-dependency.** Clipboard works on any up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana system, or anything that supports C++20, all with ZERO dependencies. Really!
+- **Zero-dependency.** Clipboard works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
 - **Universal.** Clipboard supports English, Spanish, Portuguese, and Turkish.
-- **A time-saver.** Clipboard frees you from ugly temporary directories and memorizing file locations!
+- **Integrated.** Clipboard works with many native GUI clipboards.
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
-
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
-### Linux, macOS, all BSDs, and OI:
-```bash
-curl -sSL https://github.com/Slackadays/Clipboard/raw/main/installers/install.sh | sh
-```
-### Windows:
-```powershell
-Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/installers/install.ps1 | powershell
-```
+### **Linux, macOS, BSD, and OI** 
+`curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh`
+### **Windows**
+`Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/install.ps1 | powershell`
 
 ---
 
-### Clone, Configure, Compile, and Install Manually
+### **Install Manually**
 Get the latest commit by removing `--branch 0.2.1r2` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
 ```bash
 git clone --branch 0.2.1r2 https://github.com/slackadays/Clipboard 
@@ -36,17 +31,16 @@ cmake --install .
 
 ---
 
-### Uninstall
-```
-xargs rm < install_manifest.txt
-```
+### **Uninstall**
+`xargs rm < install_manifest.txt`
+
 Add `sudo` to the beginning for Linux, macOS, all BSDs except OpenBSD, and OpenIndiana, and add `doas` for OpenBSD.
 
-For Windows, you may need to individually remove all the files in install_manifest.txt.
+For Windows, individually remove all the files in install_manifest.txt.
 
 ---
 
-### Premade Builds
+### **Premade Builds**
 
 <a>
     <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status">
@@ -102,8 +96,6 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 ---
 
 ![Simple Configuration](documentation/readme-banners/CBSimpleConfiguration.png)
-
----
 
 **`CI`** &emsp; Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
