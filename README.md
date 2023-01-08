@@ -12,17 +12,21 @@ Cut, copy, and paste absolutely anything anywhere you want, all from the comfort
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
-### **Linux, macOS, BSD, and OI** 
-`curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh`
-### **Windows**
-`Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/install.ps1 | powershell`
+### **All Except Windows** 
+```bash
+curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
+```
+### **Windows** 
+```powershell
+Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/install.ps1 | powershell
+```
 
 ---
 
 ### **Install Manually**
-Get the latest commit by removing `--branch 0.2.1r2` from `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX`, and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
+Get the latest release instead by adding `--branch 0.2.1r2` right after `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX` and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
 ```bash
-git clone --branch 0.2.1r2 https://github.com/slackadays/Clipboard 
+git clone https://github.com/slackadays/Clipboard 
 cd Clipboard/build
 cmake ..
 cmake --build .
@@ -32,7 +36,9 @@ cmake --install .
 ---
 
 ### **Uninstall**
-`xargs rm < install_manifest.txt`
+```bash
+xargs rm < install_manifest.txt
+```
 
 Add `sudo` to the beginning for Linux, macOS, all BSDs except OpenBSD, and OpenIndiana, and add `doas` for OpenBSD.
 
