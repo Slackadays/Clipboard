@@ -2,7 +2,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (UNIX AND NOT APPLE)
-  set(LINUX ON)
+  set(POSIX ON)
 endif()
 
 if(TEST)
@@ -38,7 +38,7 @@ endif()
 
 if(APPLE)
   set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Prefix")
-elseif(LINUX)
+elseif(POSIX)
   set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Installation Prefix")
 
   if(NOT NO_X11)

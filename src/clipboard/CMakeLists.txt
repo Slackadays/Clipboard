@@ -14,8 +14,8 @@ elseif(APPLE)
     src/macos.cpp
   )
   target_link_libraries(clipboard "-framework AppKit")
-elseif(LINUX)
-  target_sources(clipboard PRIVATE src/linux.cpp)
+elseif(POSIX)
+  target_sources(clipboard PRIVATE src/posix.cpp)
 
   set_property(
     TARGET clipboard
