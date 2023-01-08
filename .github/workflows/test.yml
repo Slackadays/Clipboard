@@ -15,11 +15,13 @@ jobs:
       - name: Run a multi-line script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
-          cmake . -D TEST=1 -D NO_X11=1 -D NO_WAYLAND=1
+          mkdir build
+          cd build
+          cmake .. -D TEST=1 -D NO_X11=1 -D NO_WAYLAND=1
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/suite.sh
+          bash ../tests/suite.sh
   test-linux_x11-amd64:
     runs-on: ubuntu-22.04
 
@@ -31,11 +33,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libx11-dev
-          cmake . -D TEST=1 -D NO_WAYLAND=1
+          mkdir build
+          cd build
+          cmake .. -D TEST=1 -D NO_WAYLAND=1
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/suite.sh
+          bash ../tests/suite.sh
   test-linux_wayland-amd64:
     runs-on: ubuntu-22.04
 
@@ -47,11 +51,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libwayland-dev
-          cmake . -D TEST=1 -D NO_X11=1
+          mkdir build
+          cd build
+          cmake .. -D TEST=1 -D NO_X11=1
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/suite.sh
+          bash ../tests/suite.sh
   test-linux_x11_wayland-amd64:
     runs-on: ubuntu-22.04
 
@@ -63,11 +69,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libx11-dev libwayland-dev
-          cmake . -D TEST=1
+          mkdir build
+          cd build
+          cmake .. -D TEST=1
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
-          bash tests/suite.sh
+          bash ../tests/suite.sh
   test-macos-amd64:
     runs-on: macos-11
 
@@ -77,10 +85,12 @@ jobs:
       - name: Run a multi-line script
         run: |
           brew install gcc
-          cmake . -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
+          mkdir build
+          cd build
+          cmake .. -D CMAKE_CXX_COMPILER=g++-12 -D TEST=1
           cmake --build .
           cmake --install .
-          bash tests/suite.sh
+          bash ../tests/suite.sh
   test-windows-amd64:
     runs-on: windows-latest
 
@@ -90,7 +100,9 @@ jobs:
       - name: Run a multi-line script
         shell: bash
         run: |
-          cmake .
+          mkdir build
+          cd build
+          cmake ..
           cmake --build . --config Release
           echo $HOME
           export TMPDIR=/c/Users/runneradmin/AppData/Local/Temp
@@ -98,4 +110,4 @@ jobs:
           #installs to C:/Program Files (x86)/Clipboard/bin/clipboard.exe
           #add to path
           export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
-          bash tests/suite.sh
+          bash ../tests/suite.sh

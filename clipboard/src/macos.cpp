@@ -15,7 +15,7 @@
 #include <iostream>
 #include <memory>
 
-#include "gui.hpp"
+#include "os.hpp"
 
 extern "C" {
     bool holdsText();

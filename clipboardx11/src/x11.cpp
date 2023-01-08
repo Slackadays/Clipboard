@@ -12,10 +12,6 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "clipboard.hpp"
-#include "gui.hpp"
-#include "logging.hpp"
-
 #include <chrono>
 #include <cstdint>
 #include <cstring>
@@ -34,6 +30,8 @@
 #include <set>
 
 #include <X11/Xlib.h>
+#include <clipboard/gui.hpp>
+#include <clipboard/logging.hpp>
 
 namespace chrono = std::chrono;
 namespace ranges = std::ranges;
@@ -1721,7 +1719,7 @@ static ClipboardPaths parseFiles(std::vector<char> const& data) {
     return { std::move(paths), action };
 }
 
-ClipboardContent getX11ClipboardInternal() {
+static ClipboardContent getX11ClipboardInternal() {
     X11Connection conn;
     if (!conn.isClipboardOwned()) {
         debugStream << "No selection owner, aborting" << std::endl;
@@ -1752,7 +1750,7 @@ static void startPasteDaemon(ClipboardContent const& clipboard) {
     daemon.run();
 }
 
-void setX11ClipboardInternal(ClipboardContent const& clipboard) {
+static void setX11ClipboardInternal(ClipboardContent const& clipboard) {
     bool noFork = std::getenv("CLIPBOARD_X11_NO_FORK") != nullptr;
     if (!noFork && fork() != 0) {
         debugStream << "Successfully spawned X11 paste daemon" << std::endl;
@@ -1770,4 +1768,25 @@ void setX11ClipboardInternal(ClipboardContent const& clipboard) {
     // from returning control to the stack frames above and overwriting the
     // non-forked original process' work
     std::quick_exit(EXIT_SUCCESS);
+}
+
+extern "C" {
+    extern void* getX11Clipboard() {
+        try {
+            auto clipboard = std::make_unique<ClipboardContent>(getX11ClipboardInternal());
+            return clipboard.release();
+        } catch (std::exception const& e) {
+            debugStream << "Error getting clipboard data: " << e.what() << std::endl;
+            return nullptr;
+        }
+    }
+
+    extern void setX11Clipboard(void* clipboardPtr) {
+        try {
+            ClipboardContent const& clipboard = *reinterpret_cast<ClipboardContent const*>(clipboardPtr);
+            setX11ClipboardInternal(clipboard);
+        } catch (std::exception const& e) {
+            debugStream << "Error setting clipboard data: " << e.what() << std::endl;
+        }
+    }
 }

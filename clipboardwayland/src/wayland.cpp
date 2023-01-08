@@ -13,19 +13,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 
-#include "logging.hpp"
+extern "C" {
+    extern void* getWaylandClipboard() {
+        return nullptr;
+    }
 
-#include <streambuf>
+    extern void setWaylandClipboard(void* clipboardPtr) {
+    }
+}
 
-class NullBuffer : public std::streambuf {
-public:
-    int overflow(int c) override { return c; }
-};
-
-#if defined(NDEBUG)
-    static NullBuffer nullBuffer;
-    static std::ostream nullStream(&nullBuffer);
-    std::ostream& debugStream = nullStream;
-#else
-    std::ostream& debugStream = std::cerr;
-#endif

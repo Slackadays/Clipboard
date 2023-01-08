@@ -1,9 +1,11 @@
 #!/bin/sh
 
-sh tests/copy.sh
-sh tests/cut.sh
-sh tests/files_and_redirection.sh
-sh tests/redirection.sh
+BASEDIR="$(dirname "$0")"
+
+sh "$BASEDIR/copy.sh"
+sh "$BASEDIR/cut.sh"
+sh "$BASEDIR/files_and_redirection.sh"
+sh "$BASEDIR/redirection.sh"
 
 rm -r copy_test
 rm -r cut_test

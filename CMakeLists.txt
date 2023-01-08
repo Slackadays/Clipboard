@@ -5,6 +5,10 @@ project(Clipboard LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+if (UNIX AND NOT APPLE)
+  set(LINUX ON)
+endif()
+
 if(TEST)
   message(STATUS "Building in test mode")
   set(CMAKE_BUILD_TYPE Debug)
@@ -22,14 +26,27 @@ else()
   endif()
 endif()
 
-set(CMAKE_THREAD_PREFER_PTHREAD True)
-set(THREADS_PREFER_PTHREAD_FLAG True)
-find_package(Threads REQUIRED)
+if($ENV{CI})
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/bin)
 
-if(UNIX AND NOT APPLE)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/output/lib)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/output/lib)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/output/bin)
+
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/output/lib)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/output/lib)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/output/bin)
+endif()
+
+if(APPLE)
+  set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Prefix")
+elseif(LINUX)
+  set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Installation Prefix")
+
   if(NOT NO_X11)
     find_package(X11)
-    include_directories(${X11_INCLUDE_DIR})
   endif()
   if(NOT NO_WAYLAND)
     find_package(PkgConfig)
@@ -37,10 +54,17 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
+if (CMAKE_INSTALL_PREFIX)
+  set(CMAKE_INSTALL_PREFIX_BIN "${CMAKE_INSTALL_PREFIX}/bin")
+  set(CMAKE_INSTALL_PREFIX_LIB "${CMAKE_INSTALL_PREFIX}/lib")
+endif()
+
+add_subdirectory(gui)
+
 if(X11_FOUND)
   message(STATUS "Found X11")
   message(STATUS "Building with X11 support")
-  add_compile_definitions(X11_AVAILABLE)
+  add_subdirectory(clipboardx11)
 else()
   message(STATUS "X11 not found, building without X11 support")
 endif()
@@ -48,13 +72,12 @@ endif()
 if(WAYLAND_CLIENT_FOUND)
   message(STATUS "Found Wayland")
   message(STATUS "Building with Wayland support")
-  add_compile_definitions(WAYLAND_AVAILABLE)
+  add_subdirectory(clipboardwayland)
 else()
   message(STATUS "Wayland not found, building without Wayland support")
 endif()
 
-include(CheckIPOSupported)
-check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
+add_subdirectory(clipboard)
 
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
@@ -67,68 +90,3 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADD_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
-
-add_executable(clipboard
-  src/clipboard.cpp
-  src/messages.cpp
-  src/logging.cpp
-)
-
-if(WIN32)
-  target_sources(clipboard PRIVATE src/windows.cpp)
-endif()
-
-if(UNIX AND NOT APPLE)
-  target_sources(clipboard PRIVATE src/x11_wayland.cpp)
-endif()
-
-if(X11_FOUND)
-  target_sources(clipboard PRIVATE src/x11.cpp)
-endif()
-
-if(WAYLAND_CLIENT_FOUND)
-  target_sources(clipboard PRIVATE src/wayland.cpp)
-endif()
-
-if(APPLE)
-  enable_language(OBJC)
-  target_sources(clipboard PRIVATE src/macos.m)
-  target_sources(clipboard PRIVATE src/macos.cpp)
-endif()
-
-if(lto_supported)
-  set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE) 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
-  endif()
-else()
-    message(STATUS "IPO/LTO not supported: ${lto_error}")
-endif()
-
-target_link_libraries(clipboard Threads::Threads)
-
-if(X11_FOUND)
-  target_link_libraries(clipboard ${X11_LIBRARIES})
-endif()
-
-if(WAYLAND_CLIENT_FOUND)
-  target_link_libraries(clipboard ${WAYLAND_CLIENT_LIBRARIES})
-endif()
-
-if(APPLE)
-  target_link_libraries(clipboard "-framework AppKit")
-endif()
-
-if(WIN32)
-  install(TARGETS clipboard DESTINATION bin)
-elseif(APPLE)
-  set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Prefix")
-  install(TARGETS clipboard
-    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/")
-  install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX}/bin/clipboard ${CMAKE_INSTALL_PREFIX}/bin/cb)")
-else()
-  set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Installation Prefix")
-  install(TARGETS clipboard
-    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/")
-  install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX}/bin/clipboard ${CMAKE_INSTALL_PREFIX}/bin/cb)")
-endif()

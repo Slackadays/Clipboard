@@ -71,5 +71,3 @@ public:
     [[nodiscard]] inline ClipboardPaths const& paths() const { return std::get<ClipboardPaths>(m_data); }
 };
 
-ClipboardContent getGUIClipboard();
-void writeToGUIClipboard(ClipboardContent const& clipboard);
