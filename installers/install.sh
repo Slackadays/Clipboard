@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-git clone --depth 1 --branch 0.2.1r1 https://github.com/slackadays/Clipboard
+git clone --depth 1 --branch 0.2.1r2 https://github.com/slackadays/Clipboard
 
 pushd Clipboard/build
 cmake ..
