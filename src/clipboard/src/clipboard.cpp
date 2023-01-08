@@ -28,6 +28,7 @@
 #include <thread>
 #include <condition_variable>
 #include <mutex>
+#include <sstream>
 #include "clipboard.hpp"
 #include "os.hpp"
 
