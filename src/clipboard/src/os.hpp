@@ -13,11 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
+#include <clipboard/gui.hpp>
 
-#include <iostream>
-
-/**
- * This stream can be used to write debugging information to the console.
- * Its output will be disabled when the project is compiled in release mode.
- */
-extern std::ostream& debugStream;
+extern ClipboardContent getGUIClipboard();
+extern void writeToGUIClipboard(ClipboardContent const& clipboard);

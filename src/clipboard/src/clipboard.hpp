@@ -22,7 +22,7 @@
 #include <condition_variable>
 #include <mutex>
 
-#include "gui.hpp"
+#include <clipboard/gui.hpp>
 
 namespace fs = std::filesystem;
 

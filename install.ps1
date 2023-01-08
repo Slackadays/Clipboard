@@ -1,15 +1,17 @@
-function Show-Exec {
-    param (
-        $Command
-    )
-    Write-Host $Command
-    Invoke-Expression $Command
-}
+Set-PSDebug -Trace 1
+$ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
 
-Show-Exec -Command "git clone --depth 1 --branch 0.2.1 https://github.com/slackadays/Clipboard"
+git clone --depth 1 --branch 0.2.1 https://github.com/slackadays/Clipboard
+Push-Location Clipboard
 
-Set-Location Clipboard
+New-Item -Type Directory -Path build
+Push-Location build
 
-Show-Exec -Command "cmake ."
-Show-Exec -Command "cmake --build . --config Release"
-Show-Exec -Command "cmake --install . --config Release"
+cmake ..
+cmake --build . --config Release
+cmake --install . --config Release
+
+Pop-Location
+Pop-Location
+Set-PSDebug -Trace 0

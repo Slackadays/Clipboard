@@ -29,6 +29,7 @@
 #include <condition_variable>
 #include <mutex>
 #include "clipboard.hpp"
+#include "os.hpp"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
