@@ -47,7 +47,7 @@ endif()
 add_subdirectory(gui)
 
 find_package(X11)
-if(NOT NO_X11 AND X11_FOUND)
+if(NOT NO_X11 AND X11_FOUND AND NOT APPLE) # X11 is technically available on macOS, but we don't want to use it
   message(STATUS "Found X11, building with X11 support")
   add_subdirectory(clipboardx11)
 else()
