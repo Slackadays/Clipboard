@@ -48,7 +48,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd build
-          cmake .. -D ADD_FLAGS="-arch arm64"
+          cmake .. -D CMAKE_CXX_COMPILER=clang++ -D ADD_FLAGS="-arch arm64"
           cmake --build .
       - uses: actions/upload-artifact@v3
         with:
