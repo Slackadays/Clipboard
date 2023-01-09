@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        clang: [ 12, 13, 14 ]
+        clang: [ 13, 14 ]
         x11: [ "1", "0" ]
         wayland: [ "1", "0" ]
 
