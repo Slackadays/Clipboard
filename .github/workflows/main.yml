@@ -32,9 +32,8 @@ jobs:
 
       - name: Run a multi-line script
         run: |
-          brew install gcc
           cd build
-          cmake .. -D CMAKE_CXX_COMPILER=g++-12
+          cmake ..
           cmake --build .
       - uses: actions/upload-artifact@v3
         with:
@@ -64,7 +63,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd build
-          cmake ..
+          cmake .. -D ADD_FLAGS="/MACHINE:ARM"
           cmake --build . --config Release
       - uses: actions/upload-artifact@v3
         with:
