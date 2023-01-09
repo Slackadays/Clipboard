@@ -1,10 +1,6 @@
 name: Clipboard Builds
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [ push, pull_request ]
 jobs:
   build-linux_x11_wayland-amd64:
     runs-on: ubuntu-22.04

@@ -16,7 +16,7 @@
 #include <optional>
 #include <dlfcn.h>
 #include <clipboard/logging.hpp>
-#include "os.hpp"
+#include "clipboard.hpp"
 
 constexpr auto objectX11 = "libclipboardx11.so";
 constexpr auto symbolGetX11Clipboard = "getX11Clipboard";

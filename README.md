@@ -2,10 +2,10 @@
 
 Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! Clipboard saves you time and effort by being the unified and polished file powertool for the command line.
 
-- **Zero-bloat.** Clipboard is mere tens of kilobytes on most platforms.
-- **Zero-config.** Clipboard requires zero configuration to use.
-- **Zero-effort.** Clipboard is friendly to newbies and power users alike.
-- **Zero-dependency.** Clipboard works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
+- **Tiny.** Clipboard is mere tens of kilobytes on most platforms.
+- **Simple.** Clipboard requires zero configuration to use.
+- **Easy.** Clipboard is friendly to newbies and power users alike.
+- **Compatible.** Clipboard works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
 - **Universal.** Clipboard supports English, Spanish, Portuguese, and Turkish.
 - **Integrated.** Clipboard works with many native GUI clipboards.
 
