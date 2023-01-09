@@ -37,6 +37,10 @@ set(THREADS_PREFER_PTHREAD_FLAG True)
 find_package(Threads REQUIRED)
 target_link_libraries(clipboard Threads::Threads)
 
+if(CMAKE_DL_LIBS)
+  target_link_libraries(clipboard ${CMAKE_DL_LIBS})
+endif()
+
 if(WIN32)
   install(TARGETS clipboard DESTINATION bin)
 else()

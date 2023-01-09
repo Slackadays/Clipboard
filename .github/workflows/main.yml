@@ -5,19 +5,24 @@ jobs:
   build-linux_x11_wayland-amd64:
     runs-on: ubuntu-22.04
 
+    strategy:
+      fail-fast: false
+      matrix:
+        gcc: [ 10, 11, 12 ]
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a multi-line script
         run: |
           sudo apt update
-          sudo apt install -y g++-12 libx11-dev libwayland-dev
+          sudo apt install -y g++-${{ matrix.gcc }} libx11-dev libwayland-dev
           cd build
-          cmake .. -D CMAKE_CXX_COMPILER=g++-12
+          cmake .. "-DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }}"
           cmake --build .
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-linux-amd64
+          name: clipboard-linux-gcc${{ matrix.gcc }}-amd64
           path: build/output
   build-macos-amd64:
     runs-on: macos-11
