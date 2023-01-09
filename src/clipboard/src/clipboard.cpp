@@ -261,6 +261,10 @@ namespace PerformAction {
             printf(replaceColors(no_clipboard_contents_message).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
         }
     }
+
+    void edit() {
+        
+    }
 }
 
 std::string replaceColors(const std::string_view& str) {
@@ -565,6 +569,8 @@ void setupAction(int& argc, char *argv[]) {
                 fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(EXIT_FAILURE);
             }
+        } else if (flagIsPresent(actions[Action::Edit], "--"), flagIsPresent(action_shortcuts[Action::Edit])) {
+            action = Action::Edit;
         } else if (flagIsPresent("ee")) {
             printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
             exit(EXIT_SUCCESS);
@@ -780,6 +786,9 @@ void performAction() {
             break;
         case Action::Show:
             PerformAction::show();
+            break;
+        case Action::Edit:
+            PerformAction::edit();
             break;
     }
 }

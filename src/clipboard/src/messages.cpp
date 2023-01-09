@@ -14,42 +14,46 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-ActionArray<std::string_view, 7> actions = {{
+ActionArray<std::string_view, 8> actions = {{
     "cut",
     "copy",
     "paste",
     "pipe in",
     "pipe out",
     "clear",
-    "show"
+    "show",
+    "edit"
 }};
 
-ActionArray<std::string_view, 7> action_shortcuts = {{
+ActionArray<std::string_view, 8> action_shortcuts = {{
     "ct",
     "cp",
     "p",
     "pin",
     "pout",
     "clr",
-    "sh"
+    "sh",
+    "ed"
 }};
 
-ActionArray<std::string_view, 7> doing_action = {{
+ActionArray<std::string_view, 8> doing_action = {{
     "Cutting",
     "Copying",
     "Pasting",
     "Piping in",
     "Piping out",
     "Clearing"
+    "Editing"
 }};
 
-ActionArray<std::string_view, 7> did_action = {{
+ActionArray<std::string_view, 8> did_action = {{
     "Cut",
     "Copied",
     "Pasted",
     "Piped in",
     "Piped out",
-    "Cleared"
+    "Cleared",
+    "Edited"
 }};
 
 std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"

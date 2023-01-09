@@ -78,7 +78,7 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show };
+enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show, Edit };
 extern Action action;
 
 template <typename T, size_t N>
@@ -89,10 +89,10 @@ public:
     }
 };
 
-extern ActionArray<std::string_view, 7> actions;
-extern ActionArray<std::string_view, 7> action_shortcuts;
-extern ActionArray<std::string_view, 7> doing_action;
-extern ActionArray<std::string_view, 7> did_action;
+extern ActionArray<std::string_view, 8> actions;
+extern ActionArray<std::string_view, 8> action_shortcuts;
+extern ActionArray<std::string_view, 8> doing_action;
+extern ActionArray<std::string_view, 8> did_action;
 
 extern std::string_view help_message;
 extern std::string_view check_clipboard_status_message;
