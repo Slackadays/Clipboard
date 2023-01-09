@@ -16,7 +16,6 @@
 #include <vector>
 #include <string_view>
 #include "clipboard.hpp"
-#include "os.hpp"
 
 namespace fs = std::filesystem;
 

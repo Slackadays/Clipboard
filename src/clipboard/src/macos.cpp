@@ -15,7 +15,7 @@
 #include <iostream>
 #include <memory>
 
-#include "os.hpp"
+#include "clipboard.hpp"
 
 extern "C" {
     bool holdsText();
