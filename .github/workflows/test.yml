@@ -5,20 +5,12 @@ jobs:
   test-linux-amd64:
     runs-on: ubuntu-22.04
 
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
-        run: |
-          cd build
-          cmake .. -D TEST=1 -D NO_X11=1 -D NO_WAYLAND=1
-          cmake --build .
-          sudo cmake --install .
-          export TMPDIR=/tmp
-          bash ../tests/suite.sh
-  test-linux_x11-amd64:
-    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        gcc: [ 10, 11, 12 ]
+        x11: [ "1", "0" ]
+        wayland: [ "1", "0" ]
 
     steps:
       - uses: actions/checkout@v3
@@ -26,48 +18,32 @@ jobs:
       - name: Run a multi-line script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
+          NO_X11=1
+          NO_WAYLAND=1
+          PACKAGES="g++-${{ matrix.gcc }}"
+
+          if [[ "${{ matrix.x11 }}" == "1" ]]
+          then
+            NO_X11=0
+            PACKAGES="${PACKAGES} libx11-dev"
+          fi
+          
+          if [[ "${{ matrix.wayland }}" == "1" ]]
+          then
+            NO_WAYLAND=0
+            PACKAGES="${PACKAGES} libwayland-dev"
+          fi
+          
           sudo apt update
-          sudo apt install -y libx11-dev
+          sudo apt install -y $PACKAGES
+
           cd build
-          cmake .. -D TEST=1 -D NO_WAYLAND=1
+          cmake .. "-DTEST=1" "-DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }}" "-DNO_X11=${NO_X11}" "-DNO_WAYLAND=${NO_WAYLAND}"
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
           bash ../tests/suite.sh
-  test-linux_wayland-amd64:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
-        run: |
-          sudo apt update
-          sudo apt install -y libwayland-dev
-          cd build
-          cmake .. -D TEST=1 -D NO_X11=1
-          cmake --build .
-          sudo cmake --install .
-          export TMPDIR=/tmp
-          bash ../tests/suite.sh
-  test-linux_x11_wayland-amd64:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
-        run: |
-          sudo apt update
-          sudo apt install -y libx11-dev libwayland-dev
-          cd build
-          cmake .. -D TEST=1
-          cmake --build .
-          sudo cmake --install .
-          export TMPDIR=/tmp
-          bash ../tests/suite.sh
+  
   test-macos-amd64:
     runs-on: macos-11
 

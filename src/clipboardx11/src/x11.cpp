@@ -29,6 +29,7 @@
 #include <limits>
 #include <set>
 
+#include <unistd.h>
 #include <X11/Xlib.h>
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>
