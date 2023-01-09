@@ -91,5 +91,16 @@ if(COMPILER_SUPPORTS_MARCH_NATIVE AND (NOT DEFINED ENV{CI})) #do not use a nativ
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
 endif()
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT lto_supported)
+if(lto_supported)
+  set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_property(TARGET clipboardx11 PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_property(TARGET clipboardwayland PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
+  endif()
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADD_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")

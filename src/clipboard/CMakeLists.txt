@@ -48,12 +48,3 @@ else()
     RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
   install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX_BIN}/clipboard ${CMAKE_INSTALL_PREFIX_BIN}/cb)")
 endif()
-
-include(CheckIPOSupported)
-check_ipo_supported(RESULT lto_supported)
-if(lto_supported)
-  set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
-  endif()
-endif()
