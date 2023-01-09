@@ -13,7 +13,11 @@ elseif(APPLE)
     src/macos.m
     src/macos.cpp
   )
-  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+  #make a universal binary
+  set_target_properties(clipboard PROPERTIES
+    XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
+    XCODE_ATTRIBUTE_VALID_ARCHS "x86_64 arm64"
+  )
   target_link_libraries(clipboard "-framework AppKit")
 elseif(POSIX)
   target_sources(clipboard PRIVATE src/posix.cpp)

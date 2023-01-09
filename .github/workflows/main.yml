@@ -64,7 +64,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           cd build
-          cmake .. -D ADD_FLAGS=CMAKE_GENERATOR_PLATFORM=ARM64
+          cmake ..
           cmake --build . --config Release
       - uses: actions/upload-artifact@v3
         with:
