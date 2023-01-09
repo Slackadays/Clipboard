@@ -1,6 +1,6 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! Clipboard saves you time and effort by being the unified and polished file powertool for the command line.
+Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! **Clipboard is a file powertool that saves you time and effort.**
 
 - **Tiny.** Clipboard is mere tens of kilobytes on most platforms.
 - **Simple.** Clipboard requires zero configuration to use.
@@ -103,39 +103,45 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ![Simple Configuration](documentation/readme-banners/CBSimpleConfiguration.png)
 
-**`CI`** &emsp; Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+### **Environment Variables**
+
+**`CI`** &emsp; Set this to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
 ---
 
-**`FORCE_COLOR`** &emsp; Set this environment variable to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+**`FORCE_COLOR`** &emsp; Set this to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
 ---
 
-**`TMPDIR`** &emsp; Set this environment variable to the directory that Clipboard will use to hold the items you cut or copy into a temporary directory. Other programs use `TMPDIR` as well, so be careful about changing this.
+**`TMPDIR`** &emsp; Set this to the directory that Clipboard will use to hold the items you cut or copy into a temporary directory. Other programs use `TMPDIR` as well, so be careful about changing this.
 
 ---
 
-**`CLIPBOARD_TMPDIR`** &emsp; Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
+**`CLIPBOARD_TMPDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
 
 ---
 
-**`CLIPBOARD_PERSISTDIR`** &emsp; Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
+**`CLIPBOARD_PERSISTDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
 
 ---
 
-**`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this environment variable to make Clipboard always use persistent clipboards.
+**`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to make Clipboard always use persistent clipboards.
 
 ---
 
-**`CLIPBOARD_NOGUI`** &emsp; Set this environment variable to disable integration with GUI clipboards.
+**`CLIPBOARD_NOGUI`** &emsp; Set this to disable integration with GUI clipboards.
 
 ---
 
-**`NO_COLOR`** &emsp; Set this environment variable to make Clipboard not show any colors.
+**`NO_COLOR`** &emsp; Set this to make Clipboard not show any colors.
+
+</details>
 
 ---
 
-**`--fast-copy`, `-fc`** &emsp; Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+### **Flags**
+
+**`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
 ---
 
