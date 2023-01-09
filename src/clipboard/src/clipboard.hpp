@@ -127,7 +127,7 @@ void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
 std::string replaceColors(const std::string_view& str);
-void setupSignals();
+void setupHandlers();
 void setLocale();
 void showHelpMessage(int& argc, char *argv[]);
 void setupItems(int& argc, char *argv[]);
@@ -160,3 +160,6 @@ void performAction();
 void updateGUIClipboard();
 void showFailures();
 void showSuccesses();
+
+extern ClipboardContent getGUIClipboard();
+extern void writeToGUIClipboard(ClipboardContent const& clipboard);
