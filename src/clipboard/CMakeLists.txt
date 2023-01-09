@@ -13,6 +13,7 @@ elseif(APPLE)
     src/macos.m
     src/macos.cpp
   )
+  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
   target_link_libraries(clipboard "-framework AppKit")
 elseif(POSIX)
   target_sources(clipboard PRIVATE src/posix.cpp)
