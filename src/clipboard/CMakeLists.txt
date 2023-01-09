@@ -3,6 +3,15 @@ add_executable(clipboard
   src/messages.cpp
 )
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT lto_supported)
+if(lto_supported)
+  set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
+  endif()
+endif()
+
 target_link_libraries(clipboard gui)
 
 if(WIN32)
@@ -12,11 +21,6 @@ elseif(APPLE)
   target_sources(clipboard PRIVATE
     src/macos.m
     src/macos.cpp
-  )
-  #make a universal binary
-  set_target_properties(clipboard PROPERTIES
-    XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
-    XCODE_ATTRIBUTE_VALID_ARCHS "x86_64 arm64"
   )
   target_link_libraries(clipboard "-framework AppKit")
 elseif(POSIX)

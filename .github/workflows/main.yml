@@ -39,6 +39,21 @@ jobs:
         with:
           name: clipboard-macos-amd64
           path: build/output
+  build-macos-arm64:
+    runs-on: macos-11
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          cd build
+          cmake .. -D ADD_FLAGS="-arch arm64"
+          cmake --build .
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clipboard-macos-arm64
+          path: build/output
   build-windows-amd64:
     runs-on: windows-latest
 
@@ -53,19 +68,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-windows-amd64
-          path: build/output
-  build-windows-arm64:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        run: |
-          cd build
-          cmake .. -D ADD_FLAGS="/MACHINE:ARM"
-          cmake --build . --config Release
-      - uses: actions/upload-artifact@v3
-        with:
-          name: clipboard-windows-arm64
           path: build/output
