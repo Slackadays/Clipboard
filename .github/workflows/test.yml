@@ -2,7 +2,7 @@ name: Clipboard Tests
 
 on: [ push, pull_request ]
 jobs:
-  test-linux-amd64:
+  test-linux-gcc-amd64:
     runs-on: ubuntu-22.04
 
     strategy:
@@ -39,6 +39,48 @@ jobs:
 
           cd build
           cmake .. "-DTEST=1" "-DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }}" "-DNO_X11=${NO_X11}" "-DNO_WAYLAND=${NO_WAYLAND}"
+          cmake --build .
+          sudo cmake --install .
+          export TMPDIR=/tmp
+          bash ../tests/suite.sh
+
+    test-linux-clang-amd64:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        clang: [ 12, 13, 14 ]
+        x11: [ "1", "0" ]
+        wayland: [ "1", "0" ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
+        run: |
+          NO_X11=1
+          NO_WAYLAND=1
+          PACKAGES="clang-${{ matrix.clang }}"
+
+          if [[ "${{ matrix.x11 }}" == "1" ]]
+          then
+            NO_X11=0
+            PACKAGES="${PACKAGES} libx11-dev"
+          fi
+          
+          if [[ "${{ matrix.wayland }}" == "1" ]]
+          then
+            NO_WAYLAND=0
+            PACKAGES="${PACKAGES} libwayland-dev"
+          fi
+          
+          sudo apt update
+          sudo apt install -y $PACKAGES
+
+          cd build
+          cmake .. "-DTEST=1" "-DCMAKE_CXX_COMPILER=clang++-${{ matrix.clang }}" "-DNO_X11=${NO_X11}" "-DNO_WAYLAND=${NO_WAYLAND}"
           cmake --build .
           sudo cmake --install .
           export TMPDIR=/tmp
