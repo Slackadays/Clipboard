@@ -44,7 +44,7 @@ jobs:
           export TMPDIR=/tmp
           bash ../tests/suite.sh
 
-    test-linux-clang-amd64:
+  test-linux-clang-amd64:
     runs-on: ubuntu-22.04
 
     strategy:
