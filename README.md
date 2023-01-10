@@ -1,6 +1,6 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-Cut, copy, and paste absolutely anything anywhere you want, all from the comfort of your terminal! **Clipboard is a file powertool that saves you time and effort.**
+**Clipboard is a software powertool that saves you time and effort.** Now, you can have a clipboard to use anywhere in the command line, as if you were using a GUI.
 
 - **Tiny.** Clipboard is mere tens of kilobytes on most platforms.
 - **Simple.** Clipboard requires zero configuration to use.
