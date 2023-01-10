@@ -2,12 +2,12 @@
 
 **Clipboard is a software powertool that saves you time and effort.** Now, you can have a clipboard to use anywhere in the command line, as if you were using a GUI.
 
-- **Tiny.** Clipboard is mere tens of kilobytes on most platforms.
-- **Simple.** Clipboard requires zero configuration to use.
-- **Easy.** Clipboard is friendly to newbies and power users alike.
-- **Compatible.** Clipboard works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
-- **Universal.** Clipboard supports English, Spanish, Portuguese, and Turkish.
-- **Integrated.** Clipboard works with many native GUI clipboards.
+- **Tiny.** Mere tens of kilobytes on most platforms.
+- **Simple.** Requires zero configuration to use.
+- **Easy.** Friendly to newbies and power users alike.
+- **Compatible.** Works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
+- **Universal.** Supports English, Spanish, Portuguese, and Turkish.
+- **Integrated.** Works with many native GUI clipboards.
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
