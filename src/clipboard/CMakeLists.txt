@@ -54,6 +54,6 @@ if(WIN32)
   install(TARGETS clipboard DESTINATION bin)
 else()
   install(TARGETS clipboard
-    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
+    DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
   install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX_BIN}/clipboard ${CMAKE_INSTALL_PREFIX_BIN}/cb)")
 endif()

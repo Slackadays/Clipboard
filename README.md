@@ -1,9 +1,9 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-**Clipboard is a software powertool that saves you time and effort.** Now, you can have a clipboard to use anywhere in the command line, as if you were using a GUI.
+**Clipboard is a software powertool that saves you time and effort.** Now, you can have a unified clipboard to use anywhere in the command line, as if you were using a GUI.
 
 - **Tiny.** Mere tens of kilobytes on most platforms.
-- **Simple.** Requires zero configuration to use.
+- **Quick.** Requires zero configuration to use.
 - **Easy.** Friendly to newbies and power users alike.
 - **Compatible.** Works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
 - **Universal.** Supports English, Spanish, Portuguese, and Turkish.
@@ -24,11 +24,11 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 ---
 
 ### **Install Manually**
-Get the latest release instead by adding `--branch 0.2.1r2` right after `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX` and enable Debug Mode by adding `-D TEST=1` to `cmake .`.
+Get the latest release instead by adding `--branch 0.2.1r2` right after `git clone...`. Change the installation prefix by adding `-D CMAKE_INSTALL_PREFIX=/CUSTOM/PREFIX` to `cmake ..`.
 ```bash
 git clone https://github.com/slackadays/Clipboard 
 cd Clipboard/build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
 cmake --build .
 cmake --install .
 ```
