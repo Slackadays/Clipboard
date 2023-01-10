@@ -497,7 +497,7 @@ void syncWithGUIClipboard() {
 
 void showClipboardStatus() {
     std::vector<std::pair<std::string, bool>> clipboards_with_contents;
-    auto iterateClipboards = [&](const fs::path& path, bool persistent) {
+    auto iterateClipboards = [&](const fs::path& path, bool persistent) { //use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path)) {
             if (fs::is_directory(entry) && !fs::is_empty(entry)) {
                 clipboards_with_contents.push_back({entry.path().filename().string(), persistent});
@@ -681,7 +681,7 @@ void deduplicateItems() {
     copying.items.erase(std::unique(copying.items.begin(), copying.items.end()), copying.items.end());
 }
 
-unsigned long long calculateTotalItemSize() {
+unsigned long long totalItemSize() {
     unsigned long long total_item_size = 0;
     for (const auto& i : copying.items) {
         try {
@@ -701,15 +701,14 @@ unsigned long long calculateTotalItemSize() {
         } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(i.string(), e.code());
         }
-    }   
+    }
     return total_item_size;
 }
 
 void checkItemSize() {
-    const unsigned long long space_available = fs::space(filepath.main).available;
-    unsigned long long total_item_size = 0;
     if (action == Action::Cut || action == Action::Copy) {
-        total_item_size = calculateTotalItemSize();
+        unsigned long long total_item_size = totalItemSize();
+        const unsigned long long space_available = fs::space(filepath.main).available;
         if (total_item_size > (space_available / 2)) {
             stopIndicator();
             fprintf(stderr, replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
@@ -717,8 +716,6 @@ void checkItemSize() {
         }
     }
 }
-
-
 
 void removeOldFiles() {
     if (fs::is_regular_file(filepath.original_files)) {
@@ -819,11 +816,7 @@ void showSuccesses() {
         return;
     }
     if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
-        if (action == Action::Paste) {
-            printf("%s", replaceColors(paste_success_message).data());
-        } else {
-            printf(replaceColors(one_item_success_message).data(), did_action[action].data(), copying.items.at(0).string().data());
-        }
+        printf(replaceColors(one_item_success_message).data(), did_action[action].data(), action == Action::Paste ? (*(fs::directory_iterator(filepath.main))).path().filename().string().data() : copying.items.at(0).string().data());
     } else {
         if ((successes.files > 1) && (successes.directories == 0)) {
             printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), static_cast<int>(successes.files));
