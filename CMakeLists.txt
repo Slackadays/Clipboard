@@ -7,7 +7,7 @@ if (UNIX AND NOT APPLE)
   set(POSIX ON)
 endif()
 
-if($ENV{CI}) # enable easy artifact access on CI by shipping everything to a unified folder
+if($ENV{CI} AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug") # enable easy artifact access on CI by shipping everything to a unified folder
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/bin)
