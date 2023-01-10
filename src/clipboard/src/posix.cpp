@@ -34,6 +34,7 @@ static return_t dynamicCall(char const* object, char const* symbol, args_t... ar
     auto objectHandle = dlopen(object, RTLD_LAZY | RTLD_NODELETE);
     if (objectHandle == nullptr) {
         debugStream << "Opening " << object << " to look for " << symbol << " failed, aborting operation" << std::endl;
+        debugStream << "Specific error: " << dlerror() << std::endl;
         return return_t();
     }
 
