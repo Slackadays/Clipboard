@@ -249,6 +249,7 @@ namespace PerformAction {
     void show() {
         stopIndicator();
         if (fs::is_directory(filepath.main) && !fs::is_empty(filepath.main)) {
+            std::pair<int, int> termSpaceRemaining(terminalSize());
             if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
                 std::string content;
                 std::ifstream input(filepath.main / constants.pipe_file);
@@ -266,14 +267,19 @@ namespace PerformAction {
             for (const auto& entry : fs::directory_iterator(filepath.main)) {
                 total_items++;
             }
-            printf(replaceColors(clipboard_item_contents_message).data(), std::min(static_cast<unsigned int>(20), total_items), clipboard_name.data());
+            unsigned int rowsAvailable = termSpaceRemaining.second - ((replaceColors(clipboard_item_contents_message).length() / termSpaceRemaining.first) + 3);
+            printf(replaceColors(clipboard_item_contents_message).data(), std::min(rowsAvailable, total_items), clipboard_name.data());
             auto it = fs::directory_iterator(filepath.main);
-            for (int i = 0; i < std::min(static_cast<unsigned int>(20), total_items); i++) {
-                printf(replaceColors("{blue}▏ {bold}%s{blank}\n").data(), it->path().filename().string().data());
-                if (i == 19 && total_items > 20) {
-                    printf(replaceColors(and_more_items_message).data(), total_items - 20);
+            for (int i = 0; i < std::min(rowsAvailable, total_items); i++) {
+
+                printf(replaceColors("{blue}▏ {bold}{pink}%s{blank}\n").data(), it->path().filename().string().data());
+
+                if (i == rowsAvailable - 1 && total_items > rowsAvailable) {
+                    printf(replaceColors(and_more_items_message).data(), total_items - rowsAvailable);
                 }
+
                 it++;
+
             }
         } else {
             printf(replaceColors(no_clipboard_contents_message).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
@@ -529,38 +535,36 @@ void showClipboardStatus() {
         printf("%s", replaceColors(no_clipboard_contents_message).data());
     } else {
         std::pair<int, int> termSizeAvailable(terminalSize());
-        termSizeAvailable.second -= clipboard_action_prompt.size() / termSizeAvailable.first + 1;
-        termSizeAvailable.second -= check_clipboard_status_message.size() / termSizeAvailable.first + 1;
+        termSizeAvailable.second -= (replaceColors(clipboard_action_prompt).size() / termSizeAvailable.first) + 1;
+        termSizeAvailable.second -= (replaceColors(check_clipboard_status_message).size() / termSizeAvailable.first) + 1;
         printf("%s", replaceColors(check_clipboard_status_message).data());
 
         for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.second); clipboard++) {
 
-            int widthRemaining = termSizeAvailable.first - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 2 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
-            printf(replaceColors("{bold}{blue}%s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
-            
+            int widthRemaining = termSizeAvailable.first - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
+            printf(replaceColors("{bold}{blue}▏ %s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first)) {
+                int entryWidth = entry.path().filename().string().length();
 
                 if (widthRemaining <= 0) {
                     break;
                 }
 
                 if (!first) {
-                    if (static_cast<int>(entry.path().filename().string().length()) <= widthRemaining - 2) {
+                    if (entryWidth <= widthRemaining - 2) {
                         printf("%s", replaceColors("{pink}, {blank}").data());
                         widthRemaining -= 2;
                     }
                 }
 
-                if (entry.path().filename().string().length() <= widthRemaining) {
+                if (entryWidth <= widthRemaining) {
                     printf(replaceColors("{pink}%s{blank}").data(), entry.path().filename().string().data());
-                    widthRemaining -= entry.path().filename().string().length();
+                    widthRemaining -= entryWidth;
                     first = false;
                 }
-
             }
             printf("\n");
-
         }
     }
     printf("%s", replaceColors(clipboard_action_prompt).data());
