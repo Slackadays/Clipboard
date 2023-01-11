@@ -43,8 +43,9 @@
 #include "windows.hpp"
 #endif
 
-#if !defined(_WIN32) && !defined(_WIN64)
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <unistd.h>
+#include <sys/ioctl.h>
 #endif
 
 namespace fs = std::filesystem;
@@ -84,6 +85,23 @@ bool stopIndicator(bool change_condition_variable = true) {
     cv.notify_one();
     indicator.join();
     return true;
+}
+
+std::pair<int, int> terminalSize() {
+    #if defined(_WIN32) || defined(_WIN64)
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int columns, rows;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+    return {columns, rows};
+    #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    return {w.ws_col, w.ws_row};
+    #else
+    return {80, 24};
+    #endif
 }
 
 namespace PerformAction {
@@ -496,6 +514,7 @@ void syncWithGUIClipboard() {
 }
 
 void showClipboardStatus() {
+    std::pair<int, int> termSize(terminalSize());
     std::vector<std::pair<std::string, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { //use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path)) {
