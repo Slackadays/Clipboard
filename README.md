@@ -10,6 +10,8 @@
 - **Integrated.** Works with many native GUI clipboards.
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/main.yml?style=for-the-badge)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/test.yml?label=TESTS&style=for-the-badge)
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 ### **All Except Windows** 
@@ -32,8 +34,6 @@ cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
 cmake --build .
 cmake --install .
 ```
-
----
 
 ### **Uninstall**
 
@@ -59,21 +59,28 @@ Add a number to the end of the action to choose which clipboard you want to use 
 
 **Copy** &emsp; `clipboard ([--]copy|[-]cp)[(num)|_(id)] (file) [files]`
 
+---
+
 
 **Cut** &emsp; `clipboard ([--]cut|[-]ct)[(num)|_(id)] (file) [files]`
 
+---
 
 **Paste** &emsp; `clipboard ([--]paste|[-]p)[(num)|_(id)]`
 
+---
 
 **Pipe In** &emsp; `(something) | clipboard [([--]copy|[-]cp)][(num)|_(id)]`
 
+---
 
 **Pipe Out** &emsp; `clipboard [([--]paste|[-]p][(num)|_(id)] | (something)` or `clipboard [([--]paste|[-]p)][(num)|_(id)] > (some file)`
 
+---
 
 **Show Contents** &emsp; `clipboard ([--]show|[-]sh)[(num)|_(id)]`
 
+---
 
 **Clear Contents** &emsp; `clipboard ([--]clear|[-]clr)[(num)|_(id)]`
 
@@ -93,24 +100,31 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 **`CI`** &emsp; Set this to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
+---
 
 **`FORCE_COLOR`** &emsp; Set this to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
+---
 
 **`TMPDIR`** &emsp; Set this to the directory that Clipboard will use to hold the items you cut or copy into a temporary directory. Other programs use `TMPDIR` as well, so be careful about changing this.
 
+---
 
 **`CLIPBOARD_TMPDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
 
+---
 
 **`CLIPBOARD_PERSISTDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
 
+---
 
 **`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to make Clipboard always use persistent clipboards.
 
+---
 
 **`CLIPBOARD_NOGUI`** &emsp; Set this to disable integration with GUI clipboards.
 
+---
 
 **`NO_COLOR`** &emsp; Set this to make Clipboard not show any colors.
 
