@@ -21,7 +21,7 @@ extern "C" {
     bool holdsText();
     bool holdsFiles();
 
-    char* getText();
+    const char* getText();
     char** getFiles();
 
     void writeText(const char* text);
@@ -29,7 +29,7 @@ extern "C" {
 }
 
 ClipboardContent getGUIClipboard() {
-    if (holdsText()) {
+    if (holdsFiles()) {
         std::vector<fs::path> fileVector;
         char** files = getFiles();
         for (int i = 0; files[i] != nullptr; i++) {
@@ -39,7 +39,7 @@ ClipboardContent getGUIClipboard() {
         ClipboardPaths paths(fileVector);
         return ClipboardContent(paths);
     }
-    if (holdsFiles()) {
+    if (holdsText()) {
         std::string text(getText());
         return ClipboardContent(text);
     }

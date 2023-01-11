@@ -16,70 +16,47 @@
 #include <stdbool.h>
 
 bool holdsText() {
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
-    NSDictionary *options = [NSDictionary dictionary];
-    return [pasteboard canReadObjectForClasses:classes options:options];
+    return [[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]];
 }
 
-char* getText() {
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-    NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
-    NSDictionary *options = [NSDictionary dictionary];
-    if ([pasteboard canReadObjectForClasses:classes options:options]) {
-        NSString *text = [pasteboard stringForType:NSPasteboardTypeString];
-        const char *string = [text UTF8String];
-        int length = strlen(string);
-        char *newstring = malloc(length + 1);
-        strcpy(newstring, string);
-        return newstring;
-    } else {
-        return "";
-    }
+const char* getText() {
+    NSString *text = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString];
+    return [text UTF8String];
 }
 
 bool holdsFiles() {
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
-    NSDictionary *options = [NSDictionary dictionary];
-    return [pasteboard canReadObjectForClasses:classes options:options];
+    return [[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]];
 }
 
 char** getFiles() {
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
-    NSDictionary *options = [NSDictionary dictionary];
-    if ([pasteboard canReadObjectForClasses:classes options:options]) {
-        NSArray *files = [pasteboard readObjectsForClasses:classes options:options];
-        int numberOfFiles = [files count];
-        char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
-        for (int i = 0; i < numberOfFiles; i++) {
-            NSURL *file = [files objectAtIndex:i];
-            const char* filepath = [[file path] UTF8String];
-            int length = strlen(filepath);
-            char* Cfilepath = malloc(length + 1);
-            strcpy(Cfilepath, filepath);
-            stringArray[i] = Cfilepath;
-        }
-        stringArray[numberOfFiles] = NULL;
-        return stringArray;
-    } else {
-        return NULL;
+    NSArray *files = [[NSPasteboard generalPasteboard] readObjectsForClasses:classes options:[NSDictionary dictionary]];
+    int numberOfFiles = [files count];
+    char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
+    for (int i = 0; i < numberOfFiles; i++) {
+        NSURL *file = [files objectAtIndex:i];
+        const char* filepath = [[file path] UTF8String];
+        int length = strlen(filepath);
+        char* Cfilepath = malloc(length + 1);
+        strcpy(Cfilepath, filepath);
+        stringArray[i] = Cfilepath;
     }
+    stringArray[numberOfFiles] = NULL;
+    return stringArray;
 }
 
 void writeText(const char* text) {
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-    [pasteboard clearContents];
-    [pasteboard setString:[NSString stringWithUTF8String:text] forType:NSPasteboardTypeString];
+    [[NSPasteboard generalPasteboard] clearContents];
+    [[NSPasteboard generalPasteboard] setString:[NSString stringWithUTF8String:text] forType:NSPasteboardTypeString];
 }
 
 void writeFiles(const char** files) {
-    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-    [pasteboard clearContents];
+    [[NSPasteboard generalPasteboard] clearContents];
     NSMutableArray *fileArray = [[NSMutableArray alloc] init];
     for (int i = 0; files[i] != NULL; i++) {
         [fileArray addObject:[NSURL fileURLWithPath:[NSString stringWithUTF8String:files[i]]]];
     }
-    [pasteboard writeObjects:fileArray];
+    [[NSPasteboard generalPasteboard] writeObjects:fileArray];
 }
