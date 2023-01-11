@@ -84,7 +84,7 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
-std::string_view check_clipboard_status_message = "{blue}• There are items in these clipboards: ";
+std::string_view check_clipboard_status_message = "{blue}• There are items in these clipboards:\n";
 std::string_view clipboard_item_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view clipboard_text_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} bytes in clipboard {bold}%s{blank}{blue}: {blank}\n";
 std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
@@ -279,7 +279,7 @@ void setLanguageTR() {
                    "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                    "{blue}▏                                 GPLv3 altında lisanslanmıştır.{blank}\n"
                    "{blue}▏Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli koşullar altında yeniden dağıtabilirsiniz.{blank}\n";
-    check_clipboard_status_message = "{blue}• Pano içeriği şunlardır: ";
+    check_clipboard_status_message = "{blue}• Pano içeriği şunlardır:\n";
     clipboard_item_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
     no_clipboard_contents_message = "{blue}• Panoda hiçbir şey yok.{blank}\n";
     clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}kes, kopyala, {blank}{pink}veya{bold} yapistir{blank}{pink} ekleyin, {bold}clipboard kopyala{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";

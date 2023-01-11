@@ -514,12 +514,11 @@ void syncWithGUIClipboard() {
 }
 
 void showClipboardStatus() {
-    std::pair<int, int> termSize(terminalSize());
-    std::vector<std::pair<std::string, bool>> clipboards_with_contents;
+    std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { //use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path)) {
             if (fs::is_directory(entry) && !fs::is_empty(entry)) {
-                clipboards_with_contents.push_back({entry.path().filename().string(), persistent});
+                clipboards_with_contents.push_back({entry.path(), persistent});
             }
         }
     };
@@ -529,14 +528,40 @@ void showClipboardStatus() {
     if (clipboards_with_contents.empty()) {
         printf("%s", replaceColors(no_clipboard_contents_message).data());
     } else {
+        std::pair<int, int> termSizeAvailable(terminalSize());
+        termSizeAvailable.second -= clipboard_action_prompt.size() / termSizeAvailable.first + 1;
+        termSizeAvailable.second -= check_clipboard_status_message.size() / termSizeAvailable.first + 1;
         printf("%s", replaceColors(check_clipboard_status_message).data());
-        for (int clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
-            printf(replaceColors("{bold}%s%s{blank}{blue}").data(), clipboards_with_contents.at(clipboard).first.data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
-            if (clipboard != clipboards_with_contents.size() - 1) {
-                printf(", ");
+
+        for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.second); clipboard++) {
+
+            int widthRemaining = termSizeAvailable.first - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 2 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
+            printf(replaceColors("{bold}{blue}%s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
+            
+
+            for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first)) {
+
+                if (widthRemaining <= 0) {
+                    break;
+                }
+
+                if (!first) {
+                    if (static_cast<int>(entry.path().filename().string().length()) <= widthRemaining - 2) {
+                        printf("%s", replaceColors("{pink}, {blank}").data());
+                        widthRemaining -= 2;
+                    }
+                }
+
+                if (entry.path().filename().string().length() <= widthRemaining) {
+                    printf(replaceColors("{pink}%s{blank}").data(), entry.path().filename().string().data());
+                    widthRemaining -= entry.path().filename().string().length();
+                    first = false;
+                }
+
             }
+            printf("\n");
+
         }
-        printf("\n");
     }
     printf("%s", replaceColors(clipboard_action_prompt).data());
 }
