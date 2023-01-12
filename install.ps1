@@ -1,12 +1,17 @@
-Set-PSDebug -Trace 1
+Invoke-WebRequest https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-windows-amd64.zip -OutFile clipboard-windows-amd64.zip
+Expand-Archive clipboard-windows-amd64.zip -DestinationPath .\clipboard-windows-amd64
 
-git clone --depth 1 https://github.com/slackadays/Clipboard
+New-Item -ItemType Directory -Force -Path "C:\Program Files\Clipboard"
 
-Push-Location Clipboard\build
+Copy-Item .\clipboard-windows-amd64\bin\clipboard.exe -Force -Destination "C:\Program Files\Clipboard\clipboard.exe"
 
-cmake ..
-cmake --build . --config Release
-cmake --install . --config Release
+New-Item -ItemType SymbolicLink -Force -Path "C:\Program Files\Clipboard\cb.exe" -Value "C:\Program Files\Clipboard\clipboard.exe"
 
-Pop-Location
-Set-PSDebug -Trace 0
+$Old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
+$New = "$Old;C:\Program Files\Clipboard"
+Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path -Value $New
+
+Remove-Item .\clipboard-windows-amd64.zip -Force
+Remove-Item .\clipboard-windows-amd64 -Force -Recurse
+
+Write-Host "Please restart to use Clipboard"
