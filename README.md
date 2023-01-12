@@ -1,17 +1,20 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-**Clipboard is a software powertool that saves you time and effort.** Now, you can have a unified clipboard to use anywhere in the command line, as if you were using a GUI.
-
-- **Tiny.** Mere tens of kilobytes on most platforms.
-- **Quick.** Requires zero configuration to use.
-- **Easy.** Friendly to newbies and power users alike.
-- **Compatible.** Works with up-to-date Windows, Linux, Android, macOS, FreeBSD, OpenBSD, NetBSD, DragonFlyBSD, or OpenIndiana systems, or anything that supports C++20. Really!
-- **Universal.** Supports English, Spanish, Portuguese, and Turkish.
-- **Integrated.** Works with many native GUI clipboards.
-
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/main.yml?style=for-the-badge)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/main.yml?label=BUILDS&style=for-the-badge)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/test.yml?label=TESTS&style=for-the-badge)
+
+**Clipboard is a software power tool that saves you time and effort.** Previously, you've always had to think about where exactly you want to move text and files. This increases your mental workload and makes some scenarios simply untenable. 
+Now, you can have a unified clipboard to use anywhere in the command line, as if you were using a GUI.
+
+- **Quick.** Zero configuration needed to use.
+- **Easy.** Friendly to newbies and power users alike.
+- **Compatible.** Works on any system that supports C++20. Really!
+- **Unified.** Functions exactly the same everywhere.
+- **Universal.** Supports English, Spanish, Portuguese, and Turkish.
+- **Integrated.** Connects with many native GUI clipboards.
+- **Tiny.** Mere tens of kilobytes in size.
+
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 ### **All Except Windows** 
