@@ -19,7 +19,7 @@ Now, you can have a unified clipboard to use anywhere in the command line, as if
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 ### **All Except Windows** 
 ```bash
-curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
+curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | bash
 ```
 ### **Windows** 
 ```powershell
