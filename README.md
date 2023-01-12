@@ -22,8 +22,9 @@ Now, you can have a unified clipboard to use anywhere in the command line, as if
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
 ```
 ### **Windows** 
+Working `cmake` is required.
 ```powershell
-Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/install.ps1 | powershell
+irm https://github.com/Slackadays/Clipboard/raw/main/install.ps1 | iex
 ```
 
 ---
