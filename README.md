@@ -4,8 +4,8 @@
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test.yml?branch=main&label=TESTS&style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
 
-**Clipboard is a software power tool that saves you time and effort.** Previously, you've always had to think about where exactly you want to move text and files. This increases your mental workload and makes some scenarios simply untenable. 
-Now, you can have a unified clipboard to use anywhere in the command line, as if you were using a GUI.
+**Clipboard is a power tool that saves you time and effort.** Previously, you've always had to think about where exactly you want to move text and files. This increases your mental workload and makes some scenarios simply impractical. 
+Now, you can have a _unified_ clipboard to use anywhere in the command line, just as if you were using a GUI.
 
 - **Quick.** Zero configuration needed to use.
 - **Easy.** Friendly to newbies and power users alike.
