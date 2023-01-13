@@ -39,6 +39,7 @@ elseif(POSIX)
     "${CMAKE_INSTALL_PREFIX_LIB}"
   )
   target_link_options(clipboard PRIVATE -z origin) # set the rpath to $ORIGIN
+  target_link_libraries(clipboard atomic)
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD True)
