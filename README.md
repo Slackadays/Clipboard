@@ -1,6 +1,7 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
+[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/main.yml?branch=main&label=BUILDS&style=for-the-badge)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test.yml?branch=main&label=TESTS&style=for-the-badge)
 
@@ -139,6 +140,6 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
+## **Need More Help?**
 
-[<img src="documentation/readme-banners/TheCBWiki.png" width="46%" alt="The Clipboard Wiki"/>](https://github.com/Slackadays/Clipboard/wiki)
-[<img src="documentation/readme-banners/DiscordSupport.png" width="46%" alt="Discord Support" align="right"/>](https://discord.gg/J6asnc3pEG)
+Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information.
