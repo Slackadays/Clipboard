@@ -1,9 +1,9 @@
 ![Clipboard Banner](documentation/readme-banners/CBBanner.png)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
-[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/main.yml?branch=main&label=BUILDS&style=for-the-badge)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test.yml?branch=main&label=TESTS&style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge)
+[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
 **Clipboard is a software power tool that saves you time and effort.** Previously, you've always had to think about where exactly you want to move text and files. This increases your mental workload and makes some scenarios simply untenable. 
 Now, you can have a unified clipboard to use anywhere in the command line, as if you were using a GUI.
