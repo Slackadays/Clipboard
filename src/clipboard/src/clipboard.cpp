@@ -535,8 +535,13 @@ void showClipboardStatus() {
         printf("%s", replaceColors(no_clipboard_contents_message).data());
     } else {
         std::pair<int, int> termSizeAvailable(terminalSize());
+
         termSizeAvailable.second -= (replaceColors(clipboard_action_prompt).size() / termSizeAvailable.first) + 1;
         termSizeAvailable.second -= (replaceColors(check_clipboard_status_message).size() / termSizeAvailable.first) + 1;
+        if (clipboards_with_contents.size() > termSizeAvailable.second) {
+            termSizeAvailable.second -= (replaceColors(and_more_items_message).size() / termSizeAvailable.first) + 1;
+        }
+
         printf("%s", replaceColors(check_clipboard_status_message).data());
 
         for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.second); clipboard++) {
@@ -565,6 +570,9 @@ void showClipboardStatus() {
                 }
             }
             printf("\n");
+        }
+        if (clipboards_with_contents.size() > termSizeAvailable.second) {
+            printf(replaceColors(and_more_items_message).data(), clipboards_with_contents.size() - termSizeAvailable.second);
         }
     }
     printf("%s", replaceColors(clipboard_action_prompt).data());
