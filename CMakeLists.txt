@@ -34,13 +34,13 @@ else()
 endif()
 
 if(APPLE AND NOT INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(INSTALL_PREFIX "/usr/local")
 elseif(POSIX AND NOT INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr")
+  set(INSTALL_PREFIX "/usr")
 endif()
 
-set(CMAKE_INSTALL_PREFIX_BIN "${CMAKE_INSTALL_PREFIX}/bin")
-set(CMAKE_INSTALL_PREFIX_LIB "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_PREFIX_BIN "${INSTALL_PREFIX}/bin")
+set(CMAKE_INSTALL_PREFIX_LIB "${INSTALL_PREFIX}/lib")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "Building Clipboard in Debug mode")
