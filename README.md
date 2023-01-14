@@ -19,30 +19,18 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
-
-<img alt="All Except Windows" src="documentation/readme-banners/CBAllExceptWindows.png" width="35%">
-
+### **All Except Windows** 
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
 ```
-<img alt="Windows" src="documentation/readme-banners/Windows.png" width="35%%">
-
+### **Windows** 
 ```powershell
 Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1 | powershell
 ```
 
-<img alt="Premade Builds" src="documentation/readme-banners/PremadeBuilds.png" width="35%">
-
-<a>
-    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status">
-</a>
-
-You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
-
 ---
 
-<img alt="Install Manually" src="documentation/readme-banners/InstallManually.png" width="35%">
-
+### **Install Manually**
 Get the latest release instead by adding `--branch 0.2.1r2` right after `git clone...`. Change the installation prefix by adding `-DINSTALL_PREFIX=/CUSTOM/PREFIX` to `cmake ..`.
 ```bash
 git clone https://github.com/slackadays/Clipboard 
@@ -52,13 +40,20 @@ cmake --build .
 cmake --install .
 ```
 
----
-
-<img alt="Uninstall" src="documentation/readme-banners/Uninstall.png" width="35%">
+### **Uninstall**
 
 Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
 ---
+
+### **Premade Builds**
+
+<a>
+    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status">
+</a>
+
+You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
+
 
 ![How To Use](documentation/readme-banners/CBHowToUse.png)
 
@@ -106,7 +101,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ![Simple Configuration](documentation/readme-banners/CBSimpleConfiguration.png)
 
-<img alt="Environment Variables" src="documentation/readme-banners/EnvironmentVariables.png" width="35%">
+### **Environment Variables**
 
 **`CI`** &emsp; Set this to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
@@ -142,10 +137,16 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-<img alt="Flags" src="documentation/readme-banners/Flags.png" width="35%">
+### **Flags**
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
-## **Need More Help?**
+![Need Help?](documentation/readme-banners/NeedHelp.png)
 
-Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, or join our Discord group!  [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, or join our Discord group!  
+
+[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+
+![Thank You!](documentation/readme-banners/ThankYou.png)
+
+Thank you to all the contributors who have helped make Clipboard great.
