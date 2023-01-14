@@ -11,7 +11,7 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 
 - **Quick.** Zero configuration needed to use.
 - **Easy.** Friendly to newbies and power users alike.
-- **Compatible.** Works on any system that supports C++20. Really!
+- **Compatible.** Works on any system that supports C++23. Really!
 - **Unified.** Functions exactly the same everywhere.
 - **Universal.** Supports English, Spanish, Portuguese, and Turkish.
 - **Integrated.** Connects with many native GUI clipboards.

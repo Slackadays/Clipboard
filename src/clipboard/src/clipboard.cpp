@@ -256,6 +256,7 @@ namespace PerformAction {
                 std::stringstream buffer;
                 buffer << input.rdbuf();
                 content = buffer.str();
+                content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
                 printf(replaceColors(clipboard_text_contents_message).data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(content.size())), clipboard_name.data());
                 printf(replaceColors("{bold}{blue}%s\n{blank}").data(), content.substr(0, 250).data());
                 if (content.size() > 250) {
@@ -548,6 +549,17 @@ void showClipboardStatus() {
 
             int widthRemaining = termSizeAvailable.first - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
             printf(replaceColors("{bold}{blue}▏ %s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
+
+            if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.pipe_file)) {
+                std::string content;
+                std::ifstream input(clipboards_with_contents.at(clipboard).first / constants.pipe_file);
+                std::stringstream buffer;
+                buffer << input.rdbuf();
+                content = buffer.str();
+                content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
+                printf(replaceColors("{pink}%s{blank}").data(), content.substr(0, widthRemaining).data());
+                continue;
+            }
 
             for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first)) {
                 int entryWidth = entry.path().filename().string().length();
