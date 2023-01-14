@@ -4,7 +4,7 @@ set +e
 
 if [ "$(uname)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ]
 then
-    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip -o clipboard-linux-amd64.zip
+    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc11-amd64.zip -o clipboard-linux-amd64.zip
     unzip clipboard-linux-amd64.zip
     rm clipboard-linux-amd64.zip
     sudo mv bin/clipboard /usr/bin/clipboard
