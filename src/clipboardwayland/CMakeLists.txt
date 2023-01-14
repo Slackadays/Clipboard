@@ -16,4 +16,4 @@ target_link_libraries(clipboardwayland
   gui
 )
 
-install(TARGETS clipboardwayland LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/")
+install(TARGETS clipboardwayland LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX_LIB}")
