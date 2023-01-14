@@ -4,7 +4,7 @@ set +e
 
 if [ "$(uname)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ]
 then
-    wget https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip -O clipboard-linux-amd64.zip
+    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip -o clipboard-linux-amd64.zip
     unzip clipboard-linux-amd64.zip
     rm clipboard-linux-amd64.zip
     sudo mv bin/clipboard /usr/bin/clipboard
@@ -25,7 +25,7 @@ fi
 
 if [ "$(uname)" = "Darwin" ] && [ "$(uname -m)" = "x86_64" ]
 then
-    wget https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-macos-amd64.zip -O clipboard-macos-amd64.zip
+    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-macos-amd64.zip -o clipboard-macos-amd64.zip
     unzip clipboard-macos-amd64.zip
     rm clipboard-macos-amd64.zip
     sudo mv bin/clipboard /usr/local/bin/clipboard
