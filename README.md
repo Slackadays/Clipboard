@@ -20,12 +20,12 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
 ![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
 
-<img src="documentation/readme-banners/CBAllExceptWindows.png" width="30%">
+<img alt="All Except Windows" src="documentation/readme-banners/CBAllExceptWindows.png" width="40%">
 
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
 ```
-<img src="documentation/readme-banners/Windows.png" width="30%">
+<img alt="Windows" src="documentation/readme-banners/Windows.png" width="40%">
 
 ```powershell
 Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1 | powershell
@@ -33,7 +33,7 @@ Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/m
 
 ---
 
-<img src="documentation/readme-banners/InstallManually.png" width="30%">
+<img alt="Install Manually" src="documentation/readme-banners/InstallManually.png" width="40%">
 
 Get the latest release instead by adding `--branch 0.2.1r2` right after `git clone...`. Change the installation prefix by adding `-DINSTALL_PREFIX=/CUSTOM/PREFIX` to `cmake ..`.
 ```bash
@@ -44,13 +44,13 @@ cmake --build .
 cmake --install .
 ```
 
-<img src="documentation/readme-banners/Uninstall.png" width="30%">
+<img alt="Uninstall" src="documentation/readme-banners/Uninstall.png" width="40%">
 
 Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
 ---
 
-<img src="documentation/readme-banners/PremadeBuilds.png" width="30%">
+<img alt="Premade Builds" src="documentation/readme-banners/PremadeBuilds.png" width="40%">
 
 <a>
     <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status">
@@ -105,7 +105,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ![Simple Configuration](documentation/readme-banners/CBSimpleConfiguration.png)
 
-<img src="documentation/readme-banners/EnvironmentVariables.png" width="30%">
+<img alt="Environment Variables" src="documentation/readme-banners/EnvironmentVariables.png" width="40%">
 
 **`CI`** &emsp; Set this to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
@@ -141,7 +141,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-<img src="documentation/readme-banners/Flags.png" width="30%">
+<img alt="Flags" src="documentation/readme-banners/Flags.png" width="40%">
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
