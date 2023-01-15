@@ -14,7 +14,7 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 - **Compatible.** Works on any system that supports C++23. Really!
 - **Unified.** Functions exactly the same everywhere.
 - **Universal.** Supports English, Spanish, Portuguese, and Turkish.
-- **Integrated.** Connects with many native GUI clipboards.
+- **Integrated.** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
 - **Tiny.** Mere tens of kilobytes in size.
 
 ![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
