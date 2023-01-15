@@ -25,7 +25,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
 ```
 ### **Windows** 
 ```powershell
-Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1 | powershell
+(Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
 ```
 
 ---
