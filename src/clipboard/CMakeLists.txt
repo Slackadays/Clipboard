@@ -22,6 +22,7 @@ target_link_libraries(clipboard gui)
 
 if(WIN32)
   target_sources(clipboard PRIVATE src/windows.cpp)
+  target_compile_options(clipboard PRIVATE /utf-8)
 elseif(APPLE)
   enable_language(OBJC)
   target_sources(clipboard PRIVATE
