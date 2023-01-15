@@ -35,6 +35,12 @@ elseif(POSIX)
   set_property(
     TARGET clipboard
     APPEND
+    PROPERTY BUILD_RPATH
+    "${CMAKE_INSTALL_PREFIX_LIB}"
+  )
+  set_property(
+    TARGET clipboard
+    APPEND
     PROPERTY INSTALL_RPATH
     "${CMAKE_INSTALL_PREFIX_LIB}"
   )
