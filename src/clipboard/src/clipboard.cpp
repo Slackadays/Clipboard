@@ -63,17 +63,6 @@ Successes successes;
 IsTTY is_tty;
 Action action;
 
-std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
-    {"{red}", "\033[38;5;196m"},
-    {"{green}", "\033[38;5;40m"},
-    {"{yellow}", "\033[38;5;214m"},
-    {"{blue}", "\033[38;5;51m"},
-    {"{orange}", "\033[38;5;208m"},
-    {"{pink}", "\033[38;5;219m"},
-    {"{bold}", "\033[1m"},
-    {"{blank}", "\033[0m"}
-}};
-
 bool stopIndicator(bool change_condition_variable = true) {
     SpinnerState expect = SpinnerState::Active;
     if (!change_condition_variable) {
@@ -240,9 +229,9 @@ namespace PerformAction {
 
     void clear() {
         if (fs::is_empty(filepath.main)) {
-            printf("%s", replaceColors(clear_success_message).data());
+            printf("%s", clear_success_message().data());
         } else {
-            printf("%s", replaceColors(clear_fail_message).data());
+            printf("%s", clear_fail_message().data());
         }
     }
 
@@ -257,10 +246,10 @@ namespace PerformAction {
                 buffer << input.rdbuf();
                 content = buffer.str();
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
-                printf(replaceColors(clipboard_text_contents_message).data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(content.size())), clipboard_name.data());
+                printf(clipboard_text_contents_message().data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(content.size())), clipboard_name.data());
                 printf(replaceColors("{bold}{blue}%s\n{blank}").data(), content.substr(0, 250).data());
                 if (content.size() > 250) {
-                    printf(replaceColors(and_more_items_message).data(), content.size() - 250);
+                    printf(and_more_items_message().data(), content.size() - 250);
                 }
                 return;
             }
@@ -268,38 +257,28 @@ namespace PerformAction {
             for (const auto& entry : fs::directory_iterator(filepath.main)) {
                 total_items++;
             }
-            unsigned int rowsAvailable = termSpaceRemaining.second - ((replaceColors(clipboard_item_contents_message).length() / termSpaceRemaining.first) + 3);
-            printf(replaceColors(clipboard_item_contents_message).data(), std::min(rowsAvailable, total_items), clipboard_name.data());
+            unsigned int rowsAvailable = termSpaceRemaining.second - ((clipboard_item_contents_message().length() / termSpaceRemaining.first) + 3);
+            printf(clipboard_item_contents_message().data(), std::min(rowsAvailable, total_items), clipboard_name.data());
             auto it = fs::directory_iterator(filepath.main);
             for (int i = 0; i < std::min(rowsAvailable, total_items); i++) {
 
                 printf(replaceColors("{blue}▏ {bold}{pink}%s{blank}\n").data(), it->path().filename().string().data());
 
                 if (i == rowsAvailable - 1 && total_items > rowsAvailable) {
-                    printf(replaceColors(and_more_items_message).data(), total_items - rowsAvailable);
+                    printf(and_more_items_message().data(), total_items - rowsAvailable);
                 }
 
                 it++;
 
             }
         } else {
-            printf(replaceColors(no_clipboard_contents_message).data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
+            printf(no_clipboard_contents_message().data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
         }
     }
 
     void edit() {
         
     }
-}
-
-std::string replaceColors(const std::string_view& str) {
-    std::string temp(str); //a string to do scratch work on
-    for (const auto& key : colors) { //iterate over all the possible colors to replace
-        for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
-            temp.replace(i, key.first.length(), key.second);
-        }
-    }
-    return temp;
 }
 
 void clearTempDirectory(bool force_clear = false) {
@@ -417,7 +396,7 @@ void setLocale() {
 void showHelpMessage(int& argc, char *argv[]) {
     for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
         if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
-            printf(replaceColors(help_message).data(), constants.clipboard_version.data());
+            printf(help_message().data(), constants.clipboard_version.data());
             exit(EXIT_SUCCESS);
         }
     }
@@ -533,17 +512,17 @@ void showClipboardStatus() {
     iterateClipboards(filepath.persistent.parent_path(), true);
     std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
     if (clipboards_with_contents.empty()) {
-        printf("%s", replaceColors(no_clipboard_contents_message).data());
+        printf("%s", no_clipboard_contents_message().data());
     } else {
         std::pair<int, int> termSizeAvailable(terminalSize());
 
-        termSizeAvailable.second -= (replaceColors(clipboard_action_prompt).size() / termSizeAvailable.first) + 1;
-        termSizeAvailable.second -= (replaceColors(check_clipboard_status_message).size() / termSizeAvailable.first) + 1;
+        termSizeAvailable.second -= (clipboard_action_prompt().size() / termSizeAvailable.first) + 1;
+        termSizeAvailable.second -= (check_clipboard_status_message().size() / termSizeAvailable.first) + 1;
         if (clipboards_with_contents.size() > termSizeAvailable.second) {
-            termSizeAvailable.second -= (replaceColors(and_more_items_message).size() / termSizeAvailable.first) + 1;
+            termSizeAvailable.second -= (and_more_items_message().size() / termSizeAvailable.first) + 1;
         }
 
-        printf("%s", replaceColors(check_clipboard_status_message).data());
+        printf("%s", check_clipboard_status_message().data());
 
         for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.second); clipboard++) {
 
@@ -557,7 +536,7 @@ void showClipboardStatus() {
                 buffer << input.rdbuf();
                 content = buffer.str();
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
-                printf(replaceColors("{pink}%s{blank}").data(), content.substr(0, widthRemaining).data());
+                printf(replaceColors("{pink}%s{blank}\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
 
@@ -580,14 +559,14 @@ void showClipboardStatus() {
                     widthRemaining -= entryWidth;
                     first = false;
                 }
+                printf("\n");
             }
-            printf("\n");
         }
         if (clipboards_with_contents.size() > termSizeAvailable.second) {
-            printf(replaceColors(and_more_items_message).data(), clipboards_with_contents.size() - termSizeAvailable.second);
+            printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.second);
         }
     }
-    printf("%s", replaceColors(clipboard_action_prompt).data());
+    printf("%s", clipboard_action_prompt().data());
 }
 
 void setupAction(int& argc, char *argv[]) {
@@ -607,7 +586,7 @@ void setupAction(int& argc, char *argv[]) {
         if (flagIsPresent(actions[Action::Cut], "--") || flagIsPresent(action_shortcuts[Action::Cut], "-")) { //replace with join_with_view when C++23 becomes available
             action = Action::Cut;
             if (!is_tty.std_in || !is_tty.std_out) {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
+                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(EXIT_FAILURE);
             }
         } else if (flagIsPresent(actions[Action::Copy], "--") || flagIsPresent(action_shortcuts[Action::Copy], "-")) {
@@ -615,7 +594,7 @@ void setupAction(int& argc, char *argv[]) {
             if (!is_tty.std_in) {
                 action = Action::PipeIn;
             } else if (!is_tty.std_out) {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
+                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(EXIT_FAILURE);
             }
         } else if (flagIsPresent(actions[Action::Paste], "--") || flagIsPresent(action_shortcuts[Action::Paste], "-")) {
@@ -623,7 +602,7 @@ void setupAction(int& argc, char *argv[]) {
             if (!is_tty.std_out) {
                 action = Action::PipeOut;
             } else if (!is_tty.std_in) {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
+                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
                 exit(EXIT_FAILURE);
             }
         } else if (flagIsPresent(actions[Action::Show], "--") || flagIsPresent(action_shortcuts[Action::Show], "-")) {
@@ -631,10 +610,10 @@ void setupAction(int& argc, char *argv[]) {
         } else if (flagIsPresent(actions[Action::Clear], "--") || flagIsPresent(action_shortcuts[Action::Clear], "-")) {
             action = Action::Clear;
             if (!is_tty.std_in) {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
+                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
                 exit(EXIT_FAILURE);
             } else if (!is_tty.std_out) {
-                fprintf(stderr, replaceColors(fix_redirection_action_message).data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
+                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
                 exit(EXIT_FAILURE);
             }
         } else if (flagIsPresent(actions[Action::Edit], "--"), flagIsPresent(action_shortcuts[Action::Edit])) {
@@ -643,7 +622,7 @@ void setupAction(int& argc, char *argv[]) {
             printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
             exit(EXIT_SUCCESS);
         } else {
-            printf(replaceColors(no_valid_action_message).data(), argv[1]);
+            printf(no_valid_action_message().data(), argv[1]);
             exit(EXIT_FAILURE);
         }
         if (flagIsPresent("--fast-copy") || flagIsPresent("-fc")) {
@@ -668,7 +647,7 @@ void setupAction(int& argc, char *argv[]) {
     }
     if (action == Action::PipeIn || action == Action::PipeOut) {
         if (argc >= 3) {
-            fprintf(stderr, "%s", replaceColors(redirection_no_items_message).data());
+            fprintf(stderr, "%s", redirection_no_items_message().data());
             exit(EXIT_FAILURE);
         }
     }
@@ -676,7 +655,7 @@ void setupAction(int& argc, char *argv[]) {
 
 void checkForNoItems() {
     if ((action == Action::Cut || action == Action::Copy) && copying.items.size() < 1) {
-        printf(replaceColors(choose_action_items_message).data(), actions[action].data(), actions[action].data(), actions[action].data());
+        printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
     if (action == Action::Paste && fs::is_empty(filepath.main)) {
@@ -694,13 +673,13 @@ void setupIndicator() {
         static unsigned long items_size = copying.items.size();
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
+            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     } else if ((action == Action::PipeIn || action == Action::PipeOut) && is_tty.std_err) {
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), static_cast<int>(successes.bytes), "B", spinner_steps.at(i).data());
+            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), static_cast<int>(successes.bytes), "B", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
@@ -716,13 +695,13 @@ void setupIndicator() {
         }
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
+            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     } else if (is_tty.std_err) {
         while (spinner_state == SpinnerState::Active) {
-            output_length = fprintf(stderr, replaceColors(working_message).data(), doing_action[action].data(), 0, "%", "");
+            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), 0, "%", "");
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
@@ -731,7 +710,7 @@ void setupIndicator() {
         fprintf(stderr, "\r%*s\r", output_length, "");
     }
     if (spinner_state == SpinnerState::Cancel) {
-        fprintf(stderr, replaceColors(cancelled_message).data(), actions[action].data());
+        fprintf(stderr, cancelled_message().data(), actions[action].data());
         fflush(stderr);
         _exit(EXIT_FAILURE);
     }
@@ -779,7 +758,7 @@ void checkItemSize() {
         const unsigned long long space_available = fs::space(filepath.main).available;
         if (total_item_size > (space_available / 2)) {
             stopIndicator();
-            fprintf(stderr, replaceColors(not_enough_storage_message).data(), total_item_size / 1024.0, space_available / 1024.0);
+            fprintf(stderr, not_enough_storage_message().data(), total_item_size / 1024.0, space_available / 1024.0);
             exit(EXIT_FAILURE);
         }
     }
@@ -812,7 +791,7 @@ int getUserDecision(const std::string& item) {
     if (userIsARobot()) {
         return 2;
     }
-    fprintf(stderr, replaceColors(item_already_exists_message).data(), item.data());
+    fprintf(stderr, item_already_exists_message().data(), item.data());
     std::string decision;
     while (true) {
         std::getline(std::cin, decision);
@@ -826,7 +805,7 @@ int getUserDecision(const std::string& item) {
         } else if (decision == "na" || decision == "noall") {
             return -2;
         } else {
-            fprintf(stderr, "%s", replaceColors(bad_response_message).data());
+            fprintf(stderr, "%s", bad_response_message().data());
         }
     }
 }
@@ -867,31 +846,31 @@ void updateGUIClipboard() {
 
 void showFailures() {
     if (copying.failedItems.size() > 0) {
-        printf(replaceColors(clipboard_failed_message).data(), actions[action].data());
+        printf(clipboard_failed_message().data(), actions[action].data());
         for (int i = 0; i < std::min(5, static_cast<int>(copying.failedItems.size())); i++) {
             printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
             if (i == 4 && copying.failedItems.size() > 5) {
-                printf(replaceColors(and_more_fails_message).data(), int(copying.failedItems.size() - 5));
+                printf(and_more_fails_message().data(), int(copying.failedItems.size() - 5));
             }
         }
-        printf("%s", replaceColors(fix_problem_message).data());
+        printf("%s", fix_problem_message().data());
     }
 }
 
 void showSuccesses() {
     if (action == Action::PipeIn || action == Action::PipeOut && is_tty.std_err) {
-        fprintf(stderr, replaceColors(pipe_success_message).data(), did_action[action].data(), static_cast<int>(successes.bytes));
+        fprintf(stderr, pipe_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
         return;
     }
     if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
-        printf(replaceColors(one_item_success_message).data(), did_action[action].data(), action == Action::Paste ? (*(fs::directory_iterator(filepath.main))).path().filename().string().data() : copying.items.at(0).string().data());
+        printf(one_item_success_message().data(), did_action[action].data(), action == Action::Paste ? (*(fs::directory_iterator(filepath.main))).path().filename().string().data() : copying.items.at(0).string().data());
     } else {
         if ((successes.files > 1) && (successes.directories == 0)) {
-            printf(replaceColors(multiple_files_success_message).data(), did_action[action].data(), static_cast<int>(successes.files));
+            printf(multiple_files_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
         } else if ((successes.files == 0) && (successes.directories > 1)) {
-            printf(replaceColors(multiple_directories_success_message).data(), did_action[action].data(), static_cast<int>(successes.directories));
+            printf(multiple_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
         } else if ((successes.files >= 1) && (successes.directories >= 1)) {
-            printf(replaceColors(multiple_files_directories_success_message).data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+            printf(multiple_files_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
         }
     }
 }
@@ -937,7 +916,7 @@ int main(int argc, char *argv[]) {
         showSuccesses();
     } catch (const std::exception& e) {
         if (stopIndicator()) {
-            fprintf(stderr, replaceColors(internal_error_message).data(), e.what());
+            fprintf(stderr, internal_error_message().data(), e.what());
         }
         exit(EXIT_FAILURE);
     }

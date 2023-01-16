@@ -56,7 +56,7 @@ ActionArray<std::string_view, 8> did_action = {{
     "Edited"
 }};
 
-std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
+Message help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
                                 "{blue}{bold}▏How To Use{blank}\n"
                                 "{orange}▏clipboard cut (item) [items]{blank} {pink}(This cuts an item or items.){blank}\n"
                                 "{orange}▏clipboard copy (item) [items]{blank} {pink}(This copies an item or items.){blank}\n"
@@ -84,34 +84,34 @@ std::string_view help_message = "{blue}▏This is Clipboard %s, the cut, copy, a
                                 "{blue}▏You can also get more help in our Discord server at {bold}https://discord.gg/J6asnc3pEG{blank}\n"
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
-std::string_view check_clipboard_status_message = "{blue}• There are items in these clipboards:\n";
-std::string_view clipboard_item_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
-std::string_view clipboard_text_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} bytes in clipboard {bold}%s{blank}{blue}: {blank}\n";
-std::string_view no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
-std::string_view clipboard_action_prompt = "{pink}Add {bold}cut, copy, {blank}{pink}or{bold} paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
-std::string_view no_valid_action_message = "{red}╳ You did not specify a valid action ({bold}\"%s\"{blank}{red}), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
-std::string_view choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
-std::string_view fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
-std::string_view redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
-std::string_view paste_success_message = "{green}✓ Pasted successfully{blank}\n";
-std::string_view clear_success_message = "{green}✓ Cleared the clipboard{blank}\n";
-std::string_view clear_fail_message = "{red}╳ Failed to clear the clipboard{blank}\n";
-std::string_view clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
-std::string_view and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
-std::string_view and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
-std::string_view fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
+Message check_clipboard_status_message = "{blue}• There are items in these clipboards:\n";
+Message clipboard_item_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
+Message clipboard_text_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} bytes in clipboard {bold}%s{blank}{blue}: {blank}\n";
+Message no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
+Message clipboard_action_prompt = "{pink}Add {bold}cut, copy, {blank}{pink}or{bold} paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
+Message no_valid_action_message = "{red}╳ You did not specify a valid action ({bold}\"%s\"{blank}{red}), or you forgot to include one. {pink}Try using or adding {bold}cut, copy, {blank}{pink}or {bold}paste{blank}{pink} instead, like {bold}clipboard copy.{blank}\n";
+Message choose_action_items_message = "{red}╳ You need to choose something to %s.{pink} Try adding the items you want to %s to the end, like {bold}clipboard %s contacts.txt myprogram.cpp{blank}\n";
+Message fix_redirection_action_message = "{red}╳ You can't use the {bold}%s{blank}{red} action with redirection here. {pink}Try removing {bold}%s{blank}{pink} or use {bold}%s{blank}{pink} instead, like {bold}clipboard %s{blank}{pink}.\n";
+Message redirection_no_items_message = "{red}╳ You can't specify items when you use redirection. {pink}Try removing the items that come after {bold}clipboard [action].\n";
+Message paste_success_message = "{green}✓ Pasted successfully{blank}\n";
+Message clear_success_message = "{green}✓ Cleared the clipboard{blank}\n";
+Message clear_fail_message = "{red}╳ Failed to clear the clipboard{blank}\n";
+Message clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
+Message and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
+Message and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
+Message fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-std::string_view not_enough_storage_message = "{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
-std::string_view item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ";
-std::string_view bad_response_message = "{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ";
-std::string_view working_message = "{yellow}• %s... %i%s %s{blank}\r";
-std::string_view cancelled_message = "{green}✓ Cancelled %s{blank}\n";
-std::string_view pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
-std::string_view one_item_success_message = "{green}✓ %s %s{blank}\n";
-std::string_view multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
-std::string_view multiple_directories_success_message = "{green}✓ %s %i directories{blank}\n";
-std::string_view multiple_files_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
-std::string_view internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking permissions on this system.{blank}\n";
+Message not_enough_storage_message = "{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
+Message item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ";
+Message bad_response_message = "{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ";
+Message working_message = "{yellow}• %s... %i%s %s{blank}\r";
+Message cancelled_message = "{green}✓ Cancelled %s{blank}\n";
+Message pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+Message one_item_success_message = "{green}✓ %s %s{blank}\n";
+Message multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
+Message multiple_directories_success_message = "{green}✓ %s %i directories{blank}\n";
+Message multiple_files_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
+Message internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking permissions on this system.{blank}\n";
 
 void setLanguageES() {
     actions[Action::Cut] = "cortar";

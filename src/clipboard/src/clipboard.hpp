@@ -94,34 +94,66 @@ extern ActionArray<std::string_view, 8> action_shortcuts;
 extern ActionArray<std::string_view, 8> doing_action;
 extern ActionArray<std::string_view, 8> did_action;
 
-extern std::string_view help_message;
-extern std::string_view check_clipboard_status_message;
-extern std::string_view clipboard_item_contents_message;
-extern std::string_view clipboard_text_contents_message;
-extern std::string_view no_clipboard_contents_message;
-extern std::string_view clipboard_action_prompt;
-extern std::string_view no_valid_action_message;
-extern std::string_view choose_action_items_message;
-extern std::string_view fix_redirection_action_message;
-extern std::string_view redirection_no_items_message;
-extern std::string_view paste_success_message;
-extern std::string_view clear_success_message;
-extern std::string_view clear_fail_message;
-extern std::string_view clipboard_failed_message;
-extern std::string_view and_more_fails_message;
-extern std::string_view and_more_items_message;
-extern std::string_view fix_problem_message;
-extern std::string_view not_enough_storage_message;
-extern std::string_view item_already_exists_message;
-extern std::string_view bad_response_message;
-extern std::string_view working_message;
-extern std::string_view cancelled_message;
-extern std::string_view pipe_success_message;
-extern std::string_view one_item_success_message;
-extern std::string_view multiple_files_success_message;
-extern std::string_view multiple_directories_success_message;
-extern std::string_view multiple_files_directories_success_message;
-extern std::string_view internal_error_message;
+static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
+    {"{red}", "\033[38;5;196m"},
+    {"{green}", "\033[38;5;40m"},
+    {"{yellow}", "\033[38;5;214m"},
+    {"{blue}", "\033[38;5;51m"},
+    {"{orange}", "\033[38;5;208m"},
+    {"{pink}", "\033[38;5;219m"},
+    {"{bold}", "\033[1m"},
+    {"{blank}", "\033[0m"}
+}};
+
+static std::string replaceColors(const std::string_view& str) {
+    std::string temp(str); //a string to do scratch work on
+    for (const auto& key : colors) { //iterate over all the possible colors to replace
+        for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
+            temp.replace(i, key.first.length(), key.second);
+        }
+    }
+    return temp;
+}
+
+class Message {
+private:
+    std::string_view internal_message;
+public:
+    Message() = default;
+    Message(const auto& message) : internal_message(std::move(message)) {}
+    void operator = (const auto& message) { internal_message = std::move(message); }
+    std::string operator()() const { return std::move(replaceColors(internal_message)); }
+    auto length() const { return std::move(internal_message.length()); }
+};
+
+extern Message help_message;
+extern Message check_clipboard_status_message;
+extern Message clipboard_item_contents_message;
+extern Message clipboard_text_contents_message;
+extern Message no_clipboard_contents_message;
+extern Message clipboard_action_prompt;
+extern Message no_valid_action_message;
+extern Message choose_action_items_message;
+extern Message fix_redirection_action_message;
+extern Message redirection_no_items_message;
+extern Message paste_success_message;
+extern Message clear_success_message;
+extern Message clear_fail_message;
+extern Message clipboard_failed_message;
+extern Message and_more_fails_message;
+extern Message and_more_items_message;
+extern Message fix_problem_message;
+extern Message not_enough_storage_message;
+extern Message item_already_exists_message;
+extern Message bad_response_message;
+extern Message working_message;
+extern Message cancelled_message;
+extern Message pipe_success_message;
+extern Message one_item_success_message;
+extern Message multiple_files_success_message;
+extern Message multiple_directories_success_message;
+extern Message multiple_files_directories_success_message;
+extern Message internal_error_message;
 
 void setLanguagePT();
 void setLanguageTR();
