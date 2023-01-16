@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        gcc: [ 11, 12 ]
+        gcc: [ 10, 11, 12 ]
         x11: [ "1", "0" ]
         wayland: [ "1", "0" ]
 

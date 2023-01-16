@@ -15,7 +15,7 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 
 - **Quick.** Zero configuration needed to use.
 - **Easy.** Friendly to newbies and power users alike.
-- **Compatible.** Works on any system that supports C++23. Really!
+- **Compatible.** Works on any system that supports C++20. Really!
 - **Unified.** Functions exactly the same everywhere.
 - **Universal.** Supports English, Spanish, Portuguese, and Turkish.
 - **Integrated.** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
@@ -27,7 +27,7 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
 ```
-### **Windows** 
+### **Windows (run as Administrator)** 
 ```powershell
 (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
 ```
