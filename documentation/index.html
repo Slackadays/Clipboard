@@ -14,20 +14,37 @@
                 font-style: normal;
             }
 
+            @font-face {
+                font-family: 'Lobster Two';
+                src: url('fonts/lobster_two/LobsterTwo-BoldItalic.ttf');
+                font-weight: normal;
+                font-style: normal;
+            }
+
             html {
-                background: rgb(255, 162, 39);
+                background: rgb(255, 178, 65);
             }
 
             body {
                 max-width: 50%;
                 margin: 0 auto;
                 font-family: 'Courier New', Courier, monospace;
+                box-shadow: 0 0 40px 5px black;
+                padding-left: 25px;
+                padding-right: 25px;
             }
 
             img {
-                width: 100%;
+                max-width: 100%;
                 margin-top: 25px;
                 margin-bottom: 25px;
+            }
+
+            h1 {
+                font-family: 'Lobster Two';
+                font-size: 8em;
+                text-align: center;
+                padding: 10px;
             }
 
             h2 {
@@ -39,6 +56,7 @@
             }
 
             p {
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
                 text-align: center;
                 font-size: 2em;
                 font-weight: bold;
@@ -51,28 +69,38 @@
             @media screen and (max-width: 800px) {
                 body {
                     max-width: 98%;
+                    box-shadow: none;
+                }
+                h1 {
+                    font-size: 3em;
+                    box-shadow: 0 0 40px 5px black;
                 }
                 h2 {
-                    font-size: 2.5em;
+                    font-size: 2em;
                 }
                 p {
-                    font-size: 1.5em;
+                    font-size: 1.4em;
                 }
             }
         </style>
     </head>
     <body>
-        <img src="readme-banners/CBBanner.png">
+        <h1>
+            The Clipboard Project
+        </h1>
         <h2>
-            Welcome to the Clipboard project!
+            Introduction
         </h2>
         <p>
-            Clipboard is a free and open source power tool that lets you cut, copy, and paste anything, anywhere, all in the terminal.            
+            Clipboard by Jackson Huff is a free and open source power tool that lets you cut, copy, and paste anything, anywhere, all in the terminal.
+        </p>
+        <h2>
+            Get Started
+        </h2>
+        <p>
+            Head on over to <a href="https://github.com/Slackadays/Clipboard">the official GitHub repository page</a> for more info!<br><br>
+            Join <a href="https://discord.gg/J6asnc3pEG">the Discord server</a> for discussions about Clipboard.
         </p>
         <img src="readme-banners/CBDemo.png">
-        <p>
-            Read all about Clipboard and install it at <a href="https://github.com/Slackadays/Clipboard">the GitHub page</a>, which is where all development takes place.
-            Discussions about the Clipboard project are held in <a href="https://discord.gg/J6asnc3pEG">the Discord server.</a>
-        </p>
     </body>
 </html>
