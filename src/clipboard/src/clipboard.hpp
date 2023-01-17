@@ -121,7 +121,6 @@ private:
 public:
     Message(const auto& message) : internal_message(std::move(message)) {}
     std::string operator()() const { return std::move(replaceColors(internal_message)); }
-    auto length() const { return std::move(internal_message.length()); }
 };
 
 extern Message help_message;
