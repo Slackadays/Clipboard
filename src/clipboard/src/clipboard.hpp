@@ -119,9 +119,7 @@ class Message {
 private:
     std::string_view internal_message;
 public:
-    Message() = default;
     Message(const auto& message) : internal_message(std::move(message)) {}
-    void operator = (const auto& message) { internal_message = std::move(message); }
     std::string operator()() const { return std::move(replaceColors(internal_message)); }
     auto length() const { return std::move(internal_message.length()); }
 };
