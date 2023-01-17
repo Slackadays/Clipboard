@@ -2,27 +2,51 @@ name: Clipboard Builds
 
 on: [ push, pull_request ]
 jobs:
-  build-linux_x11_wayland-amd64:
+  build-linux_x11_wayland:
     runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
       matrix:
         gcc: [ 10, 11, 12 ]
+        arch: [ i386, amd64 ]
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a multi-line script
         run: |
-          sudo apt update
-          sudo apt install -y g++-${{ matrix.gcc }} libx11-dev libwayland-dev
+          GPP_PACKAGE=""
+          GPP_NAME="g++"
+          if [[ "${{ matrix.arch }}" == "i386" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}-i686-linux-gnu"
+            GPP_NAME="i686-linux-gnu-g++-${{ matrix.gcc }}"
+          fi
+          
+          if [[ "${{ matrix.arch }}" == "amd64" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}"
+            GPP_NAME="x86_64-linux-gnu-g++-${{ matrix.gcc }}"
+          fi
+          
+          sudo dpkg --add-architecture "${{ matrix.arch }}"
+          sudo apt-get update
+          sudo apt-get install -y \
+            "${GPP_PACKAGE}" \
+            "libx11-dev:${{ matrix.arch }}" \
+            "libwayland-dev:${{ matrix.arch }}"
+          
           cd build
-          cmake .. "-DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }}" "-DCMAKE_BUILD_TYPE=MinSizeRel"
+          
+          cmake .. \
+            "-DCMAKE_CXX_COMPILER=${GPP_NAME}" \
+            "-DCMAKE_BUILD_TYPE=MinSizeRel"
+          
           cmake --build .
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-linux-gcc${{ matrix.gcc }}-amd64
+          name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch }}
           path: build/output
   build-macos-amd64:
     runs-on: macos-11

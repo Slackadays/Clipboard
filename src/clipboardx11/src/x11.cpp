@@ -229,6 +229,10 @@ private:
     std::size_t m_size;
 
 public:
+    using format8_t = std::uint8_t;
+    using format16_t = std::uint16_t;
+    using format32_t = std::conditional<sizeof(void*) == sizeof(std::uint64_t), std::uint64_t, std::uint32_t>::type;
+
     enum Value : std::size_t {
         Format8 = 8,
         Format16 = 16,
@@ -237,9 +241,9 @@ public:
 
     constexpr X11PropertyFormat(Value value) : X11PropertyFormat(
         static_cast<std::size_t>(value),
-        value == Format8 ? sizeof(std::uint8_t) :
-        value == Format8 ? sizeof(std::uint16_t) :
-        sizeof(std::uint64_t) // No, this is not a mistake. libx11 uses a 64-bit int for the 32 format
+        value == Format8 ? sizeof(format8_t) :
+        value == Format16 ? sizeof(format16_t) :
+        sizeof(format32_t)
     ) { }
 
     [[nodiscard]] inline std::size_t size() const { return m_size; }
@@ -251,19 +255,8 @@ public:
         return { static_cast<Value>(value) };
     }
 
-    static X11PropertyFormat fromSize(std::size_t size) {
-        if (size == sizeof(std::uint8_t)) {
-            return Format8;
-        }
-        if (size == sizeof(std::uint16_t)) {
-            return Format16;
-        }
-        if (size == sizeof(std::uint64_t)) {
-            return Format32;
-        }
-
-        throw X11Exception("Invalid format size");
-    }
+    template<std::size_t char_t>
+    constexpr static inline X11PropertyFormat fromSize();
 };
 
 enum class X11PropertyMode : int {
@@ -278,7 +271,7 @@ private:
     X11Atom const& m_type;
     X11PropertyFormat m_format;
 
-    std::variant<std::uint8_t const*, std::unique_ptr<std::uint8_t[]>> m_data8;
+    std::variant<X11PropertyFormat::format8_t const*, std::unique_ptr<X11PropertyFormat::format8_t[]>> m_data8;
     std::size_t m_size8;
 
 public:
@@ -295,21 +288,21 @@ public:
     [[nodiscard]] std::size_t size() const { return m_size8 / m_format.size(); }
 
     [[nodiscard]] std::size_t size8() const { return m_size8; }
-    [[nodiscard]] std::size_t size16() const { return size8() / X11PropertyFormat{X11PropertyFormat::Format16}.size(); }
-    [[nodiscard]] std::size_t size32() const { return size8() / X11PropertyFormat{X11PropertyFormat::Format32}.size(); }
+    [[nodiscard]] std::size_t size16() const { return size8() / sizeof(X11PropertyFormat::format16_t); }
+    [[nodiscard]] std::size_t size32() const { return size8() / sizeof(X11PropertyFormat::format32_t); }
 
-    [[nodiscard]] std::uint8_t const* data8() const {
-        return std::visit([](auto&& arg) -> std::uint8_t const* {
+    [[nodiscard]] X11PropertyFormat::format8_t const* data8() const {
+        return std::visit([](auto&& arg) -> X11PropertyFormat::format8_t const* {
             using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, uint8_t const*>)
+            if constexpr (std::is_same_v<T, X11PropertyFormat::format8_t const*>)
                 return arg;
             else
                 return arg.get();
         }, m_data8);
     }
 
-    [[nodiscard]] std::uint16_t const* data16() const { return reinterpret_cast<std::uint16_t const*>(data8()); }
-    [[nodiscard]] std::uint64_t const* data32() const { return reinterpret_cast<std::uint64_t const*>(data8()); }
+    [[nodiscard]] X11PropertyFormat::format16_t const* data16() const { return reinterpret_cast<X11PropertyFormat::format16_t const*>(data8()); }
+    [[nodiscard]] X11PropertyFormat::format32_t const* data32() const { return reinterpret_cast<X11PropertyFormat::format32_t const*>(data8()); }
 
     [[nodiscard]] X11PropertyIterator begin() const;
     [[nodiscard]] X11PropertyIterator end() const;
@@ -325,7 +318,7 @@ private:
 public:
     X11PropertyIterator(X11Property const& property, std::size_t offset) : m_property(property), m_offset(offset) { }
 
-    std::uint64_t operator*() const;
+    X11PropertyFormat::format32_t operator*() const;
     X11PropertyIterator& operator++();
     std::partial_ordering operator<=>(X11PropertyIterator const&) const;
 
@@ -831,6 +824,26 @@ std::shared_ptr<X11Window> X11Connection::externalWindow(Window window) {
     return result;
 }
 
+template<>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format8_t)>() { return X11PropertyFormat::Format8; }
+
+template<>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format16_t)>() { return X11PropertyFormat::Format16; }
+
+template<>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format32_t)>() { return X11PropertyFormat::Format32; }
+
+template<std::size_t T>
+struct AssertFalse : std::false_type
+{ };
+
+template<std::size_t bad_t>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize() {
+    static_assert(AssertFalse<bad_t>::value);
+    return X11PropertyFormat::Format8; // Just here to make the compiler happy
+}
+
+
 template<ranges::contiguous_range range_t, typename char_t>
 X11Property::X11Property(
     X11Atom const& name,
@@ -840,7 +853,7 @@ X11Property::X11Property(
 ) : X11Property(
     name,
     type,
-    X11PropertyFormat::fromSize(sizeof(char_t)),
+    X11PropertyFormat::fromSize<sizeof(char_t)>(),
     data,
     owned
 ) { }
@@ -857,11 +870,11 @@ X11Property::X11Property(
   , m_format(format)
   , m_size8(data.size() * sizeof(char_t)) {
     if (owned) {
-        auto data8 = std::make_unique<std::uint8_t[]>(m_size8);
+        auto data8 = std::make_unique<X11PropertyFormat::format8_t[]>(m_size8);
         std::memcpy(data8.get(), &data[0], m_size8);
-        m_data8.emplace<std::unique_ptr<std::uint8_t[]>>(std::move(data8));
+        m_data8.emplace<std::unique_ptr<X11PropertyFormat::format8_t[]>>(std::move(data8));
     } else {
-        m_data8.emplace<std::uint8_t const*>(reinterpret_cast<std::uint8_t const*>(&data[0]));
+        m_data8.emplace<X11PropertyFormat::format8_t const*>(reinterpret_cast<X11PropertyFormat::format8_t const*>(&data[0]));
     }
 }
 
@@ -895,7 +908,7 @@ std::partial_ordering X11PropertyIterator::operator<=>(X11PropertyIterator const
     return m_offset <=> other.m_offset;
 }
 
-std::uint64_t X11PropertyIterator::operator*() const {
+X11PropertyFormat::format32_t X11PropertyIterator::operator*() const {
     auto pointer8 = m_property.data8() + (m_property.format().size() * m_offset);
 
     if (m_property.format() == X11PropertyFormat::Format8) {
@@ -903,11 +916,11 @@ std::uint64_t X11PropertyIterator::operator*() const {
     }
 
     if (m_property.format() == X11PropertyFormat::Format16) {
-        return *reinterpret_cast<std::uint16_t const*>(pointer8);
+        return *reinterpret_cast<X11PropertyFormat::format16_t const*>(pointer8);
     }
 
     if (m_property.format() == X11PropertyFormat::Format32) {
-        return *reinterpret_cast<std::uint64_t const*>(pointer8);
+        return *reinterpret_cast<X11PropertyFormat::format32_t const*>(pointer8);
     }
 
     throw X11Exception("Unknown property format");
@@ -1057,9 +1070,9 @@ X11Property X11Window::getProperty(X11Atom const& name, bool delet) {
 
     Atom actualTypeReturn = None;
     int actualFormatReturn = 0;
-    std::size_t nitemsReturn = 0;
-    std::size_t bytesAfterReturn = 0;
-    std::uint8_t* propReturn = nullptr;
+    unsigned long nitemsReturn = 0;
+    unsigned long bytesAfterReturn = 0;
+    unsigned char* propReturn = nullptr;
 
     X_CALL(XGetWindowProperty,
        /*display*/ display(),
@@ -1488,8 +1501,8 @@ bool X11SelectionDaemon::handleMultipleSelectionRequest(X11SelectionRequest cons
         return refuseSelectionRequest(request);
     }
 
-    std::vector<std::uint64_t> result;
-    std::optional<std::uint64_t> target;
+    std::vector<X11PropertyFormat::format32_t> result;
+    std::optional<X11PropertyFormat::format32_t> target;
     for (auto&& value : *pairs) {
         if (!target) {
             target = value;
@@ -1509,7 +1522,7 @@ bool X11SelectionDaemon::handleMultipleSelectionRequest(X11SelectionRequest cons
 }
 
 bool X11SelectionDaemon::handleTargetsSelectionRequest(X11SelectionRequest const& request) {
-    std::vector<std::uint64_t> data {
+    std::vector<X11PropertyFormat::format32_t> data {
         atom(atomTargets).value(),
         atom(atomMultiple).value(),
         atom(atomTimestamp).value(),
@@ -1531,8 +1544,7 @@ bool X11SelectionDaemon::handleTimestampSelectionRequest(X11SelectionRequest con
     debugStream << "Got a TIMESTAMP request" << std::endl;
     debugStream << "Replying with: " << m_selectionAcquiredTime << std::endl;
 
-    std::vector<std::uint64_t> data { m_selectionAcquiredTime };
-    return replySelectionRequest(event, atom(atomInteger), data);
+    return replySelectionRequest(event, atom(atomInteger), ranges::single_view(m_selectionAcquiredTime));
 }
 
 bool X11SelectionDaemon::handleRegularSelectionRequest(X11SelectionRequest const& request) {
