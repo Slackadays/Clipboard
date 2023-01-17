@@ -4,6 +4,8 @@ set +e
 
 if [ "$(uname)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ]
 then
+    tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
+    cd $tmp_dir
     curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip -o clipboard-linux-amd64.zip
     unzip clipboard-linux-amd64.zip
     rm clipboard-linux-amd64.zip
@@ -18,20 +20,22 @@ then
     then
         sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
     fi
-    rm -r bin lib
+    rm -rf $tmp_dir
     echo "Installed Clipboard"
     exit 0
 fi
 
 if [ "$(uname)" = "Darwin" ] && [ "$(uname -m)" = "x86_64" ]
 then
+    tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
+    cd $tmp_dir
     curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-macos-amd64.zip -o clipboard-macos-amd64.zip
     unzip clipboard-macos-amd64.zip
     rm clipboard-macos-amd64.zip
     sudo mv bin/clipboard /usr/local/bin/clipboard
     chmod +x /usr/local/bin/clipboard
     sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
-    rm -r bin lib
+    rm -rf $tmp_dir
     echo "Installed Clipboard"
     exit 0
 fi
