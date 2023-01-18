@@ -35,10 +35,10 @@ jobs:
             GPP_PACKAGE="g++-${{ matrix.gcc }}-aarch64-linux-gnu"
             GPP_NAME="aarch64-linux-gnu-g++-${{ matrix.gcc }}"
             # add arm64 architecture from Ubuntu ports
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy main multiverse universe" >> /etc/apt/sources.list
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" >> /etc/apt/sources.list
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-security main multiverse universe" >> /etc/apt/sources.list
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" >> /etc/apt/sources.list
+            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
           fi
 
           if [[ "${{ matrix.arch }}" == "riscv64" ]]
@@ -46,10 +46,10 @@ jobs:
             GPP_PACKAGE="g++-${{ matrix.gcc }}-riscv64-linux-gnu"
             GPP_NAME="riscv64-linux-gnu-g++-${{ matrix.gcc }}"
             # add riscv64 architecture from Ubuntu ports
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy main multiverse universe" >> /etc/apt/sources.list
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" >> /etc/apt/sources.list
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-security main multiverse universe" >> /etc/apt/sources.list
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" >> /etc/apt/sources.list
+            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
           fi
           
           sudo dpkg --add-architecture "${{ matrix.arch }}"
