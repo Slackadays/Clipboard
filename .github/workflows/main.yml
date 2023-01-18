@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         gcc: [ 10, 11, 12 ]
-        arch: [ i386, amd64 ]
+        arch: [ i386, amd64, arm64, riscv64 ]
 
     steps:
       - uses: actions/checkout@v3
@@ -28,6 +28,18 @@ jobs:
           then
             GPP_PACKAGE="g++-${{ matrix.gcc }}"
             GPP_NAME="x86_64-linux-gnu-g++-${{ matrix.gcc }}"
+          fi
+
+          if [[ "${{ matrix.arch }}" == "arm64" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}-aarch64-linux-gnu"
+            GPP_NAME="aarch64-linux-gnu-g++-${{ matrix.gcc }}"
+          fi
+
+          if [[ "${{ matrix.arch }}" == "riscv64" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}-riscv64-linux-gnu"
+            GPP_NAME="riscv64-linux-gnu-g++-${{ matrix.gcc }}"
           fi
           
           sudo dpkg --add-architecture "${{ matrix.arch }}"
