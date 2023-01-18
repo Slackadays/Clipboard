@@ -2,27 +2,46 @@
 set -uxo pipefail
 set +e
 
-if [ "$(uname)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ]
+if [ "$(uname)" = "Linux" ]
 then
     tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
     cd $tmp_dir
-    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip -o clipboard-linux-amd64.zip
-    unzip clipboard-linux-amd64.zip
-    rm clipboard-linux-amd64.zip
-    sudo mv bin/clipboard /usr/bin/clipboard
-    chmod +x /usr/bin/clipboard
-    sudo ln -sf /usr/bin/clipboard /usr/bin/cb
-    if [ -f "lib/libclipboardx11.so" ]
+    if [ "$(uname -m)" = "x86_64" ]
     then
-        sudo mv lib/libclipboardx11.so /usr/lib/libclipboardx11.so
-    fi
-    if [ -f "lib/libclipboardwayland.so" ]
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip
+    elif [ "$(uname -m)" = "aarch64" ]
     then
-        sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-arm64.zip
+    elif [ "$(uname -m)" = "riscv64" ]
+    then
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-riscv64.zip
+    elif [ "$(uname -m)" = "i386" ]
+    then
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-i386.zip
+    else
+        download_link="skip"
     fi
-    rm -rf $tmp_dir
-    echo "Installed Clipboard"
-    exit 0
+    #check if download_link is NOT equal to skip
+    if [ "$download_link" != "skip" ]
+    then
+        curl -SsLl $download_link -o clipboard-linux.zip
+        unzip clipboard-linux.zip
+        rm clipboard-linux.zip
+        sudo mv bin/clipboard /usr/bin/clipboard
+        chmod +x /usr/bin/clipboard
+        sudo ln -sf /usr/bin/clipboard /usr/bin/cb
+        if [ -f "lib/libclipboardx11.so" ]
+        then
+            sudo mv lib/libclipboardx11.so /usr/lib/libclipboardx11.so
+        fi
+        if [ -f "lib/libclipboardwayland.so" ]
+        then
+            sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
+        fi
+        rm -rf $tmp_dir
+        echo "Installed Clipboard"
+        exit 0
+    fi
 fi
 
 if [ "$(uname)" = "Darwin" ] && [ "$(uname -m)" = "x86_64" ]
