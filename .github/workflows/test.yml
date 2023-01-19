@@ -64,7 +64,7 @@ jobs:
           export TMPDIR=/tmp
           bash ../tests/suite.sh
   
-  test-macos-amd64:
+  test-macos-arm64-amd64:
     runs-on: macos-latest
 
     steps:

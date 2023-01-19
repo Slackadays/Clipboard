@@ -73,7 +73,7 @@ jobs:
         with:
           name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch }}
           path: build/output
-  build-macos-amd64:
+  build-macos-arm64-amd64:
     runs-on: macos-latest
 
     steps:
@@ -86,7 +86,7 @@ jobs:
           cmake --build .
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-macos-amd64
+          name: clipboard-macos-arm64-amd64
           path: build/output
   build-windows-amd64:
     runs-on: windows-latest

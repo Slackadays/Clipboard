@@ -44,13 +44,13 @@ then
     fi
 fi
 
-if [ "$(uname)" = "Darwin" ] && [ "$(uname -m)" = "x86_64" ]
+if [ "$(uname)" = "Darwin" ]
 then
     tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
     cd $tmp_dir
-    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-macos-amd64.zip -o clipboard-macos-amd64.zip
-    unzip clipboard-macos-amd64.zip
-    rm clipboard-macos-amd64.zip
+    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-macos-arm64-amd64.zip -o clipboard-macos.zip
+    unzip clipboard-macos.zip
+    rm clipboard-macos.zip
     sudo mv bin/clipboard /usr/local/bin/clipboard
     chmod +x /usr/local/bin/clipboard
     sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
