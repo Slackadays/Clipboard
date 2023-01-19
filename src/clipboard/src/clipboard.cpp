@@ -559,12 +559,11 @@ void setAction(int& argc, char *argv[]) {
         return false;
     };
     if (argc >= 2) {
-        using enum Action;
-        for (const auto& entry : {Cut, Copy, Paste, Show, Clear, Edit}) {
+        for (const auto& entry : {Action::Cut, Action::Copy, Action::Paste, Action::Show, Action::Clear, Action::Edit}) {
             if (flagIsPresent(actions[entry], "--") || flagIsPresent(action_shortcuts[entry], "-")) { //replace with join_with_view when C++23 becomes available
                 action = entry;
-                if (action == Copy && !is_tty.in) { action = PipeIn; }
-                if (action == Paste && !is_tty.out) { action = PipeOut; }
+                if (action == Action::Copy && !is_tty.in) { action = Action::PipeIn; }
+                if (action == Action::Paste && !is_tty.out) { action = Action::PipeOut; }
                 return;
             }
         }
@@ -602,11 +601,10 @@ void verifyAction(int& argc) {
         fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[tryThisAction].data(), actions[tryThisAction].data());
         exit(EXIT_FAILURE);
     };
-    using enum Action;
-    if (action == Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Copy); }
-    if (action == Copy && !is_tty.out) { tryThisInstead(Paste); }
-    if (action == Paste && !is_tty.in) { tryThisInstead(Copy); }
-    if ((action == PipeIn || action == PipeOut) && argc >= 3) {
+    if (action == Action::Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Action::Copy); }
+    if (action == Action::Copy && !is_tty.out) { tryThisInstead(Action::Paste); }
+    if (action == Action::Paste && !is_tty.in) { tryThisInstead(Action::Copy); }
+    if ((action == Action::PipeIn || action == Action::PipeOut) && argc >= 3) {
         fprintf(stderr, "%s", redirection_no_items_message().data());
         exit(EXIT_FAILURE);
     }
@@ -770,36 +768,34 @@ int getUserDecision(const std::string& item) {
 }
 
 void performAction() {
-    using enum Action;
     switch (action) {
-        case Copy:
-        case Cut:
+        case Action::Copy:
+        case Action::Cut:
             PerformAction::copy();
             break;
-        case Paste:
+        case Action::Paste:
             PerformAction::paste();
             break;
-        case PipeIn:
+        case Action::PipeIn:
             PerformAction::pipeIn();
             break;
-        case PipeOut:
+        case Action::PipeOut:
             PerformAction::pipeOut();
             break;
-        case Clear:
+        case Action::Clear:
             PerformAction::clear();
             break;
-        case Show:
+        case Action::Show:
             PerformAction::show();
             break;
-        case Edit:
+        case Action::Edit:
             PerformAction::edit();
             break;
     }
 }
 
 void updateGUIClipboard() {
-    using enum Action;
-    if ((action == Cut || action == Copy || action == PipeIn || action == Clear) && !getenv("CLIPBOARD_NOGUI")) { //only update GUI clipboard on write operations
+    if ((action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear) && !getenv("CLIPBOARD_NOGUI")) { //only update GUI clipboard on write operations
         ClipboardContent thisClipboard = getThisClipboard();
         writeToGUIClipboard(thisClipboard);
     }
