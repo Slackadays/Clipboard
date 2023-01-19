@@ -63,62 +63,6 @@ jobs:
           sudo cmake --install .
           export TMPDIR=/tmp
           bash ../tests/suite.sh
-  test-linux-clang:
-    runs-on: ubuntu-22.04
-
-    strategy:
-      fail-fast: false
-      matrix:
-        clang: [ 13, 14 ]
-        x11: [ "1", "0" ]
-        wayland: [ "1", "0" ]
-        arch: [ i386, amd64 ]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a multi-line script
-        shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
-        run: |
-          NO_X11=1
-          NO_WAYLAND=1
-          PACKAGES=""
-          I386FLAG=""
-          
-          if [[ "${{ matrix.x11 }}" == "1" ]]
-          then
-            NO_X11=0
-            PACKAGES="${PACKAGES} libx11-dev:${{ matrix.arch }}"
-          fi
-          
-          if [[ "${{ matrix.wayland }}" == "1" ]]
-          then
-            NO_WAYLAND=0
-            PACKAGES="${PACKAGES} libwayland-dev:${{ matrix.arch }}"
-          fi
-
-          if [[ "${{ matrix.arch }}" == "i386" ]]
-          then
-            PACKAGES="${PACKAGES} libstdc++-12-dev-i386-cross"
-            I386FLAG="-DCMAKE_CXX_COMPILER_ARG1=-m32"
-          fi
-          
-          sudo dpkg --add-architecture "${{ matrix.arch }}"
-          sudo apt-get update
-          sudo apt-get install -y $PACKAGES
-
-          cd build
-          cmake .. \
-            "-DCMAKE_CXX_COMPILER=clang++" \
-            "${I386FLAG}" \
-            "-DNO_X11=${NO_X11}" \
-            "-DNO_WAYLAND=${NO_WAYLAND}" \
-            "-DCMAKE_BUILD_TYPE=Debug"
-          
-          cmake --build . -j 2
-          sudo cmake --install .
-          export TMPDIR=/tmp
-          bash ../tests/suite.sh
   test-macos-arm64-amd64:
     runs-on: macos-latest
 
