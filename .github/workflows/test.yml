@@ -99,6 +99,7 @@ jobs:
 
           if [[ "${{ matrix.arch }}" == "i386" ]]
           then
+            PACKAGES="${PACKAGES} libstdc++-12-dev-i386-cross"
             I386FLAG="-DCMAKE_CXX_COMPILER_ARG1=-m32"
           fi
           
