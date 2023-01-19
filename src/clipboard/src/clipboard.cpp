@@ -50,6 +50,8 @@
 
 namespace fs = std::filesystem;
 
+static Action action;
+
 bool stopIndicator(bool change_condition_variable = true) {
     SpinnerState expect = SpinnerState::Active;
     if (!change_condition_variable) {
@@ -67,7 +69,7 @@ TerminalSize getTerminalSize() {
     #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1;);
+    return TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1);
     #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     struct winsize w;
     ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
@@ -229,22 +231,22 @@ namespace PerformAction {
                 buffer << input.rdbuf();
                 content = buffer.str();
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
-                printf(clipboard_text_contents_message().data(), std::min(static_cast<unsigned int>(250), static_cast<unsigned int>(content.size())), clipboard_name.data());
+                printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
                 printf(replaceColors("{bold}{blue}%s\n{blank}").data(), content.substr(0, 250).data());
                 if (content.size() > 250) {
                     printf(and_more_items_message().data(), content.size() - 250);
                 }
                 return;
             }
-            unsigned int total_items = 0;
-            for (const auto& entry : fs::directory_iterator(filepath.main)) {
+            size_t total_items = 0;
+            for (auto dummy : fs::directory_iterator(filepath.main)) {
                 total_items++;
             }
-            unsigned int rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_contents_message().length());
+            size_t rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_contents_message().length());
             rowsAvailable -= 3;
             printf(clipboard_item_contents_message().data(), std::min(rowsAvailable, total_items), clipboard_name.data());
             auto it = fs::directory_iterator(filepath.main);
-            for (int i = 0; i < std::min(rowsAvailable, total_items); i++) {
+            for (size_t i = 0; i < std::min(rowsAvailable, total_items); i++) {
 
                 printf(replaceColors("{blue}▏ {bold}{pink}%s{blank}\n").data(), it->path().filename().string().data());
 
@@ -498,7 +500,7 @@ void showClipboardStatus() {
 
         printf("%s", check_clipboard_status_message().data());
 
-        for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.rows); clipboard++) {
+        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), termSizeAvailable.rows); clipboard++) {
 
             int widthRemaining = termSizeAvailable.columns - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
             printf(replaceColors("{bold}{blue}▏ %s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
@@ -625,7 +627,7 @@ void setupIndicator() {
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
     if ((action == Action::Cut || action == Action::Copy) && is_tty.err) {
-        static unsigned long items_size = copying.items.size();
+        static size_t items_size = copying.items.size();
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
@@ -639,9 +641,9 @@ void setupIndicator() {
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     } else if (action == Action::Paste && is_tty.err) {
-        static unsigned long items_size = 0;
+        static size_t items_size = 0;
         if (items_size == 0) {
-            for (const auto& f : fs::directory_iterator(filepath.main)) {
+            for (auto dummy : fs::directory_iterator(filepath.main)) {
                 items_size++;
             }
             if (items_size == 0) {
@@ -808,7 +810,7 @@ void showFailures() {
         }
         available.rows -= 3;
         printf(clipboard_failed_message().data(), actions[action].data());
-        for (int i = 0; i < std::min(available.rows, static_cast<int>(copying.failedItems.size())); i++) {
+        for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
             printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
             if (i == available.rows - 1 && copying.failedItems.size() > available.rows) {
                 printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
@@ -819,7 +821,7 @@ void showFailures() {
 }
 
 void showSuccesses() {
-    if (action == Action::PipeIn || action == Action::PipeOut && is_tty.err) {
+    if ((action == Action::PipeIn || action == Action::PipeOut) && is_tty.err) {
         fprintf(stderr, pipe_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
         return;
     }

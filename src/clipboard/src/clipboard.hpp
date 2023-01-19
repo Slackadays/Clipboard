@@ -79,7 +79,6 @@ struct Constants {
 constexpr Constants constants;
 
 enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show, Edit };
-static Action action;
 
 template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
@@ -107,11 +106,11 @@ static bool use_colors = true;
 
 class TerminalSize {
 public:
-    int rows;
-    int columns;
-    TerminalSize(const int& rows, const int& columns) : rows(rows), columns(columns) {}
-    int accountRowsFor(const auto& ...args) {
-        ((rows -= (static_cast<int>(args) / columns) + 1),...);
+    size_t rows;
+    size_t columns;
+    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows(rows), columns(columns) {}
+    unsigned int accountRowsFor(const auto& ...args) {
+        ((rows -= (static_cast<unsigned int>(args) / columns) + 1),...);
         return columns;
     }
 };
@@ -119,7 +118,7 @@ public:
 static std::string replaceColors(const std::string_view& str, bool colorful = use_colors) {
     std::string temp(str); //a string to do scratch work on
     for (const auto& key : colors) { //iterate over all the possible colors to replace
-        for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
+        for (size_t i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
             temp.replace(i, key.first.length(), colorful ? key.second : "");
         }
     }
