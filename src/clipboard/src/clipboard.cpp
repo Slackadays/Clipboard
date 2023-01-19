@@ -50,19 +50,6 @@
 
 namespace fs = std::filesystem;
 
-std::string clipboard_name = "0";
-
-std::condition_variable cv;
-std::mutex m;
-std::atomic<SpinnerState> spinner_state = SpinnerState::Done;
-std::thread indicator;
-
-Copying copying;
-Filepath filepath;
-Successes successes;
-IsTTY is_tty;
-Action action;
-
 bool stopIndicator(bool change_condition_variable = true) {
     SpinnerState expect = SpinnerState::Active;
     if (!change_condition_variable) {
@@ -76,21 +63,17 @@ bool stopIndicator(bool change_condition_variable = true) {
     return true;
 }
 
-std::pair<int, int> terminalSize() {
+TerminalSize getTerminalSize() {
     #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    int columns, rows;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-    return {columns, rows};
+    return TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1;);
     #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    return {w.ws_col, w.ws_row};
-    #else
-    return {80, 24};
+    ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
+    return TerminalSize(w.ws_row, w.ws_col);
     #endif
+    return TerminalSize(80, 24);
 }
 
 namespace PerformAction {
@@ -238,7 +221,7 @@ namespace PerformAction {
     void show() {
         stopIndicator();
         if (fs::is_directory(filepath.main) && !fs::is_empty(filepath.main)) {
-            std::pair<int, int> termSpaceRemaining(terminalSize());
+            TerminalSize termSpaceRemaining(getTerminalSize());
             if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
                 std::string content;
                 std::ifstream input(filepath.main / constants.pipe_file);
@@ -257,7 +240,8 @@ namespace PerformAction {
             for (const auto& entry : fs::directory_iterator(filepath.main)) {
                 total_items++;
             }
-            unsigned int rowsAvailable = termSpaceRemaining.second - ((clipboard_item_contents_message().length() / termSpaceRemaining.first) + 3);
+            unsigned int rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_contents_message().length());
+            rowsAvailable -= 3;
             printf(clipboard_item_contents_message().data(), std::min(rowsAvailable, total_items), clipboard_name.data());
             auto it = fs::directory_iterator(filepath.main);
             for (int i = 0; i < std::min(rowsAvailable, total_items); i++) {
@@ -376,9 +360,6 @@ void setupHandlers() {
             _exit(EXIT_FAILURE);
         }
     });
-    atexit([]() {
-        //stopIndicator();
-    });
 }
 
 void setLocale() {
@@ -450,14 +431,14 @@ void setClipboardName(int& argc, char *argv[]) {
 }
 
 void setupVariables(int& argc, char *argv[]) {
-    is_tty.std_in = isatty(fileno(stdin));
-    is_tty.std_out = isatty(fileno(stdout));
-    is_tty.std_err = isatty(fileno(stderr));
+    is_tty.in = isatty(fileno(stdin));
+    is_tty.out = isatty(fileno(stdout));
+    is_tty.err = isatty(fileno(stderr));
 
     if (getenv("IS_ACTUALLY_A_TTY")) { //add test compatibility where isatty returns false, but there is actually a tty
-        is_tty.std_in = true;
-        is_tty.std_out = true;
-        is_tty.std_err = true;
+        is_tty.in = true;
+        is_tty.out = true;
+        is_tty.err = true;
     }
 
     #if defined(_WIN64) || defined (_WIN32)
@@ -465,21 +446,15 @@ void setupVariables(int& argc, char *argv[]) {
 	DWORD dwMode = 0;
 	GetConsoleMode(hOut, &dwMode);
 	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
-        for (auto& key : colors) {
-            key.second = "";
-        }
+        use_colors = false;
 	}
 	SetConsoleOutputCP(CP_UTF8); //fix broken accents on Windows
 
-    filepath.home = getenv("USERPROFILE");
-    #else
-    filepath.home = getenv("HOME");
     #endif
+    filepath.home = getenv("USERPROFILE") ? getenv("USERPROFILE") : getenv("HOME");
 
     if (getenv("NO_COLOR") && !getenv("FORCE_COLOR")) {
-        for (auto& key : colors) {
-            key.second = "";
-        }
+        use_colors = false;
     }
 }
 
@@ -514,19 +489,18 @@ void showClipboardStatus() {
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
     } else {
-        std::pair<int, int> termSizeAvailable(terminalSize());
+        TerminalSize termSizeAvailable(getTerminalSize());
 
-        termSizeAvailable.second -= (clipboard_action_prompt().size() / termSizeAvailable.first) + 1;
-        termSizeAvailable.second -= (check_clipboard_status_message().size() / termSizeAvailable.first) + 1;
-        if (clipboards_with_contents.size() > termSizeAvailable.second) {
-            termSizeAvailable.second -= (and_more_items_message().size() / termSizeAvailable.first) + 1;
+        termSizeAvailable.accountRowsFor(clipboard_action_prompt().size(), check_clipboard_status_message().size());
+        if (clipboards_with_contents.size() > termSizeAvailable.rows) {
+            termSizeAvailable.accountRowsFor(and_more_items_message().size());
         }
 
         printf("%s", check_clipboard_status_message().data());
 
-        for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.second); clipboard++) {
+        for (int clipboard = 0; clipboard < std::min(static_cast<int>(clipboards_with_contents.size()), termSizeAvailable.rows); clipboard++) {
 
-            int widthRemaining = termSizeAvailable.first - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
+            int widthRemaining = termSizeAvailable.columns - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
             printf(replaceColors("{bold}{blue}▏ %s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.pipe_file)) {
@@ -562,14 +536,14 @@ void showClipboardStatus() {
                 printf("\n");
             }
         }
-        if (clipboards_with_contents.size() > termSizeAvailable.second) {
-            printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.second);
+        if (clipboards_with_contents.size() > termSizeAvailable.rows) {
+            printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
         }
     }
     printf("%s", clipboard_action_prompt().data());
 }
 
-void setupAction(int& argc, char *argv[]) {
+void setAction(int& argc, char *argv[]) {
     auto flagIsPresent = [&](const std::string_view& flag, const std::string_view& shortcut = ""){
         for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
             if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(shortcut).append(flag)).data())) {
@@ -583,42 +557,15 @@ void setupAction(int& argc, char *argv[]) {
         return false;
     };
     if (argc >= 2) {
-        if (flagIsPresent(actions[Action::Cut], "--") || flagIsPresent(action_shortcuts[Action::Cut], "-")) { //replace with join_with_view when C++23 becomes available
-            action = Action::Cut;
-            if (!is_tty.std_in || !is_tty.std_out) {
-                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
-                exit(EXIT_FAILURE);
+        for (const auto& entry : {Action::Cut, Action::Copy, Action::Paste, Action::Show, Action::Clear, Action::Edit}) {
+            if (flagIsPresent(actions[entry], "--") || flagIsPresent(action_shortcuts[entry], "-")) { //replace with join_with_view when C++23 becomes available
+                action = entry;
+                if (action == Action::Copy && !is_tty.in) { action = Action::PipeIn; }
+                if (action == Action::Paste && !is_tty.out) { action = Action::PipeOut; }
+                return;
             }
-        } else if (flagIsPresent(actions[Action::Copy], "--") || flagIsPresent(action_shortcuts[Action::Copy], "-")) {
-            action = Action::Copy;
-            if (!is_tty.std_in) {
-                action = Action::PipeIn;
-            } else if (!is_tty.std_out) {
-                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
-                exit(EXIT_FAILURE);
-            }
-        } else if (flagIsPresent(actions[Action::Paste], "--") || flagIsPresent(action_shortcuts[Action::Paste], "-")) {
-            action = Action::Paste;
-            if (!is_tty.std_out) {
-                action = Action::PipeOut;
-            } else if (!is_tty.std_in) {
-                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Copy].data(), actions[Action::Copy].data());
-                exit(EXIT_FAILURE);
-            }
-        } else if (flagIsPresent(actions[Action::Show], "--") || flagIsPresent(action_shortcuts[Action::Show], "-")) {
-            action = Action::Show;
-        } else if (flagIsPresent(actions[Action::Clear], "--") || flagIsPresent(action_shortcuts[Action::Clear], "-")) {
-            action = Action::Clear;
-            if (!is_tty.std_in) {
-                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Cut].data(), actions[Action::Cut].data());
-                exit(EXIT_FAILURE);
-            } else if (!is_tty.std_out) {
-                fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[Action::Paste].data(), actions[Action::Paste].data());
-                exit(EXIT_FAILURE);
-            }
-        } else if (flagIsPresent(actions[Action::Edit], "--"), flagIsPresent(action_shortcuts[Action::Edit])) {
-            action = Action::Edit;
-        } else if (flagIsPresent("ee")) {
+        }
+        if (flagIsPresent("ee")) {
             printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
             exit(EXIT_SUCCESS);
         } else {
@@ -637,19 +584,27 @@ void setupAction(int& argc, char *argv[]) {
                 break;
             }
         }
-    } else if (!is_tty.std_in) {
+    } else if (!is_tty.in) {
         action = Action::PipeIn;
-    } else if (!is_tty.std_out) {
+    } else if (!is_tty.out) {
         action = Action::PipeOut;
     } else {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
     }
-    if (action == Action::PipeIn || action == Action::PipeOut) {
-        if (argc >= 3) {
-            fprintf(stderr, "%s", redirection_no_items_message().data());
-            exit(EXIT_FAILURE);
-        }
+}
+
+void verifyAction(int& argc) {
+    auto tryThisInstead = [&](const Action& tryThisAction) {
+        fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[tryThisAction].data(), actions[tryThisAction].data());
+        exit(EXIT_FAILURE);
+    };
+    if (action == Action::Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Action::Copy); }
+    if (action == Action::Copy && !is_tty.out) { tryThisInstead(Action::Paste); }
+    if (action == Action::Paste && !is_tty.in) { tryThisInstead(Action::Copy); }
+    if ((action == Action::PipeIn || action == Action::PipeOut) && argc >= 3) {
+        fprintf(stderr, "%s", redirection_no_items_message().data());
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -669,7 +624,7 @@ void setupIndicator() {
     int output_length = 0;
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
-    if ((action == Action::Cut || action == Action::Copy) && is_tty.std_err) {
+    if ((action == Action::Cut || action == Action::Copy) && is_tty.err) {
         static unsigned long items_size = copying.items.size();
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
@@ -677,13 +632,13 @@ void setupIndicator() {
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
-    } else if ((action == Action::PipeIn || action == Action::PipeOut) && is_tty.std_err) {
+    } else if ((action == Action::PipeIn || action == Action::PipeOut) && is_tty.err) {
         for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), static_cast<int>(successes.bytes), "B", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
-    } else if (action == Action::Paste && is_tty.std_err) {
+    } else if (action == Action::Paste && is_tty.err) {
         static unsigned long items_size = 0;
         if (items_size == 0) {
             for (const auto& f : fs::directory_iterator(filepath.main)) {
@@ -699,14 +654,14 @@ void setupIndicator() {
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
-    } else if (is_tty.std_err) {
+    } else if (is_tty.err) {
         while (spinner_state == SpinnerState::Active) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), 0, "%", "");
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
         }
     }
-    if (is_tty.std_err) {
+    if (is_tty.err) {
         fprintf(stderr, "\r%*s\r", output_length, "");
     }
     if (spinner_state == SpinnerState::Cancel) {
@@ -784,7 +739,7 @@ void removeOldFiles() {
 }
 
 bool userIsARobot() {
-    return !is_tty.std_err || !is_tty.std_in || !is_tty.std_out || getenv("CI");
+    return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
 }
 
 int getUserDecision(const std::string& item) {
@@ -846,11 +801,17 @@ void updateGUIClipboard() {
 
 void showFailures() {
     if (copying.failedItems.size() > 0) {
+        TerminalSize available(getTerminalSize());
+        available.accountRowsFor(clipboard_failed_message().length());
+        if (copying.failedItems.size() > available.rows) {
+            available.accountRowsFor(and_more_fails_message().length());
+        }
+        available.rows -= 3;
         printf(clipboard_failed_message().data(), actions[action].data());
-        for (int i = 0; i < std::min(5, static_cast<int>(copying.failedItems.size())); i++) {
+        for (int i = 0; i < std::min(available.rows, static_cast<int>(copying.failedItems.size())); i++) {
             printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
-            if (i == 4 && copying.failedItems.size() > 5) {
-                printf(and_more_fails_message().data(), int(copying.failedItems.size() - 5));
+            if (i == available.rows - 1 && copying.failedItems.size() > available.rows) {
+                printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
             }
         }
         printf("%s", fix_problem_message().data());
@@ -858,7 +819,7 @@ void showFailures() {
 }
 
 void showSuccesses() {
-    if (action == Action::PipeIn || action == Action::PipeOut && is_tty.std_err) {
+    if (action == Action::PipeIn || action == Action::PipeOut && is_tty.err) {
         fprintf(stderr, pipe_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
         return;
     }
@@ -891,7 +852,9 @@ int main(int argc, char *argv[]) {
 
         syncWithGUIClipboard();
 
-        setupAction(argc, argv);
+        setAction(argc, argv);
+
+        verifyAction(argc);
 
         setupItems(argc, argv);
 

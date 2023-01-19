@@ -33,7 +33,7 @@ struct Filepath {
     fs::path original_files;
     fs::path home;
 };
-extern Filepath filepath;
+static Filepath filepath;
 
 struct Copying {
     bool is_persistent = false;
@@ -43,30 +43,30 @@ struct Copying {
     std::vector<std::pair<std::string, std::error_code>> failedItems;
     std::string buffer;
 };
-extern Copying copying;
+static Copying copying;
 
-extern std::string clipboard_name;
+static std::string clipboard_name = "0";
 
 enum class SpinnerState : int { Done, Active, Cancel };
 
-extern std::condition_variable cv;
-extern std::mutex m;
-extern std::atomic<SpinnerState> spinner_state;
-extern std::thread indicator;
+static std::condition_variable cv;
+static std::mutex m;
+static std::atomic<SpinnerState> spinner_state = SpinnerState::Done;
+static std::thread indicator;
 
 struct Successes {
     std::atomic<unsigned long> files;
     std::atomic<unsigned long> directories;
     std::atomic<unsigned long long> bytes;
 };
-extern Successes successes;
+static Successes successes;
 
 struct IsTTY {
-    bool std_in = true;
-    bool std_out = true;
-    bool std_err = true;
+    bool in = true;
+    bool out = true;
+    bool err = true;
 };
-extern IsTTY is_tty;
+static IsTTY is_tty;
 
 struct Constants {
     std::string_view clipboard_version = "0.2.1r2";
@@ -79,14 +79,12 @@ struct Constants {
 constexpr Constants constants;
 
 enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show, Edit };
-extern Action action;
+static Action action;
 
 template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
 public:
-    T& operator[](Action index) {
-        return std::array<T, N>::operator[](static_cast<unsigned int>(index)); //switch to std::to_underlying when available
-    }
+    T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } //switch to std::to_underlying when available 
 };
 
 extern ActionArray<std::string_view, 8> actions;
@@ -105,11 +103,24 @@ static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{blank}", "\033[0m"}
 }};
 
-static std::string replaceColors(const std::string_view& str) {
+static bool use_colors = true;
+
+class TerminalSize {
+public:
+    int rows;
+    int columns;
+    TerminalSize(const int& rows, const int& columns) : rows(rows), columns(columns) {}
+    int accountRowsFor(const auto& ...args) {
+        ((rows -= (static_cast<int>(args) / columns) + 1),...);
+        return columns;
+    }
+};
+
+static std::string replaceColors(const std::string_view& str, bool colorful = use_colors) {
     std::string temp(str); //a string to do scratch work on
     for (const auto& key : colors) { //iterate over all the possible colors to replace
         for (int i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
-            temp.replace(i, key.first.length(), key.second);
+            temp.replace(i, key.first.length(), colorful ? key.second : "");
         }
     }
     return temp;
@@ -155,7 +166,6 @@ extern Message internal_error_message;
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
-std::string replaceColors(const std::string_view& str);
 void setupHandlers();
 void setLocale();
 void showHelpMessage(int& argc, char *argv[]);
