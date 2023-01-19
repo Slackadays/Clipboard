@@ -68,7 +68,7 @@ jobs:
             "-DCMAKE_CXX_COMPILER=${GPP_NAME}" \
             "-DCMAKE_BUILD_TYPE=MinSizeRel"
           
-          cmake --build .
+          cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch }}
@@ -83,7 +83,7 @@ jobs:
         run: |
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
-          cmake --build .
+          cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-macos-arm64-amd64
@@ -98,7 +98,7 @@ jobs:
         run: |
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
-          cmake --build . --config Release
+          cmake --build . --config Release -j 2
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-windows-amd64
