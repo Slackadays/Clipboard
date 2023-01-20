@@ -45,6 +45,8 @@ struct Copying {
 };
 static Copying copying;
 
+static std::vector<std::string> arguments;
+
 static std::string clipboard_name = "0";
 
 enum class SpinnerState : int { Done, Active, Cancel };

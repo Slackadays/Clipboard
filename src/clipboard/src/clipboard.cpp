@@ -376,24 +376,9 @@ void setLocale() {
     } catch (...) {}
 }
 
-void showHelpMessage(int& argc, char *argv[]) {
-    for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
-        if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || (argc >= 2 && !strcmp(argv[1], "help"))) {
-            printf(help_message().data(), constants.clipboard_version.data());
-            exit(EXIT_SUCCESS);
-        }
-    }
-}
-
-void setupItems(int& argc, char *argv[]) {
-    for (int i = 1; i < argc; i++) {
-        copying.items.push_back(argv[i]);
-    }
-}
-
-void setClipboardName(int& argc, char *argv[]) {
-    if (argc >= 2) {
-        clipboard_name = argv[1];
+void setClipboardName() {
+    if (arguments.size() >= 1) {
+        clipboard_name = arguments.at(0);
         if (clipboard_name.find_first_of("_") != std::string::npos) {
             clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("_") + 1);
             copying.is_persistent = true;
@@ -403,33 +388,9 @@ void setClipboardName(int& argc, char *argv[]) {
         if (clipboard_name.empty()) {
             clipboard_name = constants.default_clipboard_name;
         } else {
-            argv[1][strlen(argv[1]) - (clipboard_name.length() + copying.is_persistent)] = '\0';
+            arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - (clipboard_name.length() + copying.is_persistent));
         }
     }
-
-    if (argc >= 3) {
-        if (!strcmp(argv[2], "-c") && argc >= 4) {
-            clipboard_name = argv[3];
-            for (int i = 2; i < argc - 2; i++) {
-                argv[i] = argv[i + 2];
-            }
-            argc -= 2;
-        } else if (!strncmp(argv[2], "--clipboard=", 12)) {
-            clipboard_name = argv[2] + 12;
-            for (int i = 2; i < argc - 1; i++) {
-                argv[i] = argv[i + 1];
-            }
-            argc -= 1;
-        }
-    }
-
-    filepath.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR") : getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name / clipboard_name;
-
-    filepath.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : filepath.home)) / constants.persistent_directory_name / clipboard_name;
-    
-    filepath.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? filepath.persistent : filepath.temporary;
-
-    filepath.original_files = filepath.main.parent_path() / (clipboard_name + std::string(constants.original_files_extension));
 }
 
 void setupVariables(int& argc, char *argv[]) {
@@ -457,6 +418,10 @@ void setupVariables(int& argc, char *argv[]) {
 
     if (getenv("NO_COLOR") && !getenv("FORCE_COLOR")) {
         use_colors = false;
+    }
+
+    for (int i = 1; i < argc; i++) {
+        arguments.emplace_back(argv[i]);
     }
 }
 
@@ -535,8 +500,8 @@ void showClipboardStatus() {
                     widthRemaining -= entryWidth;
                     first = false;
                 }
-                printf("\n");
             }
+            printf("\n");
         }
         if (clipboards_with_contents.size() > termSizeAvailable.rows) {
             printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
@@ -545,29 +510,38 @@ void showClipboardStatus() {
     printf("%s", clipboard_action_prompt().data());
 }
 
-void setAction(int& argc, char *argv[]) {
-    auto flagIsPresent = [&](const std::string_view& flag, const std::string_view& shortcut = ""){
-        for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
-            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(shortcut).append(flag)).data())) {
-                for (int j = i; j < argc - 1; j++) {
-                    argv[j] = argv[j + 1];
-                }
-                argc--;
+template<typename T>
+auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcut = "") {
+    for (const auto& entry : arguments) {
+        if (entry == flag || entry == (std::string(shortcut).append(flag))) {
+            if constexpr (std::is_same_v<T, std::string>) {
+                std::string temp = *arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
+                arguments.erase(std::find(arguments.begin(), arguments.end(), temp));
+                return temp;
+            } else {
+                arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
                 return true;
             }
         }
+    }
+    if constexpr (std::is_same_v<T, std::string>) {
+        return std::string();
+    } else {
         return false;
-    };
-    if (argc >= 2) {
+    }
+}
+
+void setAction() {
+    if (arguments.size() >= 1) {
         for (const auto& entry : {Action::Cut, Action::Copy, Action::Paste, Action::Show, Action::Clear, Action::Edit}) {
-            if (flagIsPresent(actions[entry], "--") || flagIsPresent(action_shortcuts[entry], "-")) { //replace with join_with_view when C++23 becomes available
+            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 action = entry;
                 if (action == Action::Copy && !is_tty.in) { action = Action::PipeIn; }
                 if (action == Action::Paste && !is_tty.out) { action = Action::PipeOut; }
                 return;
             }
         }
-        printf(no_valid_action_message().data(), argv[1]);
+        printf(no_valid_action_message().data(), arguments.at(0).data());
         exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
         action = Action::PipeIn;
@@ -579,38 +553,33 @@ void setAction(int& argc, char *argv[]) {
     }
 }
 
-void setFlags(int& argc, char *argv[]) {
-    auto flagIsPresent = [&](const std::string_view& flag, const std::string_view& shortcut = ""){
-        for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
-            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(shortcut).append(flag)).data())) {
-                for (int j = i; j < argc - 1; j++) {
-                    argv[j] = argv[j + 1];
-                }
-                argc--;
-                return true;
-            }
-        }
-        return false;
-    };
-    if (flagIsPresent("--fast-copy") || flagIsPresent("-fc")) {
+void setFlags() {
+    if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) {
         copying.use_safe_copy = false;
     }
-    if (flagIsPresent("--ee")) {
+    if (flagIsPresent<bool>("--ee")) {
         printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
         exit(EXIT_SUCCESS);
     }
-    for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "--")) {
-            for (int j = i; j < argc; j++) {
-                argv[j] = argv[j + 1];
-            }
-            argc--;
+    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") {
+        clipboard_name = flag;
+    }
+    if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") {
+        clipboard_name = flag;
+    }
+    if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
+        printf(help_message().data(), constants.clipboard_version.data());
+        exit(EXIT_SUCCESS);
+    }
+    for (const auto& entry : arguments) {
+        if (entry == "--") {
+            arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
             break;
         }
     }
 }
 
-void verifyAction(int& argc) {
+void verifyAction() {
     auto tryThisInstead = [&](const Action& tryThisAction) {
         fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[tryThisAction].data(), actions[tryThisAction].data());
         exit(EXIT_FAILURE);
@@ -618,9 +587,25 @@ void verifyAction(int& argc) {
     if (action == Action::Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Action::Copy); }
     if (action == Action::Copy && !is_tty.out) { tryThisInstead(Action::Paste); }
     if (action == Action::Paste && !is_tty.in) { tryThisInstead(Action::Copy); }
-    if ((action == Action::PipeIn || action == Action::PipeOut) && argc >= 3) {
+    if ((action == Action::PipeIn || action == Action::PipeOut) && arguments.size() >= 2) {
         fprintf(stderr, "%s", redirection_no_items_message().data());
         exit(EXIT_FAILURE);
+    }
+}
+
+void setFilepaths() {
+    filepath.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR") : getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name / clipboard_name;
+
+    filepath.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : filepath.home)) / constants.persistent_directory_name / clipboard_name;
+    
+    filepath.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? filepath.persistent : filepath.temporary;
+
+    filepath.original_files = filepath.main.parent_path() / (clipboard_name + std::string(constants.original_files_extension));
+}
+
+void setupItems() {
+    for (const auto& entry : arguments) {
+        copying.items.push_back(entry);
     }
 }
 
@@ -723,9 +708,8 @@ unsigned long long totalItemSize() {
     return total_item_size;
 }
 
-void checkItemSize() {
+void checkItemSize(unsigned long long total_item_size) {
     if (action == Action::Cut || action == Action::Copy) {
-        unsigned long long total_item_size = totalItemSize();
         const unsigned long long space_available = fs::space(filepath.main).available;
         if (total_item_size > (space_available / 2)) {
             stopIndicator();
@@ -871,21 +855,21 @@ int main(int argc, char *argv[]) {
 
         setLocale();
 
-        setClipboardName(argc, argv);
+        setClipboardName();
 
-        showHelpMessage(argc, argv);
+        setFlags();
+
+        setFilepaths();
 
         createTempDirectory();
 
         syncWithGUIClipboard();
 
-        setAction(argc, argv);
+        setAction();
 
-        setFlags(argc, argv);
+        verifyAction();
 
-        verifyAction(argc);
-
-        setupItems(argc, argv);
+        setupItems();
 
         checkForNoItems();
 
@@ -893,7 +877,7 @@ int main(int argc, char *argv[]) {
 
         deduplicateItems();
 
-        checkItemSize();
+        checkItemSize(totalItemSize());
 
         clearTempDirectory();
 
