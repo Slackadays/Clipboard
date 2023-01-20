@@ -515,7 +515,7 @@ auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcu
     for (const auto& entry : arguments) {
         if (entry == flag || entry == (std::string(shortcut).append(flag))) {
             if constexpr (std::is_same_v<T, std::string>) {
-                std::string temp = *arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
+                std::string temp(*arguments.erase(std::find(arguments.begin(), arguments.end(), entry)));
                 arguments.erase(std::find(arguments.begin(), arguments.end(), temp));
                 return temp;
             } else {
@@ -601,12 +601,6 @@ void setFilepaths() {
     filepath.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? filepath.persistent : filepath.temporary;
 
     filepath.original_files = filepath.main.parent_path() / (clipboard_name + std::string(constants.original_files_extension));
-}
-
-void setupItems() {
-    for (const auto& entry : arguments) {
-        copying.items.push_back(entry);
-    }
 }
 
 void checkForNoItems() {
@@ -869,7 +863,7 @@ int main(int argc, char *argv[]) {
 
         verifyAction();
 
-        setupItems();
+        copying.items.assign(arguments.begin(), arguments.end());
 
         checkForNoItems();
 
