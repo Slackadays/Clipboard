@@ -567,25 +567,8 @@ void setAction(int& argc, char *argv[]) {
                 return;
             }
         }
-        if (flagIsPresent("ee")) {
-            printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
-            exit(EXIT_SUCCESS);
-        } else {
-            printf(no_valid_action_message().data(), argv[1]);
-            exit(EXIT_FAILURE);
-        }
-        if (flagIsPresent("--fast-copy") || flagIsPresent("-fc")) {
-            copying.use_safe_copy = false;
-        }
-        for (int i = 1; i < argc; i++) {
-            if (!strcmp(argv[i], "--")) {
-                for (int j = i; j < argc; j++) {
-                    argv[j] = argv[j + 1];
-                }
-                argc--;
-                break;
-            }
-        }
+        printf(no_valid_action_message().data(), argv[1]);
+        exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
         action = Action::PipeIn;
     } else if (!is_tty.out) {
@@ -593,6 +576,37 @@ void setAction(int& argc, char *argv[]) {
     } else {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
+    }
+}
+
+void setFlags(int& argc, char *argv[]) {
+    auto flagIsPresent = [&](const std::string_view& flag, const std::string_view& shortcut = ""){
+        for (int i = 1; i < argc && strcmp(argv[i], "--"); i++) {
+            if (!strcmp(argv[i], flag.data()) || !strcmp(argv[i], (std::string(shortcut).append(flag)).data())) {
+                for (int j = i; j < argc - 1; j++) {
+                    argv[j] = argv[j + 1];
+                }
+                argc--;
+                return true;
+            }
+        }
+        return false;
+    };
+    if (flagIsPresent("--fast-copy") || flagIsPresent("-fc")) {
+        copying.use_safe_copy = false;
+    }
+    if (flagIsPresent("--ee")) {
+        printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
+        exit(EXIT_SUCCESS);
+    }
+    for (int i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "--")) {
+            for (int j = i; j < argc; j++) {
+                argv[j] = argv[j + 1];
+            }
+            argc--;
+            break;
+        }
     }
 }
 
@@ -866,6 +880,8 @@ int main(int argc, char *argv[]) {
         syncWithGUIClipboard();
 
         setAction(argc, argv);
+
+        setFlags(argc, argv);
 
         verifyAction(argc);
 
