@@ -21,7 +21,6 @@ then
     else
         download_link="skip"
     fi
-    #check if download_link is NOT equal to skip
     if [ "$download_link" != "skip" ]
     then
         curl -SsLl $download_link -o clipboard-linux.zip

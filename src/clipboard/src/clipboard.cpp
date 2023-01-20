@@ -801,6 +801,11 @@ void updateGUIClipboard() {
     }
 }
 
+void deduplicateFailures() {
+    std::sort(copying.failedItems.begin(), copying.failedItems.end());
+    copying.failedItems.erase(std::unique(copying.failedItems.begin(), copying.failedItems.end()), copying.failedItems.end());
+}
+
 void showFailures() {
     if (copying.failedItems.size() > 0) {
         TerminalSize available(getTerminalSize());
@@ -881,6 +886,8 @@ int main(int argc, char *argv[]) {
         updateGUIClipboard();
 
         stopIndicator();
+
+        deduplicateFailures();
 
         showFailures();
 
