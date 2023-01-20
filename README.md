@@ -11,6 +11,7 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 
 - **Quick.** Zero configuration needed to use.
 - **Easy.** Friendly to newbies and power users alike.
+- **Pretty.** Breaks the rules to look beautiful.
 - **Compatible.** Works on anything that supports C++20.
 - **Unified.** Functions exactly the same everywhere.
 - **Universal.** Supports English, Spanish, Portuguese, and Turkish.

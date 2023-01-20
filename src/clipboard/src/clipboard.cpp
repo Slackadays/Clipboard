@@ -242,9 +242,9 @@ namespace PerformAction {
             for (auto dummy : fs::directory_iterator(filepath.main)) {
                 total_items++;
             }
-            size_t rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_contents_message().length());
+            size_t rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_many_contents_message().length());
             rowsAvailable -= 3;
-            printf(clipboard_item_contents_message().data(), std::min(rowsAvailable, total_items), clipboard_name.data());
+            printf(total_items > rowsAvailable ? clipboard_item_too_many_contents_message().data() : clipboard_item_many_contents_message().data(), std::min(rowsAvailable, total_items), clipboard_name.data());
             auto it = fs::directory_iterator(filepath.main);
             for (size_t i = 0; i < std::min(rowsAvailable, total_items); i++) {
 
@@ -804,12 +804,12 @@ void updateGUIClipboard() {
 void showFailures() {
     if (copying.failedItems.size() > 0) {
         TerminalSize available(getTerminalSize());
-        available.accountRowsFor(clipboard_failed_message().length());
+        available.accountRowsFor(clipboard_failed_many_message().length());
         if (copying.failedItems.size() > available.rows) {
             available.accountRowsFor(and_more_fails_message().length());
         }
         available.rows -= 3;
-        printf(clipboard_failed_message().data(), actions[action].data());
+        printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
         for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
             printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
             if (i == available.rows - 1 && copying.failedItems.size() > available.rows) {
@@ -829,11 +829,17 @@ void showSuccesses() {
         printf(one_item_success_message().data(), did_action[action].data(), action == Action::Paste ? (*(fs::directory_iterator(filepath.main))).path().filename().string().data() : copying.items.at(0).string().data());
     } else {
         if ((successes.files > 1) && (successes.directories == 0)) {
-            printf(multiple_files_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
+            printf(many_files_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
         } else if ((successes.files == 0) && (successes.directories > 1)) {
-            printf(multiple_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
-        } else if ((successes.files >= 1) && (successes.directories >= 1)) {
-            printf(multiple_files_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+            printf(many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
+        } else if ((successes.files == 1) && (successes.directories == 1)) {
+            printf(one_file_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+        } else if ((successes.files > 1) && (successes.directories == 1)) {
+            printf(many_files_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+        } else if ((successes.files == 1) && (successes.directories > 1)) {
+            printf(one_file_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+        } else if ((successes.files > 1) && (successes.directories > 1)) {
+            printf(many_files_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
         }
     }
 }

@@ -135,7 +135,9 @@ public:
 
 extern Message help_message;
 extern Message check_clipboard_status_message;
-extern Message clipboard_item_contents_message;
+extern Message clipboard_item_one_contents_message;
+extern Message clipboard_item_many_contents_message;
+extern Message clipboard_item_too_many_contents_message;
 extern Message clipboard_text_contents_message;
 extern Message no_clipboard_contents_message;
 extern Message clipboard_action_prompt;
@@ -146,7 +148,8 @@ extern Message redirection_no_items_message;
 extern Message paste_success_message;
 extern Message clear_success_message;
 extern Message clear_fail_message;
-extern Message clipboard_failed_message;
+extern Message clipboard_failed_one_message;
+extern Message clipboard_failed_many_message;
 extern Message and_more_fails_message;
 extern Message and_more_items_message;
 extern Message fix_problem_message;
@@ -157,9 +160,12 @@ extern Message working_message;
 extern Message cancelled_message;
 extern Message pipe_success_message;
 extern Message one_item_success_message;
-extern Message multiple_files_success_message;
-extern Message multiple_directories_success_message;
-extern Message multiple_files_directories_success_message;
+extern Message many_files_success_message;
+extern Message many_directories_success_message;
+extern Message one_file_one_directory_success_message;
+extern Message one_file_many_directories_success_message;
+extern Message many_files_one_directory_success_message;
+extern Message many_files_many_directories_success_message;
 extern Message internal_error_message;
 
 void setLanguagePT();

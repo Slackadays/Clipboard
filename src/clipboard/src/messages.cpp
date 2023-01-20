@@ -85,7 +85,9 @@ Message help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste 
                                 "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                                 "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
 Message check_clipboard_status_message = "{blue}• There are items in these clipboards:\n";
-Message clipboard_item_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
+Message clipboard_item_one_contents_message = "{blue}• Here is the {bold}%i{blank}{blue} item in clipboard {bold}%s{blank}{blue}: {blank}\n";
+Message clipboard_item_many_contents_message = "{blue}• Here are the {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
+Message clipboard_item_too_many_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} items in clipboard {bold}%s{blank}{blue}: {blank}\n";
 Message clipboard_text_contents_message = "{blue}• Here are the first {bold}%i{blank}{blue} bytes in clipboard {bold}%s{blank}{blue}: {blank}\n";
 Message no_clipboard_contents_message = "{blue}• There is currently nothing in the clipboard.{blank}\n";
 Message clipboard_action_prompt = "{pink}Add {bold}cut, copy, {blank}{pink}or{bold} paste{blank}{pink} to the end, like {bold}clipboard copy{blank}{pink} to get started, or if you need help, try {bold}clipboard -h{blank}{pink} to show the help screen.{blank}\n";
@@ -96,21 +98,25 @@ Message redirection_no_items_message = "{red}╳ You can't specify items when yo
 Message paste_success_message = "{green}✓ Pasted successfully{blank}\n";
 Message clear_success_message = "{green}✓ Cleared the clipboard{blank}\n";
 Message clear_fail_message = "{red}╳ Failed to clear the clipboard{blank}\n";
-Message clipboard_failed_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
+Message clipboard_failed_one_message = "{red}╳ Clipboard couldn't %s this item:{blank}\n";
+Message clipboard_failed_many_message = "{red}╳ Clipboard couldn't %s these items:{blank}\n";
 Message and_more_fails_message = "{red}▏ ...and {bold}%i{blank}{red} more.{blank}\n";
 Message and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{blank}\n";
 Message fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
-Message not_enough_storage_message = "{red}╳ There won't be enough storage available to paste all your items (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
+Message not_enough_storage_message = "{red}╳ There won't be enough storage available to paste everything (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
 Message item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ";
 Message bad_response_message = "{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ";
 Message working_message = "{yellow}• %s... %i%s %s{blank}\r";
 Message cancelled_message = "{green}✓ Cancelled %s{blank}\n";
 Message pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 Message one_item_success_message = "{green}✓ %s %s{blank}\n";
-Message multiple_files_success_message = "{green}✓ %s %i files{blank}\n";
-Message multiple_directories_success_message = "{green}✓ %s %i directories{blank}\n";
-Message multiple_files_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
+Message many_files_success_message = "{green}✓ %s %i files{blank}\n";
+Message many_directories_success_message = "{green}✓ %s %i directories{blank}\n";
+Message one_file_one_directory_success_message = "{green}✓ %s %i file and %i directory{blank}\n";
+Message one_file_many_directories_success_message = "{green}✓ %s %i file and %i directories{blank}\n";
+Message many_files_one_directory_success_message = "{green}✓ %s %i files and %i directory{blank}\n";
+Message many_files_many_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
 Message internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking permissions on this system.{blank}\n";
 
 void setLanguageES() {
@@ -156,7 +162,7 @@ void setLanguageES() {
                    "{blue}▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.{blank}\n"
                    "{blue}▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions.{blank}\n";
     no_valid_action_message = "{red}╳ No especificaste ninguna acción válida o se te olvidó. {pink}Inténta usar o añadir {bold}cortar, copiar o pegar{blank}{pink} en su lugar, como {bold}clipboard copiar.{blank}\n";
-    clipboard_item_contents_message = "{blue}• Aquí están las {bold}%i{blank}{blue} cosas primeras del portapapeles {bold}%s{blank}{blue}: {blank}\n";
+    clipboard_item_many_contents_message = "{blue}• Aquí están las {bold}%i{blank}{blue} cosas primeras del portapapeles {bold}%s{blank}{blue}: {blank}\n";
     no_clipboard_contents_message = "{blue}• No hay nada en Clipboard en este momento.{blank}\n";
     clipboard_action_prompt = "{pink}Añade {bold}cortar, copiar {blank}{pink}o{bold} pegar{blank}{pink} al final, como {bold}clipboard copiar{blank}{pink} para comenzar, o si necesitas ayuda, haz {bold}clipboard -h{blank}{pink} para mostrar el mensaje de ayudar.{blank}\n";
     choose_action_items_message = "{red}╳ Necesitas escoger una cosa para %s.{pink} Inténta añadir las cosas que quieres %s al final, como {bold}clipboard %s contactos.txt miprograma.cpp{blank}\n";
@@ -165,16 +171,16 @@ void setLanguageES() {
     paste_success_message = "{green}✓ Pegó con éxito{blank}\n";
     clear_success_message = "{green}✓ Quitó el portapapeles{blank}\n";
     clear_fail_message = "{red}╳ No pudo quitar el portapapeles{blank}\n";
-    clipboard_failed_message = "{red}╳ Clipboard no pudo %s estas cosas.{blank}\n";
+    clipboard_failed_many_message = "{red}╳ Clipboard no pudo %s estas cosas.{blank}\n";
     and_more_fails_message = "{red}▏ ...y {bold}%i{blank}{red} más.{blank}\n";
     and_more_items_message = "{blue}▏ ...y {bold}%i{blank}{blue} más.{blank}\n";
     fix_problem_message = "{pink}▏ Verífica si tengas los permisos necesarios, o\n"
                           "▏ vuelve a revisar el deletro de los archivos o la carpeta en que estás.{blank}\n";
     not_enough_storage_message = "{red}╳ No habrá espacio suficiente para pegar todas tus cosas (%gkB a pegar, %gkB disponible).{blank}{pink} Vuelve a revisar las cosas que especificaste o saca algunas cosas para hacer más espacio.{blank}\n";
     pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
-    multiple_files_success_message = "{green}✓ %s %i archivos{blank}\n";
-    multiple_directories_success_message = "{green}✓ %s %i carpetas{blank}\n";
-    multiple_files_directories_success_message = "{green}✓ %s %i archivos y %i carpetas{blank}\n";
+    many_files_success_message = "{green}✓ %s %i archivos{blank}\n";
+    many_directories_success_message = "{green}✓ %s %i carpetas{blank}\n";
+    many_files_many_directories_success_message = "{green}✓ %s %i archivos y %i carpetas{blank}\n";
     internal_error_message = "{red}╳ Error internal: %s{blank}\n";
 }
 
@@ -216,15 +222,15 @@ void setLanguagePT() {
     fix_redirection_action_message = "{red}╳ Você não pode {bold}%s{blank}{red} com redirecionamento aqui. {pink}Tente remover {bold}%s{blank}{pink} ou utilizar {bold}%s{blank}{pink}, como em {bold}clipboard %s{blank}{pink}.\n";
     redirection_no_items_message = "{red}╳ Você não pode especificar itens ao redirecionar. {pink}Tente remover itens que vêm após {bold}clipboard [action].\n";
     paste_success_message = "{green}✓ Colado com sucesso{blank}\n";
-    clipboard_failed_message = "{red}╳ Clipboard não pôde %s esses itens.{blank}\n";
+    clipboard_failed_many_message = "{red}╳ Clipboard não pôde %s esses itens.{blank}\n";
     and_more_fails_message = "{red}▏ ...e mais {bold}%i{blank}{red}.{blank}\n";
     and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
     fix_problem_message = "{pink}▏ Veja se você possui as permissões necessárias, ou\n"
                           "▏ verifique a ortografia do arquivo ou diretório que voce está.{blank}\n";
     pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
-    multiple_files_success_message = "{green}✓ %s %i arquivos{blank}\n";
-    multiple_directories_success_message = "{green}✓ %s %i diretórios{blank}\n";
-    multiple_files_directories_success_message = "{green}✓ %s %i arquivos e %i diretórios{blank}\n";
+    many_files_success_message = "{green}✓ %s %i arquivos{blank}\n";
+    many_directories_success_message = "{green}✓ %s %i diretórios{blank}\n";
+    many_files_many_directories_success_message = "{green}✓ %s %i arquivos e %i diretórios{blank}\n";
     internal_error_message = "{red}╳ Erro interno: %s\n▏ Isso é provavelmente um bug.{blank}\n";
 }
 
@@ -280,7 +286,7 @@ void setLanguageTR() {
                    "{blue}▏                                 GPLv3 altında lisanslanmıştır.{blank}\n"
                    "{blue}▏Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli koşullar altında yeniden dağıtabilirsiniz.{blank}\n";
     check_clipboard_status_message = "{blue}• Pano içeriği şunlardır:\n";
-    clipboard_item_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
+    clipboard_item_many_contents_message = "{blue}• {bold}%s{blank}{blue} panoda bulunan ilk {bold}%i{blank}{blue} öğe: {blank}\n";
     no_clipboard_contents_message = "{blue}• Panoda hiçbir şey yok.{blank}\n";
     clipboard_action_prompt = "{pink}Başlamak için sonuna {bold}kes, kopyala, {blank}{pink}veya{bold} yapistir{blank}{pink} ekleyin, {bold}clipboard kopyala{blank}{pink} gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için {bold}clipboard -h{blank}{pink}'i dene.{blank}\n";
     no_valid_action_message = "{red}╳ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz {pink}Komutunuza {bold}cut, copy, {blank}{pink}ya da {bold}paste{blank}{pink} eklemelisiniz, örneğin {bold}clipboard copy.{blank}\n";
@@ -290,15 +296,15 @@ void setLanguageTR() {
     paste_success_message = "{green}✓ Yapıştırma başarıyla tamamlandı{blank}\n";
     clear_success_message = "{green}✓ Pano temizlendi{blank}\n";
     clear_fail_message = "{red}╳ Pano temizlenemedi{blank}\n";
-    clipboard_failed_message = "{red}╳ %s(ma/me) işlemi şu öğeler için başarısız oldu:{blank}\n";
+    clipboard_failed_many_message = "{red}╳ %s(ma/me) işlemi şu öğeler için başarısız oldu:{blank}\n";
     and_more_fails_message = "{red}▏ ...ve {bold}%i{blank}{red} fazla.{blank}\n";
     and_more_items_message = "{blue}▏ ...ve {bold}%i{blank}{blue} fazla.{blank}\n";
     fix_problem_message = "{pink}▏ Erişime ihtiyacınız varsa şuna bakın, veya\n"
                           "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.{blank}\n";
     not_enough_storage_message = "{red}╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gkB yapıştırılacak, %gkB boş).{blank}{pink} Hangi öğeleri seçtiğinizi ikinci kez kontrol etmeyi deneyin veya yer açmak için bazı dosyaları silin.{blank}\n";
     pipe_success_message = "{green}✓ %s %i bayt{blank}\n";
-    multiple_files_success_message = "{green}✓ %s %i dosya{blank}\n";
-    multiple_directories_success_message = "{green}✓ %s %i dizin{blank}\n";
-    multiple_files_directories_success_message = "{green}✓ %s %i dosya ve %i dizin{blank}\n";
+    many_files_success_message = "{green}✓ %s %i dosya{blank}\n";
+    many_directories_success_message = "{green}✓ %s %i dizin{blank}\n";
+    many_files_many_directories_success_message = "{green}✓ %s %i dosya ve %i dizin{blank}\n";
     internal_error_message = "{red}╳ İçsel hata: %s\n▏ Bu yüksek ihtimal bir hata veya bu sistemde erişim sorunu yaşıyorsunuz.{blank}\n";
 }
