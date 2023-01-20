@@ -322,7 +322,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     }
 }
 
-ClipboardContent getThisClipboard() {
+ClipboardContent thisClipboard() {
     if (fs::exists(filepath.original_files)) {
         std::ifstream originalFiles { filepath.original_files };
         std::vector<fs::path> files;
@@ -786,10 +786,13 @@ void performAction() {
     }
 }
 
+bool isAWriteAction() {
+    return action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear;
+}
+
 void updateGUIClipboard() {
-    if ((action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear) && !getenv("CLIPBOARD_NOGUI")) { //only update GUI clipboard on write operations
-        ClipboardContent thisClipboard = getThisClipboard();
-        writeToGUIClipboard(thisClipboard);
+    if (isAWriteAction() && !getenv("CLIPBOARD_NOGUI")) { //only update GUI clipboard on write operations
+        writeToGUIClipboard(thisClipboard());
     }
 }
 
