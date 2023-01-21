@@ -78,6 +78,12 @@ TerminalSize getTerminalSize() {
     return TerminalSize(80, 24);
 }
 
+std::string fileContents(const fs::path& path) {
+    std::stringstream buffer;
+    buffer << std::ifstream(path).rdbuf().str();
+    return buffer.str();
+}
+
 namespace PerformAction {
     void copy() {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
@@ -225,11 +231,7 @@ namespace PerformAction {
         if (fs::is_directory(filepath.main) && !fs::is_empty(filepath.main)) {
             TerminalSize termSpaceRemaining(getTerminalSize());
             if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
-                std::string content;
-                std::ifstream input(filepath.main / constants.pipe_file);
-                std::stringstream buffer;
-                buffer << input.rdbuf();
-                content = buffer.str();
+                std::string content(fileContents(filepath.main / constants.pipe_file));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
                 printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
                 printf(replaceColors("{bold}{blue}%s\n{blank}").data(), content.substr(0, 250).data());
@@ -474,11 +476,7 @@ void showClipboardStatus() {
             printf(replaceColors("{bold}{blue}▏ %s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.pipe_file)) {
-                std::string content;
-                std::ifstream input(clipboards_with_contents.at(clipboard).first / constants.pipe_file);
-                std::stringstream buffer;
-                buffer << input.rdbuf();
-                content = buffer.str();
+                std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.pipe_file));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
                 printf(replaceColors("{pink}%s{blank}\n").data(), content.substr(0, widthRemaining).data());
                 continue;
