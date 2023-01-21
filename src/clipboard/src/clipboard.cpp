@@ -557,6 +557,9 @@ void setFlags() {
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) {
         copying.use_safe_copy = false;
     }
+    if (flagIsPresent<bool>("--parents") || flagIsPresent<bool>("-p")) {
+        copying.copy_parents = true;
+    }
     if (flagIsPresent<bool>("--ee")) {
         printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
         exit(EXIT_SUCCESS);

@@ -38,6 +38,7 @@ static Filepath filepath;
 struct Copying {
     bool is_persistent = false;
     bool use_safe_copy = true;
+    bool copy_parents = false;
     fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
     std::vector<fs::path> items;
     std::vector<std::pair<std::string, std::error_code>> failedItems;
