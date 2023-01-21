@@ -53,11 +53,11 @@ namespace fs = std::filesystem;
 static Action action;
 
 bool stopIndicator(bool change_condition_variable = true) {
-    SpinnerState expect = SpinnerState::Active;
+    ProgressState expect = ProgressState::Active;
     if (!change_condition_variable) {
-        return spinner_state.exchange(SpinnerState::Cancel) == expect;
+        return progress_state.exchange(ProgressState::Cancel) == expect;
     }
-    if (!spinner_state.compare_exchange_strong(expect, SpinnerState::Done)) {
+    if (!progress_state.compare_exchange_strong(expect, ProgressState::Done)) {
         return false;
     }
     cv.notify_one();
@@ -360,6 +360,9 @@ void setupHandlers() {
         if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation message, directly to standard error. Note: There is no standard C++ interface for this, so this requires an OS call.
             _exit(EXIT_FAILURE);
+        } else {
+            indicator.join();
+            exit(EXIT_FAILURE);
         }
     });
 }
@@ -618,25 +621,26 @@ void checkForNoItems() {
 }
 
 void setupIndicator() {
+    if (!is_tty.err) { return; }
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
-    if ((action == Action::Cut || action == Action::Copy) && is_tty.err) {
+    if ((action == Action::Cut || action == Action::Copy)) {
         static size_t items_size = copying.items.size();
-        for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
+        for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return progress_state != ProgressState::Active; });
         }
-    } else if ((action == Action::PipeIn || action == Action::PipeOut) && is_tty.err) {
-        for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
+    } else if (action == Action::PipeIn || action == Action::PipeOut) {
+        for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), static_cast<int>(successes.bytes), "B", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return progress_state != ProgressState::Active; });
         }
-    } else if (action == Action::Paste && is_tty.err) {
+    } else if (action == Action::Paste) {
         static size_t items_size = 0;
         if (items_size == 0) {
             for (auto dummy : fs::directory_iterator(filepath.main)) {
@@ -646,33 +650,36 @@ void setupIndicator() {
                 items_size = 1;
             }
         }
-        for (int i = 0; spinner_state == SpinnerState::Active; i == 9 ? i = 0 : i++) {
+        for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
             percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return progress_state != ProgressState::Active; });
         }
-    } else if (is_tty.err) {
-        while (spinner_state == SpinnerState::Active) {
+    } else {
+        while (progress_state == ProgressState::Active) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), 0, "%", "");
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return spinner_state != SpinnerState::Active; });
+            cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return progress_state != ProgressState::Active; });
         }
     }
-    if (is_tty.err) {
-        fprintf(stderr, "\r%*s\r", output_length, "");
-    }
-    if (spinner_state == SpinnerState::Cancel) {
+    fprintf(stderr, "\r%*s\r", output_length, "");
+    fflush(stderr);
+    if (progress_state == ProgressState::Cancel) {
         fprintf(stderr, cancelled_message().data(), actions[action].data());
-        fflush(stderr);
+        if (action == Action::Copy || action == Action::Cut) {
+            fprintf(stderr, "\n");
+        } else {
+            fflush(stderr);
+        }
         _exit(EXIT_FAILURE);
     }
     fflush(stderr);
 }
 
 void startIndicator() { // If cancelled, leave cancelled
-    SpinnerState expect = SpinnerState::Done;
-    spinner_state.compare_exchange_strong(expect, SpinnerState::Active);
+    ProgressState expect = ProgressState::Done;
+    progress_state.compare_exchange_strong(expect, ProgressState::Active);
     indicator = std::thread(setupIndicator);
 }
 

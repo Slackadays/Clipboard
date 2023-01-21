@@ -1145,7 +1145,7 @@ std::vector<char> X11Window::getClipboardData(X11Atom const& target) {
     if (firstResult.type() != atom(atomIncr)) {
         debugStream << "Got a regular non-INCR result" << std::endl;
         addToResult(firstResult);
-        return std::move(result);
+        return result;
     }
 
     debugStream << "Got an INCR result" << std::endl;

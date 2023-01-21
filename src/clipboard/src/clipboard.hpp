@@ -50,11 +50,11 @@ static std::vector<std::string> arguments;
 
 static std::string clipboard_name = "0";
 
-enum class SpinnerState : int { Done, Active, Cancel };
+enum class ProgressState : int { Done, Active, Cancel };
 
 static std::condition_variable cv;
 static std::mutex m;
-static std::atomic<SpinnerState> spinner_state = SpinnerState::Done;
+static std::atomic<ProgressState> progress_state = ProgressState::Done;
 static std::thread indicator;
 
 struct Successes {
