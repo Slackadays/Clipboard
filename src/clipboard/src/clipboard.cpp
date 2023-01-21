@@ -80,7 +80,7 @@ TerminalSize getTerminalSize() {
 
 std::string fileContents(const fs::path& path) {
     std::stringstream buffer;
-    buffer << std::ifstream(path).rdbuf().str();
+    buffer << std::ifstream(path).rdbuf();
     return buffer.str();
 }
 
