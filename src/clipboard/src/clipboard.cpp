@@ -207,14 +207,11 @@ namespace PerformAction {
     }
 
     void pipeOut() {
-        std::string line;
         for (const auto& entry : fs::recursive_directory_iterator(filepath.main)) {
-            std::ifstream file(entry.path());
-            while (std::getline(file, line)) {
-                printf("%s\n", line.data());
-                successes.bytes += line.size() + 1;
-            }
-            file.close();
+            std::string content(fileContents(entry.path()));
+            printf("%s", content.data());
+            fflush(stdout);
+            successes.bytes += content.size();
         }
     }
 
