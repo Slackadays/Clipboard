@@ -35,9 +35,12 @@ struct Filepath {
 };
 static Filepath filepath;
 
+enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
+
 struct Copying {
     bool is_persistent = false;
     bool use_safe_copy = true;
+    CopyPolicy policy = CopyPolicy::Unknown;
     fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
     std::vector<fs::path> items;
     std::vector<std::pair<std::string, std::error_code>> failedItems;
@@ -197,7 +200,6 @@ void clearTempDirectory(bool force_clear);
 void copyFiles();
 void removeOldFiles();
 bool userIsARobot();
-int getUserDecision(const std::string& item);
 void pasteFiles();
 void pipeIn();
 void pipeOut();

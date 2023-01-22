@@ -84,6 +84,33 @@ std::string fileContents(const fs::path& path) {
     return buffer.str();
 }
 
+bool userIsARobot() {
+    return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
+}
+
+CopyPolicy userDecision(const std::string& item) {
+    if (userIsARobot()) {
+        return CopyPolicy::ReplaceAll;
+    }
+    fprintf(stderr, item_already_exists_message().data(), item.data());
+    std::string decision;
+    while (true) {
+        std::getline(std::cin, decision);
+        fprintf(stderr, "%s", replaceColors("{blank}").data());
+        if (decision == "y" || decision == "yes") {
+            return CopyPolicy::ReplaceOnce;
+        } else if (decision == "a" || decision == "all") {
+            return CopyPolicy::ReplaceAll;
+        } else if (decision == "n" || decision == "no") {
+            return CopyPolicy::SkipOnce;
+        } else if (decision == "s" || decision == "skip") {
+            return CopyPolicy::SkipAll;
+        } else {
+            fprintf(stderr, "%s", bad_response_message().data());
+        }
+    }
+}
+
 namespace PerformAction {
     void copy() {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
@@ -133,7 +160,6 @@ namespace PerformAction {
     }
 
     void paste() {
-        int user_decision = 0;
         for (const auto& f : fs::directory_iterator(filepath.main)) {
             auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
                 if (fs::exists(fs::current_path() / f.path().filename()) && fs::equivalent(f, fs::current_path() / f.path().filename())) {
@@ -154,24 +180,24 @@ namespace PerformAction {
             };
             try {
                 if (fs::exists(fs::current_path() / f.path().filename())) {
-                    switch (user_decision) {
-                        case -2:
+                    switch (copying.policy) {
+                        case CopyPolicy::SkipAll:
                             break;
-                        case -1:
-                        case 0:
-                        case 1:
+                        case CopyPolicy::SkipOnce:
+                        case CopyPolicy::Unknown:
+                        case CopyPolicy::ReplaceOnce:
                             stopIndicator();
-                            user_decision = getUserDecision(f.path().filename().string());
+                            copying.policy = userDecision(f.path().filename().string());
                             startIndicator();
                             break;
-                        case 2:
+                        case CopyPolicy::ReplaceAll:
                             pasteItem();
                             break;
                     }
-                    switch (user_decision) {
-                        case -1:
+                    switch (copying.policy) {
+                        case CopyPolicy::SkipOnce:
                             break;
-                        case 1:
+                        case CopyPolicy::ReplaceOnce:
                             pasteItem();
                     }
                 } else {
@@ -731,33 +757,6 @@ void removeOldFiles() {
             fs::remove(filepath.original_files);
         }
         action = Action::Cut;
-    }
-}
-
-bool userIsARobot() {
-    return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
-}
-
-int getUserDecision(const std::string& item) {
-    if (userIsARobot()) {
-        return 2;
-    }
-    fprintf(stderr, item_already_exists_message().data(), item.data());
-    std::string decision;
-    while (true) {
-        std::getline(std::cin, decision);
-        fprintf(stderr, "%s", replaceColors("{blank}").data());
-        if (decision == "y" || decision == "yes") {
-            return 1;
-        } else if (decision == "a" || decision == "all") {
-            return 2;
-        } else if (decision == "n" || decision == "no") {
-            return -1;
-        } else if (decision == "s" || decision == "skip") {
-            return -2;
-        } else {
-            fprintf(stderr, "%s", bad_response_message().data());
-        }
     }
 }
 
