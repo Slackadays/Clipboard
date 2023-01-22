@@ -18,29 +18,23 @@
 #include "clipboard.hpp"
 
 extern "C" {
-    bool holdsText();
-    bool holdsFiles();
-
-    const char* getText();
-    char** getFiles();
+    const char* textContent();
+    char** fileContent();
 
     void writeText(const char* text);
     void writeFiles(const char** files);
 }
 
 ClipboardContent getGUIClipboard() {
-    if (holdsFiles()) {
+    if (char** files = fileContent(); files != nullptr) {
         std::vector<fs::path> fileVector;
-        char** files = getFiles();
         for (int i = 0; files[i] != nullptr; i++) {
             fileVector.push_back(files[i]);
         }
         delete[] files;
         ClipboardPaths paths(fileVector);
         return ClipboardContent(paths);
-    }
-    if (holdsText()) {
-        std::string text(getText());
+    } else if (std::string text(textContent()); text != "") {
         return ClipboardContent(text);
     }
     return ClipboardContent();

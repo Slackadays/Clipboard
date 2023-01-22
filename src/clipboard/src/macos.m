@@ -13,38 +13,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <AppKit/AppKit.h>
-#include <stdbool.h>
 
-bool holdsText() {
+const char* textContent() {
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
-    return [[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]];
-}
-
-const char* getText() {
-    NSString *text = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString];
-    return [text UTF8String];
-}
-
-bool holdsFiles() {
-    NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
-    return [[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]];
-}
-
-char** getFiles() {
-    NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
-    NSArray *files = [[NSPasteboard generalPasteboard] readObjectsForClasses:classes options:[NSDictionary dictionary]];
-    int numberOfFiles = [files count];
-    char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
-    for (int i = 0; i < numberOfFiles; i++) {
-        NSURL *file = [files objectAtIndex:i];
-        const char* filepath = [[file path] UTF8String];
-        int length = strlen(filepath);
-        char* Cfilepath = malloc(length + 1);
-        strcpy(Cfilepath, filepath);
-        stringArray[i] = Cfilepath;
+    if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]]) {
+        NSString *text = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString];
+        return [text UTF8String];
     }
-    stringArray[numberOfFiles] = NULL;
-    return stringArray;
+    return NULL;
+}
+
+char** fileContent() {
+    NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
+    if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]]) {
+        NSArray *files = [[NSPasteboard generalPasteboard] readObjectsForClasses:classes options:[NSDictionary dictionary]];
+        int numberOfFiles = [files count];
+        char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
+        for (int i = 0; i < numberOfFiles; i++) {
+            const char* filepath = [[[files objectAtIndex:i] path] UTF8String];
+            char* Cfilepath = malloc(strlen(filepath) + 1);
+            strcpy(Cfilepath, filepath);
+            stringArray[i] = Cfilepath;
+        }
+        stringArray[numberOfFiles] = NULL;
+        return stringArray;
+    }
+    return NULL;
 }
 
 void writeText(const char* text) {
