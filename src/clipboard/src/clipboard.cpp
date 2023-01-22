@@ -829,11 +829,11 @@ void showSuccesses() {
         } else if ((successes.files == 0) && (successes.directories > 1)) {
             printf(many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
         } else if ((successes.files == 1) && (successes.directories == 1)) {
-            printf(one_file_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+            printf(one_file_one_directory_success_message().data(), did_action[action].data());
         } else if ((successes.files > 1) && (successes.directories == 1)) {
-            printf(many_files_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+            printf(many_files_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
         } else if ((successes.files == 1) && (successes.directories > 1)) {
-            printf(one_file_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+            printf(one_file_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
         } else if ((successes.files > 1) && (successes.directories > 1)) {
             printf(many_files_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
         }

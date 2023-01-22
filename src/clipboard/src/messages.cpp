@@ -113,9 +113,9 @@ Message pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
 Message one_item_success_message = "{green}✓ %s %s{blank}\n";
 Message many_files_success_message = "{green}✓ %s %i files{blank}\n";
 Message many_directories_success_message = "{green}✓ %s %i directories{blank}\n";
-Message one_file_one_directory_success_message = "{green}✓ %s %i file and %i directory{blank}\n";
-Message one_file_many_directories_success_message = "{green}✓ %s %i file and %i directories{blank}\n";
-Message many_files_one_directory_success_message = "{green}✓ %s %i files and %i directory{blank}\n";
+Message one_file_one_directory_success_message = "{green}✓ %s one file and one directory{blank}\n";
+Message one_file_many_directories_success_message = "{green}✓ %s one file and %i directories{blank}\n";
+Message many_files_one_directory_success_message = "{green}✓ %s %i files and one directory{blank}\n";
 Message many_files_many_directories_success_message = "{green}✓ %s %i files and %i directories{blank}\n";
 Message internal_error_message = "{red}╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking permissions on this system.{blank}\n";
 
