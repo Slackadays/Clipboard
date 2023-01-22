@@ -18,6 +18,7 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <clipboard/fork.hpp>
 
 namespace fs = std::filesystem;
 
@@ -26,16 +27,16 @@ enum class ClipboardPathsAction {
     Cut
 };
 
+std::ostream& operator<<(std::ostream&, ClipboardPathsAction const&);
+
 class ClipboardPaths {
 private:
     ClipboardPathsAction m_action;
     std::vector<fs::path> m_paths;
 
 public:
-    ClipboardPaths(std::vector<fs::path>&& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
-        : m_action(action), m_paths(std::move(paths)) { }
-    ClipboardPaths(std::vector<fs::path> const& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
-        : m_action(action), m_paths(paths) { }
+    ClipboardPaths(std::vector<fs::path>&&, ClipboardPathsAction = ClipboardPathsAction::Copy);
+    ClipboardPaths(std::vector<fs::path> const& paths, ClipboardPathsAction = ClipboardPathsAction::Copy);
 
     [[nodiscard]] inline ClipboardPathsAction action() const { return m_action; }
     [[nodiscard]] inline std::vector<fs::path> const& paths() const { return m_paths; }
@@ -53,21 +54,27 @@ private:
     std::variant<std::nullptr_t, std::string, ClipboardPaths> m_data;
 
 public:
-    ClipboardContent() : m_type(ClipboardContentType::Empty), m_data(nullptr) { }
+    ClipboardContent();
 
-    ClipboardContent(std::string const& text) : m_type(ClipboardContentType::Text), m_data(text) { }
-    ClipboardContent(std::string&& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) { }
+    ClipboardContent(std::string const&);
+    ClipboardContent(std::string&&);
 
-    ClipboardContent(ClipboardPaths const& paths) : m_type(ClipboardContentType::Paths), m_data(paths) { }
-    ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) { }
+    ClipboardContent(ClipboardPaths const&);
+    ClipboardContent(ClipboardPaths&&);
 
-    ClipboardContent(std::vector<fs::path>&& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
-        : ClipboardContent(ClipboardPaths(std::move(paths), action)) { }
-    ClipboardContent(std::vector<fs::path> const& paths, ClipboardPathsAction action = ClipboardPathsAction::Copy)
-        : ClipboardContent(ClipboardPaths(paths, action)) { }
+    ClipboardContent(std::vector<fs::path>&&, ClipboardPathsAction = ClipboardPathsAction::Copy);
+    ClipboardContent(std::vector<fs::path> const&, ClipboardPathsAction = ClipboardPathsAction::Copy);
 
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
     [[nodiscard]] inline std::string const& text() const { return std::get<std::string>(m_data); }
     [[nodiscard]] inline ClipboardPaths const& paths() const { return std::get<ClipboardPaths>(m_data); }
 };
 
+/**
+ * Object that's passed through the C interface to System GUI
+ * implementations on Write calls.
+ */
+struct WriteGuiContext {
+    Forker const& forker;
+    ClipboardContent const& clipboard;
+};

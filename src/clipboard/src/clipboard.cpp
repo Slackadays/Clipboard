@@ -31,6 +31,7 @@
 #include <sstream>
 #include <system_error>
 #include "clipboard.hpp"
+#include <clipboard/fork.hpp>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -50,6 +51,8 @@
 #endif
 
 namespace fs = std::filesystem;
+
+Forker forker {};
 
 static Action action;
 
@@ -391,6 +394,21 @@ void setupHandlers() {
             indicator.join();
             exit(EXIT_FAILURE);
         }
+    });
+
+#ifdef HAVE_PTHREAD_CANCEL
+    forker.atFork([]() {
+        // As the indicator thread still exists in memory in the forked process,
+        // the main process exiting creates an exception because it has not been joined in the X11 process.
+        // So we need to remove it from our forked memory
+        pthread_cancel(indicator.native_handle());
+    });
+#endif
+
+    forker.atNonFork([]() {
+        // If the process didn't fork, we need to stop the indicator thread to ensure it won't
+        // keep running in the background while we perform the required work
+        stopIndicator();
     });
 }
 

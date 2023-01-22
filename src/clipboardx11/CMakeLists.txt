@@ -9,7 +9,7 @@ target_link_libraries(clipboardx11
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT lto_supported)
-if(lto_supported)
+if(lto_supported AND NOT NO_LTO)
   set_property(TARGET clipboardx11 PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   if(CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU

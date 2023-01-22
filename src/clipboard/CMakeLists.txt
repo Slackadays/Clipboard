@@ -5,11 +5,17 @@ add_executable(clipboard
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT lto_supported)
-if(lto_supported)
+if(lto_supported AND NOT NO_LTO)
   set_property(TARGET clipboard PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   if(CMAKE_COMPILER_IS_GNUCXX)
     list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
   endif()
+endif()
+
+include(CheckSymbolExists)
+check_symbol_exists(pthread_cancel "pthread.h" HAVE_PTHREAD_CANCEL)
+if(HAVE_PTHREAD_CANCEL)
+  target_compile_definitions(gui PUBLIC HAVE_PTHREAD_CANCEL)
 endif()
 
 target_link_libraries(clipboard gui)

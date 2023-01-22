@@ -23,8 +23,11 @@
 #include <mutex>
 
 #include <clipboard/gui.hpp>
+#include <clipboard/fork.hpp>
 
 namespace fs = std::filesystem;
+
+extern Forker forker;
 
 struct Filepath {
     fs::path main;
@@ -116,7 +119,9 @@ class TerminalSize {
 public:
     size_t rows;
     size_t columns;
-    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows(rows), columns(columns) {}
+    TerminalSize(const unsigned int& rows, const unsigned int& columns)
+        : rows { std::max(1u, rows) }
+        , columns { std::max(1u, columns) } {}
     unsigned int accountRowsFor(const auto& ...args) {
         ((rows -= (static_cast<unsigned int>(args) / columns) + 1),...);
         return columns;
