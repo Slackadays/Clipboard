@@ -103,3 +103,18 @@ jobs:
         with:
           name: clipboard-windows-amd64
           path: build/output
+  build-windows-arm64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=ARM64
+          cmake --build . --config Release -j 2
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clipboard-windows-arm64
+          path: build/output
