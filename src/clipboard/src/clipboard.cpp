@@ -183,22 +183,17 @@ namespace PerformAction {
                     switch (copying.policy) {
                         case CopyPolicy::SkipAll:
                             break;
-                        case CopyPolicy::SkipOnce:
-                        case CopyPolicy::Unknown:
-                        case CopyPolicy::ReplaceOnce:
-                            stopIndicator();
-                            copying.policy = userDecision(f.path().filename().string());
-                            startIndicator();
-                            break;
                         case CopyPolicy::ReplaceAll:
                             pasteItem();
                             break;
-                    }
-                    switch (copying.policy) {
-                        case CopyPolicy::SkipOnce:
+                        default:
+                            stopIndicator();
+                            copying.policy = userDecision(f.path().filename().string());
+                            startIndicator();
+                            if (copying.policy == CopyPolicy::ReplaceOnce || copying.policy == CopyPolicy::ReplaceAll) {
+                                pasteItem();
+                            }
                             break;
-                        case CopyPolicy::ReplaceOnce:
-                            pasteItem();
                     }
                 } else {
                     pasteItem();
