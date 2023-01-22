@@ -752,11 +752,11 @@ int getUserDecision(const std::string& item) {
         fprintf(stderr, "%s", replaceColors("{blank}").data());
         if (decision == "y" || decision == "yes") {
             return 1;
-        } else if (decision == "ya" || decision == "yesall") {
+        } else if (decision == "a" || decision == "all") {
             return 2;
         } else if (decision == "n" || decision == "no") {
             return -1;
-        } else if (decision == "na" || decision == "noall") {
+        } else if (decision == "s" || decision == "skip") {
             return -2;
         } else {
             fprintf(stderr, "%s", bad_response_message().data());

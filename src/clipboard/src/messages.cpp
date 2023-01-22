@@ -105,7 +105,7 @@ Message and_more_items_message = "{blue}▏ ...and {bold}%i{blank}{blue} more.{b
 Message fix_problem_message = "{pink}▏ See if you have the needed permissions, or\n"
                                        "▏ try double-checking the spelling of the files or what directory you're in.{blank}\n";
 Message not_enough_storage_message = "{red}╳ There won't be enough storage available to paste everything (%gkB to paste, %gkB available).{blank}{pink} Try double-checking what items you've selected or delete some files to free up space.{blank}\n";
-Message item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yellow} already exists here. Would you like to replace it? {pink}Add {bold}all {blank}{pink}or {bold}a{blank}{pink} to use this decision for all items. {bold}[(y)es/(n)o)] ";
+Message item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yellow} already exists here. Do you want to replace it? {pink}Use {bold}all {blank}{pink}to replace all exisiting, or {bold}skip{blank}{pink} to replace nothing. {bold}[(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ";
 Message working_message = "{yellow}• %s... %i%s %s{blank}\r";
 Message cancelled_message = "{green}✓ Cancelled %s{blank}";
