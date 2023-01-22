@@ -28,12 +28,9 @@ char** fileContent() {
     if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]]) {
         NSArray *files = [[NSPasteboard generalPasteboard] readObjectsForClasses:classes options:[NSDictionary dictionary]];
         int numberOfFiles = [files count];
-        char** stringArray = malloc((numberOfFiles * sizeof(char*)) + 1);
-        for (int i = 0; i < numberOfFiles; i++) {
-            const char* filepath = [[[files objectAtIndex:i] path] UTF8String];
-            char* Cfilepath = malloc(strlen(filepath) + 1);
-            strcpy(Cfilepath, filepath);
-            stringArray[i] = Cfilepath;
+        char** stringArray = malloc((numberOfFiles + 1) * sizeof(char*));
+        for (unsigned i = 0; i < numberOfFiles; i++) {
+            stringArray[i] = strdup([[[files objectAtIndex:i] path] UTF8String]);
         }
         stringArray[numberOfFiles] = NULL;
         return stringArray;
