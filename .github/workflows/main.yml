@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         gcc: [ 10, 11, 12 ]
-        arch: [ i386, amd64, arm64, riscv64 ]
+        arch: [ i386, amd64, arm64, riscv64, armhf ]
 
     steps:
       - uses: actions/checkout@v3
@@ -51,6 +51,17 @@ jobs:
             sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
             sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
           fi
+
+          if [[ "${{ matrix.arch }}" == "armhf" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}-arm-linux-gnueabihf"
+            GPP_NAME="arm-linux-gnueabihf-g++-${{ matrix.gcc }}"
+            # add armhf architecture from Ubuntu ports
+            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
+          fi
           
           # This limits apt to only looking or amd64 and i386 from Azure, see https://github.com/actions/virtual-environments/issues/1961
           sudo sed -i'' -E 's/^deb http:\/\/(azure.archive|security).ubuntu.com/deb [arch=amd64,i386] http:\/\/\1.ubuntu.com/' /etc/apt/sources.list
@@ -68,7 +79,7 @@ jobs:
             "-DCMAKE_CXX_COMPILER=${GPP_NAME}" \
             "-DCMAKE_BUILD_TYPE=MinSizeRel"
           
-          cmake --build . -j 2
+          cmake --build . -j 3
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch }}
@@ -83,7 +94,7 @@ jobs:
         run: |
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
-          cmake --build . -j 2
+          cmake --build . -j 3
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-macos-arm64-amd64
@@ -98,7 +109,7 @@ jobs:
         run: |
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
-          cmake --build . --config Release -j 2
+          cmake --build . --config Release -j 3
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-windows-amd64
@@ -113,7 +124,7 @@ jobs:
         run: |
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=ARM64
-          cmake --build . --config Release -j 2
+          cmake --build . --config Release -j 3
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-windows-arm64
