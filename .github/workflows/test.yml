@@ -12,6 +12,7 @@ jobs:
         x11: [ "1", "0" ]
         wayland: [ "1", "0" ]
         arch: [ i386, amd64 ]
+        windows: [2022, 2019]
         exclude:
           - os: 20.04
             gcc: 12
@@ -86,7 +87,7 @@ jobs:
           cmake --install .
           bash ../tests/suite.sh
   test-windows-amd64:
-    runs-on: windows-latest
+    runs-on: windows-${{ matrix.windows }}
 
     steps:
       - uses: actions/checkout@v3
