@@ -3,13 +3,13 @@ name: Clipboard Builds
 on: [ push, pull_request ]
 jobs:
   build-linux_x11_wayland:
-    runs-on: ubuntu-22.04
-
     strategy:
       fail-fast: false
       matrix:
         gcc: [ 10, 11, 12 ]
         arch: [ i386, amd64, arm64, riscv64, armhf ]
+
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
