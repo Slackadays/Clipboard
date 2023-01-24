@@ -86,7 +86,11 @@ jobs:
           cmake --install .
           bash ../tests/suite.sh
   test-windows-amd64:
-    runs-on: windows-latest
+    strategy:
+     matrix:
+       windows: [2022, 2019]
+     
+    runs-on: windows-${{ matrix.windows }}
 
     steps:
       - uses: actions/checkout@v3
