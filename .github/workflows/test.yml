@@ -15,6 +15,9 @@ jobs:
         exclude:
           - os: 20.04
             gcc: 12
+          - os: 20.04
+            arch: i386
+            gcc: 11
 
     runs-on: ubuntu-${{ matrix.os }}
 
