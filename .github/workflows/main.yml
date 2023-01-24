@@ -7,7 +7,7 @@ jobs:
       fail-fast: false
       matrix:
         gcc: [ 10, 11, 12 ]
-        arch: [ i386, amd64, arm64, riscv64, armhf ]
+        arch: [ i386, amd64, arm64, riscv64, armhf, ppc64le, s390x ]
 
     runs-on: ubuntu-22.04
 
@@ -61,6 +61,28 @@ jobs:
             sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
             sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
             sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
+          fi
+
+          if [[ "${{ matrix.arch }}" == "ppc64le" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}-powerpc64le-linux-gnu"
+            GPP_NAME="powerpc64le-linux-gnu-g++-${{ matrix.gcc }}"
+            # add ppc64le architecture from Ubuntu ports
+            sudo echo "deb [arch=ppc64le] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=ppc64le] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=ppc64le] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=ppc64le] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
+          fi
+
+          if [[ "${{ matrix.arch }}" == "s390x" ]]
+          then
+            GPP_PACKAGE="g++-${{ matrix.gcc }}-s390x-linux-gnu"
+            GPP_NAME="s390x-linux-gnu-g++-${{ matrix.gcc }}"
+            # add s390x architecture from Ubuntu ports
+            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
           fi
           
           # This limits apt to only looking or amd64 and i386 from Azure, see https://github.com/actions/virtual-environments/issues/1961
