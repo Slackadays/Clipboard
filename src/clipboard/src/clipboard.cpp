@@ -787,7 +787,7 @@ bool isAWriteAction() {
 }
 
 void updateGUIClipboard() {
-    if (isAWriteAction() && !getenv("CLIPBOARD_NOGUI")) { //only update GUI clipboard on write operations
+    if (isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) { //only update GUI clipboard on write operations
         writeToGUIClipboard(thisClipboard());
     }
 }
