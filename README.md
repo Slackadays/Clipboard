@@ -1,4 +1,4 @@
-![Clipboard Banner](documentation/readme-banners/CBBanner.png)
+![Clipboard Banner](documentation/readme-assets/CBBanner.png)
 
 <p align="center">
     <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/main.yml?branch=main&label=BUILDS&style=for-the-badge">
@@ -18,8 +18,8 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 - **Integrated.** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
 - **Tiny.** Mere tens of kilobytes in size.
 
-![Clipboard Demo Image](documentation/readme-banners/CBDemo.png)
-![Quick Installation](documentation/readme-banners/CBQuickInstallation.png)
+![Clipboard Demo Image](documentation/readme-assets/CBDemo.png)
+![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 ### **All Except Windows** 
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
@@ -56,7 +56,7 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
 
 
-![How To Use](documentation/readme-banners/CBHowToUse.png)
+![How To Use](documentation/readme-assets/CBHowToUse.png)
 
 In all commands, you can substitute `cb` for `clipboard`. 
 Add a number to the end of the action to choose which clipboard you want to use (the default is 0) or `_` to use a persistent clipboard. 
@@ -100,7 +100,7 @@ clipboard cut1 MyDirectory
 cb cp800 bar.conf AnotherDirectory baz.txt
 ```
 
-![Simple Configuration](documentation/readme-banners/CBSimpleConfiguration.png)
+![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
 ### **Environment Variables**
 
@@ -142,12 +142,12 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
-![Need Help?](documentation/readme-banners/NeedHelp.png)
+![Need Help?](documentation/readme-assets/NeedHelp.png)
 
 Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, or join our Discord group!  
 
 [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
-![Thank You!](documentation/readme-banners/ThankYou.png)
+![Thank You!](documentation/readme-assets/ThankYou.png)
 
 Thank you to all the contributors who have helped make Clipboard great.
