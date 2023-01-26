@@ -231,7 +231,7 @@ jobs:
           version: '9.2'
           shell: bash
           run: |
-            sudo pkgin install cmake gcc12
+            sudo pkgin install -y cmake gcc12
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
             cmake --build . -j 2
