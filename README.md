@@ -18,7 +18,7 @@ Now, you can have a _unified_ clipboard to use anywhere in the command line, jus
 - **Integrated.** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
 - **Tiny.** Mere tens of kilobytes in size.
 
-https://user-images.githubusercontent.com/69403549/214739367-33fd8be1-10ac-420c-b187-b01607c7eebf.mp4
+https://user-images.githubusercontent.com/69403549/214741575-50cbb011-8a75-4c47-ac83-67e6c9ab5186.mp4
 
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 ### **All Except Windows** 
