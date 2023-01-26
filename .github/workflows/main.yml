@@ -187,7 +187,7 @@ jobs:
           version: '7.2'
           shell: bash
           run: |
-            doas pkg_add cmake g++-11.2.0p3
+            sudo pkg_add cmake g++-11.2.0p3
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++
             cmake --build . -j 2
