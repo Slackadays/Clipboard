@@ -151,25 +151,25 @@ jobs:
         with:
           name: clipboard-windows-arm64
           path: build/output
-  freebsd-amd64:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run a script
-        uses: cross-platform-actions/action@v0.9.0
-        with:
-          operating_system: freebsd
-          architecture: x86-64
-          version: '13.1'
-          shell: bash
-          run: |
-            pkg install -y cmake gcc12
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
-            cmake --build . -j 2
-      - uses: actions/upload-artifact@v3
-        with:
-          name: clipboard-freebsd-amd64
-          path: build/output
+#  freebsd-amd64:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Run a script
+#        uses: cross-platform-actions/action@v0.9.0
+#        with:
+#          operating_system: freebsd
+#          architecture: x86-64
+#          version: '13.1'
+#          shell: bash
+#          run: |
+#            pkg install -y cmake gcc12
+#            cd build
+#            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
+#            cmake --build . -j 2
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: clipboard-freebsd-amd64
+#          path: build/output
