@@ -167,7 +167,29 @@ jobs:
           run: |
             sudo pkg install -y cmake gcc12
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_CXX_COMPILER=g++12
+            cmake --build . -j 2
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clipboard-freebsd-amd64
+          path: build/output
+  openbsd-amd64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a script
+        uses: cross-platform-actions/action@v0.9.0
+        with:
+          operating_system: openbsd
+          architecture: x86-64
+          version: '7.2'
+          shell: bash
+          run: |
+            doas pkg_add cmake g++-11.2.0p3
+            cd build
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
