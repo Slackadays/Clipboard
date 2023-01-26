@@ -2,7 +2,7 @@ name: Clipboard Tests
 
 on: [ push, pull_request ]
 jobs:
-  test-linux-gcc:
+  linux-gcc:
 
     strategy:
       fail-fast: false
@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run a multi-line script
+      - name: Run a script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
           NO_X11=1
@@ -71,13 +71,13 @@ jobs:
           sudo cmake --install .
           export TMPDIR=/tmp
           bash ../tests/suite.sh
-  test-macos-arm64-amd64:
+  macos-arm64-amd64:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run a multi-line script
+      - name: Run a script
         run: |
           brew install gcc
           cd build
@@ -85,7 +85,7 @@ jobs:
           cmake --build . -j 2
           cmake --install .
           bash ../tests/suite.sh
-  test-windows-amd64:
+  windows-amd64:
     strategy:
      matrix:
        windows: [2022, 2019]
@@ -95,7 +95,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run a multi-line script
+      - name: Run a script
         shell: bash
         run: |
           cd build
