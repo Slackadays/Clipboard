@@ -165,7 +165,6 @@ jobs:
           version: '13.1'
           shell: bash
           run: |
-            su
             pkg install -y cmake gcc12
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
