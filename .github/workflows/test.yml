@@ -171,3 +171,24 @@ jobs:
             sudo cmake --install .
             export TMPDIR=/tmp
             bash ../tests/suite.sh
+  netbsd-amd64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a script
+        uses: cross-platform-actions/action@v0.10.0
+        with:
+          operating_system: netbsd
+          architecture: x86_64
+          version: '9.2'
+          shell: bash
+          run: |
+            sudo pkgin install cmake gcc12
+            cd build
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
+            cmake --build . -j 2
+            sudo cmake --install .
+            export TMPDIR=/tmp
+            bash ../tests/suite.sh
