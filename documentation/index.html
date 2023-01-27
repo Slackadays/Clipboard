@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="icon" href="data:;base64,=">
+        <link rel="icon" href="CBFavicon.png">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Cut, copy, and paste anything, anywhere, all in the terminal with Clipboard.">
@@ -21,23 +21,57 @@
                 font-style: normal;
             }
 
+            @font-face {
+                font-family: 'Secular One';
+                src: url('fonts/secular_one/SecularOne-Regular.ttf');
+                font-weight: normal;
+                font-style: normal;
+            }
+
             html {
                 background: rgb(255, 178, 65);
             }
 
             body {
-                max-width: 50%;
-                margin: 0 auto;
-                font-family: 'Courier New', Courier, monospace;
-                box-shadow: 0 0 40px 5px black;
-                padding-left: 25px;
-                padding-right: 25px;
+                margin: 0;
+                padding: 0;
+            }
+
+            titlebar {
+                max-width: 100vw;
+                max-height: 100%;
+                display: block;
+                box-shadow: 0px 2px 100px black;
+                padding-top: 1vh;
+                padding-bottom: 1.5vh;
+                padding-left: 2vw;
+                margin-bottom: 5vh;
+            }
+
+            titletext {
+                text-align: left;
+                font-family: 'Lobster Two';
+                font-size: 5em;
+                font-weight: bold;
+                display: block;
+            }
+
+            herotext {
+                font-family: 'Permanent Marker';
+                font-size: 5em;
+                text-align: left;
+                margin-top: 2vh;
+                margin-bottom: 2vh;
+                margin-left: 4vw;
+                display: block;
             }
 
             img {
                 max-width: 100%;
                 margin-top: 25px;
                 margin-bottom: 25px;
+                margin: 0 auto;
+                display: block;
             }
 
             h1 {
@@ -56,10 +90,16 @@
             }
 
             p {
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-                text-align: center;
+                text-align: left;
+                padding: 1%;
+                margin-top: 5vh;
+                margin-left: auto;
+                width: 60vw;
+                font-family: 'Secular One', sans-serif;
                 font-size: 2em;
-                font-weight: bold;
+                box-shadow: 0 0 100px 1px black;
+                border-radius: 40px 0px 0px 40px;
+                display: block;
             }
 
             a {
@@ -67,10 +107,25 @@
             }
 
             @media screen and (max-width: 800px) {
-                body {
-                    max-width: 98%;
-                    box-shadow: none;
+                titlebar {
+                    padding-left: 0;
+                    padding-right: 0;
+                    width: 100%;
                 }
+
+                titletext {
+                    font-size: 3em;
+                    text-align: center;
+                }
+
+                herotext {
+                    font-size: 3em;
+                    margin-left: 0;
+                    text-align: center;
+                    margin-top: 10vh;
+                    margin-bottom: 10vh;
+                }
+
                 h1 {
                     font-size: 3em;
                     box-shadow: 0 0 40px 5px black;
@@ -79,28 +134,46 @@
                     font-size: 2em;
                 }
                 p {
-                    font-size: 1.4em;
+                    font-size: 1.3em;
+                    border-radius: 0px;
+                    width: 98%;
                 }
             }
         </style>
     </head>
     <body>
-        <h1>
-            The Clipboard Project
-        </h1>
-        <h2>
-            About
-        </h2>
+        <titlebar>
+            <titletext>
+                The Clipboard Project
+            </titletext>
+        </titlebar>
+        <herotext>
+            Cut, copy, and paste anything, anywhere
+        </herotext>
         <p>
-            Clipboard by Jackson Huff is a free and open source software power tool that lets you cut, copy, and paste anything, anywhere, all in the terminal!<br><br>
+            Clipboard by Jackson Huff is a power tool that lets you cut, copy, and paste anything, anywhere, all in the terminal.<br><br>
 
-            Previously, using the clipboard from the terminal was an inconsistent, user-unfriendly mess. Clipboard changes all of this by unifying all the different clipboard tools into a single, highly polished one.
+            Now you can do anything that involves moving information around a lot quicker and easier.
         </p>
-        <h2>
-            More Info
-        </h2>
+        <herotext>
+            Why Choose Clipboard?
+        </herotext>
         <p>
-            Everything else is in <a href="https://github.com/Slackadays/Clipboard">the Clipboard GitHub repository page</a>!<br><br>
+            <em>Quick.</em> Zero configuration needed to use.<br>
+            <em>Easy.</em> Friendly to newbies and power users alike.<br>
+            <em>Pretty.</em> Breaks the rules to look beautiful.<br>
+            <em>Compatible.</em> Works on anything that supports C++20.<br>
+            <em>Unified.</em> Functions exactly the same everywhere.<br>
+            <em>Universal.</em> Supports several languages.<br>
+            <em>Integrated.</em> Connects with many native GUI clipboards.<br>
+            <em>Tiny.</em> Mere tens of kilobytes in size.
+        </p>
+        <herotext>
+            Get Started
+        </herotext>
+        <p>
+            Everything you need to get started with Clipboard is in the <a href="https://github.com/Slackadays/Clipboard">official GitHub page</a>.
+            <img style="display: inline;" alt="GitHub Repo stars" src="https://img.shields.io/github/stars/slackadays/Clipboard?color=bright-green&label=stars&style=social">
         </p>
         <img src="readme-assets/CBDemo.png">
     </body>
