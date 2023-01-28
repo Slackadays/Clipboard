@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        gcc: [ 10, 11, 12 ]
+        gcc: [ 11, 12 ]
         arch: [ i386, amd64, arm64, riscv64, armhf, ppc64el, s390x ]
 
     runs-on: ubuntu-22.04

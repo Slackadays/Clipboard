@@ -89,8 +89,9 @@ bool userIsARobot() {
 }
 
 CopyPolicy userDecision(const std::string& item) {
+    using enum CopyPolicy;
     if (userIsARobot()) {
-        return CopyPolicy::ReplaceAll;
+        return ReplaceAll;
     }
     fprintf(stderr, item_already_exists_message().data(), item.data());
     std::string decision;
@@ -98,13 +99,13 @@ CopyPolicy userDecision(const std::string& item) {
         std::getline(std::cin, decision);
         fprintf(stderr, "%s", replaceColors("{blank}").data());
         if (decision == "y" || decision == "yes") {
-            return CopyPolicy::ReplaceOnce;
+            return ReplaceOnce;
         } else if (decision == "a" || decision == "all") {
-            return CopyPolicy::ReplaceAll;
+            return ReplaceAll;
         } else if (decision == "n" || decision == "no") {
-            return CopyPolicy::SkipOnce;
+            return SkipOnce;
         } else if (decision == "s" || decision == "skip") {
-            return CopyPolicy::SkipAll;
+            return SkipAll;
         } else {
             fprintf(stderr, "%s", bad_response_message().data());
         }
@@ -603,10 +604,11 @@ void verifyAction() {
         fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[tryThisAction].data(), actions[tryThisAction].data());
         exit(EXIT_FAILURE);
     };
-    if (action == Action::Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Action::Copy); }
-    if (action == Action::Copy && !is_tty.out) { tryThisInstead(Action::Paste); }
-    if (action == Action::Paste && !is_tty.in) { tryThisInstead(Action::Copy); }
-    if ((action == Action::PipeIn || action == Action::PipeOut) && arguments.size() >= 2) {
+    using enum Action;
+    if (action == Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Copy); }
+    if (action == Copy && !is_tty.out) { tryThisInstead(Paste); }
+    if (action == Paste && !is_tty.in) { tryThisInstead(Copy); }
+    if ((action == PipeIn || action == PipeOut) && arguments.size() >= 2) {
         fprintf(stderr, "%s", redirection_no_items_message().data());
         exit(EXIT_FAILURE);
     }
@@ -756,34 +758,36 @@ void removeOldFiles() {
 }
 
 void performAction() {
+    using enum Action;
     switch (action) {
-        case Action::Copy:
-        case Action::Cut:
+        case Copy:
+        case Cut:
             PerformAction::copy();
             break;
-        case Action::Paste:
+        case Paste:
             PerformAction::paste();
             break;
-        case Action::PipeIn:
+        case PipeIn:
             PerformAction::pipeIn();
             break;
-        case Action::PipeOut:
+        case PipeOut:
             PerformAction::pipeOut();
             break;
-        case Action::Clear:
+        case Clear:
             PerformAction::clear();
             break;
-        case Action::Show:
+        case Show:
             PerformAction::show();
             break;
-        case Action::Edit:
+        case Edit:
             PerformAction::edit();
             break;
     }
 }
 
 bool isAWriteAction() {
-    return action == Action::Cut || action == Action::Copy || action == Action::PipeIn || action == Action::Clear;
+    using enum Action;
+    return action == Cut || action == Copy || action == PipeIn || action == Clear;
 }
 
 void updateGUIClipboard() {
