@@ -84,6 +84,11 @@ std::string fileContents(const fs::path& path) {
     return buffer.str();
 }
 
+void deduplicate(auto& items) {
+    std::sort(items.begin(), items.end());
+    items.erase(std::unique(items.begin(), items.end()), items.end());
+}
+
 bool userIsARobot() {
     return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
 }
@@ -701,11 +706,6 @@ void startIndicator() { // If cancelled, leave cancelled
     indicator = std::thread(setupIndicator);
 }
 
-void deduplicateItems() {
-    std::sort(copying.items.begin(), copying.items.end());
-    copying.items.erase(std::unique(copying.items.begin(), copying.items.end()), copying.items.end());
-}
-
 unsigned long long totalItemSize() {
     unsigned long long total_item_size = 0;
     for (const auto& i : copying.items) {
@@ -799,11 +799,6 @@ void updateGUIClipboard() {
     }
 }
 
-void deduplicateFailures() {
-    std::sort(copying.failedItems.begin(), copying.failedItems.end());
-    copying.failedItems.erase(std::unique(copying.failedItems.begin(), copying.failedItems.end()), copying.failedItems.end());
-}
-
 void showFailures() {
     if (copying.failedItems.size() > 0) {
         TerminalSize available(getTerminalSize());
@@ -875,7 +870,7 @@ int main(int argc, char *argv[]) {
 
         startIndicator();
 
-        deduplicateItems();
+        deduplicate(copying.items);
 
         checkItemSize(totalItemSize());
 
@@ -887,7 +882,7 @@ int main(int argc, char *argv[]) {
 
         stopIndicator();
 
-        deduplicateFailures();
+        deduplicate(copying.failedItems);
 
         showFailures();
 
