@@ -122,7 +122,7 @@ jobs:
           version: '13.1'
           shell: bash
           run: |
-            sudo pkg install -y cmake gcc12 xorg
+            sudo pkg install -y cmake gcc12 xorg wayland
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++12
             cmake --build . -j 2
