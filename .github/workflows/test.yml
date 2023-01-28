@@ -122,9 +122,9 @@ jobs:
           version: '13.1'
           shell: bash
           run: |
-            sudo pkg install -y cmake gcc12
+            sudo pkg install -y cmake gcc12 xorg
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=g++12
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++12
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
