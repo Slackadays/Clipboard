@@ -29,6 +29,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <sstream>
+#include <system_error>
 #include "clipboard.hpp"
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -152,7 +153,7 @@ namespace PerformAction {
             try {
                 copyItem();
             } catch (const fs::filesystem_error& e) {
-                if (!copying.use_safe_copy) {
+                if (!copying.use_safe_copy && e.code() == std::errc::cross_device_link) {
                     try {
                         copyItem(true);
                     } catch (const fs::filesystem_error& e) {
