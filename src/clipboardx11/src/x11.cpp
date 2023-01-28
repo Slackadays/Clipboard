@@ -1780,10 +1780,14 @@ static void setX11ClipboardInternal(ClipboardContent const& clipboard) {
         debugStream << "Error during X11 daemon operation: " << e.what() << std::endl;
     }
 
+    // As the indicator thread still exists in memory in the forked X11 process,
+    // the main process exiting creates an exception because it has not been joined in the X11 process.
+    // So we need to remove it from our forked memory
+    pthread_cancel(indicator.native_handle());
+
     // Always exit no matter what happens, to prevent the forked daemon
     // from returning control to the stack frames above and overwriting the
     // non-forked original process' work
-    pthread_cancel(indicator.native_handle());
     std::exit(EXIT_SUCCESS);
 }
 
