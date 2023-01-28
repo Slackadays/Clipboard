@@ -35,6 +35,8 @@
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>
 
+#include "../../clipboard/src/clipboard.hpp"
+
 namespace chrono = std::chrono;
 namespace ranges = std::ranges;
 namespace views = std::views;
@@ -1781,6 +1783,7 @@ static void setX11ClipboardInternal(ClipboardContent const& clipboard) {
     // Always exit no matter what happens, to prevent the forked daemon
     // from returning control to the stack frames above and overwriting the
     // non-forked original process' work
+    pthread_cancel(indicator.native_handle());
     std::exit(EXIT_SUCCESS);
 }
 

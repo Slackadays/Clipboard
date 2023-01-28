@@ -52,8 +52,6 @@ namespace fs = std::filesystem;
 
 static Action action;
 
-std::thread indicator;
-
 bool stopIndicator(bool change_condition_variable = true) {
     ProgressState expect = ProgressState::Active;
     if (!change_condition_variable) {

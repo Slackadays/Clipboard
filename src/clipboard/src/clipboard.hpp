@@ -59,7 +59,7 @@ enum class ProgressState : int { Done, Active, Cancel };
 static std::condition_variable cv;
 static std::mutex m;
 static std::atomic<ProgressState> progress_state = ProgressState::Done;
-extern std::thread indicator;
+static std::thread indicator;
 
 struct Successes {
     std::atomic<unsigned long> files;
