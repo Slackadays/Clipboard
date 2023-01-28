@@ -28,6 +28,7 @@
 #include <vector>
 #include <limits>
 #include <set>
+#include <sstream>
 
 #include <unistd.h>
 #include <X11/Xlib.h>
@@ -1780,7 +1781,7 @@ static void setX11ClipboardInternal(ClipboardContent const& clipboard) {
     // Always exit no matter what happens, to prevent the forked daemon
     // from returning control to the stack frames above and overwriting the
     // non-forked original process' work
-    std::quick_exit(EXIT_SUCCESS);
+    std::exit(EXIT_SUCCESS);
 }
 
 extern "C" {

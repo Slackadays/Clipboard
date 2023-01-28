@@ -52,6 +52,8 @@ namespace fs = std::filesystem;
 
 static Action action;
 
+std::thread indicator;
+
 bool stopIndicator(bool change_condition_variable = true) {
     ProgressState expect = ProgressState::Active;
     if (!change_condition_variable) {
@@ -580,6 +582,9 @@ void setFlags() {
     if (flagIsPresent<bool>("--ee")) {
         printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
         exit(EXIT_SUCCESS);
+    }
+    if (flagIsPresent<bool>("--silent") || flagIsPresent<bool>("-s")) {
+        output_silent = true;
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") {
         clipboard_name = flag;

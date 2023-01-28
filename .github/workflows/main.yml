@@ -167,7 +167,7 @@ jobs:
           run: |
             sudo pkg install -y cmake gcc12
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_CXX_COMPILER=g++12
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_CXX_COMPILER=g++12
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:

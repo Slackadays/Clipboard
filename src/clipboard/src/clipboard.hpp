@@ -52,12 +52,14 @@ static std::vector<std::string> arguments;
 
 static std::string clipboard_name = "0";
 
+static bool output_silent = false;
+
 enum class ProgressState : int { Done, Active, Cancel };
 
 static std::condition_variable cv;
 static std::mutex m;
 static std::atomic<ProgressState> progress_state = ProgressState::Done;
-static std::thread indicator;
+extern std::thread indicator;
 
 struct Successes {
     std::atomic<unsigned long> files;
