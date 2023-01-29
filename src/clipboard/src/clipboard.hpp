@@ -77,6 +77,7 @@ static IsTTY is_tty;
 
 struct Constants {
     std::string_view clipboard_version = "0.2.1r2";
+    std::string_view clipboard_commit = GIT_COMMIT_HASH;
     std::string_view pipe_file = "clipboard.rawdata";
     std::string_view default_clipboard_name = "0";
     std::string_view temporary_directory_name = "Clipboard";

@@ -56,7 +56,7 @@ ActionArray<std::string_view, 8> did_action = {
     "Edited"
 };
 
-Message help_message = "{blue}▏This is Clipboard %s, the cut, copy, and paste system for the command line.{blank}\n"
+Message help_message = "{blue}▏This is Clipboard %s (commit %s), the cut, copy, and paste system for the command line.{blank}\n"
                                 "{blue}{bold}▏How To Use{blank}\n"
                                 "{orange}▏clipboard cut (item) [items]{blank} {pink}(This cuts an item or items.){blank}\n"
                                 "{orange}▏clipboard copy (item) [items]{blank} {pink}(This copies an item or items.){blank}\n"
@@ -148,7 +148,7 @@ void setLanguageES() {
     did_action[Action::PipeIn] = "Direccionó hacia adentro";
     did_action[Action::PipeOut] = "Direccionó hacia afuera";
 
-    help_message = "{blue}▏Esto es Clipboard %s, el sistema para cortar, copiar y pegar adentro del terminal.{blank}\n"
+    help_message = "{blue}▏Esto es Clipboard %s (commit %s), el sistema para cortar, copiar y pegar adentro del terminal.{blank}\n"
                    "{blue}{bold}▏Cómo usar{blank}\n"
                    "{orange}▏clipboard cortar (cosa) [cosas]{blank}\n"
                    "{orange}▏clipboard copiar (cosa) [cosas]{blank}\n"
@@ -203,7 +203,7 @@ void setLanguagePT() {
     did_action[Action::PipeIn] = "Direcionou para dentro";
     did_action[Action::PipeOut] = "Direcionou para fora";
 
-    help_message = "{blue}▏Este é Clipboard %s, o sistema de recortar, copiar e colar para a linha de comando.{blank}\n"
+    help_message = "{blue}▏Este é Clipboard %s (commit %s), o sistema de recortar, copiar e colar para a linha de comando.{blank}\n"
                    "{blue}{bold}▏Como utilizar{blank}\n"
                    "{orange}▏clipboard recortar (item) [itens]{blank}\n"
                    "{orange}▏clipboard copiar (item) [itens]{blank}\n"
@@ -263,7 +263,7 @@ void setLanguageTR() {
     did_action[Action::PipeIn] = "İçe Yönlendirildi";
     did_action[Action::PipeOut] = "Dışa Yönlendirildi";
 
-    help_message = "{blue}▏Clipboard %s, komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.{blank}\n"
+    help_message = "{blue}▏Clipboard %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.{blank}\n"
                    "{blue}{bold}▏Nasıl kullanılır{blank}\n"
                    "{orange}▏clipboard kes (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) keser.){blank}\n"
                    "{orange}▏clipboard kopyala (öğe) [öğeler]{blank} {pink}(Bu öğe(leri) kopyalar.){blank}\n"

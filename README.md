@@ -92,6 +92,10 @@ Add a number to the end of the action to choose which clipboard you want to use 
 
 ---
 
+**Show Help Message** &emsp; `clipboard help`
+
+---
+
 **Examples**
 
 ```
@@ -141,6 +145,8 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 ### **Flags**
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+
+**`--help`, `-h`** &emsp; Add this to show the help message which also contains the Clipboard version number.
 
 ![Need Help?](documentation/readme-assets/NeedHelp.png)
 

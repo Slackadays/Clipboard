@@ -597,7 +597,7 @@ void setFlags() {
         clipboard_name = flag;
     }
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
-        printf(help_message().data(), constants.clipboard_version.data());
+        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
         exit(EXIT_SUCCESS);
     }
     for (const auto& entry : arguments) {
