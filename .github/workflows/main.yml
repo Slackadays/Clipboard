@@ -7,7 +7,34 @@ jobs:
       fail-fast: false
       matrix:
         gcc: [ 11, 12 ]
-        arch: [ i386, amd64, arm64, riscv64, armhf, ppc64el, s390x ]
+        arch:
+          - os: i386
+            gcc: i686-linux-gnu
+            needs_ports: "0"
+
+          - os: amd64
+            gcc: x86_64-linux-gnu
+            needs_ports: "0"
+
+          - os: arm64
+            gcc: aarch64-linux-gnu
+            needs_ports: "1"
+
+          - os: riscv64
+            gcc: riscv64-linux-gnu
+            needs_ports: "1"
+
+          - os: armhf
+            gcc: arm-linux-gnueabihf
+            needs_ports: "1"
+
+          - os: ppc64el
+            gcc: powerpc64le-linux-gnu
+            needs_ports: "1"
+
+          - os: s390x
+            gcc: s390x-linux-gnu
+            needs_ports: "1"
 
     runs-on: ubuntu-22.04
 
@@ -16,95 +43,40 @@ jobs:
 
       - name: Run a script
         run: |
-          GPP_PACKAGE=""
-          GPP_NAME="g++"
-          if [[ "${{ matrix.arch }}" == "i386" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}-i686-linux-gnu"
-            GPP_NAME="i686-linux-gnu-g++-${{ matrix.gcc }}"
+          GPP_PACKAGE="g++-${{ matrix.gcc }}-${{ matrix.arch.gcc }}"
+          if [[ "${{ matrix.arch.gcc }}" == "$(uname --processor)-linux-gnu" ]]; then          
+            GPP_PACKAGE="g++-${{ matrix.gcc }}"
           fi
           
-          if [[ "${{ matrix.arch }}" == "amd64" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}"
-            GPP_NAME="x86_64-linux-gnu-g++-${{ matrix.gcc }}"
-          fi
-
-          if [[ "${{ matrix.arch }}" == "arm64" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}-aarch64-linux-gnu"
-            GPP_NAME="aarch64-linux-gnu-g++-${{ matrix.gcc }}"
-            # add arm64 architecture from Ubuntu ports
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
-          fi
-
-          if [[ "${{ matrix.arch }}" == "riscv64" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}-riscv64-linux-gnu"
-            GPP_NAME="riscv64-linux-gnu-g++-${{ matrix.gcc }}"
-            # add riscv64 architecture from Ubuntu ports
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=riscv64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
-          fi
-
-          if [[ "${{ matrix.arch }}" == "armhf" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}-arm-linux-gnueabihf"
-            GPP_NAME="arm-linux-gnueabihf-g++-${{ matrix.gcc }}"
-            # add armhf architecture from Ubuntu ports
-            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=armhf] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
-          fi
-
-          if [[ "${{ matrix.arch }}" == "ppc64el" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}-powerpc64le-linux-gnu"
-            GPP_NAME="powerpc64le-linux-gnu-g++-${{ matrix.gcc }}"
-            # add ppc64el architecture from Ubuntu ports
-            sudo echo "deb [arch=ppc64el] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=ppc64el] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=ppc64el] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=ppc64el] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
-          fi
-
-          if [[ "${{ matrix.arch }}" == "s390x" ]]
-          then
-            GPP_PACKAGE="g++-${{ matrix.gcc }}-s390x-linux-gnu"
-            GPP_NAME="s390x-linux-gnu-g++-${{ matrix.gcc }}"
-            # add s390x architecture from Ubuntu ports
-            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
-            sudo echo "deb [arch=s390x] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
+          if [[ "${{ matrix.arch.needs_ports }}" == "1" ]]; then
+            sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc) main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
           fi
           
           # This limits apt to only looking or amd64 and i386 from Azure, see https://github.com/actions/virtual-environments/issues/1961
           sudo sed -i'' -E 's/^deb http:\/\/(azure.archive|security).ubuntu.com/deb [arch=amd64,i386] http:\/\/\1.ubuntu.com/' /etc/apt/sources.list
 
-          sudo dpkg --add-architecture "${{ matrix.arch }}"
+          sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
           sudo apt-get install -y \
             "${GPP_PACKAGE}" \
-            "libx11-dev:${{ matrix.arch }}" \
-            "libwayland-dev:${{ matrix.arch }}"
+            "libx11-dev:${{ matrix.arch.os }}" \
+            "libwayland-dev:${{ matrix.arch.os }}" \
+            "wayland-protocols:${{ matrix.arch.os }}"
           
           cd build
           
           cmake .. \
-            "-DCMAKE_CXX_COMPILER=${GPP_NAME}" \
+            "-DCMAKE_CXX_COMPILER=${{ matrix.arch.gcc }}-g++-${{ matrix.gcc }}" \
+            "-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc-${{ matrix.gcc }}" \
             "-DCMAKE_BUILD_TYPE=MinSizeRel"
           
           cmake --build . -j 3
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch }}
+          name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch.os }}
           path: build/output
   macos-arm64-amd64:
     runs-on: macos-latest
@@ -167,7 +139,7 @@ jobs:
           run: |
             sudo pkg install -y cmake gcc12 xorg wayland
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_CXX_COMPILER=g++12
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=gcc12 -DCMAKE_CXX_COMPILER=g++12
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -189,7 +161,7 @@ jobs:
           run: |
             sudo pkg_add cmake g++-11.2.0p3
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_C_COMPILER=egcc -DCMAKE_CXX_COMPILER=eg++
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -211,7 +183,7 @@ jobs:
           run: |
             sudo pkg_add cmake g++-11.2.0p3
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_C_COMPILER=egcc -DCMAKE_CXX_COMPILER=eg++
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -233,7 +205,7 @@ jobs:
           run: |
             sudo pkgin -y install cmake gcc12
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:

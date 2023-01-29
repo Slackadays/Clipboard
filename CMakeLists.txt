@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
-project(Clipboard LANGUAGES CXX)
+project(Clipboard LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -24,6 +24,9 @@ execute_process( # save the current commit hash to GIT_COMMIT_HASH
 
 add_definitions(-DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}")
 add_definitions(-DGIT_BRANCH="${GIT_BRANCH}")
+if (MSVC)
+  add_compile_definitions(NOMINMAX) # Prevent min() or max() from being made into macros by windows.h
+endif()
 
 if($ENV{CI}) # enable easy artifact access on CI by shipping everything to a unified folder
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output/lib)
@@ -88,7 +91,7 @@ else()
 endif()
 
 find_package(PkgConfig)
-pkg_check_modules(WAYLAND_CLIENT wayland-client)
+pkg_check_modules(WAYLAND_CLIENT wayland-client wayland-protocols)
 if(NOT NO_WAYLAND AND WAYLAND_CLIENT_FOUND)
   message(STATUS "Building Clipboard with Wayland support")
   add_subdirectory(src/clipboardwayland)

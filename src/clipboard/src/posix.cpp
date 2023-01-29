@@ -60,8 +60,12 @@ static ClipboardContent dynamicGetGUIClipboard(char const* object, char const* s
 }
 
 static void dynamicSetGUIClipboard(char const* object, char const* symbol, ClipboardContent const& clipboard) {
-    auto clipboardPtr = reinterpret_cast<void*>(const_cast<ClipboardContent*>(&clipboard));
-    dynamicCall<setClipboard_t>(object, symbol, clipboardPtr);
+    WriteGuiContext context {
+        .forker = forker,
+        .clipboard = clipboard,
+    };
+    auto ptr = reinterpret_cast<void*>(&context);
+    dynamicCall<setClipboard_t>(object, symbol, ptr);
 }
 
 ClipboardContent getGUIClipboard() {

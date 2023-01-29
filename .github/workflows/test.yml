@@ -7,19 +7,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 20.04, 22.04 ]
+        os:
+          - version: 20.04
+            no_lto: "1"
+
+          - version: 22.04
+            no_lto: "0"
+
         gcc: [ 11, 12 ]
         x11: [ "1", "0" ]
         wayland: [ "1", "0" ]
-        arch: [ i386, amd64 ]
-        exclude:
-          - os: 20.04
-            gcc: 12
-          - os: 20.04
-            arch: i386
-            gcc: 11
 
-    runs-on: ubuntu-${{ matrix.os }}
+        arch:
+          - os: i386
+            gcc: i686-linux-gnu
+
+          - os: amd64
+            gcc: x86_64-linux-gnu
+
+        exclude:
+          - os:
+              version: 20.04
+            gcc: 12
+
+          - os:
+              version: 20.04
+            gcc: 11
+            arch:
+              os: i386
+
+    runs-on: ubuntu-${{ matrix.os.version }}
 
     steps:
       - uses: actions/checkout@v3
@@ -29,42 +46,35 @@ jobs:
         run: |
           NO_X11=1
           NO_WAYLAND=1
-          PACKAGES=""
-          GPP_NAME="g++"
+          PACKAGES="g++-${{ matrix.gcc }}-${{ matrix.arch.gcc }}"
+          
+          if [[ "${{ matrix.arch.gcc }}" == "$(uname --processor)-linux-gnu" ]]; then          
+            PACKAGES="g++-${{ matrix.gcc }}"
+          fi
           
           if [[ "${{ matrix.x11 }}" == "1" ]]
           then
             NO_X11=0
-            PACKAGES="${PACKAGES} libx11-dev:${{ matrix.arch }}"
+            PACKAGES="${PACKAGES} libx11-dev:${{ matrix.arch.os }}"
           fi
           
           if [[ "${{ matrix.wayland }}" == "1" ]]
           then
             NO_WAYLAND=0
-            PACKAGES="${PACKAGES} libwayland-dev:${{ matrix.arch }}"
+            PACKAGES="${PACKAGES} libwayland-dev:${{ matrix.arch.os }} wayland-protocols:${{ matrix.arch.os }}"
           fi
-          
-          if [[ "${{ matrix.arch }}" == "i386" ]]
-          then
-            PACKAGES="${PACKAGES} g++-${{ matrix.gcc }}-i686-linux-gnu"
-            GPP_NAME="i686-linux-gnu-g++-${{ matrix.gcc }}"
-          fi
-          
-          if [[ "${{ matrix.arch }}" == "amd64" ]]
-          then
-            PACKAGES="${PACKAGES} g++-${{ matrix.gcc }}"
-            GPP_NAME="x86_64-linux-gnu-g++-${{ matrix.gcc }}"
-          fi
-          
-          sudo dpkg --add-architecture "${{ matrix.arch }}"
+                    
+          sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
           sudo apt-get install -y $PACKAGES
 
           cd build
           cmake .. \
-            "-DCMAKE_CXX_COMPILER=${GPP_NAME}" \
+            "-DCMAKE_CXX_COMPILER=${{ matrix.arch.gcc }}-g++-${{ matrix.gcc }}" \
+            "-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc-${{ matrix.gcc }}" \
             "-DNO_X11=${NO_X11}" \
             "-DNO_WAYLAND=${NO_WAYLAND}" \
+            "-DNO_LTO=${{ matrix.os.no_lto }}" \
             "-DCMAKE_BUILD_TYPE=Debug"
           
           cmake --build . -j 2
@@ -79,10 +89,9 @@ jobs:
 
       - name: Run a script
         run: |
-          brew install gcc
           cd build
-          cmake .. -D CMAKE_CXX_COMPILER=g++-12 -DCMAKE_BUILD_TYPE=Debug
-          cmake --build . -j 2
+          cmake .. -DCMAKE_BUILD_TYPE=Debug
+          cmake --build . --config Debug --parallel 2
           cmake --install .
           bash ../tests/suite.sh
   windows-amd64:
@@ -124,7 +133,7 @@ jobs:
           run: |
             sudo pkg install -y cmake gcc12 xorg wayland
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++12
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++12 -DCMAKE_C_COMPILER=gcc12
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
@@ -145,7 +154,7 @@ jobs:
           run: |
             sudo pkg_add cmake g++-11.2.0p3
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++ -DCMAKE_C_COMPILER=egcc
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
@@ -166,7 +175,7 @@ jobs:
           run: |
             sudo pkg_add cmake g++-11.2.0p3
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++ -DCMAKE_C_COMPILER=egcc
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
@@ -187,7 +196,7 @@ jobs:
           run: |
             sudo pkgin -y install cmake gcc12
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++ -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp

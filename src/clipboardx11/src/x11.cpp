@@ -28,25 +28,18 @@
 #include <vector>
 #include <limits>
 #include <set>
-#include <sstream>
 
-#include <unistd.h>
 #include <X11/Xlib.h>
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>
-
-#include "../../clipboard/src/clipboard.hpp"
+#include <clipboard/utils.hpp>
+#include "clipboard/posix/mime.hpp"
 
 namespace chrono = std::chrono;
 namespace ranges = std::ranges;
 namespace views = std::views;
 
 using namespace std::literals;
-
-constexpr auto maxEventPollTime = 5s;
-constexpr auto startEventPollBackoff = 1ms;
-constexpr auto eventPollBackoffMultiplier = 2;
-constexpr auto maxEventPollBackoffTime = 500ms;
 
 constexpr auto atomClipboard = "CLIPBOARD";
 constexpr auto atomTargets = "TARGETS";
@@ -58,7 +51,6 @@ constexpr auto atomAtomPair = "ATOM_PAIR";
 constexpr auto atomInteger = "INTEGER";
 
 // Forward declarations
-class X11ClipboardType;
 class X11Exception;
 class X11Atom;
 class X11Connection;
@@ -71,7 +63,6 @@ class X11SelectionTransfer;
 class X11IncrTransfer;
 class X11SelectionDaemon;
 
-enum class X11ClipboardTypeOption;
 enum class X11PropertyMode;
 
 #define X_CALL(name, ...) doXCall(#name, &name, __VA_ARGS__)
@@ -84,91 +75,20 @@ X11Pointer<T> capture(T* ptr) {
     return { ptr, &XFree };
 }
 
-enum class X11ClipboardTypeOption {
-    NoOption = 0,
-    ChooseBestType = 1 << 1,
-    IncludeAction = 1 << 2,
-    EncodePaths = 1 << 3,
-};
-static X11ClipboardTypeOption operator|(X11ClipboardTypeOption const& a, X11ClipboardTypeOption const& b) {
-    return static_cast<X11ClipboardTypeOption>(static_cast<int>(a) | static_cast<int>(b));
-}
-
-class X11ClipboardType {
-private:
-    unsigned int const m_priority;
-    char const* const m_name;
-    ClipboardContentType const m_type;
-    X11ClipboardTypeOption m_options;
-
-public:
-    X11ClipboardType(
-        unsigned int priority,
-        char const* const name,
-        ClipboardContentType type,
-        X11ClipboardTypeOption options)
-        : m_priority(priority)
-        , m_name(name)
-        , m_type(type)
-        , m_options(options) { }
-
-    [[nodiscard]] inline unsigned int priority() const { return m_priority; }
-    [[nodiscard]] inline char const* const name() const { return m_name; }
-    [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
-    [[nodiscard]] inline bool isChooseBestType() const { return (static_cast<int>(m_options) & static_cast<int>(X11ClipboardTypeOption::ChooseBestType)) != 0; }
-    [[nodiscard]] inline bool isIncludeAction() const { return (static_cast<int>(m_options) & static_cast<int>(X11ClipboardTypeOption::IncludeAction)) != 0; }
-    [[nodiscard]] inline bool isEncodePaths() const { return (static_cast<int>(m_options) & static_cast<int>(X11ClipboardTypeOption::EncodePaths)) != 0; }
-
-    bool supports(ClipboardContent const&) const;
-
-private:
-    inline static std::map<std::string_view, X11ClipboardType> s_typesByName {};
-    inline static std::vector<std::tuple<char const* const, ClipboardContentType, X11ClipboardTypeOption>> const s_knownTypes {
-        { "x-special/gnome-copied-files", ClipboardContentType::Paths, X11ClipboardTypeOption::IncludeAction | X11ClipboardTypeOption::EncodePaths },
-        { "text/uri-list", ClipboardContentType::Paths, X11ClipboardTypeOption::NoOption | X11ClipboardTypeOption::EncodePaths },
-        { "text/plain;charset=utf-8", ClipboardContentType::Text, X11ClipboardTypeOption::NoOption },
-        { "UTF8_STRING", ClipboardContentType::Text, X11ClipboardTypeOption::NoOption },
-        { "text/plain", ClipboardContentType::Text, X11ClipboardTypeOption::NoOption },
-        { "STRING", ClipboardContentType::Text, X11ClipboardTypeOption::NoOption },
-        { "TEXT", ClipboardContentType::Text, X11ClipboardTypeOption::ChooseBestType },
-    };
-
-    static void tryPopulateTypesByName();
-public:
-    static auto all() { return views::values(s_typesByName); }
-    static std::optional<X11ClipboardType> find(X11Atom const&);
-    static std::optional<X11ClipboardType> findBest(std::vector<std::reference_wrapper<X11Atom const>> const&);
-};
-
-class X11Exception : public std::exception {
-private:
-    std::variant<std::string, char const*> m_message;
-public:
-    explicit X11Exception(char const* const message) : m_message(message) {}
-    explicit X11Exception(std::string&& message) : m_message(message) {}
-
-    [[nodiscard]] char const* what() const noexcept override {
-        return std::visit([](auto&& message) -> char const* {
-            using T = std::decay_t<decltype(message)>;
-            if constexpr (std::is_same_v<char const*, T>)
-                return message;
-            else
-                return message.c_str();
-        }, m_message);
-    }
+class X11Exception : public SimpleException {
+    using SimpleException::SimpleException;
 };
 
 class X11Atom {
 private:
     Atom m_value;
-    std::variant<char const*, X11Pointer<char>> m_name;
+    std::string m_name;
 
 public:
-    X11Atom(Atom value, X11Pointer<char>&& name) : m_value(value), m_name(std::move(name)) { }
-    X11Atom(Atom value, char const* name) : m_value(value), m_name(name) { }
+    X11Atom(Atom value, std::string&& name) : m_value(value), m_name(std::move(name)) { }
 
     [[nodiscard]] inline Atom value() const { return m_value; }
-    [[nodiscard]] std::string_view name() const;
+    [[nodiscard]] inline std::string_view name() const { return m_name; }
 
     bool operator==(X11Atom const& other) const;
     bool operator==(Atom const& other) const;
@@ -210,7 +130,7 @@ public:
     [[nodiscard]] inline std::size_t maxRequestSize() const { return XMaxRequestSize(display()); }
     [[nodiscard]] inline std::size_t maxDataSizeForIncr() const { return maxRequestSize() / 2; }
 
-    X11Atom const& atom(char const*);
+    X11Atom const& atom(std::string_view);
     X11Atom const& atom(Atom);
 
     [[nodiscard]] XEvent nextEvent();
@@ -421,6 +341,8 @@ protected:
     bool m_done = false;
 
 public:
+    virtual ~X11SelectionTransfer() { };
+
     [[nodiscard]] inline bool isDone() const { return m_done; }
     virtual void handle(XEvent const&) = 0;
 };
@@ -468,11 +390,9 @@ private:
     bool handleTimestampSelectionRequest(X11SelectionRequest const&);
     bool handleTargetsSelectionRequest(X11SelectionRequest const&);
     bool handleRegularSelectionRequest(X11SelectionRequest const&);
-    bool handlePathsSelectionRequest(X11SelectionRequest const&, X11ClipboardType const&);
-    bool handleTextSelectionRequest(X11SelectionRequest const&, X11ClipboardType const&);
 
 public:
-    explicit X11SelectionDaemon(X11Connection&, X11Atom const& selection, ClipboardContent const&);
+    explicit X11SelectionDaemon(X11Connection&, X11Atom const& s1election, ClipboardContent const&);
 
     [[nodiscard]] inline X11Connection& connection() const { return m_connection; }
     [[nodiscard]] inline X11Atom const& selection() const { return m_selection; }
@@ -480,135 +400,11 @@ public:
     [[nodiscard]] inline ClipboardContent const& content() const { return m_content; }
     [[nodiscard]] inline bool isSelectionOwner() const { return m_isSelectionOwner; }
 
-    [[nodiscard]] inline X11Atom const& atom(char const* name) const { return m_connection.atom(name); }
+    [[nodiscard]] inline X11Atom const& atom(std::string_view name) const { return m_connection.atom(name); }
     [[nodiscard]] inline X11Atom const& atom(Atom value) const { return m_connection.atom(value); }
 
     void run();
 };
-
-template<typename Return, typename Func>
-static Return poll(Func func) {
-    auto const startTime = chrono::steady_clock::now();
-    auto backoffTime = startEventPollBackoff;
-
-    std::optional<Return> result;
-    while (!(result = func()).has_value()) {
-        debugStream << "No poll data, sleeping" << std::endl;
-
-        auto const time = chrono::steady_clock::now() - startTime;
-        if (time >= maxEventPollTime) {
-            debugStream << "Timeout during poll" << std::endl;
-            throw X11Exception("Timeout during poll");
-        }
-
-        std::this_thread::sleep_for(backoffTime);
-        backoffTime = eventPollBackoffMultiplier * backoffTime;
-        if (backoffTime > maxEventPollBackoffTime) {
-            backoffTime = maxEventPollBackoffTime;
-        }
-    }
-
-    debugStream << "Poll finished successfully, got a result" << std::endl;
-    return result.value();
-}
-
-static std::string urlEncode(std::string const& value) {
-    static std::set<char> const allowedCharacters {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        '-', '_', '.', '~', '/'
-    };
-
-    std::stringstream result;
-    for (auto&& c : value) {
-        if (allowedCharacters.contains(c)) {
-            result << c;
-            continue;
-        }
-
-        result
-                << "%"
-                << std::hex
-                << std::uppercase
-                << std::setw(2)
-                << std::setfill('0')
-                << static_cast<std::uint64_t>(static_cast<std::uint8_t>(c));
-    }
-
-    return result.str();
-}
-
-void X11ClipboardType::tryPopulateTypesByName() {
-    if (!s_typesByName.empty()) {
-        return;
-    }
-
-    unsigned int priority = 0;
-    for (auto&& [ name, type, options ] : s_knownTypes) {
-        s_typesByName.insert({ name, { priority++, name, type, options } });
-    }
-}
-
-std::optional<X11ClipboardType> X11ClipboardType::find(X11Atom const& atom) {
-    tryPopulateTypesByName();
-
-    auto&& it = s_typesByName.find(atom.name());
-    if (it == s_typesByName.end()) {
-        return {};
-    }
-
-    return it->second;
-}
-
-std::optional<X11ClipboardType> X11ClipboardType::findBest(std::vector<std::reference_wrapper<const X11Atom>> const& targets) {
-    tryPopulateTypesByName();
-
-    std::optional<X11ClipboardType> best {};
-    for (auto&& target : targets) {
-        debugStream << "Advertised target: " << target.get().name() << std::endl;
-
-        auto found = find(target.get());
-        if (!found.has_value()) {
-            continue;
-        }
-
-        if (best.has_value() && best->priority() <= found->priority()) {
-            continue;
-        }
-
-        best.emplace(*found);
-    }
-
-    return best;
-}
-
-bool X11ClipboardType::supports(ClipboardContent const& content) const {
-    if (type() == content.type()) {
-        return true;
-    }
-
-    if (type() == ClipboardContentType::Text && content.type() == ClipboardContentType::Paths) {
-        return true;
-    }
-
-    return false;
-}
-
-std::string_view X11Atom::name() const {
-    return std::visit([](auto&& name) -> char const* {
-        using T = std::decay_t<decltype(name)>;
-        if constexpr (std::is_same_v<char const*, T>) {
-            return name;
-        } else {
-            return name.get();
-        }
-    }, m_name);
-}
 
 bool X11Atom::operator==(const X11Atom &other) const {
     return m_value == other.m_value;
@@ -661,9 +457,11 @@ inline auto X11Connection::doXCall(std::string_view callName, F callLambda, Args
     throwIfDestroyed();
 
     if (m_currentXCall.has_value()) {
-        std::stringstream message;
-        message << "Tried to call " << callName << " while a call to " << m_currentXCall.value() << " was already in progress";
-        throw X11Exception(message.str());
+        throw X11Exception(
+            "Tried to call ", callName,
+            " while a call to ", m_currentXCall.value(),
+            " was already in progress"
+        );
     }
 
     m_currentXCall.emplace(callName);
@@ -714,9 +512,7 @@ X11Connection::X11Connection() {
 
     m_display = XOpenDisplay(nullptr);
     if (m_display == nullptr) {
-        std::stringstream message;
-        message << "XOpenDisplay: failed to open display " << XDisplayName(nullptr);
-        throw X11Exception(message.str());
+        throw X11Exception("XOpenDisplay: failed to open display ", XDisplayName(nullptr));
     }
 
     instance = this;
@@ -737,19 +533,20 @@ X11Atom const& X11Connection::addAtomToCache(X11Atom&& atom) {
     return *ptr;
 }
 
-X11Atom const& X11Connection::atom(const char* const name) {
+X11Atom const& X11Connection::atom(std::string_view name) {
     throwIfDestroyed();
 
     if (m_atoms_by_name.contains(name)) {
         return *m_atoms_by_name.at(name);
     }
 
-    auto const value = X_CALL(XInternAtom, display(), name, false);
+    std::string nameCopy { name };
+    auto const value = X_CALL(XInternAtom, display(), nameCopy.c_str(), false);
     if (value == None) {
         throw X11Exception("Unable to intern value");
     }
 
-    return addAtomToCache({ value, name });
+    return addAtomToCache({ value, std::move(nameCopy) });
 }
 
 X11Atom const& X11Connection::atom(Atom value) {
@@ -759,12 +556,13 @@ X11Atom const& X11Connection::atom(Atom value) {
         return *m_atoms_by_value.at(value);
     }
 
-    auto name = X_CALL(XGetAtomName, display(), value);
-    if (name == nullptr) {
-        throw X11Exception("Unable to get atom name");
+    auto rawName = X_CALL(XGetAtomName, display(), value);
+    if (rawName == nullptr) {
+        throw X11Exception("Unable to get atom rawName");
     }
+    auto name = capture(rawName);
 
-    return addAtomToCache({ value, capture(name) });
+    return addAtomToCache({ value, name.get() });
 }
 
 void X11Connection::throwIfDestroyed() const {
@@ -836,16 +634,11 @@ constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat
 template<>
 constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format32_t)>() { return X11PropertyFormat::Format32; }
 
-template<std::size_t T>
-struct AssertFalse : std::false_type
-{ };
-
 template<std::size_t bad_t>
 constexpr X11PropertyFormat X11PropertyFormat::fromSize() {
-    static_assert(AssertFalse<bad_t>::value);
+    static_assert(AssertFalse<bad_t>::value, "Invalid property format size");
     return X11PropertyFormat::Format8; // Just here to make the compiler happy
 }
-
 
 template<ranges::contiguous_range range_t, typename char_t>
 X11Property::X11Property(
@@ -1011,7 +804,7 @@ XEvent X11Window::waitForEvent(int eventType, predicate_t predicate) {
     throwIfDestroyed();
 
     debugStream << "Waiting for event " << eventType << std::endl;
-    return poll<XEvent>([this, eventType, &predicate]() -> std::optional<XEvent> {
+    return pollUntilReturn([this, eventType, &predicate]() -> std::optional<XEvent> {
         auto event = checkTypedWindowEvent(eventType);
         if (event.has_value() && !predicate(event.value())) {
             return {};
@@ -1096,9 +889,11 @@ X11Property X11Window::getProperty(X11Atom const& name, bool delet) {
     auto x11Data = capture(propReturn);
 
     if (bytesAfterReturn > 0) {
-        std::stringstream message;
-        message << "XGetWindowProperty read " << nitemsReturn << " items but left " << bytesAfterReturn << " bytes behind";
-        throw X11Exception(message.str());
+        throw X11Exception(
+            "XGetWindowProperty read ", nitemsReturn,
+            " items but left ", bytesAfterReturn,
+            " bytes behind"
+        );
     }
 
     auto&& type = atom(actualTypeReturn);
@@ -1346,7 +1141,7 @@ XEvent X11SelectionDaemon::nextEvent() {
     // we lost the selection ownership. To prevent the daemon from staying up forever, we switch to
     // polling to ensure we'll fail if all ongoing requests are stalled.
 
-    return poll<XEvent>([this]() {
+    return pollUntilReturn([this]() {
         return connection().checkMaskEvent(std::numeric_limits<int>::max());
     });
 }
@@ -1530,11 +1325,9 @@ bool X11SelectionDaemon::handleTargetsSelectionRequest(X11SelectionRequest const
         atom(atomMultiple).value(),
         atom(atomTimestamp).value(),
     };
-    for (auto&& type : X11ClipboardType::all()) {
-        if (type.supports(content())) {
-            data.push_back(atom(type.name()).value());
-        }
-    }
+    MimeType::forEachSupporting(content(), [&](MimeType const& type) {
+        data.push_back(atom(type.name()).value());
+    });
 
     for (auto&& value : data) {
         debugStream << "Advertising target: " << atom(value).name() << std::endl;
@@ -1551,81 +1344,19 @@ bool X11SelectionDaemon::handleTimestampSelectionRequest(X11SelectionRequest con
 }
 
 bool X11SelectionDaemon::handleRegularSelectionRequest(X11SelectionRequest const& request) {
-    auto type = X11ClipboardType::find(request.target());
-    if (!type.has_value()) {
-        debugStream << "Target not recognized, refusing" << std::endl;
-        return refuseSelectionRequest(request);
-    }
 
-    if (type->isChooseBestType()) {
-        auto all = X11ClipboardType::all();
-        auto bestType = std::find_if(all.begin(), all.end(), [&](X11ClipboardType const& value) -> bool {
-            return value.supports(content()) && !value.isChooseBestType();
-        });
-
-        if (bestType == all.end()) {
-            throw X11Exception("Unable to find proper target");
-        }
-
-        type.emplace(*bestType);
-    }
-
-    if (!type->supports(content())) {
-        debugStream << "Target is incompatible with the clipboard content, refusing" << std::endl;
-        return refuseSelectionRequest(request);
-    }
-
-    if (content().type() == ClipboardContentType::Paths) {
-        return handlePathsSelectionRequest(request, *type);
-    } else if (content().type() == ClipboardContentType::Text) {
-        return handleTextSelectionRequest(request, *type);
-    } else {
-        debugStream << "Unknown clipboard content, refusing" << std::endl;
-        return refuseSelectionRequest(request);
-    }
-}
-
-bool X11SelectionDaemon::handlePathsSelectionRequest(X11SelectionRequest const& request, X11ClipboardType const& type) {
-    auto&& paths = content().paths();
-
-    std::stringstream data;
-    if (type.isIncludeAction()) {
-        if (paths.action() == ClipboardPathsAction::Cut) {
-            data << "cut" << std::endl;
-        } else {
-            data << "copy" << std::endl;
-        }
-    }
-
-    bool first = true;
-    for (auto&& path : paths.paths()) {
-        if (!first) {
-            data << std::endl;
-        }
-
-        if (type.isEncodePaths()) {
-            data << "file://" << urlEncode(path.string());
-        } else {
-            data << path.string();
-        }
-
-        first = false;
-    }
-
-    debugStream << "Replying with: " << std::endl << data.str() << std::endl;
-    return replySelectionRequest(
+    auto mime = request.target().name();
+    std::ostringstream stream;
+    if (MimeType::encode(content(), mime, stream)) {
+        return replySelectionRequest(
             request,
-            atom(type.name()),
-            data.str()
-    );
-}
+            atom(mime),
+            stream.str()
+        );
+    }
 
-bool X11SelectionDaemon::handleTextSelectionRequest(X11SelectionRequest const& request, X11ClipboardType const& type) {
-    return replySelectionRequest(
-        request,
-        atom(type.name()),
-        content().text()
-    );
+    debugStream << "Unable to encode clipboard content, refusing" << std::endl;
+    return refuseSelectionRequest(request);
 }
 
 void X11SelectionDaemon::run() {
@@ -1654,87 +1385,6 @@ void X11SelectionDaemon::run() {
     }
 }
 
-static std::string urlDecode(std::string const& value) {
-    auto tryConvertByte = [](std::string const& str) -> std::optional<char> {
-        std::size_t pos = 0;
-        unsigned long result;
-        try {
-            result = std::stoul(str, &pos, 16);
-        } catch (std::invalid_argument&) {
-            return {};
-        }
-
-        if (pos != 2) {
-            return {};
-        }
-
-        return static_cast<char>(result);
-    };
-
-    std::vector<char> result;
-
-    for (std::size_t i = 0; i < value.size(); i++) {
-        if (value[i] != '%' || i >= value.size() - 2) {
-            result.push_back(value[i]);
-            continue;
-        }
-
-        auto possibleByte = tryConvertByte({ &value[i + 1], 2 });
-        if (possibleByte.has_value()) {
-            result.push_back(possibleByte.value());
-            i += 2;
-        } else {
-            result.push_back('%');
-        }
-    }
-
-    return { result.begin(), result.end() };
-}
-
-static std::string parseText(std::vector<char> const& data) {
-    return { data.begin(), data.end() };
-}
-
-static ClipboardPaths parseFiles(std::vector<char> const& data) {
-    std::string dataStr { data.begin(), data.end() };
-    debugStream << "Parsing buffer as files, raw data:" << std::endl << dataStr << std::endl;
-
-    std::istringstream stream { dataStr };
-
-    ClipboardPathsAction action = ClipboardPathsAction::Copy;
-    std::vector<fs::path> paths {};
-    while (!stream.eof()) {
-        std::string line;
-        std::getline(stream, line);
-
-        if (line.empty()) {
-            continue;
-        }
-
-        if (line == "copy"sv) {
-            action = ClipboardPathsAction::Copy;
-            debugStream << "Action: copy" << std::endl;
-            continue;
-        }
-
-        if (line == "cut"sv) {
-            action = ClipboardPathsAction::Cut;
-            debugStream << "Action: cut" << std::endl;
-            continue;
-        }
-
-        if (line.starts_with("file://"sv)) {
-            line.erase(0, "file://"sv.size());
-            line = urlDecode(line);
-        }
-
-        debugStream << "file: " << line << std::endl;
-        paths.emplace_back(line);
-    }
-
-    return { std::move(paths), action };
-}
-
 static ClipboardContent getX11ClipboardInternal() {
     X11Connection conn;
     if (!conn.isClipboardOwned()) {
@@ -1743,21 +1393,22 @@ static ClipboardContent getX11ClipboardInternal() {
     }
 
     auto window = conn.createWindow();
-    auto target = X11ClipboardType::findBest(window.queryClipboardTargets());
 
-    if (!target) {
-        debugStream << "No supported target was advertised, aborting" << std::endl;
-        return {};
-    }
+    auto offeredTargets = window.queryClipboardTargets();
+    auto offeredTypes = views::transform(
+        offeredTargets,
+        [](auto&& x) { return x.get().name(); }
+    );
 
-    debugStream << "Chosen target: " << target->name() << std::endl;
-    auto const data = window.getClipboardData(conn.atom(target->name()));
+    std::vector<char> data;
+    std::istringstream stream;
+    auto request = [&](MimeType const& type) -> std::istream& {
+        data = window.getClipboardData(conn.atom(type.name()));
+        stream = std::istringstream { std::string { data.data(), data.size() } };
+        return stream;
+    };
 
-    if (target->type() == ClipboardContentType::Text) {
-        return { parseText(data) };
-    }
-
-    return { parseFiles(data) };
+    return MimeType::decode(offeredTypes, request);
 }
 
 static void startPasteDaemon(ClipboardContent const& clipboard) {
@@ -1766,29 +1417,10 @@ static void startPasteDaemon(ClipboardContent const& clipboard) {
     daemon.run();
 }
 
-static void setX11ClipboardInternal(ClipboardContent const& clipboard) {
-    bool noFork = std::getenv("CLIPBOARD_X11_NO_FORK") != nullptr;
-    if (!noFork && fork() != 0) {
-        debugStream << "Successfully spawned X11 paste daemon" << std::endl;
-        return;
-    }
-
-    debugStream << "We are the X11 paste daemon, hijacking operation" << std::endl;
-    try {
-        startPasteDaemon(clipboard);
-    } catch (std::exception const& e) {
-        debugStream << "Error during X11 daemon operation: " << e.what() << std::endl;
-    }
-
-    // As the indicator thread still exists in memory in the forked X11 process,
-    // the main process exiting creates an exception because it has not been joined in the X11 process.
-    // So we need to remove it from our forked memory
-    pthread_cancel(indicator.native_handle());
-
-    // Always exit no matter what happens, to prevent the forked daemon
-    // from returning control to the stack frames above and overwriting the
-    // non-forked original process' work
-    std::exit(EXIT_SUCCESS);
+static void setX11ClipboardInternal(WriteGuiContext const& context) {
+    context.forker.fork([&]() {
+        startPasteDaemon(context.clipboard);
+    });
 }
 
 extern "C" {
@@ -1802,10 +1434,10 @@ extern "C" {
         }
     }
 
-    extern void setX11Clipboard(void* clipboardPtr) {
+    extern void setX11Clipboard(void* ptr) {
         try {
-            ClipboardContent const& clipboard = *reinterpret_cast<ClipboardContent const*>(clipboardPtr);
-            setX11ClipboardInternal(clipboard);
+            WriteGuiContext const& context = *reinterpret_cast<WriteGuiContext*>(ptr);
+            setX11ClipboardInternal(context);
         } catch (std::exception const& e) {
             debugStream << "Error setting clipboard data: " << e.what() << std::endl;
         }
