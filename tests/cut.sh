@@ -1,5 +1,5 @@
 #setup
-export IS_ACTUALLY_A_TTY=1
+export CLIPBOARD_FORCETTY=1
 
 mkdir cut_test
 cd cut_test

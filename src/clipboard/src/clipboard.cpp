@@ -424,15 +424,9 @@ void setClipboardName() {
 }
 
 void setupVariables(int& argc, char *argv[]) {
-    is_tty.in = isatty(fileno(stdin));
-    is_tty.out = isatty(fileno(stdout));
-    is_tty.err = isatty(fileno(stderr));
-
-    if (getenv("IS_ACTUALLY_A_TTY")) { //add test compatibility where isatty returns false, but there is actually a tty
-        is_tty.in = true;
-        is_tty.out = true;
-        is_tty.err = true;
-    }
+    is_tty.in = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdin));
+    is_tty.out = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdout));
+    is_tty.err = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stderr));
 
     #if defined(_WIN64) || defined (_WIN32)
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); //Windows terminal color compatibility

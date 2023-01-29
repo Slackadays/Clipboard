@@ -8,7 +8,7 @@ echo "Foobar" > copyme.txt
 echo "Foobar" > cutme.txt
 
 #test copying a file
-IS_ACTUALLY_A_TTY=1 clipboard copy copyme.txt
+CLIPBOARD_FORCETTY=1 clipboard copy copyme.txt
 if [ ! -f "$TMPDIR"/Clipboard/0/copyme.txt ]; then
   echo did not copy file
   exit 1
@@ -21,7 +21,7 @@ if [ "$(clipboard paste)" != "Foobar" ]; then
 fi
 
 #test cutting a file
-IS_ACTUALLY_A_TTY=1 clipboard cut cutme.txt
+CLIPBOARD_FORCETTY=1 clipboard cut cutme.txt
 if [ ! -f "$TMPDIR"/Clipboard/0/cutme.txt ]; then
   echo did not cut file
   exit 1
