@@ -92,7 +92,7 @@ Add a number to the end of the action to choose which clipboard you want to use 
 
 ---
 
-**Show Help Message** &emsp; `clipboard help`
+**Show Help Message** &emsp; `clipboard (-h|[--]help)`
 
 ---
 
@@ -146,11 +146,9 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
-**`--help`, `-h`** &emsp; Add this to show the help message which also contains the Clipboard version number.
-
 ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, or join our Discord group!  
+Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join our Discord group!  
 
 [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
