@@ -858,7 +858,7 @@ int main(int argc, char *argv[]) {
 
         setFilepaths();
 
-        [](const auto& path...){ fs::create_directories(path); }(filepath.temporary, filepath.persistent); // make directories
+        [](const auto& ...path){ (fs::create_directories(path),...); }(filepath.temporary, filepath.persistent); // make directories
 
         syncWithGUIClipboard();
 
