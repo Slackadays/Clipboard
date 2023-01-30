@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-ActionArray<std::string_view, 8> actions = {
+ActionArray<std::string_view, 10> actions = {
     "cut",
     "copy",
     "paste",
@@ -22,10 +22,12 @@ ActionArray<std::string_view, 8> actions = {
     "pipe out",
     "clear",
     "show",
-    "edit"
+    "edit",
+    "add",
+    "remove"
 };
 
-ActionArray<std::string_view, 8> action_shortcuts = {
+ActionArray<std::string_view, 10> action_shortcuts = {
     "ct",
     "cp",
     "p",
@@ -33,10 +35,12 @@ ActionArray<std::string_view, 8> action_shortcuts = {
     "pout",
     "clr",
     "sh",
-    "ed"
+    "ed",
+    "ad",
+    "rm"
 };
 
-ActionArray<std::string_view, 8> doing_action = {
+ActionArray<std::string_view, 10> doing_action = {
     "Cutting",
     "Copying",
     "Pasting",
@@ -44,16 +48,21 @@ ActionArray<std::string_view, 8> doing_action = {
     "Piping out",
     "Clearing"
     "Editing"
+    "Adding",
+    "Removing"
 };
 
-ActionArray<std::string_view, 8> did_action = {
+ActionArray<std::string_view, 10> did_action = {
     "Cut",
     "Copied",
     "Pasted",
     "Piped in",
     "Piped out",
     "Cleared",
-    "Edited"
+    "Showed",
+    "Edited",
+    "Added",
+    "Removed"
 };
 
 Message help_message = "{blue}▏This is Clipboard %s (commit %s), the cut, copy, and paste system for the command line.{blank}\n"
@@ -109,7 +118,7 @@ Message item_already_exists_message = "{yellow}• The item {bold}%s{blank}{yell
 Message bad_response_message = "{red}╳ Sorry, that wasn't a valid choice. Try again: {blank}{pink}{bold}[(y)es/(n)o)] ";
 Message working_message = "{yellow}• %s... %i%s %s{blank}\r";
 Message cancelled_message = "{green}✓ Cancelled %s{blank}";
-Message pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+Message byte_success_message = "{green}✓ %s %i bytes{blank}\n";
 Message one_item_success_message = "{green}✓ %s %s{blank}\n";
 Message many_files_success_message = "{green}✓ %s %i files{blank}\n";
 Message many_directories_success_message = "{green}✓ %s %i directories{blank}\n";
@@ -177,7 +186,7 @@ void setLanguageES() {
     fix_problem_message = "{pink}▏ Verífica si tengas los permisos necesarios, o\n"
                           "▏ vuelve a revisar el deletro de los archivos o la carpeta en que estás.{blank}\n";
     not_enough_storage_message = "{red}╳ No habrá espacio suficiente para pegar todas tus cosas (%gkB a pegar, %gkB disponible).{blank}{pink} Vuelve a revisar las cosas que especificaste o saca algunas cosas para hacer más espacio.{blank}\n";
-    pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+    byte_success_message = "{green}✓ %s %i bytes{blank}\n";
     many_files_success_message = "{green}✓ %s %i archivos{blank}\n";
     many_directories_success_message = "{green}✓ %s %i carpetas{blank}\n";
     many_files_many_directories_success_message = "{green}✓ %s %i archivos y %i carpetas{blank}\n";
@@ -227,7 +236,7 @@ void setLanguagePT() {
     and_more_items_message = "{blue}▏ ...e mais {bold}%i{blank}{blue}.{blank}\n";
     fix_problem_message = "{pink}▏ Veja se você possui as permissões necessárias, ou\n"
                           "▏ verifique a ortografia do arquivo ou diretório que voce está.{blank}\n";
-    pipe_success_message = "{green}✓ %s %i bytes{blank}\n";
+    byte_success_message = "{green}✓ %s %i bytes{blank}\n";
     many_files_success_message = "{green}✓ %s %i arquivos{blank}\n";
     many_directories_success_message = "{green}✓ %s %i diretórios{blank}\n";
     many_files_many_directories_success_message = "{green}✓ %s %i arquivos e %i diretórios{blank}\n";
@@ -302,7 +311,7 @@ void setLanguageTR() {
     fix_problem_message = "{pink}▏ Erişime ihtiyacınız varsa şuna bakın, veya\n"
                           "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.{blank}\n";
     not_enough_storage_message = "{red}╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gkB yapıştırılacak, %gkB boş).{blank}{pink} Hangi öğeleri seçtiğinizi ikinci kez kontrol etmeyi deneyin veya yer açmak için bazı dosyaları silin.{blank}\n";
-    pipe_success_message = "{green}✓ %s %i bayt{blank}\n";
+    byte_success_message = "{green}✓ %s %i bayt{blank}\n";
     many_files_success_message = "{green}✓ %s %i dosya{blank}\n";
     many_directories_success_message = "{green}✓ %s %i dizin{blank}\n";
     many_files_many_directories_success_message = "{green}✓ %s %i dosya ve %i dizin{blank}\n";

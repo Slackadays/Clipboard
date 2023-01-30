@@ -119,6 +119,42 @@ CopyPolicy userDecision(const std::string& item) {
 }
 
 namespace PerformAction {
+    void copyItem(const fs::path& f) {
+        static std::ofstream originalFiles;
+        static bool setup = false;
+        if (action == Action::Cut && !setup) {
+            originalFiles.open(filepath.original_files);
+            setup = true;
+        }
+        auto actuallyCopyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
+            if (fs::is_directory(f)) {
+                auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
+                fs::create_directories(filepath.main / target);
+                fs::copy(f, filepath.main / target, copying.opts);
+                successes.directories++;
+            } else {
+                fs::copy(f, filepath.main / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
+                successes.files++;
+            }
+            if (action == Action::Cut) {
+                originalFiles << fs::absolute(f).string() << std::endl;
+            }
+        };
+        try {
+            actuallyCopyItem();
+        } catch (const fs::filesystem_error& e) {
+            if (!copying.use_safe_copy && e.code() == std::errc::cross_device_link) {
+                try {
+                    actuallyCopyItem(true);
+                } catch (const fs::filesystem_error& e) {
+                    copying.failedItems.emplace_back(f.string(), e.code());
+                }
+            } else {
+                copying.failedItems.emplace_back(f.string(), e.code());
+            }
+        }
+    }
+
     void copy() {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
             std::ofstream file(filepath.main / constants.pipe_file);
@@ -127,38 +163,8 @@ namespace PerformAction {
             printf(replaceColors("{green}✓ Copied text \"{bold}%s{blank}{green}\"{blank}\n").data(), copying.items.at(0).string().data());
             return;
         }
-        std::ofstream originalFiles;
-        if (action == Action::Cut) {
-            originalFiles.open(filepath.original_files);
-        }
         for (const auto& f : copying.items) {
-            auto copyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
-                if (fs::is_directory(f)) {
-                    auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
-                    fs::create_directories(filepath.main / target);
-                    fs::copy(f, filepath.main / target, copying.opts);
-                    successes.directories++;
-                } else {
-                    fs::copy(f, filepath.main / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
-                    successes.files++;
-                }
-                if (action == Action::Cut) {
-                    originalFiles << fs::absolute(f).string() << std::endl;
-                }
-            };
-            try {
-                copyItem();
-            } catch (const fs::filesystem_error& e) {
-                if (!copying.use_safe_copy && e.code() == std::errc::cross_device_link) {
-                    try {
-                        copyItem(true);
-                    } catch (const fs::filesystem_error& e) {
-                        copying.failedItems.emplace_back(f.string(), e.code());
-                    }
-                } else {
-                    copying.failedItems.emplace_back(f.string(), e.code());
-                }
-            }
+            copyItem(f);
         }
     }
 
@@ -290,7 +296,29 @@ namespace PerformAction {
     }
 
     void add() {
-
+        if (fs::is_regular_file(filepath.main / constants.pipe_file)) {
+            copying.buffer = fileContents(filepath.main / constants.pipe_file);
+            if (!is_tty.in) {
+                std::string line;
+                while (std::getline(std::cin, line)) {
+                    copying.buffer.append(line);
+                    successes.bytes += line.size();
+                }
+                std::ofstream file(filepath.main / constants.pipe_file);
+                file << copying.buffer;
+            } else if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
+                copying.buffer.append(copying.items.at(0));
+                std::ofstream file(filepath.main / constants.pipe_file);
+                file << copying.buffer;
+                successes.bytes += copying.items.at(0).string().size();
+            } else {
+                fprintf(stderr, "%s", replaceColors("{red}╳ You can't add files to text. {blank}{pink}Try copying text first, or add a file instead.{blank}\n").data());
+            }
+        } else if (!fs::is_empty(filepath.main)) {
+            for (const auto& f : copying.items) {
+                copyItem(f);
+            }
+        }
     }
 
     void remove() {
@@ -299,7 +327,8 @@ namespace PerformAction {
 }
 
 void clearTempDirectory(bool force_clear = false) {
-    if (force_clear || (action != Action::Paste && action != Action::PipeOut && action != Action::Show)) {
+    using enum Action;
+    if (force_clear || action == Cut || action == Copy || action == PipeIn || action == Clear) {
         fs::remove(filepath.original_files);
         for (const auto& entry : fs::directory_iterator(filepath.main)) {
             fs::remove_all(entry.path());
@@ -561,21 +590,22 @@ auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcu
 }
 
 void setAction() {
+    using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Action::Cut, Action::Copy, Action::Paste, Action::Show, Action::Clear, Action::Edit}) {
+        for (const auto& entry : {Cut, Copy, Paste, Show, Clear, Edit, Add, Remove}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 action = entry;
-                if (action == Action::Copy && !is_tty.in) { action = Action::PipeIn; }
-                if (action == Action::Paste && !is_tty.out) { action = Action::PipeOut; }
+                if (action == Copy && !is_tty.in) { action = PipeIn; }
+                if (action == Paste && !is_tty.out) { action = PipeOut; }
                 return;
             }
         }
         printf(no_valid_action_message().data(), arguments.at(0).data());
         exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
-        action = Action::PipeIn;
+        action = PipeIn;
     } else if (!is_tty.out) {
-        action = Action::PipeOut;
+        action = PipeOut;
     } else {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
@@ -792,7 +822,7 @@ void performAction() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action == Cut || action == Copy || action == PipeIn || action == Clear;
+    return action != Paste && action != PipeOut && action != Show; 
 }
 
 void updateGUIClipboard() {
@@ -821,8 +851,8 @@ void showFailures() {
 }
 
 void showSuccesses() {
-    if ((action == Action::PipeIn || action == Action::PipeOut) && is_tty.err) {
-        fprintf(stderr, pipe_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
+    if (successes.bytes > 0 && is_tty.err) {
+        fprintf(stderr, byte_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
         return;
     }
     if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {

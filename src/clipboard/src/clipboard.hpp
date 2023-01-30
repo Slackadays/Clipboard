@@ -97,10 +97,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } //switch to std::to_underlying when available 
 };
 
-extern ActionArray<std::string_view, 8> actions;
-extern ActionArray<std::string_view, 8> action_shortcuts;
-extern ActionArray<std::string_view, 8> doing_action;
-extern ActionArray<std::string_view, 8> did_action;
+extern ActionArray<std::string_view, 10> actions;
+extern ActionArray<std::string_view, 10> action_shortcuts;
+extern ActionArray<std::string_view, 10> doing_action;
+extern ActionArray<std::string_view, 10> did_action;
 
 static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{red}", "\033[38;5;196m"},
@@ -171,7 +171,7 @@ extern Message item_already_exists_message;
 extern Message bad_response_message;
 extern Message working_message;
 extern Message cancelled_message;
-extern Message pipe_success_message;
+extern Message byte_success_message;
 extern Message one_item_success_message;
 extern Message many_files_success_message;
 extern Message many_directories_success_message;
