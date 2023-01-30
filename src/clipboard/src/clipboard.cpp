@@ -489,6 +489,8 @@ void setupVariables(int& argc, char *argv[]) {
 
     no_color = getenv("NO_COLOR") && !getenv("FORCE_COLOR");
 
+    output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
+
     arguments.assign(argv + 1, argv + argc);
 }
 
