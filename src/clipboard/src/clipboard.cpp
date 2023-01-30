@@ -402,7 +402,7 @@ void setupHandlers() {
         // As the indicator thread still exists in memory in the forked process,
         // the main process exiting creates an exception because it has not been joined in the X11 process.
         // So we need to remove it from our forked memory
-        pthread_cancel(indicator.native_handle());
+        indicator.detach();
     });
 #endif
 
