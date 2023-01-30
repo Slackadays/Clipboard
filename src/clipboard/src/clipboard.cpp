@@ -463,11 +463,6 @@ void setupVariables(int& argc, char *argv[]) {
     arguments.assign(argv + 1, argv + argc);
 }
 
-void createTempDirectory() {
-    fs::create_directories(filepath.temporary);
-    fs::create_directories(filepath.persistent);
-}
-
 void syncWithGUIClipboard() {
     if (clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) {
         ClipboardContent guiClipboard = getGUIClipboard();
@@ -863,7 +858,7 @@ int main(int argc, char *argv[]) {
 
         setFilepaths();
 
-        createTempDirectory();
+        [](const auto& path...){ fs::create_directories(path); }(filepath.temporary, filepath.persistent); // make directories
 
         syncWithGUIClipboard();
 
