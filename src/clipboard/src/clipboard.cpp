@@ -307,7 +307,7 @@ namespace PerformAction {
                 std::ofstream file(filepath.main / constants.pipe_file);
                 file << copying.buffer;
             } else if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
-                copying.buffer.append(copying.items.at(0));
+                copying.buffer.append(copying.items.at(0).string());
                 std::ofstream file(filepath.main / constants.pipe_file);
                 file << copying.buffer;
                 successes.bytes += copying.items.at(0).string().size();
