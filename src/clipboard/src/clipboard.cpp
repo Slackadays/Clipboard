@@ -35,9 +35,6 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
 #include <windows.h>
 #include <shlobj.h>
 #define isatty _isatty
@@ -137,13 +134,9 @@ namespace PerformAction {
         for (const auto& f : copying.items) {
             auto copyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
                 if (fs::is_directory(f)) {
-                    if (f.filename() == "") {
-                        fs::create_directories(filepath.main / f.parent_path().filename());
-                        fs::copy(f, filepath.main / f.parent_path().filename(), copying.opts);
-                    } else {
-                        fs::create_directories(filepath.main / f.filename());
-                        fs::copy(f, filepath.main / f.filename(), copying.opts);
-                    }
+                    auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
+                    fs::create_directories(filepath.main / target);
+                    fs::copy(f, filepath.main / target, copying.opts);
                     successes.directories++;
                 } else {
                     fs::copy(f, filepath.main / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
@@ -294,6 +287,14 @@ namespace PerformAction {
 
     void edit() {
         
+    }
+
+    void add() {
+
+    }
+
+    void remove() {
+
     }
 }
 
@@ -451,20 +452,15 @@ void setupVariables(int& argc, char *argv[]) {
 	DWORD dwMode = 0;
 	GetConsoleMode(hOut, &dwMode);
 	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
-        use_colors = false;
+        no_color = true;
 	}
 	SetConsoleOutputCP(CP_UTF8); //fix broken accents on Windows
-
     #endif
     filepath.home = getenv("USERPROFILE") ? getenv("USERPROFILE") : getenv("HOME");
 
-    if (getenv("NO_COLOR") && !getenv("FORCE_COLOR")) {
-        use_colors = false;
-    }
+    no_color = getenv("NO_COLOR") && !getenv("FORCE_COLOR");
 
-    for (int i = 1; i < argc; i++) {
-        arguments.emplace_back(argv[i]);
-    }
+    arguments.assign(argv + 1, argv + argc);
 }
 
 void createTempDirectory() {
@@ -487,7 +483,7 @@ void showClipboardStatus() {
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { //use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path)) {
-            if (fs::is_directory(entry) && !fs::is_empty(entry)) {
+            if (entry.is_directory() && !fs::is_empty(entry)) {
                 clipboards_with_contents.push_back({entry.path(), persistent});
             }
         }
@@ -598,9 +594,6 @@ void setFlags() {
     if (flagIsPresent<bool>("--ee")) {
         printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
         exit(EXIT_SUCCESS);
-    }
-    if (flagIsPresent<bool>("--silent") || flagIsPresent<bool>("-s")) {
-        output_silent = true;
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") {
         clipboard_name = flag;
@@ -725,16 +718,10 @@ unsigned long long totalItemSize() {
         try {
             if (fs::is_directory(i)) {
                 for (const auto& entry : fs::recursive_directory_iterator(i)) {
-                    if (fs::is_regular_file(entry)) {
-                        total_item_size += fs::file_size(entry);
-                    } else {
-                        total_item_size += 16;
-                    }
+                    total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
                 }
-            } else if (fs::is_regular_file(i)) {
-                total_item_size += fs::file_size(i);
             } else {
-                total_item_size += 16;
+                total_item_size += fs::is_regular_file(i) ? fs::file_size(i) : 16;
             }
         } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(i.string(), e.code());
@@ -775,28 +762,35 @@ void removeOldFiles() {
 
 void performAction() {
     using enum Action;
+    using namespace PerformAction;
     switch (action) {
         case Copy:
         case Cut:
-            PerformAction::copy();
+            copy();
             break;
         case Paste:
-            PerformAction::paste();
+            paste();
             break;
         case PipeIn:
-            PerformAction::pipeIn();
+            pipeIn();
             break;
         case PipeOut:
-            PerformAction::pipeOut();
+            pipeOut();
             break;
         case Clear:
-            PerformAction::clear();
+            clear();
             break;
         case Show:
-            PerformAction::show();
+            show();
             break;
         case Edit:
-            PerformAction::edit();
+            edit();
+            break;
+        case Add:
+            add();
+            break;
+        case Remove:
+            remove();
             break;
     }
 }

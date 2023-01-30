@@ -89,7 +89,7 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show, Edit };
+enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show, Edit, Add, Remove };
 
 template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
@@ -113,7 +113,7 @@ static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"{blank}", "\033[0m"}
 }};
 
-static bool use_colors = true;
+static bool no_color = false;
 
 class TerminalSize {
 public:
@@ -128,7 +128,7 @@ public:
     }
 };
 
-static std::string replaceColors(const std::string_view& str, bool colorful = use_colors) {
+static std::string replaceColors(const std::string_view& str, bool colorful = !no_color) {
     std::string temp(str); //a string to do scratch work on
     for (const auto& key : colors) { //iterate over all the possible colors to replace
         for (size_t i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
@@ -209,8 +209,6 @@ void copyFiles();
 void removeOldFiles();
 bool userIsARobot();
 void pasteFiles();
-void pipeIn();
-void pipeOut();
 void clearClipboard();
 void performAction();
 void updateGUIClipboard();

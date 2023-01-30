@@ -24,6 +24,7 @@ execute_process( # save the current commit hash to GIT_COMMIT_HASH
 
 add_definitions(-DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}")
 add_definitions(-DGIT_BRANCH="${GIT_BRANCH}")
+
 if (MSVC)
   add_compile_definitions(NOMINMAX) # Prevent min() or max() from being made into macros by windows.h
 endif()
