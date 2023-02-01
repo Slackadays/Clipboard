@@ -196,7 +196,7 @@ jobs:
           run: |
             sudo pkgin -y install cmake gcc12
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++ -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc
+            cmake .. -DNO_LTO=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++ -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
