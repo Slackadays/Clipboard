@@ -51,6 +51,8 @@ namespace fs = std::filesystem;
 
 Forker forker {};
 
+Filepath filepath;
+
 static Action action;
 
 bool stopIndicator(bool change_condition_variable = true) {
