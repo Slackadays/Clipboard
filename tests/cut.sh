@@ -12,12 +12,12 @@ echo "Foobar" > cutdir/cutme.txt
 #test cutting a file and a directory
 clipboard cut cutme.txt cutdir
 
-if [ ! -f "$TMPDIR"/Clipboard/0/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/cutme.txt ]; then
   echo did not cut file
   exit 1
 fi
 
-if [ ! -f "$TMPDIR"/Clipboard/0/cutdir/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/cutdir/cutme.txt ]; then
   echo did not cut directory
   exit 1
 fi
@@ -65,12 +65,12 @@ echo "Foobar" > cutdir/cutme.txt
 #test cutting a file and a directory to clipboard 1
 clipboard cut1 cutme.txt cutdir
 
-if [ ! -f "$TMPDIR"/Clipboard/1/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/data/cutme.txt ]; then
   echo did not cut file into cb 1
   exit 1
 fi
 
-if [ ! -f "$TMPDIR"/Clipboard/1/cutdir/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/data/cutdir/cutme.txt ]; then
   echo did not cut directory into cb 1
   exit 1
 fi
@@ -120,12 +120,12 @@ echo "Foobar" > cutdir/cutme.txt
 #test cutting a file and a directory with "--cut"
 clipboard --cut cutme.txt cutdir
 
-if [ ! -f "$TMPDIR"/Clipboard/0/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/cutme.txt ]; then
   echo did not cut file
   exit 1
 fi
 
-if [ ! -f "$TMPDIR"/Clipboard/0/cutdir/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/cutdir/cutme.txt ]; then
   echo did not cut directory
   exit 1
 fi

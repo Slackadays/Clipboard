@@ -9,7 +9,7 @@ echo "Foobar" > cutme.txt
 
 #test copying a file
 CLIPBOARD_FORCETTY=1 clipboard copy copyme.txt
-if [ ! -f "$TMPDIR"/Clipboard/0/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/copyme.txt ]; then
   echo did not copy file
   exit 1
 fi
@@ -22,7 +22,7 @@ fi
 
 #test cutting a file
 CLIPBOARD_FORCETTY=1 clipboard cut cutme.txt
-if [ ! -f "$TMPDIR"/Clipboard/0/cutme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/cutme.txt ]; then
   echo did not cut file
   exit 1
 fi

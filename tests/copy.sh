@@ -12,12 +12,12 @@ echo "Foobar" > copydir/copyme.txt
 #test copying a file and a directory
 clipboard copy copyme.txt copydir
 
-if [ ! -f "$TMPDIR"/Clipboard/0/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/copyme.txt ]; then
 echo did not copy file
   exit 1
 fi
 
-if [ ! -f "$TMPDIR"/Clipboard/0/copydir/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/copydir/copyme.txt ]; then
   echo did not copy directory
   exit 1
 fi
@@ -64,12 +64,12 @@ echo "Foobar" > copydir/copyme.txt
 #test copying a file and a directory to clipboard 1
 clipboard copy1 copyme.txt copydir
 
-if [ ! -f "$TMPDIR"/Clipboard/1/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/data/copyme.txt ]; then
   echo did not copy file into cb 1
   exit 1
 fi
 
-if [ ! -f "$TMPDIR"/Clipboard/1/copydir/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/1/data/copydir/copyme.txt ]; then
   echo did not copy directory into cb 1
   exit 1
 fi
@@ -118,12 +118,12 @@ echo "Foobar" > copydir/copyme.txt
 #test copying a file and a directory with "--copy"
 clipboard --copy copyme.txt copydir
 
-if [ ! -f "$TMPDIR"/Clipboard/0/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/copyme.txt ]; then
   echo did not copy file
   exit 1
 fi
 
-if [ ! -f "$TMPDIR"/Clipboard/0/copydir/copyme.txt ]; then
+if [ ! -f "$TMPDIR"/Clipboard/0/data/copydir/copyme.txt ]; then
   echo did not copy directory
   exit 1
 fi

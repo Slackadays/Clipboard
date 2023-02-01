@@ -31,12 +31,13 @@ extern Forker forker;
 
 struct Filepath {
     fs::path main;
+    fs::path data;
     fs::path temporary;
     fs::path persistent;
     fs::path original_files;
     fs::path home;
 };
-extern Filepath filepath;
+extern Filepath path;
 
 enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
 
@@ -82,11 +83,11 @@ static IsTTY is_tty;
 struct Constants {
     std::string_view clipboard_version = "0.2.1r2";
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
-    std::string_view pipe_file = "clipboard.rawdata";
+    std::string_view data_file_name = "rawdata.clipboard";
     std::string_view default_clipboard_name = "0";
     std::string_view temporary_directory_name = "Clipboard";
     std::string_view persistent_directory_name = ".clipboard";
-    std::string_view original_files_extension = ".files";
+    std::string_view original_files_name = "originals";
 };
 constexpr Constants constants;
 
