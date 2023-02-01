@@ -49,13 +49,14 @@ struct Copying {
     std::vector<std::pair<std::string, std::error_code>> failedItems;
     std::string buffer;
 };
-static Copying copying;
+extern Copying copying;
 
 static std::vector<std::string> arguments;
 
-static std::string clipboard_name = "0";
+extern std::string clipboard_name;
 
-static bool output_silent = false;
+extern bool output_silent;
+extern bool no_color;
 
 enum class ProgressState : int { Done, Active, Cancel };
 
@@ -103,17 +104,15 @@ extern ActionArray<std::string_view, 10> doing_action;
 extern ActionArray<std::string_view, 10> did_action;
 
 static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
-    {"{red}", "\033[38;5;196m"},
-    {"{green}", "\033[38;5;40m"},
-    {"{yellow}", "\033[38;5;214m"},
-    {"{blue}", "\033[38;5;51m"},
-    {"{orange}", "\033[38;5;208m"},
-    {"{pink}", "\033[38;5;219m"},
-    {"{bold}", "\033[1m"},
-    {"{blank}", "\033[0m"}
+    {"[red]", "\033[38;5;196m"},
+    {"[green]", "\033[38;5;40m"},
+    {"[yellow]", "\033[38;5;214m"},
+    {"[blue]", "\033[38;5;51m"},
+    {"[orange]", "\033[38;5;208m"},
+    {"[pink]", "\033[38;5;219m"},
+    {"[bold]", "\033[1m"},
+    {"[blank]", "\033[0m"}
 }};
-
-static bool no_color = false;
 
 class TerminalSize {
 public:

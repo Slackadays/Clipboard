@@ -52,8 +52,14 @@ namespace fs = std::filesystem;
 Forker forker {};
 
 Filepath filepath;
+Copying copying;
 
-static Action action;
+bool output_silent = false;
+bool no_color = false;
+
+std::string clipboard_name = "0";
+
+Action action;
 
 bool stopIndicator(bool change_condition_variable = true) {
     ProgressState expect = ProgressState::Active;
@@ -105,7 +111,7 @@ CopyPolicy userDecision(const std::string& item) {
     std::string decision;
     while (true) {
         std::getline(std::cin, decision);
-        fprintf(stderr, "%s", replaceColors("{blank}").data());
+        fprintf(stderr, "%s", replaceColors("[blank]").data());
         if (decision == "y" || decision == "yes") {
             return ReplaceOnce;
         } else if (decision == "a" || decision == "all") {
@@ -162,7 +168,7 @@ namespace PerformAction {
             std::ofstream file(filepath.main / constants.pipe_file);
             file << copying.items.at(0).string();
             copying.buffer = copying.items.at(0).string();
-            printf(replaceColors("{green}✓ Copied text \"{bold}%s{blank}{green}\"{blank}\n").data(), copying.items.at(0).string().data());
+            printf(replaceColors("[green]✓ Copied text \"[bold]%s[blank][green]\"[blank]\n").data(), copying.items.at(0).string().data());
             return;
         }
         for (const auto& f : copying.items) {
@@ -263,7 +269,7 @@ namespace PerformAction {
                 std::string content(fileContents(filepath.main / constants.pipe_file));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
                 printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
-                printf(replaceColors("{bold}{blue}%s\n{blank}").data(), content.substr(0, 250).data());
+                printf(replaceColors("[bold][blue]%s\n[blank]").data(), content.substr(0, 250).data());
                 if (content.size() > 250) {
                     printf(and_more_items_message().data(), content.size() - 250);
                 }
@@ -279,7 +285,7 @@ namespace PerformAction {
             auto it = fs::directory_iterator(filepath.main);
             for (size_t i = 0; i < std::min(rowsAvailable, total_items); i++) {
 
-                printf(replaceColors("{blue}▏ {bold}{pink}%s{blank}\n").data(), it->path().filename().string().data());
+                printf(replaceColors("[blue]▏ [bold][pink]%s[blank]\n").data(), it->path().filename().string().data());
 
                 if (i == rowsAvailable - 1 && total_items > rowsAvailable) {
                     printf(and_more_items_message().data(), total_items - rowsAvailable);
@@ -314,7 +320,7 @@ namespace PerformAction {
                 file << copying.buffer;
                 successes.bytes += copying.items.at(0).string().size();
             } else {
-                fprintf(stderr, "%s", replaceColors("{red}╳ You can't add files to text. {blank}{pink}Try copying text first, or add a file instead.{blank}\n").data());
+                fprintf(stderr, "%s", replaceColors("[red]╳ You can't add files to text. [blank][pink]Try copying text first, or add a file instead.[blank]\n").data());
             }
         } else if (!fs::is_empty(filepath.main)) {
             for (const auto& f : copying.items) {
@@ -534,12 +540,12 @@ void showClipboardStatus() {
         for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), termSizeAvailable.rows); clipboard++) {
 
             int widthRemaining = termSizeAvailable.columns - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4 + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
-            printf(replaceColors("{bold}{blue}▏ %s%s: {blank}").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
+            printf(replaceColors("[bold][blue]▏ %s%s: [blank]").data(), clipboards_with_contents.at(clipboard).first.filename().string().data(), clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.pipe_file)) {
                 std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.pipe_file));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
-                printf(replaceColors("{pink}%s{blank}\n").data(), content.substr(0, widthRemaining).data());
+                printf(replaceColors("[pink]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
 
@@ -552,13 +558,13 @@ void showClipboardStatus() {
 
                 if (!first) {
                     if (entryWidth <= widthRemaining - 2) {
-                        printf("%s", replaceColors("{pink}, {blank}").data());
+                        printf("%s", replaceColors("[pink], [blank]").data());
                         widthRemaining -= 2;
                     }
                 }
 
                 if (entryWidth <= widthRemaining) {
-                    printf(replaceColors("{pink}%s{blank}").data(), entry.path().filename().string().data());
+                    printf(replaceColors("[pink]%s[blank]").data(), entry.path().filename().string().data());
                     widthRemaining -= entryWidth;
                     first = false;
                 }
@@ -621,7 +627,7 @@ void setFlags() {
         copying.use_safe_copy = false;
     }
     if (flagIsPresent<bool>("--ee")) {
-        printf("%s", replaceColors("{bold}{blue}https://youtu.be/Lg_Pn45gyMs\n{blank}").data());
+        printf("%s", replaceColors("[bold][blue]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") {
@@ -845,7 +851,7 @@ void showFailures() {
         available.rows -= 3;
         printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
         for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-            printf(replaceColors("{red}▏ {bold}%s{blank}{red}: %s{blank}\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+            printf(replaceColors("[red]▏ [bold]%s[blank][red]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
             if (i == available.rows - 1 && copying.failedItems.size() > available.rows) {
                 printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
             }
