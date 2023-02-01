@@ -36,7 +36,7 @@ struct Filepath {
     fs::path original_files;
     fs::path home;
 };
-static Filepath filepath;
+extern Filepath filepath;
 
 enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
 
