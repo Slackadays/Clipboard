@@ -1,210 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link rel="icon" href="CBFavicon.png">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Cut, copy, and paste anything, anywhere, all in the terminal with Clipboard.">
-        <title>The Clipboard Project</title>
-        <style>
-            @font-face {
-                font-family: 'Permanent Marker';
-                src: url('fonts/permanent_marker/PermanentMarker-Regular.ttf');
-                font-weight: normal;
-                font-style: normal;
-            }
 
-            @font-face {
-                font-family: 'Lobster Two';
-                src: url('fonts/lobster_two/LobsterTwo-BoldItalic.ttf');
-                font-weight: normal;
-                font-style: normal;
-            }
+<head>
+    <link rel="icon" href="CBSmall.png">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Cut, copy, and paste anything, anywhere, all in the terminal with Clipboard.">
+    <title>The Clipboard Project</title>
+    <style>
+        @font-face {
+            font-family: 'Permanent Marker';
+            src: url('fonts/permanent_marker/PermanentMarker-Regular.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-            @font-face {
-                font-family: 'Secular One';
-                src: url('fonts/secular_one/SecularOne-Regular.ttf');
-                font-weight: normal;
-                font-style: normal;
-            }
+        @font-face {
+            font-family: 'Lobster Two';
+            src: url('fonts/lobster_two/LobsterTwo-BoldItalic.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-            body {
-                margin: 0;
-                padding: 0;
-                background: rgb(164, 188, 192);
-            }
+        @font-face {
+            font-family: 'PT Sans';
+            src: url('fonts/pt_sans/PTSans-Bold.ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
 
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #3a7bd5, #3a6073);
+            font-family: 'PT Sans';
+        }
+
+        titlebar {
+            background: rgba(255, 182, 73, 0.8);
+            display: block;
+            padding-top: .5vh;
+            padding-bottom: 1vh;
+            padding-left: 2vw;
+            margin-bottom: 25vh;
+            position: sticky;
+            top: 0;
+            max-height: 5vh;
+            z-index: 1;
+        }
+
+        titletext {
+            text-align: left;
+            font-family: 'Lobster Two';
+            font-size: 3em;
+            font-weight: bold;
+            display: inline;
+        }
+
+        herotext {
+            font-family: 'Permanent Marker';
+            font-size: 3em;
+            margin-left: 7vw;
+            margin-top: 25vh;
+            margin-bottom: 2vh;
+            display: block;
+        }
+
+        img {
+            max-width: 100%;
+            margin-top: 10vh;
+            margin-bottom: 10vh;
+            margin: 0 auto;
+            display: block;
+        }
+
+        img.button {
+            float: left;
+            transform: scale(1);
+            transition: all 0.4s cubic-bezier(0.33, 0.53, 0.12, 1);
+        }
+
+        img.button:hover {
+            transform: scale(1.1);
+        }
+
+        img.button:active {
+            transform: scale(.95);
+        }
+
+        p {
+            max-width: 75vw;
+            font-size: 2.5em;
+            margin-left: 7vw;
+
+            background: linear-gradient(20deg, rgba(34,16,99,1) 0%, rgba(0,12,87,1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        a {
+            background: black;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ul {
+            font-size: 2.5em;
+            max-width: 75vw;
+            margin-left: 7vw;
+        }
+
+        @media screen and (max-width: 800px) {
             titlebar {
-                background: rgba(255, 203, 123, 0.8);
-                display: block;
-                box-shadow: 0px 1px 100px black;
-                padding-top: .5vh;
+                position: relative;
+                max-height: 100vh;
+                padding: 0;
                 padding-bottom: 1vh;
-                padding-left: 2vw;
-                margin-bottom: 5vh;
-                position: sticky;
-                top: 0;
-                max-height: 5vh;
             }
 
             titletext {
-                text-align: left;
-                font-family: 'Lobster Two';
-                font-size: 3em;
-                font-weight: bold;
-                display: inline;
+                font-size: 2.2em;
+                display: block;
+                text-align: center;
             }
 
             herotext {
-                font-family: 'Permanent Marker';
-                font-size: 2.5em;
+                font-size: 1.7em;
+                margin-left: 0;
                 text-align: center;
-                margin-top: 2vh;
-                margin-bottom: 2vh;
-                padding: 1%;
-                display: block;
-            }
-
-            img {
-                max-width: 100%;
-                margin-top: 10vh;
                 margin-bottom: 10vh;
-                margin: 0 auto;
-                display: block;
-            }
-
-            section {
-                background: rgba(255, 203, 123, 0.5);
-                padding: 1%;
-                margin-top: 5vh;
-                margin-bottom: 5vh;
-                margin-left: auto;
-                font-family: 'Secular One', sans-serif;
-                font-size: 1.3em;
-                box-shadow: 0 0 30px 1px black;
-                display: block;
+                border-radius: 0;
+                max-width: 100vw;
             }
 
             p {
-                text-align: center;
-                max-width: 50vw;
-                margin: 0 auto;
-            }
-
-            a {
-                color: black;
+                font-size: 1.2em;
+                max-width: 98%;
+                margin-left: 1%;
+                margin-right: 1%;
             }
 
             ul {
-                margin: 0 auto;
-                max-width: 50vw;
+                max-width: 100%;
+                font-size: 1.2em;
+                margin: 0;
             }
+        }
+    </style>
+</head>
 
-            @media screen and (max-width: 800px) {
-                titlebar {
-                    position: relative;
-                    max-height: 100vh;
-                    padding: 0;
-                    padding-bottom: 1vh;
-                }
+<body>
+    <titlebar>
+        <titletext>
+            The Clipboard Project
+        </titletext>
+    </titlebar>
+    <herotext>
+        Cut, copy, and paste anything, anywhere, all in the terminal!
+    </herotext>
+    <p>
+        One of those tools you'd never believe you went without after trying out.<br><br>
 
-                titletext {
-                    font-size: 2.5em;
-                    display: block;
-                    text-align: center;
-                }
+        <a href="https://github.com/Slackadays/Clipboard"><img class="button" src="readme-assets/GetItOnGitHub.png"
+                width="400px"></a>
+    </p>
+    <herotext>
+        What's the big deal?
+    </herotext>
+    <p>
+        If you're a terminal user, maybe...<br><br>
+            > ...you need to copy a file somewhere, but don't know where exactly.<br>
+            > ...you need to make a change to something and you want to revert those changes quickly. <br>
+            > ...you need to share a file with a website but you only know where this file is in the terminal. <br>
+            > ...you need a "scratchpad" to save some words on to help remind you in the future. <br>
+            > ...you need to save a bunch of data from some program for later. <br>
+    </ul>
+    <br>
+    </p>
+    <p>
+        Before Clipboard, you'd have to research which specific tool to download and figure out and remember how to use it and hope you get it right every time. Yuck, ugh, puke! <br><br>
 
-                herotext {
-                    font-size: 1.9em;
-                    margin-left: 0;
-                    text-align: center;
-                    margin-top: 10vh;
-                    margin-bottom: 10vh;
-                    padding: 0;
-                    border-radius: 0;
-                    max-width: 100vw;
-                }
+        With Clipboard, do anything that involves moving information around much quicker and way easier. I know this because I've been in this situation before.
+    </p>
 
-                p {
-                    font-size: .8em;
-                    border-radius: 0px;
-                    max-width: 98%;
-                }
+    <herotext>
+        Let's Get This Party Started
+    </herotext>
+    <p>
+        Step 1: Visit the <a href="https://github.com/Slackadays/Clipboard">official GitHub page</a> and go to
+        "Quick Installation" to get Clipboard (it's easy).
+        Feel free to give us a star if you're feeling generous. <img style="display: inline;" alt="GitHub Repo stars"
+        src="https://img.shields.io/github/stars/slackadays/Clipboard?color=bright-green&label=stars&style=social">
+    </p>
+    <p>
+        Step 2: Set optional environment variables (if you wish).
+    </p>
+    <p>
+        Step 3: Done! Start using Clipboard. See, I told you it would be
+        easy.
+    </p>
+    <img src="readme-assets/CBDemo.png">
+</body>
 
-                ul {
-                    max-width: 100%;
-                    font-size: .8em;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <titlebar>
-            <titletext>
-                The Clipboard Project
-            </titletext>
-        </titlebar>
-        <herotext>
-            Cut, copy, and paste anything, anywhere!
-            <img src="readme-assets/clipboard.svg" width="200px">
-        </herotext>
-        <section>
-            <p>
-                Clipboard by Jackson Huff is a <em>power tool</em> that lets you cut, copy, and paste anything, anywhere, all in the terminal.<br><br>
-
-                It's one of those tools you'd never believe you went without after trying out.<br><br>
-
-                <a href="https://github.com/Slackadays/Clipboard"><img src="readme-assets/GetItOnGitHub.png" width="400px"></a>
-            </p>
-        </section>
-        <herotext>
-            What's the big deal?
-        </herotext>
-        <section>
-            <p>
-                If you're a terminal user, maybe you've encountered situations where...<br><br>
-                <ul>
-                    <li>
-                        ...you need to copy a file somewhere, but don't know where exactly.
-                    </li>
-                    <li>
-                        ...you need to make a change to something and you want to revert those changes quickly.
-                    </li>
-                    <li>
-                        ...you need to share a file with a website but you only know where this file is in the terminal.
-                    </li>
-                    <li>
-                        ...you need a "scratchpad" to save some words on to help remind you in the future.
-                    </li>
-                    <li>
-                        ...you need to save a bunch of data from some program for later.
-                    </li>
-                </ul> 
-                <br>
-                </p>
-                <p>
-                Before Clipboard, you'd have to research which specific tool to download and figure out how to use it. <br>
-                UGH! <br>
-                Say adiós to that confusion and wasted time.<br>
-                Do anything that involves moving information around a lot quicker and easier.
-            </p>
-        </section>
-        
-        <herotext>
-            Let's Get This Party Started
-        </herotext>
-        <section>
-            <p>
-                Step 1: Visit the <a href="https://github.com/Slackadays/Clipboard">official GitHub page</a> and go to "Quick Installation" to see how to get Clipboard (it's easy).
-                Feel free to give it a star <img style="display: inline;" alt="GitHub Repo stars" src="https://img.shields.io/github/stars/slackadays/Clipboard?color=bright-green&label=stars&style=social"> if you're feeling generous.
-            </p>
-            <p>
-                Step 2: Set optional environment variables (if you wish).
-            </p>
-            <p>
-                Step 3: Done! There's nothing else to do other than actually use Clipboard. See, I told you it would be easy. 
-            </p>
-        </section>
-        <img src="readme-assets/CBDemo.png">
-    </body>
 </html>
