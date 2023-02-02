@@ -193,7 +193,6 @@ void setupVariables(int& argc, char *argv[]);
 void createTempDirectory();
 void syncWithGUIClipboard(std::string const& text);
 void syncWithGUIClipboard(ClipboardPaths const& clipboard);
-void syncWithGUIClipboard();
 void showClipboardStatus();
 void showClipboardContents();
 void setupAction(int& argc, char *argv[]);

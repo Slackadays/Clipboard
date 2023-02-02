@@ -93,6 +93,11 @@ std::string fileContents(const fs::path& path) {
     return buffer.str();
 }
 
+void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
+    std::ofstream file(path, append ? std::ios::app : std::ios::trunc);
+    file << content;
+}
+
 void deduplicate(auto& items) {
     std::sort(items.begin(), items.end());
     items.erase(std::unique(items.begin(), items.end()), items.end());
@@ -102,7 +107,12 @@ bool userIsARobot() {
     return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
 }
 
-CopyPolicy userDecision(const std::string& item) {
+bool isAWriteAction() {
+    using enum Action;
+    return action != Paste && action != PipeOut && action != Show; 
+}
+
+[[nodiscard]] CopyPolicy userDecision(const std::string& item) {
     using enum CopyPolicy;
     if (userIsARobot()) {
         return ReplaceAll;
@@ -128,12 +138,6 @@ CopyPolicy userDecision(const std::string& item) {
 
 namespace PerformAction {
     void copyItem(const fs::path& f) {
-        static std::ofstream originalFiles;
-        static bool setup = false;
-        if (action == Action::Cut && !setup) {
-            originalFiles.open(path.original_files);
-            setup = true;
-        }
         auto actuallyCopyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
             if (fs::is_directory(f)) {
                 auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
@@ -145,7 +149,7 @@ namespace PerformAction {
                 successes.files++;
             }
             if (action == Action::Cut) {
-                originalFiles << fs::absolute(f).string() << std::endl;
+                writeToFile(path.original_files, fs::absolute(f).string() + "\n", true);
             }
         };
         try {
@@ -165,9 +169,8 @@ namespace PerformAction {
 
     void copy() {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
-            std::ofstream file(path.data);
-            file << copying.items.at(0).string();
             copying.buffer = copying.items.at(0).string();
+            writeToFile(path.data, copying.buffer);
             printf(replaceColors("[green]✓ Copied text \"[bold]%s[blank][green]\"[blank]\n").data(), copying.items.at(0).string().data());
             return;
         }
@@ -231,17 +234,16 @@ namespace PerformAction {
     }
 
     void pipeIn() {
-        std::ofstream file(path.data);
         std::string line;
         while (std::getline(std::cin, line)) {
             successes.bytes += line.size() + 1;
             copying.buffer.append(line + "\n");
             if (copying.buffer.size() >= 32000000) {
-                file << copying.buffer;
+                writeToFile(path.data, copying.buffer, true);
                 copying.buffer.clear();
             }
         }
-        file << copying.buffer;
+        writeToFile(path.data, copying.buffer, true);
     }
 
     void pipeOut() {
@@ -312,12 +314,10 @@ namespace PerformAction {
                     copying.buffer.append(line);
                     successes.bytes += line.size();
                 }
-                std::ofstream file(path.data);
-                file << copying.buffer;
+                writeToFile(path.data, copying.buffer, true);
             } else if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
                 copying.buffer.append(copying.items.at(0).string());
-                std::ofstream file(path.data);
-                file << copying.buffer;
+                writeToFile(path.data, copying.buffer, true);
                 successes.bytes += copying.items.at(0).string().size();
             } else {
                 fprintf(stderr, "%s", replaceColors("[red]╳ You can't add files to text. [blank][pink]Try copying text first, or add a file instead.[blank]\n").data());
@@ -346,8 +346,7 @@ void clearTempDirectory(bool force_clear = false) {
 
 void convertFromGUIClipboard(const std::string& text) {
     clearTempDirectory(true);
-    std::ofstream output(path.data);
-    output << text;
+    writeToFile(path.data, text);
 }
 
 void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
@@ -390,7 +389,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     }
 }
 
-ClipboardContent thisClipboard() {
+[[nodiscard]] ClipboardContent thisClipboard() {
     if (fs::exists(path.original_files)) {
         std::ifstream originalFiles { path.original_files };
         std::vector<fs::path> files;
@@ -502,18 +501,20 @@ void setupVariables(int& argc, char *argv[]) {
     arguments.assign(argv + 1, argv + argc);
 }
 
-void syncWithGUIClipboard() {
-    if (clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) {
-        ClipboardContent guiClipboard = getGUIClipboard();
-        if (guiClipboard.type() == ClipboardContentType::Text) {
-            convertFromGUIClipboard(guiClipboard.text());
-        } else if (guiClipboard.type() == ClipboardContentType::Paths) {
-            convertFromGUIClipboard(guiClipboard.paths());
+void syncWithGUIClipboard(bool force = false) {
+    if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || force) {
+        using enum ClipboardContentType;
+        auto content = getGUIClipboard();
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+        } else if (content.type() == Paths) {
+            convertFromGUIClipboard(content.paths());
         }
     }
 }
 
 void showClipboardStatus() {
+    syncWithGUIClipboard(true);
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { //use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path)) {
@@ -579,7 +580,7 @@ void showClipboardStatus() {
 }
 
 template<typename T>
-auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcut = "") {
+[[nodiscard]] auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcut = "") {
     for (const auto& entry : arguments) {
         if (entry == flag || entry == (std::string(shortcut).append(flag))) {
             if constexpr (std::is_same_v<T, std::string>) {
@@ -830,11 +831,6 @@ void performAction() {
             remove();
             break;
     }
-}
-
-bool isAWriteAction() {
-    using enum Action;
-    return action != Paste && action != PipeOut && action != Show; 
 }
 
 void updateGUIClipboard() {
