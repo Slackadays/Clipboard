@@ -10,13 +10,13 @@
 Now, have a _powerful_ clipboard to use anywhere in the terminal, just like a GUI!
 
 - **`Easy.`** Friendly to newbies and power users.
-- **`Quick.`** Zero configuration needed to use.
-- **`Pretty.`** Breaks the rules to look beautiful.
-- **`Compatible.`** Works on anything that supports C++20.
+- **`Breezy.`** Zero configuration needed to use.
+- **`Beautiful.`** Breaks the rules to look pretty.
 - **`Unified.`** Functions exactly the same everywhere.
+- **`Compatible.`** Works on anything that supports C++20.
 - **`Universal.`** Supports English, Spanish, Portuguese, and Turkish.
-- **`Integrated.`** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
 - **`Tiny.`** Mere tens of kilobytes in size.
+- **`Integrated.`** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
