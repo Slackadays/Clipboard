@@ -6,11 +6,11 @@
     <img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge&color=brightgreen">
 </p>
 
-:sparkles: **Clipboard is the power tool that saves you time and effort.** Before, you've always needed to think about where exactly you want to move text and files. This increases your mental workload and makes many scenarios totally impractical. 
-Now, have a _unified_ clipboard to use anywhere in the command line, just as if you were using a GUI!
+:rocket: **Clipboard is the power tool that saves you time and effort.**:sparkles: Before, you've always had to think about where exactly you want to move things, which multiplies your mental workload and makes many scenarios totally impractical. 
+Now, have a _powerful_ clipboard to use anywhere in the terminal, just like a GUI!
 
+- **`Easy.`** Friendly to newbies and power users.
 - **`Quick.`** Zero configuration needed to use.
-- **`Easy.`** Friendly to newbies and power users alike.
 - **`Pretty.`** Breaks the rules to look beautiful.
 - **`Compatible.`** Works on anything that supports C++20.
 - **`Unified.`** Functions exactly the same everywhere.
