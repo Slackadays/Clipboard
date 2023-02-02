@@ -32,7 +32,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
 ---
 
 ### **Install Manually**
-Get the latest release instead by adding `--branch 0.2.1r2` right after `git clone...`. Change the installation prefix by adding `-DINSTALL_PREFIX=/CUSTOM/PREFIX` to `cmake ..`.
+Get the latest release instead by adding `--branch 0.3.0` right after `git clone...`. Change the installation prefix by adding `-DINSTALL_PREFIX=/CUSTOM/PREFIX` to `cmake ..`.
 ```bash
 git clone https://github.com/slackadays/Clipboard 
 cd Clipboard/build
