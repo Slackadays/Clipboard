@@ -6,7 +6,7 @@
     <img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge&color=brightgreen">
 </p>
 
-:rocket: **Clipboard is the power tool that saves you time and effort.** Before, you've always needed to think about where exactly you want to move text and files. This increases your mental workload and makes many scenarios totally impractical. 
+:sparkles: **Clipboard is the power tool that saves you time and effort.** Before, you've always needed to think about where exactly you want to move text and files. This increases your mental workload and makes many scenarios totally impractical. 
 Now, have a _unified_ clipboard to use anywhere in the command line, just as if you were using a GUI!
 
 - **`Quick.`** Zero configuration needed to use.
