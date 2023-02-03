@@ -102,7 +102,5 @@ endif()
 
 add_subdirectory(src/clipboard)
 
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADD_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
