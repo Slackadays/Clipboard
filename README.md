@@ -60,8 +60,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 
 ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
-In all commands, you can substitute `cb` for `clipboard`. 
-Add a number to the end of the action to choose which clipboard you want to use (the default is 0) or `_` to use a persistent clipboard. 
+You can substitute `cb` for `clipboard` in all commands, and add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
 ---
 
@@ -114,14 +113,6 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-**`FORCE_COLOR`** &emsp; Set this to make Clipboard always show color regardless of what you set `NO_COLOR` to.
-
----
-
-**`TMPDIR`** &emsp; Set this to the directory that Clipboard will use to hold the items you cut or copy into a temporary directory. Other programs use `TMPDIR` as well, so be careful about changing this.
-
----
-
 **`CLIPBOARD_TMPDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
 
 ---
@@ -138,6 +129,10 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
+**`FORCE_COLOR`** &emsp; Set this to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+
+---
+
 **`NO_COLOR`** &emsp; Set this to make Clipboard not show any colors.
 
 </details>
@@ -145,6 +140,10 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 ---
 
 ### **Flags**
+
+**`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
+
+---
 
 **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
