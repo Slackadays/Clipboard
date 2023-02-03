@@ -1,9 +1,13 @@
 ![Clipboard Banner](documentation/readme-assets/CBBanner.png)
 
 <p align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/main.yml?branch=main&label=BUILDS&style=for-the-badge">
-    <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test.yml?branch=main&label=TESTS&style=for-the-badge">
-    <img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge&color=brightgreen">
+    <a href="https://github.com/Slackadays/Clipboard/actions">
+        <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/main.yml?branch=main&label=BUILDS&style=for-the-badge">
+        <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test.yml?branch=main&label=TESTS&style=for-the-badge">
+    </a>
+    <a href="https://github.com/Slackadays/Clipboard/stargazers">
+        <img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge&color=brightgreen">
+    </a>
 </p>
 
 :sparkles::rocket: **Clipboard is the power tool that saves you time and effort.** Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
