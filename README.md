@@ -49,9 +49,7 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 ### **Premade Builds**
 
-<a>
-    <img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status">
-</a>
+<a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status"></a>
 
 You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
 
