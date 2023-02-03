@@ -8,16 +8,16 @@ then
     cd $tmp_dir
     if [ "$(uname -m)" = "x86_64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-amd64.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc11-amd64.zip
     elif [ "$(uname -m)" = "aarch64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-arm64.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc11-arm64.zip
     elif [ "$(uname -m)" = "riscv64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-riscv64.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc11-riscv64.zip
     elif [ "$(uname -m)" = "i386" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc10-i386.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc11-i386.zip
     else
         download_link="skip"
     fi
