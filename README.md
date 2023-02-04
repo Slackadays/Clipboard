@@ -18,9 +18,10 @@ Now, have a _powerful_ clipboard to use anywhere in the terminal, just like a GU
 - **`Beautiful.`** Breaks the rules to look pretty.
 - **`Unified.`** Functions exactly the same everywhere.
 - **`Compatible.`** Works on anything that supports C++20.
+- **`Scriptable.`** Embed it right into your own programs.
 - **`Universal.`** Supports English, Spanish, Portuguese, and Turkish.
+- **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
 - **`Tiny.`** Mere tens of kilobytes in size.
-- **`Integrated.`** Connects with [many](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat) native GUI clipboards.
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
