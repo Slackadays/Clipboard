@@ -61,6 +61,10 @@ std::string clipboard_name = "0";
 
 Action action;
 
+#if defined(_WIN64) || defined (_WIN32)
+UINT old_code_page;
+#endif
+
 bool stopIndicator(bool change_condition_variable = true) {
     ProgressState expect = ProgressState::Active;
     if (!change_condition_variable) {
@@ -488,6 +492,7 @@ void setupVariables(int& argc, char *argv[]) {
 	if (!SetConsoleMode(hOut, (dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | ENABLE_PROCESSED_OUTPUT))) {
         no_color = true;
 	}
+    old_code_page = GetConsoleOutputCP();
 	SetConsoleOutputCP(CP_UTF8); //fix broken accents on Windows
     #endif
     path.home = getenv("USERPROFILE") ? getenv("USERPROFILE") : getenv("HOME");
@@ -925,10 +930,19 @@ int main(int argc, char *argv[]) {
         showFailures();
 
         showSuccesses();
+
+        #if defined(_WIN64) || defined (_WIN32)
+        SetConsoleOutputCP(old_code_page);
+        #endif
     } catch (const std::exception& e) {
         if (stopIndicator()) {
             fprintf(stderr, internal_error_message().data(), e.what());
         }
+
+        #if defined(_WIN64) || defined (_WIN32)
+        SetConsoleOutputCP(old_code_page);
+        #endif
+
         exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);
