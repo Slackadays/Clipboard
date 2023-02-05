@@ -1,6 +1,5 @@
-#!/bin/bash
-set -uxo pipefail
-set +e
+#!/bin/sh
+set -eux
 
 if [ "$(uname)" = "Linux" ]
 then

@@ -31,7 +31,7 @@ Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like 
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 ### **All Except Windows** 
 ```bash
-curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | bash
+curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 ```
 ### **Windows (run as Administrator)** 
 ```powershell
