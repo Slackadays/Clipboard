@@ -114,7 +114,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ### **Environment Variables**
 
-**`CI`** &emsp; Set this to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+**`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
 ---
 
@@ -126,19 +126,19 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
-**`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to make Clipboard always use persistent clipboards.
+**`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to anything to make Clipboard always use persistent clipboards.
 
 ---
 
-**`CLIPBOARD_NOGUI`** &emsp; Set this to disable integration with GUI clipboards.
+**`CLIPBOARD_NOGUI`** &emsp; Set this to anything to disable integration with GUI clipboards.
 
 ---
 
-**`FORCE_COLOR`** &emsp; Set this to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+**`FORCE_COLOR`** &emsp; Set this to anything to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
 ---
 
-**`NO_COLOR`** &emsp; Set this to make Clipboard not show any colors.
+**`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
 
 </details>
 
