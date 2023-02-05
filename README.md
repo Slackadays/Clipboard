@@ -13,18 +13,19 @@
 :sparkles::rocket: **Clipboard is the power tool that saves you time and effort.** 🏖️🌴
 
 Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
+
 Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like a GUI!
 
-- 😌 **`Easy.`** Friendly to newbies and power users.
-- 📨 **`Breezy.`** Zero configuration needed to use.
-- 🌺 **`Beautiful.`** Breaks the rules to look pretty.
-- 1️⃣ **`Unified.`** Functions exactly the same everywhere.
-- 💻 **`Compatible.`** Works on anything that supports C++20.
-- 📜 **`Scriptable.`** Embed it right into your own programs.
-- 🗣️ **`Universal.`** Supports English, Spanish, Portuguese, and Turkish.
-- 🪄 **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
-- 🤏 **`Tiny.`** Mere tens of kilobytes in size.
-- 🆓 **`FOSS.`** 100% free and open-source.
+- **`Easy.`** Friendly to newbies and power users.
+- **`Breezy.`** Zero configuration needed to use.
+- **`Beautiful.`** Breaks the rules to look pretty.
+- **`Unified.`** Functions exactly the same everywhere.
+- **`Compatible.`** Works on anything that supports C++20.
+- **`Scriptable.`** Embed it right into your own programs.
+- **`Universal.`** Supports English, Spanish, Portuguese, and Turkish.
+- **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
+- **`Tiny.`** Mere tens of kilobytes in size.
+- **`FOSS.`** 100% free and open-source.
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
