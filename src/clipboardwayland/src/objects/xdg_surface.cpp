@@ -40,11 +40,11 @@ void XdgSurface::configure(std::uint32_t serial) {
         didAction = true;
     }
 
+    xdg_surface_ack_configure(value(), serial);
+
     if (didAction) {
         m_surface.commit();
     }
-
-    xdg_surface_ack_configure(value(), serial);
 }
 
 void XdgSurface::setTitle(char const* title) const {
