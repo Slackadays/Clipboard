@@ -65,5 +65,10 @@ if(WIN32)
 else()
   install(TARGETS clipboard
     DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
-  install(CODE "execute_process(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX_BIN}/clipboard ${CMAKE_INSTALL_PREFIX_BIN}/cb)")
+  install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+      clipboard \
+      \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX_BIN}/cb\" \
+    )"
+  )
 endif()
