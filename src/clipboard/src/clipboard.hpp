@@ -81,7 +81,7 @@ struct IsTTY {
 static IsTTY is_tty;
 
 struct Constants {
-    std::string_view clipboard_version = "0.3.0";
+    std::string_view clipboard_version = "0.3.1";
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
     std::string_view data_file_name = "rawdata.clipboard";
     std::string_view default_clipboard_name = "0";
