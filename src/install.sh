@@ -1,6 +1,4 @@
 #!/bin/sh
-read -p "Do you want to compile clipboard and install it to ~/.local/bin? (Y/N)" COMPILE_CLIPBOARD
-
 set -eux
 
 compile_section() {
@@ -26,10 +24,6 @@ then
     compile_section
 fi
 
-if [ "$COMPILE_CLIPBOARD" = "Y" ]
-then
-    compile_section
-fi
 
 if [ "$(uname)" = "Linux" ]
 then
