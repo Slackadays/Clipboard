@@ -1,9 +1,7 @@
 #!/bin/sh
 set -eux
 
-if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
-then
-    echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
+compile_section() {
     git clone --depth 1 https://github.com/slackadays/Clipboard
     pushd Clipboard/build
     cmake ..
@@ -11,6 +9,12 @@ then
     mkdir -p ~/.local/bin
     sudo cp clipboard ~/.local/bin
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
+}
+
+if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+then
+    echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
+    compile_section
     echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
     exit 0
 fi
@@ -78,8 +82,6 @@ git clone --depth 1 https://github.com/slackadays/Clipboard
 pushd Clipboard/build
 cmake ..
 cmake --build .
-
-
 
 
 if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
