@@ -5,8 +5,8 @@ on:
     workflows: [ "Clipboard Builds" ]
     types:
       - completed
-  push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   linux-amd64:
