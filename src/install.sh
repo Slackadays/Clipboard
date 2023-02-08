@@ -9,7 +9,9 @@ compile_section() {
     mkdir -p ~/.local/bin
     sudo cp clipboard ~/.local/bin
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
+    export PATH="$HOME/.local/bin:$PATH"
 }
+
 
 if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
 then
@@ -75,11 +77,7 @@ then
     exit 0
 fi
 
-git clone --depth 1 https://github.com/slackadays/Clipboard
-
-pushd Clipboard/build
-cmake ..
-cmake --build .
+compile_section
 
 
 if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
