@@ -78,6 +78,4 @@ target_include_directories(clipboardwayland PRIVATE
   ${GENERATED_INCLUDE_DIR}
 )
 
-if(POSIX)
-  install(TARGETS clipboardwayland LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX_LIB}")
-endif()
+install(TARGETS clipboardwayland LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX_LIB}")
