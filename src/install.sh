@@ -5,8 +5,6 @@ compile_section() {
     if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
     then
     echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
-    else
-    echo -e "\e[1;32mInstalling Clipboard for Linux..\e[0m"
     fi
     git clone --depth 1 https://github.com/slackadays/Clipboard
     pushd Clipboard/build
@@ -22,7 +20,6 @@ compile_section() {
     echo -e "\e[1;32mInstalled Clipboard For NixOS!\e[0m"
     else
     cmake --install .
-    echo -e "\e[1;32mInstalled Clipboard For Linux!\e[0m"
     fi
 }
 
