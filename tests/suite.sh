@@ -1,4 +1,5 @@
 #!/bin/sh
+set -eux
 
 BASEDIR="$(dirname "$0")"
 

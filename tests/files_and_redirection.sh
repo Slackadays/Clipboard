@@ -1,4 +1,5 @@
 #setup
+set -eux
 mkdir fandr_test
 
 cd fandr_test

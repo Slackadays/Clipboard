@@ -1,4 +1,5 @@
 #setup
+set -eux
 export CLIPBOARD_FORCETTY=1
 
 mkdir cut_test
