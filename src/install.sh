@@ -71,10 +71,13 @@ git clone --depth 1 https://github.com/slackadays/Clipboard
 pushd Clipboard/build
 cmake ..
 cmake --build .
+if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+then
 sudo cp clipboard ~/.local/bin
 sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
 echo -e "\e[0;33mMake sure to add Clipboard to your PATH!\e[0m"
 exit 0
+fi
 
 
 if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
