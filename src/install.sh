@@ -1,6 +1,15 @@
 #!/bin/sh
 set -eux
 
+compile_for_nixos() {
+    sudo git clone https://github.com/Slackadays/Clipboard
+    cd Clipboard
+    sudo cmake .
+    sudo cmake --build .
+    sudo cp clipboard ~/.local/bin
+    sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb 
+}
+
 if [ ! -f ~/.local/bin ]
 then
     mkdir -p ~/.local/bin
@@ -39,6 +48,15 @@ then
     else
         download_link="skip"
     fi
+
+    if [ -f /run/current-system/nixos-version ]
+    then
+    cd $tmp_dir
+    compile_for_nixos
+    echo -e "\e[0;33mMake sure to add Clipboard to your PATH!\e[0m"
+    exit 0
+    fi
+
     if [ "$download_link" != "skip" ]
     then
         curl -SsLl $download_link -o clipboard-linux.zip
@@ -76,11 +94,13 @@ then
     exit 0
 fi
 
+compile_process_nixos() {
 git clone --depth 1 https://github.com/slackadays/Clipboard
 
 pushd Clipboard/build
 cmake ..
 cmake --build .
+}
 
 if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
 then
