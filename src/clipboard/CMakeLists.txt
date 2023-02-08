@@ -40,13 +40,13 @@ elseif(POSIX)
     TARGET clipboard
     APPEND
     PROPERTY BUILD_RPATH
-    "${CMAKE_INSTALL_PREFIX_LIB}"
+    "${CMAKE_INSTALL_PREFIX}/lib"
   )
   set_property(
     TARGET clipboard
     APPEND
     PROPERTY INSTALL_RPATH
-    "${CMAKE_INSTALL_PREFIX_LIB}"
+    "${CMAKE_INSTALL_PREFIX}/lib"
   )
   target_link_options(clipboard PRIVATE -z origin) # set the rpath to $ORIGIN
 endif()
@@ -60,19 +60,17 @@ if(CMAKE_DL_LIBS)
   target_link_libraries(clipboard ${CMAKE_DL_LIBS})
 endif()
 
-if(WIN32)
-  install(TARGETS clipboard DESTINATION bin)
-else()
-  install(TARGETS clipboard
-    DESTINATION "${CMAKE_INSTALL_PREFIX_BIN}")
+install(TARGETS clipboard DESTINATION bin)
+
+if(NOT WIN32)
   install(CODE "execute_process( \
     COMMAND ${CMAKE_COMMAND} -E create_symlink \
       clipboard \
-      \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX_BIN}/cb\" \
+      \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/cb\" \
     )"
   )
 endif()
 
 if(POSIX)
-  install(FILES ${CMAKE_SOURCE_DIR}/documentation/manpages/man.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1 RENAME clipboard.1)
+  install(FILES ${CMAKE_SOURCE_DIR}/documentation/manpages/man.1 DESTINATION share/man/man1 RENAME clipboard.1)
 endif()

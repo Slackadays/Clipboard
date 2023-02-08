@@ -18,4 +18,4 @@ endif()
 
 target_include_directories(clipboardx11 PRIVATE ${X11_INCLUDE_DIR})
 
-install(TARGETS clipboardx11 LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX_LIB}")
+install(TARGETS clipboardx11 LIBRARY DESTINATION lib)

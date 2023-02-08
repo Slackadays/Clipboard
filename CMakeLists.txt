@@ -61,9 +61,6 @@ elseif(POSIX AND NOT INSTALL_PREFIX)
   set(INSTALL_PREFIX "/usr")
 endif()
 
-set(CMAKE_INSTALL_PREFIX_BIN "${INSTALL_PREFIX}/bin")
-set(CMAKE_INSTALL_PREFIX_LIB "${INSTALL_PREFIX}/lib")
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "Building Clipboard in Debug mode")
   if(NOT MSVC AND NOT APPLE)
