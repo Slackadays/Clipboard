@@ -94,13 +94,12 @@ then
     exit 0
 fi
 
-compile_process_nixos() {
 git clone --depth 1 https://github.com/slackadays/Clipboard
 
 pushd Clipboard/build
 cmake ..
 cmake --build .
-}
+
 
 if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
 then
