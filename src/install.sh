@@ -23,7 +23,6 @@ if [ "$(uname)" = "Linux" ]
 then
     tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
     cd $tmp_dir
-
     if [ "$(uname -m)" = "x86_64" ]
     then
         download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-gcc11-amd64.zip
@@ -39,8 +38,6 @@ then
     else
         download_link="skip"
     fi
-
-
     if [ "$download_link" != "skip" ]
     then
         curl -SsLl $download_link -o clipboard-linux.zip
@@ -79,6 +76,7 @@ then
 fi
 
 git clone --depth 1 https://github.com/slackadays/Clipboard
+
 pushd Clipboard/build
 cmake ..
 cmake --build .
