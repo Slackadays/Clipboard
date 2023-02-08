@@ -29,6 +29,9 @@ Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like 
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
+
+**NOTE:** This method **does not** work on NixOS.
+
 ### **All Except Windows** 
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
@@ -43,7 +46,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 ### **Install Manually**
 Get the latest release instead by adding `--branch 0.3.1` right after `git clone...`. Change the installation prefix by adding `-DINSTALL_PREFIX=/CUSTOM/PREFIX` to `cmake ..`.
 ```bash
-git clone https://github.com/slackadays/Clipboard 
+git clone https://github.com/Slackadays/Clipboard 
 cd Clipboard/build
 cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
 cmake --build .
