@@ -72,3 +72,5 @@ else()
     )"
   )
 endif()
+
+install(FILES ${CMAKE_SOURCE_DIR}/documentation/manpages/man.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1 RENAME clipboard.1)
