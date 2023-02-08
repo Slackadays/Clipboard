@@ -44,6 +44,10 @@ jobs:
       - name: Run a script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
+          curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
+          export TMPDIR=/tmp
+          bash tests/suite.sh
+
           NO_X11=1
           NO_WAYLAND=1
           PACKAGES="g++-${{ matrix.gcc }}-${{ matrix.arch.gcc }}"
@@ -89,6 +93,9 @@ jobs:
 
       - name: Run a script
         run: |
+          curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
+          bash tests/suite.sh
+
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug
           cmake --build . --config Debug --parallel 2
