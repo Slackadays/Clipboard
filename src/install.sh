@@ -1,10 +1,6 @@
 #!/bin/sh
 set -eux
 
-if [ ! -f ~/.local/bin ]
-then
-    mkdir -p ~/.local/bin
-fi
 
 
 if [ "$(uname)" = "Linux" ]
@@ -66,8 +62,12 @@ then
 fi
 
 
-git clone --depth 1 https://github.com/slackadays/Clipboard
+if [ ! -f ~/.local/bin ]
+then
+    mkdir -p ~/.local/bin
+fi
 
+git clone --depth 1 https://github.com/slackadays/Clipboard
 pushd Clipboard/build
 cmake ..
 cmake --build .
