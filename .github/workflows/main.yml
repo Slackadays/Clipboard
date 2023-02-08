@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        gcc: [ 11, 12 ]
+        gcc: [ 12 ]
         arch:
           - os: i386
             gcc: i686-linux-gnu
@@ -76,7 +76,7 @@ jobs:
           cmake --build . -j 3
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-linux-gcc${{ matrix.gcc }}-${{ matrix.arch.os }}
+          name: clipboard-linux-${{ matrix.arch.os }}
           path: build/output
   macos-arm64-amd64:
     runs-on: macos-latest
