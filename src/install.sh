@@ -19,6 +19,10 @@ compile_section() {
     echo -e "\e[1;33mMake sure to add Clipboard to your PATH! (If you installed clipboard on NixOS)\e[0m"
 }
 
+if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+then
+    compile_section
+fi
 
 if [ "$(uname)" = "Linux" ]
 then
