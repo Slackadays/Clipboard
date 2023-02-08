@@ -12,11 +12,18 @@ compile_section() {
     pushd Clipboard/build
     cmake ..
     cmake --build .
+    if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+    then
     mkdir -p ~/.local/bin
     sudo cp clipboard ~/.local/bin
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
     export PATH="$HOME/.local/bin:$PATH"
-    echo -e "\e[1;33mMake sure to add Clipboard to your PATH! (If you installed clipboard on NixOS)\e[0m"
+    echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
+    echo -e "\e[1;32mInstalled Clipboard For NixOS!\e[0m"
+    else
+    cmake --install .
+    echo -e "\e[1;32mInstalled Clipboard For Linux!\e[0m"
+    fi
 }
 
 if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
