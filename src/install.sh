@@ -2,6 +2,12 @@
 set -eux
 
 compile_section() {
+    if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+    then
+    echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
+    else
+    echo -e "\e[1;32mInstalling Clipboard for Linux..\e[0m"
+    fi
     git clone --depth 1 https://github.com/slackadays/Clipboard
     pushd Clipboard/build
     cmake ..
@@ -10,18 +16,9 @@ compile_section() {
     sudo cp clipboard ~/.local/bin
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
     export PATH="$HOME/.local/bin:$PATH"
+    echo -e "\e[1;33mMake sure to add Clipboard to your PATH! (If you installed clipboard on NixOS)\e[0m"
 }
 
-
-if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
-then
-    echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
-    compile_section
-    echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
-    exit 0
-else
-    echo -e "\e[1;32mInstalling Clipboard for Linux..\e[0m"
-fi
 
 if [ "$(uname)" = "Linux" ]
 then
