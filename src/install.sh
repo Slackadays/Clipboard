@@ -19,6 +19,8 @@ then
     compile_section
     echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
     exit 0
+else
+    echo -e "\e[1;32mInstalling Clipboard for Linux..\e[0m"
 fi
 
 if [ "$(uname)" = "Linux" ]
