@@ -15,6 +15,7 @@
 #include <type_traits>
 #include <optional>
 #include <dlfcn.h>
+#include <cstring>
 #include <clipboard/logging.hpp>
 #include "clipboard.hpp"
 
@@ -29,18 +30,29 @@ constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 using getClipboard_t = void*(*)();
 using setClipboard_t = void(*)(void*);
 
+static void posixClipboardFailure(char const* object) {
+    if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
+        exit(EXIT_FAILURE);
+    } else if (bool required = getenv("CLIPBOARD_REQUIREWAYLAND"); object == objectWayland && required) {
+        exit(EXIT_FAILURE);
+    }
+}
+
 template<typename proc_t, typename... args_t, typename return_t = std::invoke_result_t<proc_t, args_t...>>
 static return_t dynamicCall(char const* object, char const* symbol, args_t... args) {
     auto objectHandle = dlopen(object, RTLD_LAZY | RTLD_NODELETE);
     if (objectHandle == nullptr) {
         debugStream << "Opening " << object << " to look for " << symbol << " failed, aborting operation" << std::endl;
         debugStream << "Specific error: " << dlerror() << std::endl;
+        posixClipboardFailure(object);
         return return_t();
     }
 
     auto symbolHandle = dlsym(objectHandle, symbol);
     if (symbolHandle == nullptr) {
         debugStream << "Reading " << symbol << " from object " << object << " failed, aborting operation" << std::endl;
+        debugStream << "Specific error: " << dlerror() << std::endl;
+        posixClipboardFailure(object);
         return return_t();
     }
 
@@ -50,13 +62,13 @@ static return_t dynamicCall(char const* object, char const* symbol, args_t... ar
 }
 
 static ClipboardContent dynamicGetGUIClipboard(char const* object, char const* symbol) {
-    auto x11ClipboardPtr = dynamicCall<getClipboard_t>(object, symbol);
-    if (x11ClipboardPtr == nullptr) {
+    auto posixClipboardPtr = dynamicCall<getClipboard_t>(object, symbol);
+    if (posixClipboardPtr == nullptr) {
         return {};
     }
 
-    std::unique_ptr<ClipboardContent const> x11Clipboard { reinterpret_cast<ClipboardContent const*>(x11ClipboardPtr) };
-    return *x11Clipboard;
+    std::unique_ptr<ClipboardContent const> posixClipboard { reinterpret_cast<ClipboardContent const*>(posixClipboardPtr) };
+    return *posixClipboard;
 }
 
 static void dynamicSetGUIClipboard(char const* object, char const* symbol, ClipboardContent const& clipboard) {
