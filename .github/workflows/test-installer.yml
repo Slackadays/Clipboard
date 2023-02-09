@@ -1,10 +1,10 @@
 name: Installer Tests
 
 on:
-  workflow_run:
-    workflows: [ "Clipboard Builds" ]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
