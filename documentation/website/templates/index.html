@@ -1,0 +1,59 @@
+{% extends "juice/templates/index.html" %}
+{% block favicon %}
+<link rel="icon" type="image/png" href="/cb_small.png">
+{% endblock favicon %}
+{% block hero %}
+<section class="text-center">
+    <h1 class="heading-text" style="font-size: 30px">
+        Cut, copy, and paste anything, anywhere,<br>all in the terminal!
+    </h1>
+    <h3 class="title-text">
+        One of those tools you'd never believe you went without<br>after giving a try.
+    </h3>
+    <div>
+        <a href="https://github.com/Slackadays/Clipboard">
+            <img class="button" src="{{ get_url(path="get_it_on_github.png") }}" width="250px" />
+        </a>
+    </div>
+</section>
+<img class="hero-image" style="width: 50%" src="{{ get_url(path="demo.png") }}">
+
+<div class="explore-more text" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
+    Explore More ⇩
+</div>
+<style>
+    .hero section {
+        padding: 0 5rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .hero section {
+            padding: 0 2rem;
+        }
+
+        .hero-image {
+            display: none
+        }
+    }
+
+    img.button {
+        transform: scale(1);
+        transition: all 0.4s cubic-bezier(0.33, 0.53, 0.12, 1);
+    }
+
+    img.button:hover {
+        transform: scale(1.1);
+    }
+
+    img.button:active {
+        transform: scale(.95);
+    }
+</style>
+{% endblock hero %}
+{% block footer %}
+<footer>
+    <small class="subtext">
+        Powered by the Juice theme from <a href="https://huhu.io">Huhu.io</a>
+    </small>
+</footer>
+{% endblock footer %}
