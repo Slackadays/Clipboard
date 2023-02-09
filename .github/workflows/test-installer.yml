@@ -45,10 +45,10 @@ jobs:
       - name: Run a script
         shell: powershell
         run: |
-          #get administrator privileges
           Start-Process powershell -Verb runAs -ArgumentList '-Command "Set-ExecutionPolicy RemoteSigned"'
           (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
-          bash tests/suite.sh
+          #restart powershell to get the new path
+          Start-Process powershell -Verb runAs -ArgumentList '-Command bash tests/suite.sh'
   freebsd-amd64:
     runs-on: ubuntu-latest
 
