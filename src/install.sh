@@ -48,7 +48,7 @@ compile_section() {
     check_installation
 }
 
-if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+if [ $(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt) = "NixOS" ]
 then
     compile_section
 fi
