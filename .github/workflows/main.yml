@@ -146,7 +146,7 @@ jobs:
           name: clipboard-freebsd-amd64
           path: build/output
   openbsd-amd64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -168,7 +168,7 @@ jobs:
           name: clipboard-openbsd-amd64
           path: build/output
   openbsd-arm64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3

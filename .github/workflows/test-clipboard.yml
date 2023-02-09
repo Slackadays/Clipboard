@@ -142,7 +142,7 @@ jobs:
             export TMPDIR=/tmp
             bash ../tests/suite.sh
   openbsd-amd64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -163,7 +163,7 @@ jobs:
             export TMPDIR=/tmp
             bash ../tests/suite.sh
   openbsd-arm64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
