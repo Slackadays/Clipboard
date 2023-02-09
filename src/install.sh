@@ -5,16 +5,18 @@ check_installation() {
     #check if we can run the clipboard command
     if [ ! -x "$(command -v clipboard)" ]
     then
-        echo "Couldn't install Clipboard"
+        echo "\e[1;31mCouldn't install Clipboard\e[0m"
         exit 1
     else
-        echo "Clipboard installed successfully!"
+        echo "\e[1;32mClipboard installed successfully!\e[0m"
         exit 0
     fi
 }
 
 compile_section() {
-    if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+    tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
+    cd $tmp_dir
+    if [ $(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt) = "NixOS" ]
     then
         echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
     fi
@@ -24,14 +26,13 @@ compile_section() {
     cmake ..
     cmake --build .
 
-    if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+    if [ $(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt) = "NixOS" ]
     then
         mkdir -p ~/.local/bin
         sudo cp clipboard ~/.local/bin
         sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
         export PATH="$HOME/.local/bin:$PATH"
         echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
-        echo -e "\e[1;32mInstalled Clipboard For NixOS!\e[0m"
     else
         cmake --install .
     fi
@@ -46,7 +47,7 @@ compile_section() {
     check_installation
 }
 
-if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+if [ $(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt) = "NixOS" ]
 then
     compile_section
 fi
