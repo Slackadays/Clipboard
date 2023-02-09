@@ -48,6 +48,12 @@ git clone https://github.com/slackadays/Clipboard
 cd Clipboard/build
 cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
 cmake --build .
+# For NixOS users, install clipboard to ~/.local/bin and add clipboard to PATH.
+mkdir -p ~/.local/bin
+cp clipboard ~/.local/bin
+ln -s ~/.local/bin/clipboard ~/.local/bin/cb
+export PATH="$HOME/.local/bin:$PATH" 
+# For non-nixos users, you only have to run this command.
 cmake --install .
 ```
 
