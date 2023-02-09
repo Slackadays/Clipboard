@@ -1,5 +1,5 @@
 #setup
-set -eux
+set -eu
 mkdir fandr_test
 
 cd fandr_test

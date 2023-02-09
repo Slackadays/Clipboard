@@ -1,5 +1,5 @@
 #test copying contents piped in
-set -eux
+set -eu
 mkdir redir_test
 
 cd redir_test

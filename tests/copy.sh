@@ -1,5 +1,5 @@
 #setup
-set -eux
+set -eu
 export CLIPBOARD_FORCETTY=1
 
 mkdir copy_test

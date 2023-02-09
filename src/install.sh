@@ -1,33 +1,55 @@
 #!/bin/sh
 set -eux
 
+check_installation() {
+    #check if we can run the clipboard command
+    if [ ! -x "$(command -v clipboard)" ]
+    then
+        echo "Couldn't install Clipboard"
+        exit 1
+    else
+        echo "Clipboard installed successfully!"
+        exit 0
+    fi
+}
+
 compile_section() {
     if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
     then
-    echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
+        echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
     fi
+
     git clone --depth 1 https://github.com/slackadays/Clipboard
-    pushd Clipboard/build
+    cd Clipboard/build
     cmake ..
     cmake --build .
+
     if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
     then
-    mkdir -p ~/.local/bin
-    sudo cp clipboard ~/.local/bin
-    sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
-    export PATH="$HOME/.local/bin:$PATH"
-    echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
-    echo -e "\e[1;32mInstalled Clipboard For NixOS!\e[0m"
+        mkdir -p ~/.local/bin
+        sudo cp clipboard ~/.local/bin
+        sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
+        export PATH="$HOME/.local/bin:$PATH"
+        echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
+        echo -e "\e[1;32mInstalled Clipboard For NixOS!\e[0m"
     else
-    cmake --install .
+        cmake --install .
     fi
+
+    if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
+    then
+        doas cmake --install .
+    else
+        sudo cmake --install .
+    fi
+
+    check_installation
 }
 
 if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
 then
     compile_section
 fi
-
 
 if [ "$(uname)" = "Linux" ]
 then
@@ -45,6 +67,12 @@ then
     elif [ "$(uname -m)" = "i386" ]
     then
         download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-i386.zip
+    elif [ "$(uname -m)" = "ppc64le" ]
+    then
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-ppc64le.zip
+    elif [ "$(uname -m)" = "s390x" ]
+    then
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-s390x.zip
     else
         download_link="skip"
     fi
@@ -65,8 +93,7 @@ then
             sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
         fi
         rm -rf $tmp_dir
-        echo "Installed Clipboard"
-        exit 0
+        check_installation
     fi
 fi
 
@@ -81,18 +108,9 @@ then
     chmod +x /usr/local/bin/clipboard
     sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
     rm -rf $tmp_dir
-    echo "Installed Clipboard"
-    exit 0
+    check_installation
 fi
 
 compile_section
 
-
-if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
-then
-    doas cmake --install .
-else
-    sudo cmake --install .
-fi
-
-popd
+cd ..
