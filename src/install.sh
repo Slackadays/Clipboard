@@ -14,7 +14,9 @@ check_installation() {
 }
 
 compile_section() {
-    if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+    tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
+    cd $tmp_dir
+    if [ $(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt) = "NixOS" ]
     then
         echo -e "\e[1;32mInstalling Clipboard for NixOS..\e[0m"
     fi
@@ -24,7 +26,7 @@ compile_section() {
     cmake ..
     cmake --build .
 
-    if [ $(nix-info --host-os > info.txt && cat info.txt | grep -ow "NixOS" info.txt) = "NixOS" ]
+    if [ $(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt) = "NixOS" ]
     then
         mkdir -p ~/.local/bin
         sudo cp clipboard ~/.local/bin
