@@ -672,7 +672,6 @@ void verifyAction() {
         fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[tryThisAction].data(), actions[tryThisAction].data());
         exit(EXIT_FAILURE);
     };
-    if (action == Action::Paste && !is_tty.in) { tryThisInstead(Action::Copy); }
     if (io_type == IOType::Pipe && arguments.size() >= 2) {
         fprintf(stderr, "%s", redirection_no_items_message().data());
         exit(EXIT_FAILURE);
