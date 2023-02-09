@@ -50,13 +50,13 @@ jobs:
           #restart powershell to get the new path
           Start-Process powershell -Verb runAs -ArgumentList '-Command bash tests/suite.sh'
   freebsd-amd64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@v0.10.0
+        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
         with:
           operating_system: freebsd
           architecture: x86-64
@@ -67,13 +67,13 @@ jobs:
             export TMPDIR=/tmp
             bash tests/suite.sh
   openbsd-amd64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@v0.10.0
+        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
         with:
           operating_system: openbsd
           architecture: x86-64
@@ -84,13 +84,13 @@ jobs:
             export TMPDIR=/tmp
             bash tests/suite.sh
   openbsd-arm64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@v0.10.0
+        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
         with:
           operating_system: openbsd
           architecture: arm64

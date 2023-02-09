@@ -124,13 +124,13 @@ jobs:
           name: clipboard-windows-arm64
           path: build/output
   freebsd-amd64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@v0.10.0
+        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
         with:
           operating_system: freebsd
           architecture: x86-64
@@ -146,13 +146,13 @@ jobs:
           name: clipboard-freebsd-amd64
           path: build/output
   openbsd-amd64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@v0.10.0
+        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
         with:
           operating_system: openbsd
           architecture: x86-64
@@ -168,13 +168,13 @@ jobs:
           name: clipboard-openbsd-amd64
           path: build/output
   openbsd-arm64:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@v0.10.0
+        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
         with:
           operating_system: openbsd
           architecture: arm64
