@@ -15,7 +15,6 @@
 #include <type_traits>
 #include <optional>
 #include <dlfcn.h>
-#include <cstring>
 #include <clipboard/logging.hpp>
 #include "clipboard.hpp"
 
@@ -32,8 +31,10 @@ using setClipboard_t = void(*)(void*);
 
 static void posixClipboardFailure(char const* object) {
     if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
+        indicator.detach();
         exit(EXIT_FAILURE);
     } else if (bool required = getenv("CLIPBOARD_REQUIREWAYLAND"); object == objectWayland && required) {
+        indicator.detach();
         exit(EXIT_FAILURE);
     }
 }
