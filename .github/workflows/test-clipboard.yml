@@ -81,6 +81,8 @@ jobs:
           cmake --build . -j 2
           sudo cmake --install .
           export TMPDIR=/tmp
+          export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
+          export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
           bash ../tests/suite.sh
   macos-arm64-amd64:
     runs-on: macos-latest
