@@ -5,10 +5,10 @@ check_installation() {
     #check if we can run the clipboard command
     if [ ! -x "$(command -v clipboard)" ]
     then
-        echo "Couldn't install Clipboard"
+        echo "\e[1;31mCouldn't install Clipboard\e[0m"
         exit 1
     else
-        echo "Clipboard installed successfully!"
+        echo "\e[1;32mClipboard installed successfully!\e[0m"
         exit 0
     fi
 }
@@ -33,7 +33,6 @@ compile_section() {
         sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
         export PATH="$HOME/.local/bin:$PATH"
         echo -e "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
-        echo -e "\e[1;32mInstalled Clipboard For NixOS!\e[0m"
     else
         cmake --install .
     fi
