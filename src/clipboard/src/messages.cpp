@@ -14,12 +14,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-ActionArray<std::string_view, 10> actions = {
+ActionArray<std::string_view, 8> actions = {
     "cut",
     "copy",
     "paste",
-    "pipe in",
-    "pipe out",
     "clear",
     "show",
     "edit",
@@ -27,12 +25,10 @@ ActionArray<std::string_view, 10> actions = {
     "remove"
 };
 
-ActionArray<std::string_view, 10> action_shortcuts = {
+ActionArray<std::string_view, 8> action_shortcuts = {
     "ct",
     "cp",
     "p",
-    "pin",
-    "pout",
     "clr",
     "sh",
     "ed",
@@ -40,24 +36,20 @@ ActionArray<std::string_view, 10> action_shortcuts = {
     "rm"
 };
 
-ActionArray<std::string_view, 10> doing_action = {
+ActionArray<std::string_view, 8> doing_action = {
     "Cutting",
     "Copying",
     "Pasting",
-    "Piping in",
-    "Piping out",
     "Clearing"
     "Editing"
     "Adding",
     "Removing"
 };
 
-ActionArray<std::string_view, 10> did_action = {
+ActionArray<std::string_view, 8> did_action = {
     "Cut",
     "Copied",
     "Pasted",
-    "Piped in",
-    "Piped out",
     "Cleared",
     "Showed",
     "Edited",
@@ -132,30 +124,22 @@ void setLanguageES() {
     actions[Action::Cut] = "cortar";
     actions[Action::Copy] = "copiar";
     actions[Action::Paste] = "pegar";
-    actions[Action::PipeIn] = "direccionar hacia adentro";
-    actions[Action::PipeOut] = "direccionar hacia afuera";
     actions[Action::Clear] = "quitar";
     actions[Action::Show] = "mostrar";
 
     action_shortcuts[Action::Cut] = "ct";
     action_shortcuts[Action::Copy] = "cp";
     action_shortcuts[Action::Paste] = "p";
-    action_shortcuts[Action::PipeIn] = "dad";
-    action_shortcuts[Action::PipeOut] = "daf";
     action_shortcuts[Action::Clear] = "qt";
     action_shortcuts[Action::Show] = "ms";
 
     doing_action[Action::Cut] = "Cortando";
     doing_action[Action::Copy] = "Copiando";
     doing_action[Action::Paste] = "Pegando";
-    doing_action[Action::PipeIn] = "Direccionando hacia adentro";
-    doing_action[Action::PipeOut] = "Direccionando hacia afuera";
 
     did_action[Action::Cut] = "Cortó";
     did_action[Action::Copy] = "Copió";
     did_action[Action::Paste] = "Pegó";
-    did_action[Action::PipeIn] = "Direccionó hacia adentro";
-    did_action[Action::PipeOut] = "Direccionó hacia afuera";
 
     help_message = "[blue]▏Esto es Clipboard %s (commit %s), el sistema para cortar, copiar y pegar adentro del terminal.[blank]\n"
                    "[blue][bold]▏Cómo usar[blank]\n"
@@ -197,20 +181,14 @@ void setLanguagePT() {
     actions[Action::Cut] = "recortar";
     actions[Action::Copy] = "copiar";
     actions[Action::Paste] = "colar";
-    actions[Action::PipeIn] = "direcionar para dentro";
-    actions[Action::PipeOut] = "direcionar para fora";
 
     doing_action[Action::Cut] = "Recortando";
     doing_action[Action::Copy] = "Copiando";
     doing_action[Action::Paste] = "Colando";
-    doing_action[Action::PipeIn] = "Direcionando para dentro";
-    doing_action[Action::PipeOut] = "Direcionando para fora";
 
     did_action[Action::Cut] = "Recortou";
     did_action[Action::Copy] = "Copiou";
     did_action[Action::Paste] = "Colou";
-    did_action[Action::PipeIn] = "Direcionou para dentro";
-    did_action[Action::PipeOut] = "Direcionou para fora";
 
     help_message = "[blue]▏Este é Clipboard %s (commit %s), o sistema de recortar, copiar e colar para a linha de comando.[blank]\n"
                    "[blue][bold]▏Como utilizar[blank]\n"
@@ -247,30 +225,22 @@ void setLanguageTR() {
     actions[Action::Cut] = "kes";
     actions[Action::Copy] = "kopyala";
     actions[Action::Paste] = "yapistir";
-    actions[Action::PipeIn] = "ice yonlendir";
-    actions[Action::PipeOut] = "disa yonlendir";
     actions[Action::Show] = "goster";
     actions[Action::Clear] = "temizle";
 
     action_shortcuts[Action::Cut] = "ks";
     action_shortcuts[Action::Copy] = "kp";
     action_shortcuts[Action::Paste] = "y";
-    action_shortcuts[Action::PipeIn] = "iy";
-    action_shortcuts[Action::PipeOut] = "dy";
     action_shortcuts[Action::Clear] = "tmz";
     action_shortcuts[Action::Show] = "go";
 
     doing_action[Action::Cut] = "Kesiliyor";
     doing_action[Action::Copy] = "Kopyalanıyor";
     doing_action[Action::Paste] = "Yapıştırılıyor";
-    doing_action[Action::PipeIn] = "İçe Yönlendiriliyor";
-    doing_action[Action::PipeOut] = "Dışa Yönlendiriliyor";
 
     did_action[Action::Cut] = "Kesildi";
     did_action[Action::Copy] = "Kopyalandı";
     did_action[Action::Paste] = "Yapıştırıldı";
-    did_action[Action::PipeIn] = "İçe Yönlendirildi";
-    did_action[Action::PipeOut] = "Dışa Yönlendirildi";
 
     help_message = "[blue]▏Clipboard %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
                    "[blue][bold]▏Nasıl kullanılır[blank]\n"

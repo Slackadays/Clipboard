@@ -91,7 +91,9 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class Action : unsigned int { Cut, Copy, Paste, PipeIn, PipeOut, Clear, Show, Edit, Add, Remove };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove };
+
+enum class IOType : unsigned int { File, Pipe };
 
 template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
@@ -99,10 +101,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } //switch to std::to_underlying when available 
 };
 
-extern ActionArray<std::string_view, 10> actions;
-extern ActionArray<std::string_view, 10> action_shortcuts;
-extern ActionArray<std::string_view, 10> doing_action;
-extern ActionArray<std::string_view, 10> did_action;
+extern ActionArray<std::string_view, 8> actions;
+extern ActionArray<std::string_view, 8> action_shortcuts;
+extern ActionArray<std::string_view, 8> doing_action;
+extern ActionArray<std::string_view, 8> did_action;
 
 static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {{
     {"[red]", "\033[38;5;196m"},

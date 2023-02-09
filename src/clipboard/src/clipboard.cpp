@@ -61,6 +61,8 @@ std::string clipboard_name = "0";
 
 Action action;
 
+IOType io_type;
+
 #if defined(_WIN64) || defined (_WIN32)
 UINT old_code_page;
 #endif
@@ -113,7 +115,7 @@ bool userIsARobot() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action != Paste && action != PipeOut && action != Show; 
+    return action != Paste && action != Show; 
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -340,7 +342,7 @@ namespace PerformAction {
 
 void clearTempDirectory(bool force_clear = false) {
     using enum Action;
-    if (force_clear || action == Cut || action == Copy || action == PipeIn || action == Clear) {
+    if (force_clear || action == Cut || action == Copy || action == Clear) {
         fs::remove(path.original_files);
         for (const auto& entry : fs::directory_iterator(path.main)) {
             fs::remove_all(entry.path());
@@ -427,6 +429,12 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 void setupHandlers() {
+    atexit([]{
+    #if defined(_WIN64) || defined (_WIN32)
+    SetConsoleOutputCP(old_code_page);
+    #endif
+    });
+
     signal(SIGINT, [](int dummy) {
         if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation message, directly to standard error. Note: There is no standard C++ interface for this, so this requires an OS call.
@@ -603,23 +611,30 @@ template<typename T>
     }
 }
 
-void setAction() {
+Action getAction() {
     using enum Action;
+    using enum IOType;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Paste, Show, Clear, Edit, Add, Remove}) {
+        for (const auto& entry : {Cut, Copy, Add, Remove}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
-                action = entry;
-                if (action == Copy && !is_tty.in) { action = PipeIn; }
-                if (action == Paste && !is_tty.out) { action = PipeOut; }
-                return;
+                if (!is_tty.in) { io_type = Pipe; }
+                return entry;
+            }
+        }
+        for (const auto& entry : {Paste, Show, Clear, Edit}) {
+            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
+                if (!is_tty.out) { io_type = Pipe; }
+                return entry;
             }
         }
         printf(no_valid_action_message().data(), arguments.at(0).data());
         exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
-        action = PipeIn;
+        io_type = Pipe;
+        return Copy;
     } else if (!is_tty.out) {
-        action = PipeOut;
+        io_type = Pipe;
+        return Paste;
     } else {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
@@ -657,11 +672,8 @@ void verifyAction() {
         fprintf(stderr, fix_redirection_action_message().data(), actions[action].data(), actions[action].data(), actions[tryThisAction].data(), actions[tryThisAction].data());
         exit(EXIT_FAILURE);
     };
-    using enum Action;
-    if (action == Cut && (!is_tty.in || !is_tty.in)) { tryThisInstead(Copy); }
-    if (action == Copy && !is_tty.out) { tryThisInstead(Paste); }
-    if (action == Paste && !is_tty.in) { tryThisInstead(Copy); }
-    if ((action == PipeIn || action == PipeOut) && arguments.size() >= 2) {
+    if (action == Action::Paste && !is_tty.in) { tryThisInstead(Action::Copy); }
+    if (io_type == IOType::Pipe && arguments.size() >= 2) {
         fprintf(stderr, "%s", redirection_no_items_message().data());
         exit(EXIT_FAILURE);
     }
@@ -680,7 +692,7 @@ void setFilepaths() {
 }
 
 void checkForNoItems() {
-    if ((action == Action::Cut || action == Action::Copy) && copying.items.size() < 1) {
+    if ((action == Action::Cut || action == Action::Copy) && io_type == IOType::File && copying.items.size() < 1) {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
@@ -696,15 +708,15 @@ void setupIndicator() {
     int output_length = 0;
     const std::array<std::string_view, 10> spinner_steps{"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
     static unsigned int percent_done = 0;
-    if ((action == Action::Cut || action == Action::Copy)) {
+    if ((action == Action::Cut || action == Action::Copy) && io_type == IOType::File) {
         static size_t items_size = copying.items.size();
         for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
-            percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size;
+            percent_done = ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size + 1;
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), percent_done, "%", spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&]{ return progress_state != ProgressState::Active; });
         }
-    } else if (action == Action::PipeIn || action == Action::PipeOut) {
+    } else if (io_type == IOType::Pipe) {
         for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), static_cast<int>(successes.bytes), "B", spinner_steps.at(i).data());
             fflush(stderr);
@@ -802,37 +814,44 @@ void removeOldFiles() {
 }
 
 void performAction() {
+    using enum IOType;
     using enum Action;
     using namespace PerformAction;
-    switch (action) {
-        case Copy:
-        case Cut:
-            copy();
-            break;
-        case Paste:
-            paste();
-            break;
-        case PipeIn:
-            pipeIn();
-            break;
-        case PipeOut:
-            pipeOut();
-            break;
-        case Clear:
-            clear();
-            break;
-        case Show:
-            show();
-            break;
-        case Edit:
-            edit();
-            break;
-        case Add:
-            //add();
-            break;
-        case Remove:
-            remove();
-            break;
+    if (io_type == File) {
+        switch (action) {
+            case Copy:
+            case Cut:
+                copy();
+                break;
+            case Paste:
+                paste();
+                break;
+            case Clear:
+                clear();
+                break;
+            case Show:
+                show();
+                break;
+            case Edit:
+                edit();
+                break;
+            case Add:
+                //add();
+                break;
+            case Remove:
+                remove();
+                break;
+        }
+    } else if (io_type == Pipe) {
+        switch (action) {
+            case Copy:
+            case Cut:
+                pipeIn();
+                break;
+            case Paste:
+                pipeOut();
+                break;
+        }
     }
 }
 
@@ -903,7 +922,7 @@ int main(int argc, char *argv[]) {
 
         syncWithGUIClipboard();
 
-        setAction();
+        action = getAction();
 
         verifyAction();
 
@@ -930,19 +949,10 @@ int main(int argc, char *argv[]) {
         showFailures();
 
         showSuccesses();
-
-        #if defined(_WIN64) || defined (_WIN32)
-        SetConsoleOutputCP(old_code_page);
-        #endif
     } catch (const std::exception& e) {
         if (stopIndicator()) {
             fprintf(stderr, internal_error_message().data(), e.what());
         }
-
-        #if defined(_WIN64) || defined (_WIN32)
-        SetConsoleOutputCP(old_code_page);
-        #endif
-
         exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);

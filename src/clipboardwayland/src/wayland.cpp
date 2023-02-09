@@ -37,7 +37,7 @@ public:
     explicit SimpleWindow(WlDisplay const& display, WlRegistry const& registry)
         : m_display { display }
         , m_surface { registry }
-        , m_keyboard { registry} {
+        , m_keyboard { registry } {
 
         m_surface.setTitle("Clipboard");
 
