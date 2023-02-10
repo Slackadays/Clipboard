@@ -12,14 +12,14 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include <filesystem>
-#include <vector>
-#include <string_view>
 #include "clipboard.hpp"
+#include <filesystem>
+#include <string_view>
+#include <vector>
 
 namespace fs = std::filesystem;
 
-template<typename char_t>
+template <typename char_t>
 void decodeWindowsDropfilesPaths(void* filesList, std::vector<fs::path>& paths) {
 
     auto data = static_cast<char_t*>(filesList);
@@ -46,4 +46,4 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer);
 void setWindowsClipboardDataPipe();
 void setWindowsClipboardDataFiles();
 ClipboardContent getGUIClipboard();
-void writeToGUIClipboard(const ClipboardContent& clipboard);
+void writeToGUIClipboard(ClipboardContent const& clipboard);

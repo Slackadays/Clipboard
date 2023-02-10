@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 #include <optional>
 #include <string>
@@ -34,7 +34,7 @@ class WlSeat : public WlObject<WlSeatSpec> {
     wl_seat_capability m_capabilities { static_cast<wl_seat_capability>(0) };
 
 public:
-    explicit WlSeat(obj_t* value) : WlObject<spec_t> { value } { }
+    explicit WlSeat(obj_t* value) : WlObject<spec_t> { value } {}
 
     [[nodiscard]] inline std::string_view name() const { return m_name; }
     [[nodiscard]] bool hasCapability(wl_seat_capability) const;

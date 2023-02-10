@@ -26,4 +26,3 @@ bool WlShm::supports(wl_shm_format format) const {
 void WlShm::onFormat(std::uint32_t format) {
     m_formats.insert(wl_shm_format(format));
 }
-

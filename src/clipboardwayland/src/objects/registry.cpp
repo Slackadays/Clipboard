@@ -18,8 +18,8 @@
 #include <clipboard/logging.hpp>
 
 wl_registry_listener WlRegistrySpec::listener {
-        .global = &eventHandler<&WlRegistry::onGlobal>,
-        .global_remove = &eventHandler<&WlRegistry::onGlobalRemove>,
+    .global = &eventHandler<&WlRegistry::onGlobal>,
+    .global_remove = &eventHandler<&WlRegistry::onGlobalRemove>,
 };
 
 WlRegistry::WlRegistry(WlDisplay const& display)
@@ -30,7 +30,7 @@ WlRegistry::WlRegistry(WlDisplay const& display)
     m_display.roundtrip();
 }
 
-template<IsWlObject T>
+template <IsWlObject T>
 void WlRegistry::bind(std::uint32_t name, std::uint32_t version) {
     using spec = T::spec_t;
 
@@ -39,41 +39,35 @@ void WlRegistry::bind(std::uint32_t name, std::uint32_t version) {
 
     auto&& existing = m_boundObjectsByName.find(name);
     if (existing != m_boundObjectsByName.end()) {
-        debugStream
-            << "Tried to bind global " << name << " with interface " << interfaceName << " version " << chosenVersion
-            << " but it was already bound to " << existing->second.interface
-            << ", ignoring"
-            << std::endl;
+        debugStream << "Tried to bind global " << name << " with interface " << interfaceName << " version "
+                    << chosenVersion << " but it was already bound to " << existing->second.interface << ", ignoring"
+                    << std::endl;
         return;
     }
 
-
-    auto voidPtr = wl_registry_bind(
-            value(),
-            name,
-            &spec::interface,
-            chosenVersion
-    );
+    auto voidPtr = wl_registry_bind(value(), name, &spec::interface, chosenVersion);
     if (voidPtr == nullptr) {
         throw WlException(
-            "Unable to bind global ", name,
-            " with interface ", interfaceName,
-            " version ", chosenVersion
+                "Unable to bind global ",
+                name,
+                " with interface ",
+                interfaceName,
+                " version ",
+                chosenVersion
         );
     }
 
     auto rawPtr = reinterpret_cast<spec::obj_t*>(voidPtr);
     auto sharedPtr = std::make_shared<T>(rawPtr);
 
-    BoundObject boundObject {
-            .name = name ,
-            .interface { interfaceName },
-            .object = std::static_pointer_cast<void>(sharedPtr)
-    };
+    BoundObject boundObject { .name = name,
+                              .interface { interfaceName },
+                              .object = std::static_pointer_cast<void>(sharedPtr) };
     m_boundObjectsByName.insert({ boundObject.name, boundObject });
     m_boundObjectsByInterface.insert({ boundObject.interface, boundObject });
 
-    debugStream << "Bound global " << name << " with interface " << interfaceName << " version " << chosenVersion << std::endl;
+    debugStream << "Bound global " << name << " with interface " << interfaceName << " version " << chosenVersion
+                << std::endl;
 
     // Roundtrip to ensure the bound global is fully initialized
     m_display.roundtrip();
@@ -109,7 +103,7 @@ void WlRegistry::onGlobalRemove(std::uint32_t name) {
     BoundObject boundObject { it->second };
     m_boundObjectsByName.erase(boundObject.name);
 
-    auto&& [ start, end ] = m_boundObjectsByInterface.equal_range(boundObject.interface);
+    auto&& [start, end] = m_boundObjectsByInterface.equal_range(boundObject.interface);
     for (auto&& it = start; it != end; it++) {
         if (it->second.name == boundObject.name) {
             m_boundObjectsByInterface.erase(it);

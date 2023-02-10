@@ -19,9 +19,7 @@ decltype(WlCallbackSpec::listener) WlCallbackSpec::listener {
     .done = &eventHandler<&WlCallback::onDone>,
 };
 
-WlCallback::WlCallback(WlDisplay const& display)
-    : WlObject<WlCallbackSpec> { wl_display_sync(display.value()) } {
-}
+WlCallback::WlCallback(WlDisplay const& display) : WlObject<WlCallbackSpec> { wl_display_sync(display.value()) } {}
 
 void WlCallback::onDone(std::uint32_t serial) {
     m_serial = serial;

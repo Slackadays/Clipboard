@@ -27,12 +27,9 @@ wl_data_source_listener WlDataSourceSpec::listener {
 };
 
 WlDataSource::WlDataSource(WlDataDeviceManager const& dataDeviceManager)
-    : WlObject<WlDataSourceSpec> { wl_data_device_manager_create_data_source(dataDeviceManager.value()) } {
-}
+        : WlObject<WlDataSourceSpec> { wl_data_device_manager_create_data_source(dataDeviceManager.value()) } {}
 
-WlDataSource::WlDataSource(WlRegistry const& registry)
-    : WlDataSource { registry.get<WlDataDeviceManager>() } {
-}
+WlDataSource::WlDataSource(WlRegistry const& registry) : WlDataSource { registry.get<WlDataDeviceManager>() } {}
 
 void WlDataSource::offer(std::string_view mime) const {
     std::string mimeCopy { mime };

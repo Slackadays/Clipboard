@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 #include <map>
 
@@ -31,6 +31,7 @@ class WlKeyboard : public WlObject<WlKeyboardSpec> {
     std::map<wl_surface*, std::uint32_t> m_focus {};
 
     static wl_keyboard* initKeyboard(WlSeat const&);
+
 public:
     explicit WlKeyboard(WlSeat const&);
     explicit WlKeyboard(WlRegistry const&);

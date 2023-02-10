@@ -14,9 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "xdg_wm_base.hpp"
 
-xdg_wm_base_listener XdgWmBaseSpec::listener {
-    .ping = &eventHandler<&XdgWmBase::ping>
-};
+xdg_wm_base_listener XdgWmBaseSpec::listener { .ping = &eventHandler<&XdgWmBase::ping> };
 
 void XdgWmBase::ping(std::uint32_t serial) {
     xdg_wm_base_pong(value(), serial);

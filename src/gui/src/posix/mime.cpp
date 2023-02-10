@@ -29,31 +29,21 @@ bool hasFlag(MimeOption const& value, MimeOption const& flag) {
     auto valueUnderlying = static_cast<MimeOptionU>(value);
     auto flagUnderlying = static_cast<MimeOptionU>(flag);
 
-    return (valueUnderlying & flagUnderlying) != (MimeOptionU{});
+    return (valueUnderlying & flagUnderlying) != (MimeOptionU {});
 }
 
-decltype(MimeType::s_typesByName) MimeType::s_typesByName{ initializeTypes() };
+decltype(MimeType::s_typesByName) MimeType::s_typesByName { initializeTypes() };
 
 decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
-    decltype(s_typesByName) result{};
+    decltype(s_typesByName) result {};
 
-    auto insert = [&](
-        char const* name,
-        ClipboardContentType type,
-        MimeOption options = MimeOption::NoOption
-    ) {
-        result.insert({
-            name,
-            MimeType {
-                static_cast<unsigned int>(result.size()),
-                name,
-                type,
-                options
-            }
-        });
+    auto insert = [&](char const* name, ClipboardContentType type, MimeOption options = MimeOption::NoOption) {
+        result.insert({ name, MimeType { static_cast<unsigned int>(result.size()), name, type, options } });
     };
 
-    insert("x-special/gnome-copied-files", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
+    insert("x-special/gnome-copied-files",
+           ClipboardContentType::Paths,
+           MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("text/uri-list", ClipboardContentType::Paths, MimeOption::EncodePaths);
     insert("text/plain;charset=utf-8", ClipboardContentType::Text);
     insert("UTF8_STRING", ClipboardContentType::Text);
@@ -205,13 +195,10 @@ bool MimeType::encode(ClipboardContent const& clipboard, std::string_view mime, 
 
     if (type->isChooseBestType()) {
 
-        auto bestType = std::find_if(
-            s_typesByName.begin(),
-            s_typesByName.end(),
-            [&](auto&& entry) -> bool {
-                auto&& value = entry.second;
-                return value.supports(clipboard) && !value.isChooseBestType();
-            });
+        auto bestType = std::find_if(s_typesByName.begin(), s_typesByName.end(), [&](auto&& entry) -> bool {
+            auto&& value = entry.second;
+            return value.supports(clipboard) && !value.isChooseBestType();
+        });
 
         if (bestType == s_typesByName.end()) {
             throw SimpleException("Unable to find proper target");
@@ -222,4 +209,3 @@ bool MimeType::encode(ClipboardContent const& clipboard, std::string_view mime, 
 
     return type->encode(clipboard, stream);
 }
-

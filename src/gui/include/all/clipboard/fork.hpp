@@ -14,10 +14,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include <vector>
-#include <functional>
-#include <clipboard/utils.hpp>
 #include <clipboard/logging.hpp>
+#include <clipboard/utils.hpp>
+#include <functional>
+#include <vector>
 
 #ifdef HAVE_FORK
 #include <unistd.h>
@@ -53,12 +53,12 @@ public:
      * If any callbacks were registered with atFork, they'll be executed in the forked/child process
      * before the parameter function is invoked.
      */
-    template<std::invocable func_t>
+    template <std::invocable func_t>
     void fork(func_t func) const;
 };
 
 #ifdef HAVE_FORK
-template<std::invocable func_t>
+template <std::invocable func_t>
 void Forker::fork(func_t func) const {
     bool noFork = isEnvTrueish("CLIPBOARD_NO_FORK");
     if (!noFork && ::fork() != 0) {
@@ -92,7 +92,7 @@ void Forker::fork(func_t func) const {
     std::exit(EXIT_SUCCESS);
 }
 #else
-template<std::invocable func_t>
+template <std::invocable func_t>
 void Forker::fork(func_t func) const {
     static_assert(AssertFalse<sizeof(func)>::value, "This platform doesn't support fork()");
 }

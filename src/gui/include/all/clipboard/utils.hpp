@@ -14,12 +14,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
+#include <chrono>
+#include <sstream>
 #include <string>
 #include <string_view>
-#include <sstream>
-#include <chrono>
-#include <variant>
 #include <thread>
+#include <variant>
 
 #include <clipboard/logging.hpp>
 
@@ -45,22 +45,21 @@ public:
 class SimpleException : public std::exception {
 private:
     StringOrLiteral m_message;
+
 public:
     explicit SimpleException(StringOrLiteral&& message) : m_message(std::move(message)) {}
 
-    template<typename... Args>
+    template <typename... Args>
     explicit SimpleException(Args&&... args);
 
-    [[nodiscard]] char const* what() const noexcept override {
-        return m_message;
-    }
+    [[nodiscard]] char const* what() const noexcept override { return m_message; }
 };
 
 /**
  * Helper class that will call a function at the end of the current scope
  * unless it is disarmed. Useful to clean up when errors occur.
  */
-template<std::invocable guard_t>
+template <std::invocable guard_t>
 class ArmedGuard {
     bool m_armed { true };
     guard_t m_guard;
@@ -89,8 +88,8 @@ public:
  * Can be used to e.g. static_assert on a template argument to ensure a given template specialization
  * fails at compile-time.
  */
-template<auto T>
-struct AssertFalse : std::false_type { };
+template <auto T>
+struct AssertFalse : std::false_type {};
 
 /**
  * Decodes a percent-encoded string.
@@ -113,7 +112,7 @@ bool isEnvTrueish(char const*);
  * Keeps calling a function until it returns a value, using an exponential backoff scheme
  * between each call and with a timeout to ensure operations don't run for too long.
  */
-template<typename func_t>
+template <typename func_t>
 auto pollUntilReturn(func_t func) -> typename std::invoke_result_t<func_t>::value_type {
     using namespace std::literals;
     using optional_t = typename std::invoke_result_t<func_t>;
@@ -147,8 +146,8 @@ auto pollUntilReturn(func_t func) -> typename std::invoke_result_t<func_t>::valu
     return result.value();
 }
 
-template<typename... Args>
-SimpleException::SimpleException(Args&& ... args) : m_message { "" } {
+template <typename... Args>
+SimpleException::SimpleException(Args&&... args) : m_message { "" } {
     std::ostringstream message;
     (message << ... << args);
     m_message = std::move(message).str();

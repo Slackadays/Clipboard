@@ -17,8 +17,8 @@
 
 #include <cstring>
 
-#include <unistd.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include <clipboard/logging.hpp>
 
@@ -32,8 +32,7 @@ Fd& Fd::operator=(Fd&& other) noexcept {
     return *this;
 }
 
-Fd::Fd(int value) : m_value(value) {
-}
+Fd::Fd(int value) : m_value(value) {}
 
 int Fd::value() const {
     if (m_value <= 0) {
@@ -97,27 +96,24 @@ PipeFd::~PipeFd() noexcept {
     closeWrite();
 }
 
-FdStream::FdStream(FdBuffer&& buffer)
-    : m_fdBuffer { std::make_unique<FdBuffer>(buffer) } {
+FdStream::FdStream(FdBuffer&& buffer) : m_fdBuffer { std::make_unique<FdBuffer>(buffer) } {
     rdbuf(m_fdBuffer.get());
 }
 
-FdStream::FdStream(int fd) : FdStream(FdBuffer { fd }) { }
-FdStream::FdStream(int readFd, int writeFd) : FdStream(FdBuffer { readFd, writeFd }) { }
-FdStream::FdStream(Fd const& fd) : FdStream(FdBuffer {fd }) { }
-FdStream::FdStream(PipeFd const& fd) : FdStream(FdBuffer { fd }) { }
+FdStream::FdStream(int fd) : FdStream(FdBuffer { fd }) {}
+FdStream::FdStream(int readFd, int writeFd) : FdStream(FdBuffer { readFd, writeFd }) {}
+FdStream::FdStream(Fd const& fd) : FdStream(FdBuffer { fd }) {}
+FdStream::FdStream(PipeFd const& fd) : FdStream(FdBuffer { fd }) {}
 
-FdBuffer::FdBuffer(int readFd, int writeFd)
-    : m_readFd { readFd }
-    , m_writeFd { writeFd } {
+FdBuffer::FdBuffer(int readFd, int writeFd) : m_readFd { readFd }, m_writeFd { writeFd } {
 
     setg(&m_readBuf.front(), &m_readBuf.back(), &m_readBuf.back());
     setp(&m_writeBuf.front(), &m_writeBuf.back());
 }
 
-FdBuffer::FdBuffer(int fd) : FdBuffer { fd, fd } { }
-FdBuffer::FdBuffer(Fd const& fd) : FdBuffer {fd.value() } { }
-FdBuffer::FdBuffer(PipeFd const& fd) : FdBuffer { fd.readFd(), fd.writeFd() } { }
+FdBuffer::FdBuffer(int fd) : FdBuffer { fd, fd } {}
+FdBuffer::FdBuffer(Fd const& fd) : FdBuffer { fd.value() } {}
+FdBuffer::FdBuffer(PipeFd const& fd) : FdBuffer { fd.readFd(), fd.writeFd() } {}
 
 std::size_t FdBuffer::safeRead(std::span<char> span) const {
     if (span.empty()) {
@@ -179,7 +175,6 @@ std::size_t FdBuffer::repeatedWrite(std::span<char const> span) const {
     return total;
 }
 
-
 std::size_t FdBuffer::flushWrite() {
     std::size_t result = 0;
     if (pptr() > pbase()) {
@@ -226,7 +221,7 @@ std::streamsize FdBuffer::xsgetn(char_type* output, std::streamsize count) {
         gbump(bufRead);
     }
 
-    totalRead += repeatedRead({output, static_cast<std::size_t>(count - totalRead) });
+    totalRead += repeatedRead({ output, static_cast<std::size_t>(count - totalRead) });
     return totalRead;
 }
 
@@ -244,5 +239,3 @@ std::streamsize FdBuffer::xsputn(char_type const* input, std::streamsize count) 
     flushWrite();
     return repeatedWrite({ input, static_cast<std::size_t>(count) });
 }
-
-

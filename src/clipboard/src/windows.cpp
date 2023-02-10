@@ -12,15 +12,15 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include <io.h>
-#include <Windows.h>
+#include "windows.hpp"
+#include "clipboard.hpp"
 #include <Shlobj.h>
+#include <Windows.h>
 #include <filesystem>
 #include <fstream>
+#include <io.h>
 #include <iostream>
 #include <vector>
-#include "clipboard.hpp"
-#include "windows.hpp"
 
 ClipboardContent getGUIClipboard() {
     if (OpenClipboard(nullptr) == 0) {
@@ -104,31 +104,13 @@ std::vector<fs::path> getWindowsClipboardDataFiles(void* clipboardPointer) {
 std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
     auto utf16 = static_cast<wchar_t*>(clipboardPointer);
 
-    auto utf8Len = WideCharToMultiByte(
-        CP_UTF8,
-        0,
-        utf16,
-        -1,
-        nullptr,
-        0,
-        nullptr,
-        nullptr
-    );
+    auto utf8Len = WideCharToMultiByte(CP_UTF8, 0, utf16, -1, nullptr, 0, nullptr, nullptr);
     if (utf8Len <= 0) {
         onWindowsError("WideCharToMultiByte");
     }
 
     std::vector<char> utf8Buffer(utf8Len);
-    auto bytesWritten = WideCharToMultiByte(
-        CP_UTF8,
-        0,
-        utf16,
-        -1,
-        &utf8Buffer[0],
-        utf8Len,
-        nullptr,
-        nullptr
-    );
+    auto bytesWritten = WideCharToMultiByte(CP_UTF8, 0, utf16, -1, &utf8Buffer[0], utf8Len, nullptr, nullptr);
     if (bytesWritten <= 0) {
         onWindowsError("WideCharToMultiByte");
     }
@@ -138,19 +120,9 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
 
 void setWindowsClipboardDataPipe() {
     std::ifstream file(path.data);
-    std::vector<char> utf8Data(
-        (std::istreambuf_iterator<char>(file)),
-        (std::istreambuf_iterator<char>())
-    );
+    std::vector<char> utf8Data((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 
-    auto utf16Len = MultiByteToWideChar(
-        CP_UTF8,
-        0,
-        &utf8Data[0],
-        utf8Data.size(),
-        nullptr,
-        0
-    );
+    auto utf16Len = MultiByteToWideChar(CP_UTF8, 0, &utf8Data[0], utf8Data.size(), nullptr, 0);
     if (utf16Len <= 0) {
         onWindowsError("MultiByteToWideChar");
     }
@@ -170,14 +142,7 @@ void setWindowsClipboardDataPipe() {
     }
 
     ZeroMemory(clipboardPointer, bufferSize);
-    auto bytesWritten = MultiByteToWideChar(
-        CP_UTF8,
-        0,
-        &utf8Data[0],
-        utf8Data.size(),
-        clipboardPointer,
-        bufferLen
-    );
+    auto bytesWritten = MultiByteToWideChar(CP_UTF8, 0, &utf8Data[0], utf8Data.size(), clipboardPointer, bufferLen);
     if (bytesWritten <= 0) {
         onWindowsError("MultiByteToWideChar");
     }
@@ -193,8 +158,8 @@ void setWindowsClipboardDataPipe() {
 void setWindowsClipboardDataFiles() {
 
     std::vector<wchar_t> data;
-    for (const auto& entry : fs::directory_iterator(path.main)) {
-        for (const auto& c : entry.path().wstring()) {
+    for (auto const& entry : fs::directory_iterator(path.main)) {
+        for (auto const& c : entry.path().wstring()) {
             data.push_back(c);
         }
 
@@ -232,7 +197,7 @@ void setWindowsClipboardDataFiles() {
     }
 }
 
-void writeToGUIClipboard(const ClipboardContent& clipboard) {
+void writeToGUIClipboard(ClipboardContent const& clipboard) {
     if (OpenClipboard(nullptr) == 0) {
         onWindowsError("OpenClipboard");
     }

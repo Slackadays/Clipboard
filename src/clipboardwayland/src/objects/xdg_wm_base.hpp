@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 #include <wayland-xdg-shell.hpp>
 
 struct XdgWmBaseSpec {
@@ -28,7 +28,7 @@ class XdgWmBase : public WlObject<XdgWmBaseSpec> {
     friend XdgWmBaseSpec;
 
 public:
-    explicit XdgWmBase(obj_t* value) : WlObject<spec_t> { value } { }
+    explicit XdgWmBase(obj_t* value) : WlObject<spec_t> { value } {}
 
 private:
     void ping(std::uint32_t);

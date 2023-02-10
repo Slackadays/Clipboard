@@ -12,11 +12,11 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include <type_traits>
-#include <optional>
-#include <dlfcn.h>
-#include <clipboard/logging.hpp>
 #include "clipboard.hpp"
+#include <clipboard/logging.hpp>
+#include <dlfcn.h>
+#include <optional>
+#include <type_traits>
 
 constexpr auto objectX11 = "libclipboardx11.so";
 constexpr auto symbolGetX11Clipboard = "getX11Clipboard";
@@ -26,8 +26,8 @@ constexpr auto objectWayland = "libclipboardwayland.so";
 constexpr auto symbolGetWaylandClipboard = "getWaylandClipboard";
 constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 
-using getClipboard_t = void*(*)();
-using setClipboard_t = void(*)(void*);
+using getClipboard_t = void* (*)();
+using setClipboard_t = void (*)(void*);
 
 static void posixClipboardFailure(char const* object) {
     if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
@@ -39,7 +39,7 @@ static void posixClipboardFailure(char const* object) {
     }
 }
 
-template<typename proc_t, typename... args_t, typename return_t = std::invoke_result_t<proc_t, args_t...>>
+template <typename proc_t, typename... args_t, typename return_t = std::invoke_result_t<proc_t, args_t...>>
 static return_t dynamicCall(char const* object, char const* symbol, args_t... args) {
     auto objectHandle = dlopen(object, RTLD_LAZY | RTLD_NODELETE);
     if (objectHandle == nullptr) {
@@ -68,7 +68,8 @@ static ClipboardContent dynamicGetGUIClipboard(char const* object, char const* s
         return {};
     }
 
-    std::unique_ptr<ClipboardContent const> posixClipboard { reinterpret_cast<ClipboardContent const*>(posixClipboardPtr) };
+    std::unique_ptr<ClipboardContent const> posixClipboard { reinterpret_cast<ClipboardContent const*>(posixClipboardPtr
+    ) };
     return *posixClipboard;
 }
 

@@ -15,14 +15,12 @@
 #include "keyboard.hpp"
 #include "all.hpp"
 
-decltype(WlKeyboardSpec::listener) WlKeyboardSpec::listener {
-    .keymap = &noHandler,
-    .enter = &eventHandler<&WlKeyboard::onEnter>,
-    .leave = &eventHandler<&WlKeyboard::onLeave>,
-    .key = &noHandler,
-    .modifiers = &noHandler,
-    .repeat_info = &noHandler
-};
+decltype(WlKeyboardSpec::listener) WlKeyboardSpec::listener { .keymap = &noHandler,
+                                                              .enter = &eventHandler<&WlKeyboard::onEnter>,
+                                                              .leave = &eventHandler<&WlKeyboard::onLeave>,
+                                                              .key = &noHandler,
+                                                              .modifiers = &noHandler,
+                                                              .repeat_info = &noHandler };
 
 wl_keyboard* WlKeyboard::initKeyboard(WlSeat const& seat) {
     if (!seat.hasCapability(WL_SEAT_CAPABILITY_KEYBOARD)) {
@@ -32,13 +30,9 @@ wl_keyboard* WlKeyboard::initKeyboard(WlSeat const& seat) {
     return wl_seat_get_keyboard(seat.value());
 }
 
-WlKeyboard::WlKeyboard(WlSeat const& seat)
-    : WlObject<WlKeyboardSpec> {initKeyboard(seat) } {
-}
+WlKeyboard::WlKeyboard(WlSeat const& seat) : WlObject<WlKeyboardSpec> { initKeyboard(seat) } {}
 
-WlKeyboard::WlKeyboard(WlRegistry const& registry)
-    : WlKeyboard { registry.get<WlSeat>() } {
-}
+WlKeyboard::WlKeyboard(WlRegistry const& registry) : WlKeyboard { registry.get<WlSeat>() } {}
 
 bool WlKeyboard::hasFocus(wl_surface* surface) const {
     return m_focus.contains(surface);

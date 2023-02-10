@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 struct WlDataDeviceSpec {
     WL_SPEC_BASE(wl_data_device, 3)
