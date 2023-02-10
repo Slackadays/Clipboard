@@ -32,13 +32,13 @@ bool hasFlag(MimeOption const& value, MimeOption const& flag) {
     return (valueUnderlying & flagUnderlying) != (MimeOptionU {});
 }
 
-decltype(MimeType::s_typesByName) MimeType::s_typesByName { initializeTypes() };
+decltype(MimeType::s_typesByName) MimeType::s_typesByName {initializeTypes()};
 
 decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     decltype(s_typesByName) result {};
 
     auto insert = [&](char const* name, ClipboardContentType type, MimeOption options = MimeOption::NoOption) {
-        result.insert({ name, MimeType { static_cast<unsigned int>(result.size()), name, type, options } });
+        result.insert({name, MimeType {static_cast<unsigned int>(result.size()), name, type, options}});
     };
 
     insert("x-special/gnome-copied-files",
@@ -123,7 +123,7 @@ ClipboardContent MimeType::decodePaths(std::istream& stream) const {
 
     debugStream << "Read " << paths.size() << " paths with action " << action << std::endl;
 
-    return { std::move(paths), action };
+    return {std::move(paths), action};
 }
 
 ClipboardContent MimeType::decodeText(std::istream& stream) const {
@@ -133,7 +133,7 @@ ClipboardContent MimeType::decodeText(std::istream& stream) const {
 
     debugStream << "Read " << str.size() << " characters from the system" << std::endl;
 
-    return { std::move(str) };
+    return {std::move(str)};
 }
 
 bool MimeType::encode(ClipboardContent const& clipboard, std::ostream& stream) const {

@@ -16,8 +16,8 @@
 #include "all.hpp"
 
 wl_seat_listener WlSeatSpec::listener {
-    .capabilities = &eventHandler<&WlSeat::onCapability>,
-    .name = &eventHandler<&WlSeat::onName>,
+        .capabilities = &eventHandler<&WlSeat::onCapability>,
+        .name = &eventHandler<&WlSeat::onName>,
 };
 
 void WlSeat::onName(char const* name) {

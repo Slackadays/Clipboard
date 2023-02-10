@@ -24,5 +24,5 @@ struct WlCompositorSpec {
 
 class WlCompositor : public WlObject<WlCompositorSpec> {
 public:
-    explicit WlCompositor(obj_t* value) : WlObject<spec_t> { value } {}
+    explicit WlCompositor(obj_t* value) : WlObject<spec_t> {value} {}
 };

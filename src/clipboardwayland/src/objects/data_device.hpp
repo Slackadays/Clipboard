@@ -26,7 +26,7 @@ struct WlDataDeviceSpec {
 class WlDataDevice : public WlObject<WlDataDeviceSpec> {
     friend WlDataDeviceSpec;
 
-    bool m_receivedSelectionEvent { false };
+    bool m_receivedSelectionEvent {false};
     std::unique_ptr<WlDataOffer> m_bufferedOffer {};
     std::unique_ptr<WlDataOffer> m_selectionOffer {};
 

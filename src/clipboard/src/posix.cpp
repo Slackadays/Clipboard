@@ -68,15 +68,15 @@ static ClipboardContent dynamicGetGUIClipboard(char const* object, char const* s
         return {};
     }
 
-    std::unique_ptr<ClipboardContent const> posixClipboard { reinterpret_cast<ClipboardContent const*>(posixClipboardPtr
-    ) };
+    std::unique_ptr<ClipboardContent const> posixClipboard {
+            reinterpret_cast<ClipboardContent const*>(posixClipboardPtr)};
     return *posixClipboard;
 }
 
 static void dynamicSetGUIClipboard(char const* object, char const* symbol, ClipboardContent const& clipboard) {
     WriteGuiContext context {
-        .forker = forker,
-        .clipboard = clipboard,
+            .forker = forker,
+            .clipboard = clipboard,
     };
     auto ptr = reinterpret_cast<void*>(&context);
     dynamicCall<setClipboard_t>(object, symbol, ptr);

@@ -18,23 +18,23 @@
 #include <clipboard/logging.hpp>
 
 wl_data_device_listener WlDataDeviceSpec::listener {
-    .data_offer = &eventHandler<&WlDataDevice::onDataOffer>,
-    .enter = &noHandler,
-    .leave = &noHandler,
-    .motion = &noHandler,
-    .drop = &noHandler,
-    .selection = &eventHandler<&WlDataDevice::onSelection>,
+        .data_offer = &eventHandler<&WlDataDevice::onDataOffer>,
+        .enter = &noHandler,
+        .leave = &noHandler,
+        .motion = &noHandler,
+        .drop = &noHandler,
+        .selection = &eventHandler<&WlDataDevice::onSelection>,
 };
 
 WlDataDevice::WlDataDevice(WlDataDeviceManager const& manager, WlSeat const& seat)
-        : WlObject<spec_t> { wl_data_device_manager_get_data_device(manager.value(), seat.value()) } {
+        : WlObject<spec_t> {wl_data_device_manager_get_data_device(manager.value(), seat.value())} {
     debugStream << "Created a data device for seat " << seat.name() << std::endl;
 }
 
 WlDataDevice::WlDataDevice(WlRegistry const& registry)
         : WlDataDevice {
-            registry.get<WlDataDeviceManager>(),
-            registry.get<WlSeat>(),
+                registry.get<WlDataDeviceManager>(),
+                registry.get<WlSeat>(),
         } {}
 
 void WlDataDevice::onDataOffer(wl_data_offer* offer) {

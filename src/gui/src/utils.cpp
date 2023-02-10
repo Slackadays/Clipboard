@@ -38,7 +38,7 @@ StringOrLiteral::operator char const*() const {
 }
 
 StringOrLiteral::operator std::string_view() const {
-    return std::visit([](auto&& data) -> std::string_view { return { data }; }, m_data);
+    return std::visit([](auto&& data) -> std::string_view { return {data}; }, m_data);
 }
 
 std::string urlDecode(std::string_view value) {
@@ -66,7 +66,7 @@ std::string urlDecode(std::string_view value) {
             continue;
         }
 
-        auto possibleByte = tryConvertByte({ &value[i + 1], 2 });
+        auto possibleByte = tryConvertByte({&value[i + 1], 2});
         if (possibleByte.has_value()) {
             result.push_back(possibleByte.value());
             i += 2;
@@ -75,18 +75,18 @@ std::string urlDecode(std::string_view value) {
         }
     }
 
-    return { result.begin(), result.end() };
+    return {result.begin(), result.end()};
 }
 
 std::string urlEncode(std::string_view value) {
-    static std::set<char> const allowedCharacters { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                                                    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    static std::set<char> const allowedCharacters {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                                   'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 
-                                                    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                                                    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                                                   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                                                   'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 
-                                                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '.',
-                                                    '~', '/' };
+                                                   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '.',
+                                                   '~', '/'};
 
     std::stringstream result;
     for (auto&& c : value) {
@@ -103,14 +103,14 @@ std::string urlEncode(std::string_view value) {
 }
 
 bool isEnvTrueish(char const* name) {
-    static std::set<std::string_view> trueIshValues { "1"sv, "TRUE"sv, "ON"sv, "Y"sv, "YES"sv };
+    static std::set<std::string_view> trueIshValues {"1"sv, "TRUE"sv, "ON"sv, "Y"sv, "YES"sv};
 
     auto rawValue = std::getenv(name);
     if (rawValue == nullptr) {
         return false;
     }
 
-    std::string value { rawValue };
+    std::string value {rawValue};
     for (auto&& c : value) {
         c = std::toupper(c);
     }

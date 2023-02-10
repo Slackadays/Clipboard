@@ -24,5 +24,5 @@ struct WlDataDeviceManagerSpec {
 
 class WlDataDeviceManager : public WlObject<WlDataDeviceManagerSpec> {
 public:
-    explicit WlDataDeviceManager(obj_t* value) : WlObject<spec_t> { value } {}
+    explicit WlDataDeviceManager(obj_t* value) : WlObject<spec_t> {value} {}
 };

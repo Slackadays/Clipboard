@@ -18,27 +18,27 @@
 #include <clipboard/logging.hpp>
 
 wl_data_source_listener WlDataSourceSpec::listener {
-    .target = &noHandler,
-    .send = &eventHandler<&WlDataSource::onSend>,
-    .cancelled = &eventHandler<&WlDataSource::onCancelled>,
-    .dnd_drop_performed = &noHandler,
-    .dnd_finished = &noHandler,
-    .action = &noHandler,
+        .target = &noHandler,
+        .send = &eventHandler<&WlDataSource::onSend>,
+        .cancelled = &eventHandler<&WlDataSource::onCancelled>,
+        .dnd_drop_performed = &noHandler,
+        .dnd_finished = &noHandler,
+        .action = &noHandler,
 };
 
 WlDataSource::WlDataSource(WlDataDeviceManager const& dataDeviceManager)
-        : WlObject<WlDataSourceSpec> { wl_data_device_manager_create_data_source(dataDeviceManager.value()) } {}
+        : WlObject<WlDataSourceSpec> {wl_data_device_manager_create_data_source(dataDeviceManager.value())} {}
 
-WlDataSource::WlDataSource(WlRegistry const& registry) : WlDataSource { registry.get<WlDataDeviceManager>() } {}
+WlDataSource::WlDataSource(WlRegistry const& registry) : WlDataSource {registry.get<WlDataDeviceManager>()} {}
 
 void WlDataSource::offer(std::string_view mime) const {
-    std::string mimeCopy { mime };
+    std::string mimeCopy {mime};
     wl_data_source_offer(value(), mimeCopy.c_str());
 }
 
 void WlDataSource::onSend(char const* rawMime, std::int32_t rawFd) {
-    std::string_view mime { rawMime };
-    Fd fd { rawFd };
+    std::string_view mime {rawMime};
+    Fd fd {rawFd};
     if (m_sendCallback) {
         m_sendCallback(mime, std::move(fd));
     }

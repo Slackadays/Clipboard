@@ -56,7 +56,7 @@ Fd Fd::memfd(std::size_t size) {
     }
 
     debugStream << "Created temporary file descriptor " << fd << std::endl;
-    return Fd { fd };
+    return Fd {fd};
 }
 
 void Fd::close() {
@@ -86,8 +86,8 @@ PipeFd::PipeFd() {
         throw WlException("Error creating pipe");
     }
 
-    m_readFd = Fd { fds[0] };
-    m_writeFd = Fd { fds[1] };
+    m_readFd = Fd {fds[0]};
+    m_writeFd = Fd {fds[1]};
     debugStream << "Created a new pipe with read end " << fds[0] << " and write end " << fds[1] << std::endl;
 }
 
@@ -96,24 +96,24 @@ PipeFd::~PipeFd() noexcept {
     closeWrite();
 }
 
-FdStream::FdStream(FdBuffer&& buffer) : m_fdBuffer { std::make_unique<FdBuffer>(buffer) } {
+FdStream::FdStream(FdBuffer&& buffer) : m_fdBuffer {std::make_unique<FdBuffer>(buffer)} {
     rdbuf(m_fdBuffer.get());
 }
 
-FdStream::FdStream(int fd) : FdStream(FdBuffer { fd }) {}
-FdStream::FdStream(int readFd, int writeFd) : FdStream(FdBuffer { readFd, writeFd }) {}
-FdStream::FdStream(Fd const& fd) : FdStream(FdBuffer { fd }) {}
-FdStream::FdStream(PipeFd const& fd) : FdStream(FdBuffer { fd }) {}
+FdStream::FdStream(int fd) : FdStream(FdBuffer {fd}) {}
+FdStream::FdStream(int readFd, int writeFd) : FdStream(FdBuffer {readFd, writeFd}) {}
+FdStream::FdStream(Fd const& fd) : FdStream(FdBuffer {fd}) {}
+FdStream::FdStream(PipeFd const& fd) : FdStream(FdBuffer {fd}) {}
 
-FdBuffer::FdBuffer(int readFd, int writeFd) : m_readFd { readFd }, m_writeFd { writeFd } {
+FdBuffer::FdBuffer(int readFd, int writeFd) : m_readFd {readFd}, m_writeFd {writeFd} {
 
     setg(&m_readBuf.front(), &m_readBuf.back(), &m_readBuf.back());
     setp(&m_writeBuf.front(), &m_writeBuf.back());
 }
 
-FdBuffer::FdBuffer(int fd) : FdBuffer { fd, fd } {}
-FdBuffer::FdBuffer(Fd const& fd) : FdBuffer { fd.value() } {}
-FdBuffer::FdBuffer(PipeFd const& fd) : FdBuffer { fd.readFd(), fd.writeFd() } {}
+FdBuffer::FdBuffer(int fd) : FdBuffer {fd, fd} {}
+FdBuffer::FdBuffer(Fd const& fd) : FdBuffer {fd.value()} {}
+FdBuffer::FdBuffer(PipeFd const& fd) : FdBuffer {fd.readFd(), fd.writeFd()} {}
 
 std::size_t FdBuffer::safeRead(std::span<char> span) const {
     if (span.empty()) {
@@ -178,7 +178,7 @@ std::size_t FdBuffer::repeatedWrite(std::span<char const> span) const {
 std::size_t FdBuffer::flushWrite() {
     std::size_t result = 0;
     if (pptr() > pbase()) {
-        result += repeatedWrite({ pbase(), pptr() });
+        result += repeatedWrite({pbase(), pptr()});
         setp(m_writeBuf.data(), m_writeBuf.data() + m_writeBuf.size());
     }
 
@@ -221,7 +221,7 @@ std::streamsize FdBuffer::xsgetn(char_type* output, std::streamsize count) {
         gbump(bufRead);
     }
 
-    totalRead += repeatedRead({ output, static_cast<std::size_t>(count - totalRead) });
+    totalRead += repeatedRead({output, static_cast<std::size_t>(count - totalRead)});
     return totalRead;
 }
 
@@ -229,7 +229,7 @@ FdBuffer::int_type FdBuffer::overflow(int_type ch) {
     flushWrite();
 
     if (ch != traits_type::eof()) {
-        repeatedWrite({ reinterpret_cast<char*>(&ch), 1 });
+        repeatedWrite({reinterpret_cast<char*>(&ch), 1});
     }
 
     return 1;
@@ -237,5 +237,5 @@ FdBuffer::int_type FdBuffer::overflow(int_type ch) {
 
 std::streamsize FdBuffer::xsputn(char_type const* input, std::streamsize count) {
     flushWrite();
-    return repeatedWrite({ input, static_cast<std::size_t>(count) });
+    return repeatedWrite({input, static_cast<std::size_t>(count)});
 }

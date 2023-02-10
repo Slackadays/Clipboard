@@ -16,7 +16,7 @@
 #include "all.hpp"
 
 wl_shm_listener WlShmSpec::listener {
-    .format = &eventHandler<&WlShm::onFormat>,
+        .format = &eventHandler<&WlShm::onFormat>,
 };
 
 bool WlShm::supports(wl_shm_format format) const {

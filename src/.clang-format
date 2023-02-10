@@ -3,30 +3,30 @@ Language:        Cpp
 AccessModifierOffset: -4
 AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: None
-AlignConsecutiveAssignments:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    true
-AlignConsecutiveBitFields:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    false
-AlignConsecutiveDeclarations:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    false
-AlignConsecutiveMacros:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    false
+#AlignConsecutiveAssignments:
+#  Enabled:         false
+#  AcrossEmptyLines: false
+#  AcrossComments:  false
+#  AlignCompound:   false
+#  PadOperators:    true
+#AlignConsecutiveBitFields:
+#  Enabled:         false
+#  AcrossEmptyLines: false
+#  AcrossComments:  false
+#  AlignCompound:   false
+#  PadOperators:    false
+#AlignConsecutiveDeclarations:
+#  Enabled:         false
+#  AcrossEmptyLines: false
+#  AcrossComments:  false
+#  AlignCompound:   false
+#  PadOperators:    false
+#AlignConsecutiveMacros:
+#  Enabled:         false
+#  AcrossEmptyLines: false
+#  AcrossComments:  false
+#  AlignCompound:   false
+#  PadOperators:    false
 AlignEscapedNewlines: Left
 AlignOperands:   Align
 AlignTrailingComments: true
@@ -66,7 +66,7 @@ BraceWrapping:
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
 BreakBeforeBinaryOperators: NonAssignment
-BreakBeforeConceptDeclarations: Always
+#BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Attach
 BreakBeforeInheritanceComma: false
 BreakInheritanceList: AfterComma
@@ -121,10 +121,10 @@ IndentCaseBlocks: false
 IndentGotoLabels: true
 IndentPPDirectives: None
 IndentExternBlock: AfterExternBlock
-IndentRequiresClause: true
+#IndentRequiresClause: true
 IndentWidth:     4
 IndentWrappedFunctionNames: false
-InsertBraces:    false
+#InsertBraces:    false
 InsertTrailingCommas: Wrapped
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
@@ -154,7 +154,7 @@ PPIndentWidth:   -2
 ReferenceAlignment: Pointer
 ReflowComments:  true
 RemoveBracesLLVM: false
-RequiresClausePosition: WithFollowing
+#RequiresClausePosition: WithFollowing
 SeparateDefinitionBlocks: Leave
 ShortNamespaceLines: 1
 SortIncludes:    CaseSensitive
@@ -176,8 +176,8 @@ SpaceBeforeParensOptions:
   AfterFunctionDeclarationName: false
   AfterIfMacros:   true
   AfterOverloadedOperator: false
-  AfterRequiresInClause: false
-  AfterRequiresInExpression: false
+#  AfterRequiresInClause: false
+#  AfterRequiresInExpression: false
   BeforeNonEmptyParentheses: false
 SpaceAroundPointerQualifiers: Default
 SpaceBeforeRangeBasedForLoopColon: true

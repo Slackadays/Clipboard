@@ -32,7 +32,7 @@ class WlDataOffer : public WlObject<WlDataOfferSpec> {
     std::set<std::string> m_mimeTypes {};
 
 public:
-    explicit WlDataOffer(obj_t* value) : WlObject<spec_t> { value } {}
+    explicit WlDataOffer(obj_t* value) : WlObject<spec_t> {value} {}
 
     void receive(std::string_view mime, int fd) const;
 

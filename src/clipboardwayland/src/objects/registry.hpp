@@ -60,7 +60,7 @@ private:
 
 template <IsWlObject T>
 T const& WlRegistry::get() const {
-    std::string_view name { T::spec_t::interface.name };
+    std::string_view name {T::spec_t::interface.name};
 
     auto found = m_boundObjectsByInterface.find(name);
     if (found == m_boundObjectsByInterface.end()) {

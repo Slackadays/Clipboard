@@ -7,4 +7,4 @@ find \
         -o -name '*.hpp' \
     ')' \
     -exec \
-    clang-format-15 --Werror -i --verbose --dry-run '{}' +
+    clang-format --Werror -i --verbose --dry-run '{}' +

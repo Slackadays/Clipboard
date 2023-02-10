@@ -33,7 +33,7 @@ public:
     using sendCallback_t = void(std::string_view, Fd&&);
 
 private:
-    bool m_isCancelled { false };
+    bool m_isCancelled {false};
     std::function<sendCallback_t> m_sendCallback;
 
 public:

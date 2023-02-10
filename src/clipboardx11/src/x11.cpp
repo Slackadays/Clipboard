@@ -72,7 +72,7 @@ using X11Pointer = std::unique_ptr<T, decltype(&XFree)>;
 
 template <typename T>
 X11Pointer<T> capture(T* ptr) {
-    return { ptr, &XFree };
+    return {ptr, &XFree};
 }
 
 class X11Exception : public SimpleException {
@@ -170,7 +170,7 @@ public:
 
     bool operator<=>(X11PropertyFormat const&) const = default;
 
-    static X11PropertyFormat fromValue(std::size_t value) { return { static_cast<Value>(value) }; }
+    static X11PropertyFormat fromValue(std::size_t value) { return {static_cast<Value>(value)}; }
 
     template <std::size_t char_t>
     constexpr static inline X11PropertyFormat fromSize();
@@ -441,7 +441,7 @@ int X11Connection::localErrorHandler(Display* const errorDisplay, XErrorEvent* c
     message << ": ";
 
     if (event != nullptr) {
-        char xmessageBuffer[1024] = { 0 };
+        char xmessageBuffer[1024] = {0};
         XGetErrorText(display(), event->error_code, xmessageBuffer, 1024);
 
         message << xmessageBuffer;
@@ -482,7 +482,7 @@ inline auto X11Connection::doXCall(std::string_view callName, F callLambda, Args
 X11Window X11Connection::createWindow() {
     throwIfDestroyed();
 
-    XSetWindowAttributes attributes { .event_mask = PropertyChangeMask };
+    XSetWindowAttributes attributes {.event_mask = PropertyChangeMask};
 
     auto handle = XCreateWindow(
             /*display*/ display(),
@@ -498,7 +498,7 @@ X11Window X11Connection::createWindow() {
             /*valuemask*/ CWEventMask,
             /*attributes*/ &attributes
     );
-    return { *this, handle };
+    return {*this, handle};
 }
 
 X11Connection::X11Connection() {
@@ -528,8 +528,8 @@ X11Connection::~X11Connection() {
 
 X11Atom const& X11Connection::addAtomToCache(X11Atom&& atom) {
     auto ptr = std::make_shared<X11Atom>(std::move(atom));
-    m_atoms_by_name.insert({ ptr->name(), ptr });
-    m_atoms_by_value.insert({ ptr->value(), ptr });
+    m_atoms_by_name.insert({ptr->name(), ptr});
+    m_atoms_by_value.insert({ptr->value(), ptr});
     return *ptr;
 }
 
@@ -540,13 +540,13 @@ X11Atom const& X11Connection::atom(std::string_view name) {
         return *m_atoms_by_name.at(name);
     }
 
-    std::string nameCopy { name };
+    std::string nameCopy {name};
     auto const value = X_CALL(XInternAtom, display(), nameCopy.c_str(), false);
     if (value == None) {
         throw X11Exception("Unable to intern value");
     }
 
-    return addAtomToCache({ value, std::move(nameCopy) });
+    return addAtomToCache({value, std::move(nameCopy)});
 }
 
 X11Atom const& X11Connection::atom(Atom value) {
@@ -562,7 +562,7 @@ X11Atom const& X11Connection::atom(Atom value) {
     }
     auto name = capture(rawName);
 
-    return addAtomToCache({ value, name.get() });
+    return addAtomToCache({value, name.get()});
 }
 
 void X11Connection::throwIfDestroyed() const {
@@ -668,11 +668,11 @@ X11Property::X11Property(
 }
 
 X11PropertyIterator X11Property::begin() const {
-    return { *this, 0 };
+    return {*this, 0};
 }
 
 X11PropertyIterator X11Property::end() const {
-    return { *this, size() };
+    return {*this, size()};
 }
 
 X11Property X11Property::range(std::size_t start, std::size_t end) {
@@ -681,7 +681,7 @@ X11Property X11Property::range(std::size_t start, std::size_t end) {
 
     auto begin = data8() + (start * format().size());
     auto count = (end - start) * format().size();
-    return { name(), type(), views::counted(begin, count), false };
+    return {name(), type(), views::counted(begin, count), false};
 }
 
 std::partial_ordering X11PropertyIterator::operator<=>(X11PropertyIterator const& other) const {
@@ -804,7 +804,7 @@ Time X11Window::queryCurrentTime() {
     throwIfDestroyed();
 
     auto&& name = atom("GETCURRENTTIME");
-    X11Property value { name, atom("text/plain"), u8"getcurrenttime"sv, false };
+    X11Property value {name, atom("text/plain"), u8"getcurrenttime"sv, false};
 
     deleteProperty(name);
     changeProperty(X11PropertyMode::Replace, value);
@@ -835,7 +835,7 @@ X11Property X11Window::convertSelection(X11Atom const& selection, X11Atom const&
     auto const result = waitForEvent(SelectionNotify, [requestor, &selection, &target](XEvent const& event) {
         auto& xselection = event.xselection;
         return xselection.requestor == requestor && xselection.selection == selection.value()
-            && xselection.target == target.value();
+               && xselection.target == target.value();
     });
 
     if (result.xselection.property == None) {
@@ -885,7 +885,7 @@ X11Property X11Window::getProperty(X11Atom const& name, bool delet) {
     auto const format = X11PropertyFormat::fromValue(actualFormatReturn);
     auto const size = nitemsReturn * format.size();
 
-    return X11Property { name, type, format, views::counted(x11Data.get(), size), true };
+    return X11Property {name, type, format, views::counted(x11Data.get(), size), true};
 }
 
 X11Property X11Window::convertClipboard(X11Atom const& target) {
@@ -966,7 +966,7 @@ void X11Window::changeWindowAttributes(unsigned long valuemask, XSetWindowAttrib
 void X11Window::setEventMask(long eventMask) {
     throwIfDestroyed();
 
-    XSetWindowAttributes attributes = { .event_mask = eventMask };
+    XSetWindowAttributes attributes = {.event_mask = eventMask};
 
     changeWindowAttributes(CWEventMask, &attributes);
 }
@@ -1035,7 +1035,7 @@ X11SelectionRequest::X11SelectionRequest(X11Connection& connection, XSelectionRe
         , m_multiple(false) {}
 
 X11SelectionRequest X11SelectionRequest::forMultiple(X11Atom const& target, X11Atom const& property) const {
-    return { event(), windowPtr(), target, property, true };
+    return {event(), windowPtr(), target, property, true};
 }
 
 X11IncrTransfer::X11IncrTransfer(std::shared_ptr<X11Window> window, X11Property&& property)
@@ -1049,7 +1049,7 @@ void X11IncrTransfer::handle(XEvent const& event) {
     }
 
     auto isIncr = event.type == PropertyNotify && event.xproperty.window == *m_window
-               && event.xproperty.atom == m_property.name() && event.xproperty.state == PropertyDelete;
+                  && event.xproperty.atom == m_property.name() && event.xproperty.state == PropertyDelete;
 
     if (!isIncr) {
         return;
@@ -1101,15 +1101,16 @@ XEvent X11SelectionDaemon::nextEvent() {
 }
 
 XEvent X11SelectionDaemon::makeSelectionNotify(XSelectionRequestEvent const& event) {
-    return XEvent { .xselection = {
-                            .type = SelectionNotify,
-                            .display = event.display,
-                            .requestor = event.requestor,
-                            .selection = event.selection,
-                            .target = event.target,
-                            .property = event.property,
-                            .time = event.time,
-                    } };
+    return XEvent {
+            .xselection = {
+                    .type = SelectionNotify,
+                    .display = event.display,
+                    .requestor = event.requestor,
+                    .selection = event.selection,
+                    .target = event.target,
+                    .property = event.property,
+                    .time = event.time,
+            }};
 }
 
 void X11SelectionDaemon::refuseSelectionRequest(XSelectionRequestEvent const& event) const {
@@ -1128,13 +1129,13 @@ bool X11SelectionDaemon::refuseSelectionRequest(X11SelectionRequest const& reque
 
 template <ranges::contiguous_range range_t>
 bool X11SelectionDaemon::replySelectionRequest(X11SelectionRequest const& request, X11Atom const& type, range_t data) {
-    X11Property property { request.property(), type, data, true };
+    X11Property property {request.property(), type, data, true};
     debugStream << "Replying with " << property.size8() << " bytes of data"
                 << " at format " << property.format().value() << " and type " << property.type().name() << std::endl;
 
     if (data.size() > connection().maxDataSizeForIncr()) {
         debugStream << "Data too big, using INCR mechanism" << std::endl;
-        X11Property incrProperty { property.name(), atom(atomIncr), views::single(property.size8()), true };
+        X11Property incrProperty {property.name(), atom(atomIncr), views::single(property.size8()), true};
         request.window().addPropertyChangeToEventMask();
         request.window().changeProperty(X11PropertyMode::Replace, incrProperty);
         m_transfers.emplace_back(std::make_unique<X11IncrTransfer>(request.windowPtr(), std::move(property)));
@@ -1195,7 +1196,7 @@ void X11SelectionDaemon::handleSelectionRequest(XSelectionRequestEvent const& ev
         return refuseSelectionRequest(event);
     }
 
-    handleSelectionRequest({ connection(), event });
+    handleSelectionRequest({connection(), event});
 }
 
 bool X11SelectionDaemon::handleSelectionRequest(X11SelectionRequest const& request) {
@@ -1253,9 +1254,9 @@ bool X11SelectionDaemon::handleMultipleSelectionRequest(X11SelectionRequest cons
 
 bool X11SelectionDaemon::handleTargetsSelectionRequest(X11SelectionRequest const& request) {
     std::vector<X11PropertyFormat::format32_t> data {
-        atom(atomTargets).value(),
-        atom(atomMultiple).value(),
-        atom(atomTimestamp).value(),
+            atom(atomTargets).value(),
+            atom(atomMultiple).value(),
+            atom(atomTimestamp).value(),
     };
     MimeType::forEachSupporting(content(), [&](MimeType const& type) { data.push_back(atom(type.name()).value()); });
 
@@ -1325,7 +1326,7 @@ static ClipboardContent getX11ClipboardInternal() {
     std::istringstream stream;
     auto request = [&](MimeType const& type) -> std::istream& {
         data = window.getClipboardData(conn.atom(type.name()));
-        stream = std::istringstream { std::string { data.data(), data.size() } };
+        stream = std::istringstream {std::string {data.data(), data.size()}};
         return stream;
     };
 
@@ -1334,7 +1335,7 @@ static ClipboardContent getX11ClipboardInternal() {
 
 static void startPasteDaemon(ClipboardContent const& clipboard) {
     X11Connection conn;
-    X11SelectionDaemon daemon { conn, conn.atom(atomClipboard), clipboard };
+    X11SelectionDaemon daemon {conn, conn.atom(atomClipboard), clipboard};
     daemon.run();
 }
 

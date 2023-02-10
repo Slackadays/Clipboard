@@ -406,7 +406,7 @@ void convertFromGUIClipboard(ClipboardPaths const& clipboard) {
     }
 
     if (clipboard.action() == ClipboardPathsAction::Cut) {
-        std::ofstream originalFiles { path.original_files };
+        std::ofstream originalFiles {path.original_files};
         for (auto&& path : clipboard.paths()) {
             originalFiles << path.string() << std::endl;
         }
@@ -415,7 +415,7 @@ void convertFromGUIClipboard(ClipboardPaths const& clipboard) {
 
 [[nodiscard]] ClipboardContent thisClipboard() {
     if (fs::exists(path.original_files)) {
-        std::ifstream originalFiles { path.original_files };
+        std::ifstream originalFiles {path.original_files};
         std::vector<fs::path> files;
 
         std::string line;
@@ -426,11 +426,11 @@ void convertFromGUIClipboard(ClipboardPaths const& clipboard) {
             }
         }
 
-        return { std::move(files), ClipboardPathsAction::Cut };
+        return {std::move(files), ClipboardPathsAction::Cut};
     }
 
     if (!copying.buffer.empty()) {
-        return { copying.buffer };
+        return {copying.buffer};
     }
 
     if (!copying.items.empty()) {
@@ -553,7 +553,7 @@ void showClipboardStatus() {
     auto iterateClipboards = [&](fs::path const& path, bool persistent) { // use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path)) {
             if (fs::is_directory(entry.path() / "data") && !fs::is_empty(entry.path() / "data")) {
-                clipboards_with_contents.push_back({ entry.path(), persistent });
+                clipboards_with_contents.push_back({entry.path(), persistent});
             }
         }
     };
@@ -647,7 +647,7 @@ Action getAction() {
     using enum Action;
     using enum IOType;
     if (arguments.size() >= 1) {
-        for (auto const& entry : { Cut, Copy, Add, Remove }) {
+        for (auto const& entry : {Cut, Copy, Add, Remove}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 if (!is_tty.in) {
                     io_type = Pipe;
@@ -655,7 +655,7 @@ Action getAction() {
                 return entry;
             }
         }
-        for (auto const& entry : { Paste, Show, Clear, Edit }) {
+        for (auto const& entry : {Paste, Show, Clear, Edit}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 if (!is_tty.out) {
                     io_type = Pipe;
@@ -723,7 +723,7 @@ void setFilepaths() {
     path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR")
                       : getenv("TMPDIR")         ? getenv("TMPDIR")
                                                  : fs::temp_directory_path())
-                   / constants.temporary_directory_name / clipboard_name / "data";
+                     / constants.temporary_directory_name / clipboard_name / "data";
 
     path.persistent =
             (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR")
@@ -757,8 +757,17 @@ void setupIndicator() {
     }
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
-    const std::array<std::string_view, 10> spinner_steps { "━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ",
-                                                           "    ━━  ", "     ━━ ", "      ━━", "       ━", "        " };
+    const std::array<std::string_view, 10> spinner_steps {
+            "━       ",
+            "━━      ",
+            " ━━     ",
+            "  ━━    ",
+            "   ━━   ",
+            "    ━━  ",
+            "     ━━ ",
+            "      ━━",
+            "       ━",
+            "        "};
     static unsigned int percent_done = 0;
     if ((action == Action::Cut || action == Action::Copy) && io_type == IOType::File) {
         static size_t items_size = copying.items.size();

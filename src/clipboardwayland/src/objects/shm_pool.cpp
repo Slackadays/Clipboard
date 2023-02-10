@@ -16,8 +16,8 @@
 #include "all.hpp"
 
 WlShmPool::WlShmPool(WlShm const& shm, Fd&& fd, std::int32_t size)
-        : WlObject<spec_t> { wl_shm_create_pool(shm.value(), fd.value(), size) }
-        , m_fd { std::move(fd) }
+        : WlObject<spec_t> {wl_shm_create_pool(shm.value(), fd.value(), size)}
+        , m_fd {std::move(fd)}
         , m_size(size) {}
 
 std::unique_ptr<WlShmPool> WlShmPool::fromMemfd(WlShm const& shm, std::int32_t size) {

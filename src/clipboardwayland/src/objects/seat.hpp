@@ -30,11 +30,11 @@ struct WlSeatSpec {
 class WlSeat : public WlObject<WlSeatSpec> {
     friend WlSeatSpec;
 
-    std::string m_name { "unnamed seat" };
-    wl_seat_capability m_capabilities { static_cast<wl_seat_capability>(0) };
+    std::string m_name {"unnamed seat"};
+    wl_seat_capability m_capabilities {static_cast<wl_seat_capability>(0)};
 
 public:
-    explicit WlSeat(obj_t* value) : WlObject<spec_t> { value } {}
+    explicit WlSeat(obj_t* value) : WlObject<spec_t> {value} {}
 
     [[nodiscard]] inline std::string_view name() const { return m_name; }
     [[nodiscard]] bool hasCapability(wl_seat_capability) const;

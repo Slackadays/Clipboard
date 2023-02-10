@@ -18,13 +18,13 @@
 #include <clipboard/logging.hpp>
 
 wl_registry_listener WlRegistrySpec::listener {
-    .global = &eventHandler<&WlRegistry::onGlobal>,
-    .global_remove = &eventHandler<&WlRegistry::onGlobalRemove>,
+        .global = &eventHandler<&WlRegistry::onGlobal>,
+        .global_remove = &eventHandler<&WlRegistry::onGlobalRemove>,
 };
 
 WlRegistry::WlRegistry(WlDisplay const& display)
-        : WlObject<spec_t> { wl_display_get_registry(display.value()) }
-        , m_display { display } {
+        : WlObject<spec_t> {wl_display_get_registry(display.value())}
+        , m_display {display} {
 
     // Ensure all globals are bound before exiting the constructor
     m_display.roundtrip();
@@ -34,7 +34,7 @@ template <IsWlObject T>
 void WlRegistry::bind(std::uint32_t name, std::uint32_t version) {
     using spec = T::spec_t;
 
-    std::string_view interfaceName { spec::interface.name };
+    std::string_view interfaceName {spec::interface.name};
     auto chosenVersion = std::min(spec::version, version);
 
     auto&& existing = m_boundObjectsByName.find(name);
@@ -60,11 +60,12 @@ void WlRegistry::bind(std::uint32_t name, std::uint32_t version) {
     auto rawPtr = reinterpret_cast<spec::obj_t*>(voidPtr);
     auto sharedPtr = std::make_shared<T>(rawPtr);
 
-    BoundObject boundObject { .name = name,
-                              .interface { interfaceName },
-                              .object = std::static_pointer_cast<void>(sharedPtr) };
-    m_boundObjectsByName.insert({ boundObject.name, boundObject });
-    m_boundObjectsByInterface.insert({ boundObject.interface, boundObject });
+    BoundObject boundObject {
+            .name = name,
+            .interface {interfaceName},
+            .object = std::static_pointer_cast<void>(sharedPtr)};
+    m_boundObjectsByName.insert({boundObject.name, boundObject});
+    m_boundObjectsByInterface.insert({boundObject.interface, boundObject});
 
     debugStream << "Bound global " << name << " with interface " << interfaceName << " version " << chosenVersion
                 << std::endl;
@@ -76,7 +77,7 @@ void WlRegistry::bind(std::uint32_t name, std::uint32_t version) {
 void WlRegistry::onGlobal(std::uint32_t name, char const* interface, std::uint32_t version) {
     debugStream << "Got global " << name << " of type " << interface << " version " << version << std::endl;
 
-    std::string_view interfaceName { interface };
+    std::string_view interfaceName {interface};
     if (interfaceName == WlDataDeviceManager::spec_t::interface.name) {
         bind<WlDataDeviceManager>(name, version);
     } else if (interfaceName == WlSeat::spec_t::interface.name) {
@@ -100,7 +101,7 @@ void WlRegistry::onGlobalRemove(std::uint32_t name) {
         return;
     }
 
-    BoundObject boundObject { it->second };
+    BoundObject boundObject {it->second};
     m_boundObjectsByName.erase(boundObject.name);
 
     auto&& [start, end] = m_boundObjectsByInterface.equal_range(boundObject.interface);

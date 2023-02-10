@@ -61,7 +61,7 @@ public:
  */
 template <std::invocable guard_t>
 class ArmedGuard {
-    bool m_armed { true };
+    bool m_armed {true};
     guard_t m_guard;
 
 public:
@@ -71,7 +71,7 @@ public:
     ArmedGuard& operator=(ArmedGuard&&) = delete;
     ArmedGuard& operator=(ArmedGuard const&) = delete;
 
-    explicit ArmedGuard(guard_t guard) : m_guard { guard } {}
+    explicit ArmedGuard(guard_t guard) : m_guard {guard} {}
 
     inline void disarm() { m_armed = false; }
 
@@ -147,7 +147,7 @@ auto pollUntilReturn(func_t func) -> typename std::invoke_result_t<func_t>::valu
 }
 
 template <typename... Args>
-SimpleException::SimpleException(Args&&... args) : m_message { "" } {
+SimpleException::SimpleException(Args&&... args) : m_message {""} {
     std::ostringstream message;
     (message << ... << args);
     m_message = std::move(message).str();

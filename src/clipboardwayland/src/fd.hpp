@@ -22,7 +22,7 @@
  * A file descriptor that is automatically closed when this object is destructed.
  */
 class Fd {
-    int m_value { 0 };
+    int m_value {0};
 
 public:
     Fd(Fd const&) = delete;

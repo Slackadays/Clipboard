@@ -23,8 +23,8 @@ WlBuffer::WlBuffer(
         std::int32_t stride,
         wl_shm_format format
 )
-        : WlObject<spec_t> { wl_shm_pool_create_buffer(getValue(pool), offset, width, height, stride, format) }
-        , m_shmPool { std::move(pool) } {}
+        : WlObject<spec_t> {wl_shm_pool_create_buffer(getValue(pool), offset, width, height, stride, format)}
+        , m_shmPool {std::move(pool)} {}
 
 std::unique_ptr<WlBuffer> WlBuffer::fromMemfd(
         WlRegistry const& registry,

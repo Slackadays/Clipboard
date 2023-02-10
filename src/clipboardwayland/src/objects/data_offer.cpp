@@ -16,9 +16,9 @@
 #include "all.hpp"
 
 wl_data_offer_listener WlDataOfferSpec::listener {
-    .offer = &eventHandler<&WlDataOffer::onOffer>,
-    .source_actions = &noHandler,
-    .action = &noHandler,
+        .offer = &eventHandler<&WlDataOffer::onOffer>,
+        .source_actions = &noHandler,
+        .action = &noHandler,
 };
 
 void WlDataOffer::onOffer(char const* mime) {
@@ -26,6 +26,6 @@ void WlDataOffer::onOffer(char const* mime) {
 }
 
 void WlDataOffer::receive(std::string_view mime, int fd) const {
-    std::string mimeCopy { mime };
+    std::string mimeCopy {mime};
     wl_data_offer_receive(value(), mimeCopy.c_str(), fd);
 }

@@ -35,9 +35,9 @@ class SimpleWindow {
 
 public:
     explicit SimpleWindow(WlDisplay const& display, WlRegistry const& registry)
-            : m_display { display }
-            , m_surface { registry }
-            , m_keyboard { registry } {
+            : m_display {display}
+            , m_surface {registry}
+            , m_keyboard {registry} {
 
         m_surface.setTitle("Clipboard");
 
@@ -62,23 +62,23 @@ class PasteDaemon {
 
 public:
     explicit PasteDaemon(ClipboardContent const& clipboard)
-            : m_clipboard { clipboard }
+            : m_clipboard {clipboard}
             , m_display()
-            , m_registry { m_display }
-            , m_dataDevice { m_registry }
-            , m_dataSource { m_registry } {
+            , m_registry {m_display}
+            , m_dataDevice {m_registry}
+            , m_dataSource {m_registry} {
 
         MimeType::forEachSupporting(m_clipboard, [&](auto&& x) { m_dataSource.offer(x.name()); });
 
         m_dataSource.sendCallback([&](std::string_view mime, Fd&& fd) {
-            FdStream stream { fd };
+            FdStream stream {fd};
             MimeType::encode(m_clipboard, mime, stream);
         });
     }
 
     void run() {
         {
-            SimpleWindow window { m_display, m_registry };
+            SimpleWindow window {m_display, m_registry};
             auto serial = window.waitForFocus();
             m_dataDevice.setSelection(m_dataSource, serial);
         }
@@ -90,9 +90,9 @@ public:
 
 static ClipboardContent getWaylandClipboardInternal() {
     WlDisplay display;
-    WlRegistry registry { display };
-    SimpleWindow window { display, registry };
-    WlDataDevice dataDevice { registry };
+    WlRegistry registry {display};
+    SimpleWindow window {display, registry};
+    WlDataDevice dataDevice {registry};
 
     display.dispatchUntil([&]() { return dataDevice.receivedSelectionEvent(); });
 
@@ -105,7 +105,7 @@ static ClipboardContent getWaylandClipboardInternal() {
     offer->forEachMimeType([&](auto&& type) { offeredTypes.emplace_back(type); });
 
     PipeFd pipe;
-    FdStream stream { pipe };
+    FdStream stream {pipe};
     auto request = [&](MimeType const& type) -> std::istream& {
         offer->receive(type.name(), pipe.writeFd());
         display.roundtrip();
@@ -118,7 +118,7 @@ static ClipboardContent getWaylandClipboardInternal() {
 
 static void setWaylandClipboardInternal(WriteGuiContext const& context) {
     context.forker.fork([&]() {
-        PasteDaemon daemon { context.clipboard };
+        PasteDaemon daemon {context.clipboard};
         daemon.run();
     });
 }

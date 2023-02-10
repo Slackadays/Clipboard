@@ -28,7 +28,7 @@ class XdgWmBase : public WlObject<XdgWmBaseSpec> {
     friend XdgWmBaseSpec;
 
 public:
-    explicit XdgWmBase(obj_t* value) : WlObject<spec_t> { value } {}
+    explicit XdgWmBase(obj_t* value) : WlObject<spec_t> {value} {}
 
 private:
     void ping(std::uint32_t);

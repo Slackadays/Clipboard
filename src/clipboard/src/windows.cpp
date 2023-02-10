@@ -51,9 +51,9 @@ ClipboardContent getGUIClipboard() {
 
         if (hasFiles) {
             auto files = getWindowsClipboardDataFiles(clipboardPointer);
-            clipboard = { std::move(files) };
+            clipboard = {std::move(files)};
         } else {
-            clipboard = { getWindowsClipboardDataPipe(clipboardPointer) };
+            clipboard = {getWindowsClipboardDataPipe(clipboardPointer)};
         }
 
         if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
@@ -115,7 +115,7 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
         onWindowsError("WideCharToMultiByte");
     }
 
-    return { utf8Buffer.begin(), utf8Buffer.end() };
+    return {utf8Buffer.begin(), utf8Buffer.end()};
 }
 
 void setWindowsClipboardDataPipe() {
