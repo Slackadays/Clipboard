@@ -15,13 +15,13 @@
 #include "display.hpp"
 #include "all.hpp"
 
-#include <poll.h>
 #include <clipboard/logging.hpp>
 #include <clipboard/utils.hpp>
+#include <poll.h>
 
 using namespace std::literals;
 
-WlDisplay::WlDisplay() : WlObject<spec_t> {wl_display_connect(nullptr) } { }
+WlDisplay::WlDisplay() : WlObject<spec_t> { wl_display_connect(nullptr) } {}
 
 void WlDisplay::throwIfError() const {
     if (wl_display_get_error(value()) != 0) {
@@ -88,7 +88,9 @@ void WlDisplay::dispatchWithTimeout() const {
         return;
     }
 
-    ArmedGuard guard { [&]() { wl_display_cancel_read(value()); } };
+    ArmedGuard guard { [&]() {
+        wl_display_cancel_read(value());
+    } };
     flush();
     pollWithTimeout(POLLIN);
     guard.disarm();
@@ -104,13 +106,7 @@ void WlDisplay::pollWithTimeout(short events) const {
     constexpr auto errorMask = POLLERR | POLLNVAL;
 
     pollUntilReturn([&]() -> std::optional<bool> {
-        pollfd fds[] = {
-            pollfd {
-                .fd = wl_display_get_fd(value()),
-                .events = events,
-                .revents = 0
-            }
-        };
+        pollfd fds[] = { pollfd { .fd = wl_display_get_fd(value()), .events = events, .revents = 0 } };
         auto result = poll(fds, 1, std::chrono::microseconds(timeout).count());
         if (result == 0) {
             throw WlException("Timed out waiting for event from the server");
@@ -135,9 +131,6 @@ std::uint32_t WlDisplay::getSerial() const {
     throwIfError();
 
     WlCallback callback { *this };
-    dispatchUntil([&]() {
-        return callback.hasSerial();
-    });
+    dispatchUntil([&]() { return callback.hasSerial(); });
     return callback.serial();
 }
-

@@ -14,31 +14,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <clipboard/utils.hpp>
 
+#include <algorithm>
 #include <iomanip>
-#include <vector>
 #include <optional>
 #include <set>
-#include <algorithm>
 #include <string>
-#include <set>
 #include <string_view>
+#include <vector>
 
 using namespace std::literals;
 
 StringOrLiteral::operator char const*() const {
-    return std::visit([](auto&& data) -> char const* {
-        using T = std::decay_t<decltype(data)>;
-        if constexpr (std::is_same_v<char const*, T>)
-            return data;
-        else
-            return data.c_str();
-    }, m_data);
+    return std::visit(
+            [](auto&& data) -> char const* {
+                using T = std::decay_t<decltype(data)>;
+                if constexpr (std::is_same_v<char const*, T>)
+                    return data;
+                else
+                    return data.c_str();
+            },
+            m_data
+    );
 }
 
 StringOrLiteral::operator std::string_view() const {
-    return std::visit([](auto&& data) -> std::string_view {
-        return { data };
-    }, m_data);
+    return std::visit([](auto&& data) -> std::string_view { return { data }; }, m_data);
 }
 
 std::string urlDecode(std::string_view value) {
@@ -79,16 +79,14 @@ std::string urlDecode(std::string_view value) {
 }
 
 std::string urlEncode(std::string_view value) {
-    static std::set<char> const allowedCharacters {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    static std::set<char> const allowedCharacters { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                                    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                                                    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                                                    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        '-', '_', '.', '~', '/'
-    };
+                                                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '.',
+                                                    '~', '/' };
 
     std::stringstream result;
     for (auto&& c : value) {
@@ -97,26 +95,15 @@ std::string urlEncode(std::string_view value) {
             continue;
         }
 
-        result
-            << "%"
-            << std::hex
-            << std::uppercase
-            << std::setw(2)
-            << std::setfill('0')
-            << static_cast<std::uint64_t>(static_cast<std::uint8_t>(c));
+        result << "%" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+               << static_cast<std::uint64_t>(static_cast<std::uint8_t>(c));
     }
 
     return result.str();
 }
 
 bool isEnvTrueish(char const* name) {
-    static std::set<std::string_view> trueIshValues {
-        "1"sv,
-        "TRUE"sv,
-        "ON"sv,
-        "Y"sv,
-        "YES"sv
-    };
+    static std::set<std::string_view> trueIshValues { "1"sv, "TRUE"sv, "ON"sv, "Y"sv, "YES"sv };
 
     auto rawValue = std::getenv(name);
     if (rawValue == nullptr) {

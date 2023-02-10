@@ -14,18 +14,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include <variant>
-#include <string>
-#include <filesystem>
-#include <vector>
 #include <clipboard/fork.hpp>
+#include <filesystem>
+#include <string>
+#include <variant>
+#include <vector>
 
 namespace fs = std::filesystem;
 
-enum class ClipboardPathsAction {
-    Copy,
-    Cut
-};
+enum class ClipboardPathsAction { Copy, Cut };
 
 std::ostream& operator<<(std::ostream&, ClipboardPathsAction const&);
 
@@ -42,11 +39,7 @@ public:
     [[nodiscard]] inline std::vector<fs::path> const& paths() const { return m_paths; }
 };
 
-enum class ClipboardContentType {
-    Empty,
-    Text,
-    Paths
-};
+enum class ClipboardContentType { Empty, Text, Paths };
 
 class ClipboardContent {
 private:

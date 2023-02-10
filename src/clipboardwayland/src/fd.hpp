@@ -15,8 +15,8 @@
 #pragma once
 
 #include <iostream>
-#include <span>
 #include <memory>
+#include <span>
 
 /**
  * A file descriptor that is automatically closed when this object is destructed.

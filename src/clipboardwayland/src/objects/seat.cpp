@@ -31,4 +31,3 @@ void WlSeat::onCapability(std::uint32_t capabilities) {
 bool WlSeat::hasCapability(wl_seat_capability query) const {
     return (m_capabilities & query) != 0;
 }
-

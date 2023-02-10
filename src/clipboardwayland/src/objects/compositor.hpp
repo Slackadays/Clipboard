@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 struct WlCompositorSpec {
     WL_SPEC_BASE(wl_compositor, 5)
@@ -24,5 +24,5 @@ struct WlCompositorSpec {
 
 class WlCompositor : public WlObject<WlCompositorSpec> {
 public:
-    explicit WlCompositor(obj_t* value) : WlObject<spec_t> { value } { }
+    explicit WlCompositor(obj_t* value) : WlObject<spec_t> { value } {}
 };

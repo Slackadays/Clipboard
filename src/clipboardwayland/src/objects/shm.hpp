@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 #include <set>
 
@@ -31,7 +31,7 @@ class WlShm : public WlObject<WlShmSpec> {
     std::set<wl_shm_format> m_formats {};
 
 public:
-    explicit WlShm(obj_t* value) : WlObject<spec_t> { value } { }
+    explicit WlShm(obj_t* value) : WlObject<spec_t> { value } {}
     [[nodiscard]] bool supports(wl_shm_format) const;
 
 private:

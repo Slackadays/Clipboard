@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 #include <map>
 #include <memory>
@@ -39,7 +39,7 @@ class WlRegistry : public WlObject<WlRegistrySpec> {
     std::map<std::uint32_t, BoundObject> m_boundObjectsByName {};
     std::multimap<std::string_view, BoundObject> m_boundObjectsByInterface {};
 
-    template<IsWlObject T>
+    template <IsWlObject T>
     void bind(std::uint32_t name, std::uint32_t version);
 
 public:
@@ -50,7 +50,7 @@ public:
      * @tparam T Type of the Wayland object to get.
      * @throws WlException If there's no object of that type bound in the registry.
      */
-    template<IsWlObject T>
+    template <IsWlObject T>
     T const& get() const;
 
 private:
@@ -58,8 +58,7 @@ private:
     void onGlobalRemove(std::uint32_t name);
 };
 
-
-template<IsWlObject T>
+template <IsWlObject T>
 T const& WlRegistry::get() const {
     std::string_view name { T::spec_t::interface.name };
 

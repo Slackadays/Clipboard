@@ -18,12 +18,12 @@
 #include <clipboard/logging.hpp>
 
 wl_data_device_listener WlDataDeviceSpec::listener {
-        .data_offer = &eventHandler<&WlDataDevice::onDataOffer>,
-        .enter = &noHandler,
-        .leave = &noHandler,
-        .motion = &noHandler,
-        .drop = &noHandler,
-        .selection = &eventHandler<&WlDataDevice::onSelection>,
+    .data_offer = &eventHandler<&WlDataDevice::onDataOffer>,
+    .enter = &noHandler,
+    .leave = &noHandler,
+    .motion = &noHandler,
+    .drop = &noHandler,
+    .selection = &eventHandler<&WlDataDevice::onSelection>,
 };
 
 WlDataDevice::WlDataDevice(WlDataDeviceManager const& manager, WlSeat const& seat)
@@ -32,11 +32,10 @@ WlDataDevice::WlDataDevice(WlDataDeviceManager const& manager, WlSeat const& sea
 }
 
 WlDataDevice::WlDataDevice(WlRegistry const& registry)
-    : WlDataDevice {
-    registry.get<WlDataDeviceManager>(),
-    registry.get<WlSeat>(),
-} {
-}
+        : WlDataDevice {
+            registry.get<WlDataDeviceManager>(),
+            registry.get<WlSeat>(),
+        } {}
 
 void WlDataDevice::onDataOffer(wl_data_offer* offer) {
     if (offer == nullptr) {
@@ -64,7 +63,8 @@ void WlDataDevice::onSelection(wl_data_offer* offer) {
     }
 
     if (getValue(m_bufferedOffer) != offer) {
-        debugStream << "Got a selection but its offer didn't match the one that was initialized earlier, ignoring" << std::endl;
+        debugStream << "Got a selection but its offer didn't match the one that was initialized earlier, ignoring"
+                    << std::endl;
         return;
     }
 

@@ -15,15 +15,12 @@
 #include "xdg_surface.hpp"
 #include "all.hpp"
 
-xdg_surface_listener XdgSurfaceSpec::listener {
-    .configure = &eventHandler<&XdgSurface::configure>
-};
+xdg_surface_listener XdgSurfaceSpec::listener { .configure = &eventHandler<&XdgSurface::configure> };
 
 XdgSurface::XdgSurface(XdgWmBase const& base, WlSurface& surface)
-    : WlObject {xdg_wm_base_get_xdg_surface(base.value(), surface.value()) }
-    , m_surface { surface }
-    , m_toplevel { std::make_unique<XdgToplevel>(*this) } {
-}
+        : WlObject { xdg_wm_base_get_xdg_surface(base.value(), surface.value()) }
+        , m_surface { surface }
+        , m_toplevel { std::make_unique<XdgToplevel>(*this) } {}
 
 void XdgSurface::configure(std::uint32_t serial) {
     auto didAction = false;

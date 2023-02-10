@@ -18,22 +18,22 @@
 #include <exception>
 #include <functional>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <optional>
 #include <ranges>
+#include <set>
 #include <string_view>
 #include <thread>
 #include <utility>
 #include <variant>
 #include <vector>
-#include <limits>
-#include <set>
 
+#include "clipboard/posix/mime.hpp"
 #include <X11/Xlib.h>
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>
 #include <clipboard/utils.hpp>
-#include "clipboard/posix/mime.hpp"
 
 namespace chrono = std::chrono;
 namespace ranges = std::ranges;
@@ -67,10 +67,10 @@ enum class X11PropertyMode;
 
 #define X_CALL(name, ...) doXCall(#name, &name, __VA_ARGS__)
 
-template<typename T>
+template <typename T>
 using X11Pointer = std::unique_ptr<T, decltype(&XFree)>;
 
-template<typename T>
+template <typename T>
 X11Pointer<T> capture(T* ptr) {
     return { ptr, &XFree };
 }
@@ -85,7 +85,7 @@ private:
     std::string m_name;
 
 public:
-    X11Atom(Atom value, std::string&& name) : m_value(value), m_name(std::move(name)) { }
+    X11Atom(Atom value, std::string&& name) : m_value(value), m_name(std::move(name)) {}
 
     [[nodiscard]] inline Atom value() const { return m_value; }
     [[nodiscard]] inline std::string_view name() const { return m_name; }
@@ -123,7 +123,7 @@ public:
     explicit X11Connection();
     ~X11Connection();
 
-    template<typename F, typename... Args>
+    template <typename F, typename... Args>
     inline auto doXCall(std::string_view callName, F callLambda, Args... args);
 
     [[nodiscard]] inline Display* display() const { return m_display; }
@@ -145,8 +145,7 @@ public:
 
 class X11PropertyFormat {
 private:
-    constexpr explicit X11PropertyFormat(std::size_t value, std::size_t size)
-        : m_value(value), m_size(size) { }
+    constexpr explicit X11PropertyFormat(std::size_t value, std::size_t size) : m_value(value), m_size(size) {}
 
     std::size_t m_value;
     std::size_t m_size;
@@ -156,37 +155,28 @@ public:
     using format16_t = std::uint16_t;
     using format32_t = std::conditional<sizeof(void*) == sizeof(std::uint64_t), std::uint64_t, std::uint32_t>::type;
 
-    enum Value : std::size_t {
-        Format8 = 8,
-        Format16 = 16,
-        Format32 = 32
-    };
+    enum Value : std::size_t { Format8 = 8, Format16 = 16, Format32 = 32 };
 
-    constexpr X11PropertyFormat(Value value) : X11PropertyFormat(
-        static_cast<std::size_t>(value),
-        value == Format8 ? sizeof(format8_t) :
-        value == Format16 ? sizeof(format16_t) :
-        sizeof(format32_t)
-    ) { }
+    constexpr X11PropertyFormat(Value value)
+            : X11PropertyFormat(
+                    static_cast<std::size_t>(value),
+                    value == Format8    ? sizeof(format8_t)
+                    : value == Format16 ? sizeof(format16_t)
+                                        : sizeof(format32_t)
+            ) {}
 
     [[nodiscard]] inline std::size_t size() const { return m_size; }
     [[nodiscard]] inline std::size_t value() const { return m_value; }
 
     bool operator<=>(X11PropertyFormat const&) const = default;
 
-    static X11PropertyFormat fromValue(std::size_t value) {
-        return { static_cast<Value>(value) };
-    }
+    static X11PropertyFormat fromValue(std::size_t value) { return { static_cast<Value>(value) }; }
 
-    template<std::size_t char_t>
+    template <std::size_t char_t>
     constexpr static inline X11PropertyFormat fromSize();
 };
 
-enum class X11PropertyMode : int {
-    Replace = PropModeReplace,
-    Append = PropModeAppend,
-    Prepend = PropModePrepend
-};
+enum class X11PropertyMode : int { Replace = PropModeReplace, Append = PropModeAppend, Prepend = PropModePrepend };
 
 class X11Property {
 private:
@@ -198,10 +188,10 @@ private:
     std::size_t m_size8;
 
 public:
-    template<ranges::contiguous_range range_t, typename char_t = ranges::range_value_t<range_t>>
+    template <ranges::contiguous_range range_t, typename char_t = ranges::range_value_t<range_t>>
     X11Property(X11Atom const& name, X11Atom const& type, range_t data, bool owned);
 
-    template<ranges::contiguous_range range_t, typename char_t = ranges::range_value_t<range_t>>
+    template <ranges::contiguous_range range_t, typename char_t = ranges::range_value_t<range_t>>
     X11Property(X11Atom const& name, X11Atom const& type, X11PropertyFormat const&, range_t data, bool owned);
 
     [[nodiscard]] inline X11Atom const& name() const { return m_name; }
@@ -215,17 +205,24 @@ public:
     [[nodiscard]] std::size_t size32() const { return size8() / sizeof(X11PropertyFormat::format32_t); }
 
     [[nodiscard]] X11PropertyFormat::format8_t const* data8() const {
-        return std::visit([](auto&& arg) -> X11PropertyFormat::format8_t const* {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, X11PropertyFormat::format8_t const*>)
-                return arg;
-            else
-                return arg.get();
-        }, m_data8);
+        return std::visit(
+                [](auto&& arg) -> X11PropertyFormat::format8_t const* {
+                    using T = std::decay_t<decltype(arg)>;
+                    if constexpr (std::is_same_v<T, X11PropertyFormat::format8_t const*>)
+                        return arg;
+                    else
+                        return arg.get();
+                },
+                m_data8
+        );
     }
 
-    [[nodiscard]] X11PropertyFormat::format16_t const* data16() const { return reinterpret_cast<X11PropertyFormat::format16_t const*>(data8()); }
-    [[nodiscard]] X11PropertyFormat::format32_t const* data32() const { return reinterpret_cast<X11PropertyFormat::format32_t const*>(data8()); }
+    [[nodiscard]] X11PropertyFormat::format16_t const* data16() const {
+        return reinterpret_cast<X11PropertyFormat::format16_t const*>(data8());
+    }
+    [[nodiscard]] X11PropertyFormat::format32_t const* data32() const {
+        return reinterpret_cast<X11PropertyFormat::format32_t const*>(data8());
+    }
 
     [[nodiscard]] X11PropertyIterator begin() const;
     [[nodiscard]] X11PropertyIterator end() const;
@@ -239,7 +236,7 @@ private:
     std::size_t m_offset;
 
 public:
-    X11PropertyIterator(X11Property const& property, std::size_t offset) : m_property(property), m_offset(offset) { }
+    X11PropertyIterator(X11Property const& property, std::size_t offset) : m_property(property), m_offset(offset) {}
 
     X11PropertyFormat::format32_t operator*() const;
     X11PropertyIterator& operator++();
@@ -262,6 +259,7 @@ private:
     bool m_owned;
 
     void throwIfDestroyed() const;
+
 public:
     X11Window(X11Connection&, Window);
     X11Window(X11Connection&, Window, bool owned);
@@ -294,10 +292,10 @@ public:
     void addPropertyChangeToEventMask();
     void clearEventMask();
 
-    template<std::predicate<XEvent const&> predicate_t>
+    template <std::predicate<XEvent const&> predicate_t>
     XEvent waitForEvent(int eventType, predicate_t predicate);
 
-    template<typename F, typename... Args>
+    template <typename F, typename... Args>
     inline auto doXCall(std::string_view callName, F callLambda, Args... args) {
         return connection().doXCall(callName, callLambda, args...);
     }
@@ -315,11 +313,11 @@ private:
     bool m_multiple;
 
     X11SelectionRequest(
-        XSelectionRequestEvent,
-        std::shared_ptr<X11Window>,
-        X11Atom const& target,
-        X11Atom const& property,
-        bool multiple
+            XSelectionRequestEvent,
+            std::shared_ptr<X11Window>,
+            X11Atom const& target,
+            X11Atom const& property,
+            bool multiple
     );
 
 public:
@@ -341,7 +339,7 @@ protected:
     bool m_done = false;
 
 public:
-    virtual ~X11SelectionTransfer() { };
+    virtual ~X11SelectionTransfer() {};
 
     [[nodiscard]] inline bool isDone() const { return m_done; }
     virtual void handle(XEvent const&) = 0;
@@ -355,7 +353,10 @@ private:
     bool m_sentTrailer = false;
 
     [[nodiscard]] inline X11Connection& connection() const { return m_window->connection(); }
-    [[nodiscard]] inline std::size_t chunkSize() const { return connection().maxDataSizeForIncr() / m_property.format().size(); }
+    [[nodiscard]] inline std::size_t chunkSize() const {
+        return connection().maxDataSizeForIncr() / m_property.format().size();
+    }
+
 public:
     X11IncrTransfer(std::shared_ptr<X11Window>, X11Property&&);
     void handle(XEvent const&) override;
@@ -378,7 +379,7 @@ private:
     void refuseSelectionRequest(XSelectionRequestEvent const&) const;
     bool refuseSelectionRequest(X11SelectionRequest const&) const;
 
-    template<ranges::contiguous_range range_t>
+    template <ranges::contiguous_range range_t>
     bool replySelectionRequest(X11SelectionRequest const&, X11Atom const& type, range_t);
 
     void handle(XEvent const&);
@@ -406,7 +407,7 @@ public:
     void run();
 };
 
-bool X11Atom::operator==(const X11Atom &other) const {
+bool X11Atom::operator==(X11Atom const& other) const {
     return m_value == other.m_value;
 }
 
@@ -417,7 +418,6 @@ bool X11Atom::operator==(Atom const& other) const {
 bool X11Atom::operator==(std::string_view const& other) const {
     return name() == other;
 }
-
 
 int X11Connection::globalErrorHandler(Display* const display, XErrorEvent* const event) {
     if (instance != nullptr) {
@@ -452,15 +452,17 @@ int X11Connection::localErrorHandler(Display* const errorDisplay, XErrorEvent* c
     return 0;
 }
 
-template<typename F, typename... Args>
+template <typename F, typename... Args>
 inline auto X11Connection::doXCall(std::string_view callName, F callLambda, Args... args) {
     throwIfDestroyed();
 
     if (m_currentXCall.has_value()) {
         throw X11Exception(
-            "Tried to call ", callName,
-            " while a call to ", m_currentXCall.value(),
-            " was already in progress"
+                "Tried to call ",
+                callName,
+                " while a call to ",
+                m_currentXCall.value(),
+                " was already in progress"
         );
     }
 
@@ -480,23 +482,21 @@ inline auto X11Connection::doXCall(std::string_view callName, F callLambda, Args
 X11Window X11Connection::createWindow() {
     throwIfDestroyed();
 
-    XSetWindowAttributes attributes {
-        .event_mask = PropertyChangeMask
-    };
+    XSetWindowAttributes attributes { .event_mask = PropertyChangeMask };
 
     auto handle = XCreateWindow(
-        /*display*/ display(),
-        /*parent*/ DefaultRootWindow(display()),
-        /*x*/ -10,
-        /*y*/ -10,
-        /*width*/ 1,
-        /*height*/ 1,
-        /*border_width*/ 0,
-        /*depth*/ CopyFromParent,
-        /*class*/ InputOutput,
-        /*visual*/ CopyFromParent,
-        /*valuemask*/ CWEventMask,
-        /*attributes*/ &attributes
+            /*display*/ display(),
+            /*parent*/ DefaultRootWindow(display()),
+            /*x*/ -10,
+            /*y*/ -10,
+            /*width*/ 1,
+            /*height*/ 1,
+            /*border_width*/ 0,
+            /*depth*/ CopyFromParent,
+            /*class*/ InputOutput,
+            /*visual*/ CopyFromParent,
+            /*valuemask*/ CWEventMask,
+            /*attributes*/ &attributes
     );
     return { *this, handle };
 }
@@ -586,19 +586,13 @@ std::optional<XEvent> X11Connection::checkMaskEvent(int eventMask) {
     return {};
 }
 
-Window X11Connection::getSelectionOwner(const X11Atom& selection) {
+Window X11Connection::getSelectionOwner(X11Atom const& selection) {
     throwIfDestroyed();
     return X_CALL(XGetSelectionOwner, display(), selection.value());
 }
 
 void X11Connection::sendEvent(Window window, bool propagate, long eventMask, XEvent& event) {
-    auto status = X_CALL(XSendEvent,
-        display(),
-        window,
-        propagate,
-        eventMask,
-        &event
-    );
+    auto status = X_CALL(XSendEvent, display(), window, propagate, eventMask, &event);
     if (status == 0) {
         throw X11Exception("XSendEvent failed");
     }
@@ -625,52 +619,51 @@ std::shared_ptr<X11Window> X11Connection::externalWindow(Window window) {
     return result;
 }
 
-template<>
-constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format8_t)>() { return X11PropertyFormat::Format8; }
+template <>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format8_t)>() {
+    return X11PropertyFormat::Format8;
+}
 
-template<>
-constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format16_t)>() { return X11PropertyFormat::Format16; }
+template <>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format16_t)>() {
+    return X11PropertyFormat::Format16;
+}
 
-template<>
-constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format32_t)>() { return X11PropertyFormat::Format32; }
+template <>
+constexpr X11PropertyFormat X11PropertyFormat::fromSize<sizeof(X11PropertyFormat::format32_t)>() {
+    return X11PropertyFormat::Format32;
+}
 
-template<std::size_t bad_t>
+template <std::size_t bad_t>
 constexpr X11PropertyFormat X11PropertyFormat::fromSize() {
     static_assert(AssertFalse<bad_t>::value, "Invalid property format size");
     return X11PropertyFormat::Format8; // Just here to make the compiler happy
 }
 
-template<ranges::contiguous_range range_t, typename char_t>
-X11Property::X11Property(
-    X11Atom const& name,
-    X11Atom const& type,
-    range_t data,
-    bool owned
-) : X11Property(
-    name,
-    type,
-    X11PropertyFormat::fromSize<sizeof(char_t)>(),
-    data,
-    owned
-) { }
+template <ranges::contiguous_range range_t, typename char_t>
+X11Property::X11Property(X11Atom const& name, X11Atom const& type, range_t data, bool owned)
+        : X11Property(name, type, X11PropertyFormat::fromSize<sizeof(char_t)>(), data, owned) {}
 
-template<ranges::contiguous_range range_t, typename char_t>
+template <ranges::contiguous_range range_t, typename char_t>
 X11Property::X11Property(
-    X11Atom const& name,
-    X11Atom const& type,
-    X11PropertyFormat const& format,
-    range_t data,
-    bool owned
-) : m_name(name)
-  , m_type(type)
-  , m_format(format)
-  , m_size8(data.size() * sizeof(char_t)) {
+        X11Atom const& name,
+        X11Atom const& type,
+        X11PropertyFormat const& format,
+        range_t data,
+        bool owned
+)
+        : m_name(name)
+        , m_type(type)
+        , m_format(format)
+        , m_size8(data.size() * sizeof(char_t)) {
     if (owned) {
         auto data8 = std::make_unique<X11PropertyFormat::format8_t[]>(m_size8);
         std::memcpy(data8.get(), &data[0], m_size8);
         m_data8.emplace<std::unique_ptr<X11PropertyFormat::format8_t[]>>(std::move(data8));
     } else {
-        m_data8.emplace<X11PropertyFormat::format8_t const*>(reinterpret_cast<X11PropertyFormat::format8_t const*>(&data[0]));
+        m_data8.emplace<X11PropertyFormat::format8_t const*>(
+                reinterpret_cast<X11PropertyFormat::format8_t const*>(&data[0])
+        );
     }
 }
 
@@ -688,12 +681,7 @@ X11Property X11Property::range(std::size_t start, std::size_t end) {
 
     auto begin = data8() + (start * format().size());
     auto count = (end - start) * format().size();
-    return {
-        name(),
-        type(),
-        views::counted(begin, count),
-        false
-    };
+    return { name(), type(), views::counted(begin, count), false };
 }
 
 std::partial_ordering X11PropertyIterator::operator<=>(X11PropertyIterator const& other) const {
@@ -731,8 +719,7 @@ X11PropertyIterator::operator bool() const {
     return m_offset < m_property.size();
 }
 
-X11Window::X11Window(X11Connection& connection, Window window)
-    : X11Window(connection, window, true) { }
+X11Window::X11Window(X11Connection& connection, Window window) : X11Window(connection, window, true) {}
 
 X11Window::X11Window(X11Connection& connection, Window window, bool owned)
         : m_connection(connection)
@@ -783,15 +770,14 @@ void X11Window::changeProperty(X11PropertyMode mode, X11Property const& value) {
     throwIfDestroyed();
 
     X_CALL(XChangeProperty,
-        display(),
-        window(),
-        value.name().value(),
-        value.type().value(),
-        value.format().value(),
-        static_cast<int>(mode),
-        value.data8(),
-        value.size()
-    );
+           display(),
+           window(),
+           value.name().value(),
+           value.type().value(),
+           value.format().value(),
+           static_cast<int>(mode),
+           value.data8(),
+           value.size());
 }
 
 void X11Window::deleteProperty(X11Atom const& property) {
@@ -799,7 +785,7 @@ void X11Window::deleteProperty(X11Atom const& property) {
     X_CALL(XDeleteProperty, display(), window(), property.value());
 }
 
-template<std::predicate<XEvent const&> predicate_t>
+template <std::predicate<XEvent const&> predicate_t>
 XEvent X11Window::waitForEvent(int eventType, predicate_t predicate) {
     throwIfDestroyed();
 
@@ -839,19 +825,17 @@ X11Property X11Window::convertSelection(X11Atom const& selection, X11Atom const&
 
     deleteProperty(property);
     X_CALL(XConvertSelection,
-        display(),
-        selection.value(),
-        target.value(),
-        property.value(),
-        requestor,
-        queryCurrentTime()
-    );
+           display(),
+           selection.value(),
+           target.value(),
+           property.value(),
+           requestor,
+           queryCurrentTime());
 
     auto const result = waitForEvent(SelectionNotify, [requestor, &selection, &target](XEvent const& event) {
         auto& xselection = event.xselection;
-        return xselection.requestor == requestor
-               && xselection.selection == selection.value()
-               && xselection.target == target.value();
+        return xselection.requestor == requestor && xselection.selection == selection.value()
+            && xselection.target == target.value();
     });
 
     if (result.xselection.property == None) {
@@ -871,28 +855,29 @@ X11Property X11Window::getProperty(X11Atom const& name, bool delet) {
     unsigned char* propReturn = nullptr;
 
     X_CALL(XGetWindowProperty,
-       /*display*/ display(),
-       /*w*/ window(),
-       /*property*/ name.value(),
-       /*long_offset*/ 0,
-       /*long_length*/ std::numeric_limits<uint32_t>::max(),
-       /*delete*/ delet,
-       /*req_type*/ AnyPropertyType,
-       /*actual_type_return*/ &actualTypeReturn,
-       /*actual_format_return*/ &actualFormatReturn,
-       /*nitems_return*/ &nitemsReturn,
-       /*bytes_after_return*/ &bytesAfterReturn,
-       /*prop_return*/ &propReturn
-    );
+           /*display*/ display(),
+           /*w*/ window(),
+           /*property*/ name.value(),
+           /*long_offset*/ 0,
+           /*long_length*/ std::numeric_limits<uint32_t>::max(),
+           /*delete*/ delet,
+           /*req_type*/ AnyPropertyType,
+           /*actual_type_return*/ &actualTypeReturn,
+           /*actual_format_return*/ &actualFormatReturn,
+           /*nitems_return*/ &nitemsReturn,
+           /*bytes_after_return*/ &bytesAfterReturn,
+           /*prop_return*/ &propReturn);
 
     // Capture before doing any checks to ensure data will be freed no matter what happens
     auto x11Data = capture(propReturn);
 
     if (bytesAfterReturn > 0) {
         throw X11Exception(
-            "XGetWindowProperty read ", nitemsReturn,
-            " items but left ", bytesAfterReturn,
-            " bytes behind"
+                "XGetWindowProperty read ",
+                nitemsReturn,
+                " items but left ",
+                bytesAfterReturn,
+                " bytes behind"
         );
     }
 
@@ -900,16 +885,10 @@ X11Property X11Window::getProperty(X11Atom const& name, bool delet) {
     auto const format = X11PropertyFormat::fromValue(actualFormatReturn);
     auto const size = nitemsReturn * format.size();
 
-    return X11Property {
-        name,
-        type,
-        format,
-        views::counted(x11Data.get(), size),
-        true
-    };
+    return X11Property { name, type, format, views::counted(x11Data.get(), size), true };
 }
 
-X11Property X11Window::convertClipboard(const X11Atom &target) {
+X11Property X11Window::convertClipboard(X11Atom const& target) {
     throwIfDestroyed();
     return convertSelection(atom(atomClipboard), target);
 }
@@ -919,7 +898,7 @@ std::vector<std::reference_wrapper<X11Atom const>> X11Window::queryClipboardTarg
 
     auto property = convertClipboard(atom(atomTargets));
 
-    std::vector<std::reference_wrapper<X11Atom const>> result{};
+    std::vector<std::reference_wrapper<X11Atom const>> result {};
     result.reserve(property.size());
 
     for (auto&& atomValue : property) {
@@ -953,8 +932,7 @@ std::vector<char> X11Window::getClipboardData(X11Atom const& target) {
 
     while (true) {
         waitForEvent(PropertyNotify, [&](XEvent const& event) {
-            return event.xproperty.atom == firstResult.name().value()
-                && event.xproperty.state == PropertyNewValue;
+            return event.xproperty.atom == firstResult.name().value() && event.xproperty.state == PropertyNewValue;
         });
         auto prop = getProperty(firstResult.name(), true);
         if (prop.size() <= 0) {
@@ -969,7 +947,7 @@ std::vector<char> X11Window::getClipboardData(X11Atom const& target) {
     return result;
 }
 
-void X11Window::setSelectionOwner(const X11Atom &selection, Time time) {
+void X11Window::setSelectionOwner(X11Atom const& selection, Time time) {
     throwIfDestroyed();
 
     X_CALL(XSetSelectionOwner, display(), selection.value(), window(), time);
@@ -982,20 +960,13 @@ void X11Window::setSelectionOwner(const X11Atom &selection, Time time) {
 void X11Window::changeWindowAttributes(unsigned long valuemask, XSetWindowAttributes* attributes) {
     throwIfDestroyed();
 
-    X_CALL(XChangeWindowAttributes,
-       display(),
-       window(),
-       valuemask,
-       attributes
-   );
+    X_CALL(XChangeWindowAttributes, display(), window(), valuemask, attributes);
 }
 
 void X11Window::setEventMask(long eventMask) {
     throwIfDestroyed();
 
-    XSetWindowAttributes attributes = {
-            .event_mask = eventMask
-    };
+    XSetWindowAttributes attributes = { .event_mask = eventMask };
 
     changeWindowAttributes(CWEventMask, &attributes);
 }
@@ -1044,57 +1015,41 @@ bool X11Window::operator==(Window const& other) const {
 }
 
 X11SelectionRequest::X11SelectionRequest(
-    XSelectionRequestEvent event,
-    std::shared_ptr<X11Window> window,
-    X11Atom const& target,
-    X11Atom const& property,
-    bool multiple)
-    : m_event(event)
-    , m_window(std::move(window))
-    , m_target(target)
-    , m_property(property)
-    , m_multiple(multiple) { }
+        XSelectionRequestEvent event,
+        std::shared_ptr<X11Window> window,
+        X11Atom const& target,
+        X11Atom const& property,
+        bool multiple
+)
+        : m_event(event)
+        , m_window(std::move(window))
+        , m_target(target)
+        , m_property(property)
+        , m_multiple(multiple) {}
 
-X11SelectionRequest::X11SelectionRequest(
-    X11Connection& connection,
-    XSelectionRequestEvent event)
-    : m_window(connection.externalWindow(event.requestor))
-    , m_property(connection.atom(event.property == None ? event.target : event.property))
-    , m_target(connection.atom(event.target))
-    , m_event(event)
-    , m_multiple(false) {
-
-}
+X11SelectionRequest::X11SelectionRequest(X11Connection& connection, XSelectionRequestEvent event)
+        : m_window(connection.externalWindow(event.requestor))
+        , m_property(connection.atom(event.property == None ? event.target : event.property))
+        , m_target(connection.atom(event.target))
+        , m_event(event)
+        , m_multiple(false) {}
 
 X11SelectionRequest X11SelectionRequest::forMultiple(X11Atom const& target, X11Atom const& property) const {
-    return {
-        event(),
-        windowPtr(),
-        target,
-        property,
-        true
-    };
+    return { event(), windowPtr(), target, property, true };
 }
 
-X11IncrTransfer::X11IncrTransfer(
-    std::shared_ptr<X11Window> window,
-    X11Property&& property
-) : m_window(std::move(window))
-  , m_property(std::move(property))
-  , m_offset(0) {
-
-}
+X11IncrTransfer::X11IncrTransfer(std::shared_ptr<X11Window> window, X11Property&& property)
+        : m_window(std::move(window))
+        , m_property(std::move(property))
+        , m_offset(0) {}
 
 void X11IncrTransfer::handle(XEvent const& event) {
     if (m_done) {
         return;
     }
 
-    auto isIncr =
-            event.type == PropertyNotify
-            && event.xproperty.window == *m_window
-            && event.xproperty.atom == m_property.name()
-            && event.xproperty.state == PropertyDelete;
+    auto isIncr = event.type == PropertyNotify && event.xproperty.window == *m_window
+               && event.xproperty.atom == m_property.name() && event.xproperty.state == PropertyDelete;
 
     if (!isIncr) {
         return;
@@ -1106,7 +1061,7 @@ void X11IncrTransfer::handle(XEvent const& event) {
         return;
     }
 
-   auto partialProp = m_property.range(m_offset, m_offset + chunkSize());
+    auto partialProp = m_property.range(m_offset, m_offset + chunkSize());
     m_offset += partialProp.size();
 
     debugStream << "INCR: Sending " << partialProp.size8() << " bytes" << std::endl;
@@ -1120,12 +1075,13 @@ void X11IncrTransfer::handle(XEvent const& event) {
 X11SelectionDaemon::X11SelectionDaemon(
         X11Connection& connection,
         X11Atom const& selection,
-        ClipboardContent const& content)
-    : m_connection(connection)
-    , m_selection(selection)
-    , m_window(connection.createWindow())
-    , m_content(content)
-    , m_isSelectionOwner(true) {
+        ClipboardContent const& content
+)
+        : m_connection(connection)
+        , m_selection(selection)
+        , m_window(connection.createWindow())
+        , m_content(content)
+        , m_isSelectionOwner(true) {
 
     debugStream << "Setting the selection owner to ourselves" << std::endl;
     m_selectionAcquiredTime = window().queryCurrentTime();
@@ -1141,35 +1097,26 @@ XEvent X11SelectionDaemon::nextEvent() {
     // we lost the selection ownership. To prevent the daemon from staying up forever, we switch to
     // polling to ensure we'll fail if all ongoing requests are stalled.
 
-    return pollUntilReturn([this]() {
-        return connection().checkMaskEvent(std::numeric_limits<int>::max());
-    });
+    return pollUntilReturn([this]() { return connection().checkMaskEvent(std::numeric_limits<int>::max()); });
 }
 
 XEvent X11SelectionDaemon::makeSelectionNotify(XSelectionRequestEvent const& event) {
-    return XEvent {
-        .xselection = {
-            .type = SelectionNotify,
-            .display = event.display,
-            .requestor = event.requestor,
-            .selection = event.selection,
-            .target = event.target,
-            .property = event.property,
-            .time = event.time,
-        }
-    };
+    return XEvent { .xselection = {
+                            .type = SelectionNotify,
+                            .display = event.display,
+                            .requestor = event.requestor,
+                            .selection = event.selection,
+                            .target = event.target,
+                            .property = event.property,
+                            .time = event.time,
+                    } };
 }
 
 void X11SelectionDaemon::refuseSelectionRequest(XSelectionRequestEvent const& event) const {
     auto refusal = makeSelectionNotify(event);
     refusal.xselection.property = None;
 
-    connection().sendEvent(
-        event.requestor,
-        false,
-        NoEventMask,
-        refusal
-    );
+    connection().sendEvent(event.requestor, false, NoEventMask, refusal);
 }
 
 bool X11SelectionDaemon::refuseSelectionRequest(X11SelectionRequest const& request) const {
@@ -1179,28 +1126,15 @@ bool X11SelectionDaemon::refuseSelectionRequest(X11SelectionRequest const& reque
     return false;
 }
 
-template<ranges::contiguous_range range_t>
+template <ranges::contiguous_range range_t>
 bool X11SelectionDaemon::replySelectionRequest(X11SelectionRequest const& request, X11Atom const& type, range_t data) {
-    X11Property property {
-        request.property(),
-        type,
-        data,
-        true
-    };
-    debugStream
-        << "Replying with " << property.size8() << " bytes of data"
-        << " at format " << property.format().value()
-        << " and type " << property.type().name()
-        << std::endl;
+    X11Property property { request.property(), type, data, true };
+    debugStream << "Replying with " << property.size8() << " bytes of data"
+                << " at format " << property.format().value() << " and type " << property.type().name() << std::endl;
 
     if (data.size() > connection().maxDataSizeForIncr()) {
         debugStream << "Data too big, using INCR mechanism" << std::endl;
-        X11Property incrProperty {
-            property.name(),
-            atom(atomIncr),
-            views::single(property.size8()),
-            true
-        };
+        X11Property incrProperty { property.name(), atom(atomIncr), views::single(property.size8()), true };
         request.window().addPropertyChangeToEventMask();
         request.window().changeProperty(X11PropertyMode::Replace, incrProperty);
         m_transfers.emplace_back(std::make_unique<X11IncrTransfer>(request.windowPtr(), std::move(property)));
@@ -1223,7 +1157,6 @@ void X11SelectionDaemon::handle(XEvent const& event) {
 
     } else if (event.type == SelectionRequest) {
         handleSelectionRequest(event.xselectionrequest);
-
     }
 }
 
@@ -1246,12 +1179,14 @@ void X11SelectionDaemon::handleSelectionRequest(XSelectionRequestEvent const& ev
     }
 
     if (event.selection != selection()) {
-        debugStream << "Selection request has incorrect selection " << atom(event.selection).name() << ", refusing" << std::endl;
+        debugStream << "Selection request has incorrect selection " << atom(event.selection).name() << ", refusing"
+                    << std::endl;
         return refuseSelectionRequest(event);
     }
 
     if (event.time != CurrentTime && event.time < m_selectionAcquiredTime) {
-        debugStream << "Selection request time " << event.time << " is from before we acquired selection ownership at " << m_selectionAcquiredTime <<", refusing" << std::endl;
+        debugStream << "Selection request time " << event.time << " is from before we acquired selection ownership at "
+                    << m_selectionAcquiredTime << ", refusing" << std::endl;
         return refuseSelectionRequest(event);
     }
 
@@ -1264,11 +1199,8 @@ void X11SelectionDaemon::handleSelectionRequest(XSelectionRequestEvent const& ev
 }
 
 bool X11SelectionDaemon::handleSelectionRequest(X11SelectionRequest const& request) {
-    debugStream
-        << "Got a selection request from " << request.window().window()
-        << " for target " << request.target().name()
-        << " on property " << request.property().name()
-        << std::endl;
+    debugStream << "Got a selection request from " << request.window().window() << " for target "
+                << request.target().name() << " on property " << request.property().name() << std::endl;
 
     if (request.target() == atomMultiple) {
         return handleMultipleSelectionRequest(request);
@@ -1325,9 +1257,7 @@ bool X11SelectionDaemon::handleTargetsSelectionRequest(X11SelectionRequest const
         atom(atomMultiple).value(),
         atom(atomTimestamp).value(),
     };
-    MimeType::forEachSupporting(content(), [&](MimeType const& type) {
-        data.push_back(atom(type.name()).value());
-    });
+    MimeType::forEachSupporting(content(), [&](MimeType const& type) { data.push_back(atom(type.name()).value()); });
 
     for (auto&& value : data) {
         debugStream << "Advertising target: " << atom(value).name() << std::endl;
@@ -1348,11 +1278,7 @@ bool X11SelectionDaemon::handleRegularSelectionRequest(X11SelectionRequest const
     auto mime = request.target().name();
     std::ostringstream stream;
     if (MimeType::encode(content(), mime, stream)) {
-        return replySelectionRequest(
-            request,
-            atom(mime),
-            stream.str()
-        );
+        return replySelectionRequest(request, atom(mime), stream.str());
     }
 
     debugStream << "Unable to encode clipboard content, refusing" << std::endl;
@@ -1370,9 +1296,7 @@ void X11SelectionDaemon::run() {
             transfer->handle(event);
         }
 
-        std::erase_if(m_transfers, [](auto&& transfer) {
-            return transfer->isDone();
-        });
+        std::erase_if(m_transfers, [](auto&& transfer) { return transfer->isDone(); });
 
         if (!m_transfers.empty()) {
             debugStream << m_transfers.size() << " transfers are in progress" << std::endl;
@@ -1395,10 +1319,7 @@ static ClipboardContent getX11ClipboardInternal() {
     auto window = conn.createWindow();
 
     auto offeredTargets = window.queryClipboardTargets();
-    auto offeredTypes = views::transform(
-        offeredTargets,
-        [](auto&& x) { return x.get().name(); }
-    );
+    auto offeredTypes = views::transform(offeredTargets, [](auto&& x) { return x.get().name(); });
 
     std::vector<char> data;
     std::istringstream stream;
@@ -1418,28 +1339,26 @@ static void startPasteDaemon(ClipboardContent const& clipboard) {
 }
 
 static void setX11ClipboardInternal(WriteGuiContext const& context) {
-    context.forker.fork([&]() {
-        startPasteDaemon(context.clipboard);
-    });
+    context.forker.fork([&]() { startPasteDaemon(context.clipboard); });
 }
 
 extern "C" {
-    extern void* getX11Clipboard() {
-        try {
-            auto clipboard = std::make_unique<ClipboardContent>(getX11ClipboardInternal());
-            return clipboard.release();
-        } catch (std::exception const& e) {
-            debugStream << "Error getting clipboard data: " << e.what() << std::endl;
-            return nullptr;
-        }
+extern void* getX11Clipboard() {
+    try {
+        auto clipboard = std::make_unique<ClipboardContent>(getX11ClipboardInternal());
+        return clipboard.release();
+    } catch (std::exception const& e) {
+        debugStream << "Error getting clipboard data: " << e.what() << std::endl;
+        return nullptr;
     }
+}
 
-    extern void setX11Clipboard(void* ptr) {
-        try {
-            WriteGuiContext const& context = *reinterpret_cast<WriteGuiContext*>(ptr);
-            setX11ClipboardInternal(context);
-        } catch (std::exception const& e) {
-            debugStream << "Error setting clipboard data: " << e.what() << std::endl;
-        }
+extern void setX11Clipboard(void* ptr) {
+    try {
+        WriteGuiContext const& context = *reinterpret_cast<WriteGuiContext*>(ptr);
+        setX11ClipboardInternal(context);
+    } catch (std::exception const& e) {
+        debugStream << "Error setting clipboard data: " << e.what() << std::endl;
     }
+}
 }

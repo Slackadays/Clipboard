@@ -14,11 +14,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
-#include <string>
 #include <set>
+#include <string>
 
 struct WlDataOfferSpec {
     WL_SPEC_BASE(wl_data_offer, 3)
@@ -32,19 +32,19 @@ class WlDataOffer : public WlObject<WlDataOfferSpec> {
     std::set<std::string> m_mimeTypes {};
 
 public:
-    explicit WlDataOffer(obj_t* value) : WlObject<spec_t> { value } { }
+    explicit WlDataOffer(obj_t* value) : WlObject<spec_t> { value } {}
 
     void receive(std::string_view mime, int fd) const;
 
     /** Performs an action for each MIME Type supported by this offer. */
-    template<std::invocable<std::string const&> func_t>
+    template <std::invocable<std::string const&> func_t>
     void forEachMimeType(func_t func) const;
 
 private:
     void onOffer(char const*);
 };
 
-template<std::invocable<std::string const&> func_t>
+template <std::invocable<std::string const&> func_t>
 void WlDataOffer::forEachMimeType(func_t func) const {
     for (auto&& value : m_mimeTypes) {
         func(value);

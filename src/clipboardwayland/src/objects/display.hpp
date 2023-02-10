@@ -14,8 +14,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
 
-#include "spec.hpp"
 #include "forward.hpp"
+#include "spec.hpp"
 
 #include <chrono>
 
@@ -43,7 +43,7 @@ public:
      * Loops dispatch() until a certain predicate is met.
      * Throws if the operation takes too long.
      */
-    template<std::predicate predicate_t>
+    template <std::predicate predicate_t>
     void dispatchUntil(predicate_t predicate) const;
 
     /**
@@ -54,7 +54,7 @@ public:
     std::uint32_t getSerial() const;
 };
 
-template<std::predicate predicate_t>
+template <std::predicate predicate_t>
 void WlDisplay::dispatchUntil(predicate_t predicate) const {
     using namespace std::literals;
     constexpr auto maxWaitTime = 5s;

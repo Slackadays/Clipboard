@@ -13,13 +13,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 
-#include "objects/all.hpp"
 #include "fd.hpp"
+#include "objects/all.hpp"
 
-#include <clipboard/gui.hpp>
-#include <clipboard/logging.hpp>
 #include "clipboard/posix/mime.hpp"
 #include <clipboard/fork.hpp>
+#include <clipboard/gui.hpp>
+#include <clipboard/logging.hpp>
 
 #include <exception>
 
@@ -35,28 +35,20 @@ class SimpleWindow {
 
 public:
     explicit SimpleWindow(WlDisplay const& display, WlRegistry const& registry)
-        : m_display { display }
-        , m_surface { registry }
-        , m_keyboard { registry } {
+            : m_display { display }
+            , m_surface { registry }
+            , m_keyboard { registry } {
 
         m_surface.setTitle("Clipboard");
 
-        auto buffer = WlBuffer::fromMemfd(
-            registry,
-            width,
-            height,
-            stride,
-            format
-        );
+        auto buffer = WlBuffer::fromMemfd(registry, width, height, stride, format);
         m_surface.scheduleAttach(std::move(buffer));
         m_surface.scheduleDamage(0, 0, width, height);
         m_surface.commit();
     }
 
     std::uint32_t waitForFocus() const {
-        m_display.dispatchUntil([&]() {
-            return m_keyboard.hasFocus(m_surface);
-        });
+        m_display.dispatchUntil([&]() { return m_keyboard.hasFocus(m_surface); });
         return m_keyboard.getFocusSerial(m_surface);
     }
 };
@@ -70,23 +62,17 @@ class PasteDaemon {
 
 public:
     explicit PasteDaemon(ClipboardContent const& clipboard)
-        : m_clipboard { clipboard }
-        , m_display()
-        , m_registry { m_display }
-        , m_dataDevice { m_registry }
-        , m_dataSource { m_registry } {
+            : m_clipboard { clipboard }
+            , m_display()
+            , m_registry { m_display }
+            , m_dataDevice { m_registry }
+            , m_dataSource { m_registry } {
 
-        MimeType::forEachSupporting(m_clipboard, [&](auto&& x) {
-            m_dataSource.offer(x.name());
-        });
+        MimeType::forEachSupporting(m_clipboard, [&](auto&& x) { m_dataSource.offer(x.name()); });
 
         m_dataSource.sendCallback([&](std::string_view mime, Fd&& fd) {
             FdStream stream { fd };
-            MimeType::encode(
-                m_clipboard,
-                mime,
-                stream
-            );
+            MimeType::encode(m_clipboard, mime, stream);
         });
     }
 
@@ -108,9 +94,7 @@ static ClipboardContent getWaylandClipboardInternal() {
     SimpleWindow window { display, registry };
     WlDataDevice dataDevice { registry };
 
-    display.dispatchUntil([&]() {
-        return dataDevice.receivedSelectionEvent();
-    });
+    display.dispatchUntil([&]() { return dataDevice.receivedSelectionEvent(); });
 
     auto offer = dataDevice.releaseSelectionOffer();
     if (!offer) {
@@ -118,9 +102,7 @@ static ClipboardContent getWaylandClipboardInternal() {
     }
 
     std::vector<std::string_view> offeredTypes;
-    offer->forEachMimeType([&](auto&& type) {
-        offeredTypes.emplace_back(type);
-    });
+    offer->forEachMimeType([&](auto&& type) { offeredTypes.emplace_back(type); });
 
     PipeFd pipe;
     FdStream stream { pipe };
@@ -142,28 +124,27 @@ static void setWaylandClipboardInternal(WriteGuiContext const& context) {
 }
 
 extern "C" {
-    extern void* getWaylandClipboard() noexcept {
-        try {
-            auto clipboard = std::make_unique<ClipboardContent>(getWaylandClipboardInternal());
-            return clipboard.release();
-        } catch (std::exception const& e) {
-            debugStream << "Error getting clipboard data: " << e.what() << std::endl;
-            return nullptr;
-        } catch (...) {
-            debugStream << "Unknown error getting clipboard data" << std::endl;
-            return nullptr;
-        }
-    }
-
-    extern void setWaylandClipboard(void* ptr) noexcept {
-        try {
-            WriteGuiContext const& context = *reinterpret_cast<WriteGuiContext const*>(ptr);
-            setWaylandClipboardInternal(context);
-        } catch (std::exception const& e) {
-            debugStream << "Error setting clipboard data: " << e.what() << std::endl;
-        } catch (...) {
-            debugStream << "Unknown error setting clipboard data" << std::endl;
-        }
+extern void* getWaylandClipboard() noexcept {
+    try {
+        auto clipboard = std::make_unique<ClipboardContent>(getWaylandClipboardInternal());
+        return clipboard.release();
+    } catch (std::exception const& e) {
+        debugStream << "Error getting clipboard data: " << e.what() << std::endl;
+        return nullptr;
+    } catch (...) {
+        debugStream << "Unknown error getting clipboard data" << std::endl;
+        return nullptr;
     }
 }
 
+extern void setWaylandClipboard(void* ptr) noexcept {
+    try {
+        WriteGuiContext const& context = *reinterpret_cast<WriteGuiContext const*>(ptr);
+        setWaylandClipboardInternal(context);
+    } catch (std::exception const& e) {
+        debugStream << "Error setting clipboard data: " << e.what() << std::endl;
+    } catch (...) {
+        debugStream << "Unknown error setting clipboard data" << std::endl;
+    }
+}
+}

@@ -18,14 +18,14 @@
 #include <streambuf>
 
 #if defined(NDEBUG)
-    class NullBuffer : public std::streambuf {
-    public:
-        int overflow(int c) override { return c; }
-    };
+class NullBuffer : public std::streambuf {
+public:
+    int overflow(int c) override { return c; }
+};
 
-    static NullBuffer nullBuffer;
-    static std::ostream nullStream(&nullBuffer);
-    static std::ostream& debugStream = nullStream;
+static NullBuffer nullBuffer;
+static std::ostream nullStream(&nullBuffer);
+static std::ostream& debugStream = nullStream;
 #else
-    static std::ostream& debugStream = std::cerr;
+static std::ostream& debugStream = std::cerr;
 #endif
