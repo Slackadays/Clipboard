@@ -27,6 +27,11 @@ elseif(APPLE)
     src/macos.cpp
   )
   target_link_libraries(clipboard "-framework AppKit")
+elseif(HAIKU)
+  target_sources(clipboard PRIVATE
+    src/haiku.cpp
+  )
+  target_link_libraries(clipboard be)
 elseif(POSIX)
   target_sources(clipboard PRIVATE src/posix.cpp)
 
