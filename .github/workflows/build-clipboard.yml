@@ -159,9 +159,9 @@ jobs:
           version: '7.2'
           shell: bash
           run: |
-            sudo pkg_add cmake g++-11.2.0p3
+            sudo pkg_add cmake
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_C_COMPILER=egcc -DCMAKE_CXX_COMPILER=eg++
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -181,9 +181,9 @@ jobs:
           version: '7.2'
           shell: bash
           run: |
-            sudo pkg_add cmake g++-11.2.0p3
+            sudo pkg_add cmake
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1 -DCMAKE_C_COMPILER=egcc -DCMAKE_CXX_COMPILER=eg++
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
