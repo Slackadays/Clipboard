@@ -35,11 +35,12 @@ jobs:
         with:
           repository: huhu/juice
           path: documentation/website/themes/juice
-      - name: Fetch Zola
-        run: curl -Ls https://github.com/getzola/zola/releases/download/v0.16.1/zola-v0.16.1-x86_64-unknown-linux-gnu.tar.gz | tar xz
-        working-directory: ./documentation/website
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
+        with:
+          tool: zola@0.16
       - name: Build content
-        run: ./zola build
+        run: zola build
         working-directory: ./documentation/website
       - name: Setup Pages
         uses: actions/configure-pages@v2
