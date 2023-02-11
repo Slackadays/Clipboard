@@ -114,6 +114,6 @@ jobs:
           version: '9.2'
           shell: bash
           run: |
-            curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
+            curl -sSLk https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
             export TMPDIR=/tmp
             bash tests/suite.sh
