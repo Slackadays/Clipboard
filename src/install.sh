@@ -188,7 +188,7 @@ then
     fi
 fi
 
-#compile_section
+compile_section
 
 rm -rf "$tmp_dir"
 check_installation
