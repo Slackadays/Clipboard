@@ -155,9 +155,9 @@ jobs:
           version: '7.2'
           shell: bash
           run: |
-            sudo pkg_add cmake g++-11.2.0p3
+            sudo pkg_add cmake
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++ -DCMAKE_C_COMPILER=egcc
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
@@ -176,9 +176,9 @@ jobs:
           version: '7.2'
           shell: bash
           run: |
-            sudo pkg_add cmake g++-11.2.0p3
+            sudo pkg_add cmake
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1 -DCMAKE_CXX_COMPILER=eg++ -DCMAKE_C_COMPILER=egcc
+            cmake .. -DCMAKE_BUILD_TYPE=Debug -DNO_X11=1
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
