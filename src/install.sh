@@ -1,9 +1,6 @@
 #!/bin/sh
 set -eux
 
-tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
-cd "$tmp_dir"
-
 check_installation() {
     #check if we can run the clipboard command
     if [ ! -x "$(command -v clipboard)" ]
@@ -45,6 +42,9 @@ compile_section() {
         sudo cmake --install .
     fi
 }
+
+tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
+cd "$tmp_dir"
 
 if [ "$(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt)" = "NixOS" ]
 then
