@@ -54,7 +54,7 @@ cd "$tmp_dir"
 #    nix=false
 #fi
 
-if [ "$(uname)" = "Linux" ] && [ "$nix" != "true" ]
+if [ "$(uname)" = "Linux" ] && [ "$nix" = "false" ]
 then
     if [ "$(uname -m)" = "x86_64" ]
     then
@@ -147,7 +147,7 @@ then
     if [ "$download_link" != "skip" ]
     then
         curl -SsLl $download_link -o clipboard-openbsd.zip
-        unzip clipboard-openbsd.zip
+        tar -xvf clipboard-openbsd.zip
         rm clipboard-openbsd.zip
         doas mv bin/clipboard /usr/local/bin/clipboard
         if [ -f "lib/libclipboardx11.so" ]
@@ -174,7 +174,7 @@ then
     if [ "$download_link" != "skip" ]
     then
         curl -SsLl $download_link -o clipboard-netbsd.zip
-        unzip clipboard-netbsd.zip
+        tar -xvf clipboard-netbsd.zip
         rm clipboard-netbsd.zip
         sudo mv bin/clipboard /usr/pkg/bin/clipboard
         if [ -f "lib/libclipboardx11.so" ]

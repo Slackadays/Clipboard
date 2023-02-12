@@ -137,9 +137,9 @@ jobs:
           version: '13.1'
           shell: bash
           run: |
-            sudo pkg install -y cmake gcc12 xorg wayland
+            sudo pkg install -y cmake llvm15-15.0.6_1 xorg wayland
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=gcc12 -DCMAKE_CXX_COMPILER=g++12
+            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=clang15 -DCMAKE_CXX_COMPILER=clang++15 -DNO_X11=1
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
