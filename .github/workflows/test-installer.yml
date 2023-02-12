@@ -50,7 +50,7 @@ jobs:
           #restart powershell to get the new path
           Start-Process powershell -Verb runAs -ArgumentList '-Command bash tests/suite.sh'
   freebsd-amd64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3

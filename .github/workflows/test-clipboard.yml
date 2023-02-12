@@ -121,7 +121,7 @@ jobs:
           export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
           bash ../tests/suite.sh
   freebsd-amd64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3

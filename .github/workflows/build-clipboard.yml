@@ -124,7 +124,7 @@ jobs:
           name: clipboard-windows-arm64
           path: build/output
   freebsd-amd64:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
