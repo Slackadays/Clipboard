@@ -20,22 +20,21 @@
 #include "clipboard.hpp"
 
 ClipboardContent getGUIClipboard() {
-	/*if (be_clipboard->Lock()) {
-        BMessage *content = be_clipboard->Data();
-        const char* temp;
-        ssize_t tempLength;
-        content->FindData("text/plain", B_MIME_TYPE, (const void**)&temp, &tempLength);
-        be_clipboard->Unlock();
-        std::string CBcontent(temp, tempLength);
-        return ClipboardContent(CBcontent);
-	}*/
-	return ClipboardContent();
+    /*if (be_clipboard->Lock()) {
+    BMessage *content = be_clipboard->Data();
+    const char* temp;
+    ssize_t tempLength;
+    content->FindData("text/plain", B_MIME_TYPE, (const void**)&temp, &tempLength);
+    be_clipboard->Unlock();
+    std::string CBcontent(temp, tempLength);
+    return ClipboardContent(CBcontent);
+    }*/
+    return ClipboardContent();
 }
 
 void writeToGUIClipboard(ClipboardContent const& clipboard) {
     if (clipboard.type() == ClipboardContentType::Text) {
-        
+
     } else if (clipboard.type() == ClipboardContentType::Paths) {
-        
     }
 }
