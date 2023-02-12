@@ -50,6 +50,8 @@ if [ "$(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt)" = "NixOS" ]
 then
     compile_section
     nix=true
+else
+    nix=false
 fi
 
 if [ "$(uname)" = "Linux" ] && [ "$nix" != "true" ]
