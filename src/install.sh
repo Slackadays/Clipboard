@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eux
+set -eu
 
 unsupported() {
     printf "\033[31mSorry, but the installer script doesn't support %s yet.\n\033[0m" "$1"
