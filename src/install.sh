@@ -46,13 +46,13 @@ compile_section() {
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir"
 
-if [ "$(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt)" = "NixOS" ]
-then
-    compile_section
-    nix=true
-else
-    nix=false
-fi
+#if [ "$(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt)" = "NixOS" ]
+#then
+#    compile_section
+#    nix=true
+#else
+#    nix=false
+#fi
 
 if [ "$(uname)" = "Linux" ] && [ "$nix" != "true" ]
 then
