@@ -88,6 +88,6 @@ else
 compile
 fi
 
-rm -rf "$tmp_dir"
-
 cd ..
+
+rm -rf "$tmp_dir"
