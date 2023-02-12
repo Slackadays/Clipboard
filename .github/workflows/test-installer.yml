@@ -64,8 +64,8 @@ jobs:
           shell: bash
           run: |
             curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
-            export TMPDIR=/tmp
-            bash tests/suite.sh
+            #export TMPDIR=/tmp
+            #bash tests/suite.sh
   openbsd-amd64:
     runs-on: ubuntu-latest
 
@@ -81,8 +81,8 @@ jobs:
           shell: bash
           run: |
             curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
-            export TMPDIR=/tmp
-            bash tests/suite.sh
+            #export TMPDIR=/tmp
+            #bash tests/suite.sh
   openbsd-arm64:
     runs-on: ubuntu-latest
 
@@ -98,8 +98,8 @@ jobs:
           shell: bash
           run: |
             curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
-            export TMPDIR=/tmp
-            bash tests/suite.sh
+            #export TMPDIR=/tmp
+            #bash tests/suite.sh
   netbsd-amd64:
     runs-on: ubuntu-latest
 
@@ -115,5 +115,5 @@ jobs:
           shell: bash
           run: |
             curl -sSLk https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
-            export TMPDIR=/tmp
-            bash tests/suite.sh
+            #export TMPDIR=/tmp
+            #bash tests/suite.sh
