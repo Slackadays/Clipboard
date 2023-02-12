@@ -1,6 +1,11 @@
 #!/bin/sh
 set -eux
 
+unsupported() {
+    printf "\033[31mSorry, but the installer script doesn't support %s yet.\n\033[0m" "$1"
+    printf '\033[32m👉 However, you can still install Clipboard with the other methods in the readme!\n\033[0m'
+}
+
 compile() {
     git clone --depth 1 https://github.com/slackadays/Clipboard
     cd Clipboard/build
@@ -20,7 +25,7 @@ compile() {
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir"
 
-if [ "$(uname)" = "Linux" ] && [ "$nix" = "false" ]
+if [ "$(uname)" = "Linux" ]
 then
     if [ "$(uname -m)" = "x86_64" ]
     then
@@ -72,16 +77,13 @@ then
     printf "\033[32mClipboard installed successfully!\033[0m"
 elif [ "$(uname)" = "FreeBSD" ]
 then
-    printf "\033[31mSorry, but the installer script doesn't support FreeBSD yet.\n\033[0m"
-    printf '\033[32m👉 However, you can still install Clipboard with the other methods in the readme!\n\033[0m'
+    unsupported "FreeBSD"
 elif [ "$(uname)" = "OpenBSD" ]
 then
-    printf "\033[31mSorry, but the installer script doesn't support OpenBSD yet.\n\033[0m"
-    printf '\033[32m👉 However, you can still install Clipboard with the other methods in the readme!\n\033[0m'
+    unsupported "OpenBSD"
 elif [ "$(uname)" = "NetBSD" ]
 then
-    printf "\033[31mSorry, but the installer script doesn't support NetBSD yet.\n\033[0m"
-    printf '\033[32m👉 However, you can still install Clipboard with the other methods in the readme!\n\033[0m'
+    unsupported "NetBSD"
 else
 compile
 fi
