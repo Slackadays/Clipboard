@@ -4,9 +4,7 @@
     <a href="https://github.com/Slackadays/Clipboard/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/build-clipboard.yml?branch=main&label=BUILDS&style=for-the-badge">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test-clipboard.yml?branch=main&label=TESTS&style=for-the-badge">
-    </a>
-    <a href="https://github.com/Slackadays/Clipboard/stargazers">
-        <img src="https://img.shields.io/github/stars/slackadays/clipboard?style=for-the-badge&color=brightgreen">
+        <img src="https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/lint-clipboard.yml?branch=main&label=LINTING&style=for-the-badge">
     </a>
 </p>
 
@@ -29,14 +27,22 @@ Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like 
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
-### **All Except Windows** 
+### [**All Except Windows**](https://github.com/Slackadays/Clipboard/blob/main/src/install.sh) 
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 ```
-### **Windows (run as Administrator)** 
+### [**Windows (run as Administrator)** ](https://github.com/Slackadays/Clipboard/blob/main/src/install.ps1)
 ```powershell
 (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
 ```
+
+---
+
+### **Premade Builds**
+
+<a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status"></a>
+
+You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
 
 ---
 
@@ -54,15 +60,6 @@ cmake --install .
 ### **Uninstall**
 
 Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
-
----
-
-### **Premade Builds**
-
-<a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status"></a>
-
-You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
-
 
 ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
