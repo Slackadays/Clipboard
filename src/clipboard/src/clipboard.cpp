@@ -98,6 +98,15 @@ std::string fileContents(const fs::path& path) {
     return buffer.str();
 }
 
+std::string pipedInContent() {
+    std::string content;
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        content.append(line);
+    }
+    return content;
+}
+
 void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
     std::ofstream file(path, append ? std::ios::app : std::ios::trunc);
     file << content;
@@ -174,7 +183,8 @@ void copy() {
     if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
         copying.buffer = copying.items.at(0).string();
         writeToFile(path.data, copying.buffer);
-        printf(replaceColors("[green]✓ Copied text \"[bold]%s[blank][green]\"[blank]\n").data(), copying.items.at(0).string().data());
+        printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
+        successes.bytes = 0; //temporarily disable the bytes success message
         return;
     }
     for (const auto& f : copying.items)
@@ -235,16 +245,9 @@ void paste() {
 }
 
 void pipeIn() {
-    std::string line;
-    while (std::getline(std::cin, line)) {
-        successes.bytes += line.size() + 1;
-        copying.buffer.append(line + "\n");
-        if (copying.buffer.size() >= 32000000) {
-            writeToFile(path.data, copying.buffer, true);
-            copying.buffer.clear();
-        }
-    }
-    writeToFile(path.data, copying.buffer, true);
+    copying.buffer = pipedInContent();
+    successes.bytes += copying.buffer.size();
+    writeToFile(path.data, copying.buffer);
 }
 
 void pipeOut() {
@@ -301,30 +304,37 @@ void show() {
 
 void edit() {}
 
-void add() {
+void addFiles() {
     if (fs::is_regular_file(path.data)) {
-        copying.buffer = fileContents(path.data);
-        if (!is_tty.in) {
-            std::string line;
-            while (std::getline(std::cin, line)) {
-                copying.buffer.append(line);
-                successes.bytes += line.size();
-            }
-            writeToFile(path.data, copying.buffer, true);
-        } else if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
-            copying.buffer.append(copying.items.at(0).string());
-            writeToFile(path.data, copying.buffer, true);
+        if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
+            writeToFile(path.data, copying.items.at(0).string(), true);
             successes.bytes += copying.items.at(0).string().size();
         } else {
             fprintf(stderr,
                     "%s",
-                    replaceColors("[red]╳ You can't add files to text. [blank][pink]Try copying text first, or add a "
-                                  "file instead.[blank]\n")
+                    replaceColors("[red]╳ You can't add items to text. [blank][pink]Try copying text first, or add "
+                                  "text instead.[blank]\n")
                             .data());
         }
+        return;
+    }
+    for (const auto& f : copying.items)
+        copyItem(f);
+}
+
+void addData() {
+    if (fs::is_regular_file(path.data)) {
+        std::string content(pipedInContent());
+        successes.bytes += content.size();
+        writeToFile(path.data, content, true);
     } else if (!fs::is_empty(path.main)) {
-        for (const auto& f : copying.items)
-            copyItem(f);
+        fprintf(stderr,
+            "%s",
+            replaceColors("[red]╳ You can't add text to items. [blank][pink]Try copying text first, or add a "
+                  "file instead.[blank]\n")
+                   .data());
+    } else {
+        pipeIn();
     }
 }
 
@@ -335,7 +345,7 @@ void clearTempDirectory(bool force_clear = false) {
     using enum Action;
     if (force_clear || action == Cut || action == Copy) {
         fs::remove(path.original_files);
-        if (fs::is_regular_file(path.data)) {
+        if (action == Clear && fs::is_regular_file(path.data)) {
             successes.bytes += fs::file_size(path.data);
             fs::remove(path.data);
         }
@@ -795,7 +805,7 @@ void performAction() {
             edit();
             break;
         case Add:
-            // add();
+            addFiles();
             break;
         case Remove:
             remove();
@@ -814,6 +824,7 @@ void performAction() {
         case Show:
         case Edit:
         case Add:
+            addData();
         case Remove:
             break;
         }
