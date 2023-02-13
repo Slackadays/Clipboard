@@ -257,8 +257,7 @@ void pipeOut() {
 }
 
 void clear() {
-    if (fs::is_empty(path.main))
-        printf("%s", no_clipboard_contents_message().data());
+    if (fs::is_empty(path.main)) printf("%s", no_clipboard_contents_message().data());
     clearTempDirectory(true);
 }
 
