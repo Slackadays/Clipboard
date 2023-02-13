@@ -23,7 +23,7 @@ decltype(WlKeyboardSpec::listener) WlKeyboardSpec::listener {
         .modifiers = &noHandler,
         .repeat_info = &noHandler};
 
-wl_keyboard* WlKeyboard::initKeyboard(WlSeat const& seat) {
+wl_keyboard* WlKeyboard::initKeyboard(const WlSeat& seat) {
     if (!seat.hasCapability(WL_SEAT_CAPABILITY_KEYBOARD)) {
         throw WlException("Seat ", seat.name(), " doesn't have Keyboard capabilities");
     }
@@ -31,15 +31,15 @@ wl_keyboard* WlKeyboard::initKeyboard(WlSeat const& seat) {
     return wl_seat_get_keyboard(seat.value());
 }
 
-WlKeyboard::WlKeyboard(WlSeat const& seat) : WlObject<WlKeyboardSpec> {initKeyboard(seat)} {}
+WlKeyboard::WlKeyboard(const WlSeat& seat) : WlObject<WlKeyboardSpec> {initKeyboard(seat)} {}
 
-WlKeyboard::WlKeyboard(WlRegistry const& registry) : WlKeyboard {registry.get<WlSeat>()} {}
+WlKeyboard::WlKeyboard(const WlRegistry& registry) : WlKeyboard {registry.get<WlSeat>()} {}
 
 bool WlKeyboard::hasFocus(wl_surface* surface) const {
     return m_focus.contains(surface);
 }
 
-bool WlKeyboard::hasFocus(WlSurface const& surface) const {
+bool WlKeyboard::hasFocus(const WlSurface& surface) const {
     return hasFocus(surface.value());
 }
 
@@ -47,7 +47,7 @@ std::uint32_t WlKeyboard::getFocusSerial(wl_surface* surface) const {
     return m_focus.at(surface);
 }
 
-std::uint32_t WlKeyboard::getFocusSerial(WlSurface const& surface) const {
+std::uint32_t WlKeyboard::getFocusSerial(const WlSurface& surface) const {
     return getFocusSerial(surface.value());
 }
 

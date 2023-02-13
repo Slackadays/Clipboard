@@ -15,15 +15,12 @@
 #include "shm_pool.hpp"
 #include "all.hpp"
 
-WlShmPool::WlShmPool(WlShm const& shm, Fd&& fd, std::int32_t size)
-        : WlObject<spec_t> {wl_shm_create_pool(shm.value(), fd.value(), size)}
-        , m_fd {std::move(fd)}
-        , m_size(size) {}
+WlShmPool::WlShmPool(const WlShm& shm, Fd&& fd, std::int32_t size) : WlObject<spec_t> {wl_shm_create_pool(shm.value(), fd.value(), size)}, m_fd {std::move(fd)}, m_size(size) {}
 
-std::unique_ptr<WlShmPool> WlShmPool::fromMemfd(WlShm const& shm, std::int32_t size) {
+std::unique_ptr<WlShmPool> WlShmPool::fromMemfd(const WlShm& shm, std::int32_t size) {
     return std::make_unique<WlShmPool>(shm, Fd::memfd(size), size);
 }
 
-std::unique_ptr<WlShmPool> WlShmPool::fromMemfd(WlRegistry const& registry, std::int32_t size) {
+std::unique_ptr<WlShmPool> WlShmPool::fromMemfd(const WlRegistry& registry, std::int32_t size) {
     return fromMemfd(registry.get<WlShm>(), size);
 }

@@ -28,8 +28,8 @@ class WlShmPool : public WlObject<WlShmPoolSpec> {
     std::int32_t m_size;
 
 public:
-    explicit WlShmPool(WlShm const&, Fd&&, std::int32_t size);
+    explicit WlShmPool(const WlShm&, Fd&&, std::int32_t size);
 
-    static std::unique_ptr<WlShmPool> fromMemfd(WlShm const&, std::int32_t size);
-    static std::unique_ptr<WlShmPool> fromMemfd(WlRegistry const&, std::int32_t size);
+    static std::unique_ptr<WlShmPool> fromMemfd(const WlShm&, std::int32_t size);
+    static std::unique_ptr<WlShmPool> fromMemfd(const WlRegistry&, std::int32_t size);
 };

@@ -29,13 +29,13 @@
  */
 class StringOrLiteral {
 private:
-    std::variant<std::string, char const*> m_data;
+    std::variant<std::string, const char*> m_data;
 
 public:
     /*implicit*/ StringOrLiteral(std::string&& data) : m_data(std::move(data)) {}
-    /*implicit*/ StringOrLiteral(char const* data) : m_data(data) {}
+    /*implicit*/ StringOrLiteral(const char* data) : m_data(data) {}
 
-    operator char const*() const;
+    operator const char*() const;
     operator std::string_view() const;
 };
 
@@ -52,7 +52,7 @@ public:
     template <typename... Args>
     explicit SimpleException(Args&&... args);
 
-    [[nodiscard]] char const* what() const noexcept override { return m_message; }
+    [[nodiscard]] const char* what() const noexcept override { return m_message; }
 };
 
 /**
@@ -66,10 +66,10 @@ class ArmedGuard {
 
 public:
     ArmedGuard(ArmedGuard&&) = delete;
-    ArmedGuard(ArmedGuard const&) = delete;
+    ArmedGuard(const ArmedGuard&) = delete;
 
     ArmedGuard& operator=(ArmedGuard&&) = delete;
-    ArmedGuard& operator=(ArmedGuard const&) = delete;
+    ArmedGuard& operator=(const ArmedGuard&) = delete;
 
     explicit ArmedGuard(guard_t guard) : m_guard {guard} {}
 
@@ -106,7 +106,7 @@ std::string urlEncode(std::string_view);
  * Checks if an environment variable is defined and has a true-ish value.
  * True-ish values include "1", "ON", "Y", "TRUE", and so on.
  */
-bool isEnvTrueish(char const*);
+bool isEnvTrueish(const char*);
 
 /**
  * Keeps calling a function until it returns a value, using an exponential backoff scheme
@@ -122,14 +122,14 @@ auto pollUntilReturn(func_t func) -> typename std::invoke_result_t<func_t>::valu
     constexpr auto eventPollBackoffMultiplier = 2;
     constexpr auto maxEventPollBackoffTime = 500ms;
 
-    auto const startTime = std::chrono::steady_clock::now();
+    const auto startTime = std::chrono::steady_clock::now();
     auto backoffTime = startEventPollBackoff;
 
     optional_t result;
     while (!(result = func()).has_value()) {
         debugStream << "No pollUntilReturn data, sleeping" << std::endl;
 
-        auto const time = std::chrono::steady_clock::now() - startTime;
+        const auto time = std::chrono::steady_clock::now() - startTime;
         if (time >= maxEventPollTime) {
             debugStream << "Timeout during pollUntilReturn" << std::endl;
             throw SimpleException("Timeout during pollUntilReturn");

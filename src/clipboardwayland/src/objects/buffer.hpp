@@ -29,15 +29,7 @@ private:
     std::unique_ptr<WlShmPool> m_shmPool;
 
 public:
-    WlBuffer(
-            std::unique_ptr<WlShmPool>&&,
-            std::int32_t offset,
-            std::int32_t width,
-            std::int32_t height,
-            std::int32_t stride,
-            wl_shm_format
-    );
+    WlBuffer(std::unique_ptr<WlShmPool>&&, std::int32_t offset, std::int32_t width, std::int32_t height, std::int32_t stride, wl_shm_format);
 
-    static std::unique_ptr<WlBuffer>
-    fromMemfd(WlRegistry const&, std::int32_t width, std::int32_t height, std::int32_t stride, wl_shm_format);
+    static std::unique_ptr<WlBuffer> fromMemfd(const WlRegistry&, std::int32_t width, std::int32_t height, std::int32_t stride, wl_shm_format);
 };

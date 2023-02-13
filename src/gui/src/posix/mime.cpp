@@ -21,11 +21,11 @@ using namespace std::literals;
 
 using MimeOptionU = std::underlying_type_t<MimeOption>;
 
-MimeOption operator|(MimeOption const& a, MimeOption const& b) {
+MimeOption operator|(const MimeOption& a, const MimeOption& b) {
     return static_cast<MimeOption>(static_cast<MimeOptionU>(a) | static_cast<MimeOptionU>(b));
 }
 
-bool hasFlag(MimeOption const& value, MimeOption const& flag) {
+bool hasFlag(const MimeOption& value, const MimeOption& flag) {
     auto valueUnderlying = static_cast<MimeOptionU>(value);
     auto flagUnderlying = static_cast<MimeOptionU>(flag);
 
@@ -37,13 +37,11 @@ decltype(MimeType::s_typesByName) MimeType::s_typesByName {initializeTypes()};
 decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     decltype(s_typesByName) result {};
 
-    auto insert = [&](char const* name, ClipboardContentType type, MimeOption options = MimeOption::NoOption) {
+    auto insert = [&](const char* name, ClipboardContentType type, MimeOption options = MimeOption::NoOption) {
         result.insert({name, MimeType {static_cast<unsigned int>(result.size()), name, type, options}});
     };
 
-    insert("x-special/gnome-copied-files",
-           ClipboardContentType::Paths,
-           MimeOption::IncludeAction | MimeOption::EncodePaths);
+    insert("x-special/gnome-copied-files", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("text/uri-list", ClipboardContentType::Paths, MimeOption::EncodePaths);
     insert("text/plain;charset=utf-8", ClipboardContentType::Text);
     insert("UTF8_STRING", ClipboardContentType::Text);
@@ -63,7 +61,7 @@ std::optional<MimeType> MimeType::find(std::string_view name) {
     return it->second;
 }
 
-bool MimeType::supports(ClipboardContent const& content) const {
+bool MimeType::supports(const ClipboardContent& content) const {
     if (m_type == content.type()) {
         return true;
     }
@@ -136,7 +134,7 @@ ClipboardContent MimeType::decodeText(std::istream& stream) const {
     return {std::move(str)};
 }
 
-bool MimeType::encode(ClipboardContent const& clipboard, std::ostream& stream) const {
+bool MimeType::encode(const ClipboardContent& clipboard, std::ostream& stream) const {
     if (!supports(clipboard)) {
         debugStream << "Clipboard is incompatible with " << m_name << ", refusing to encode" << std::endl;
         return false;
@@ -154,12 +152,12 @@ bool MimeType::encode(ClipboardContent const& clipboard, std::ostream& stream) c
     return false;
 }
 
-bool MimeType::encode(std::string const& text, std::ostream& stream) const {
+bool MimeType::encode(const std::string& text, std::ostream& stream) const {
     stream << text;
     return true;
 }
 
-bool MimeType::encode(ClipboardPaths const& paths, std::ostream& stream) const {
+bool MimeType::encode(const ClipboardPaths& paths, std::ostream& stream) const {
     if (isIncludeAction()) {
         if (paths.action() == ClipboardPathsAction::Cut) {
             stream << "cut" << std::endl;
@@ -186,7 +184,7 @@ bool MimeType::encode(ClipboardPaths const& paths, std::ostream& stream) const {
     return true;
 }
 
-bool MimeType::encode(ClipboardContent const& clipboard, std::string_view mime, std::ostream& stream) {
+bool MimeType::encode(const ClipboardContent& clipboard, std::string_view mime, std::ostream& stream) {
     auto type = find(mime);
     if (!type.has_value()) {
         debugStream << "Request MIME Type " << mime << " not recognized, refusing" << std::endl;

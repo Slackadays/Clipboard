@@ -24,9 +24,9 @@
 
 using namespace std::literals;
 
-StringOrLiteral::operator char const*() const {
+StringOrLiteral::operator const char*() const {
     return std::visit(
-            [](auto&& data) -> char const* {
+            [](auto&& data) -> const char* {
                 using T = std::decay_t<decltype(data)>;
                 if constexpr (std::is_same_v<char const*, T>)
                     return data;
@@ -42,7 +42,7 @@ StringOrLiteral::operator std::string_view() const {
 }
 
 std::string urlDecode(std::string_view value) {
-    auto tryConvertByte = [](std::string const& str) -> std::optional<char> {
+    auto tryConvertByte = [](const std::string& str) -> std::optional<char> {
         std::size_t pos = 0;
         unsigned long result;
         try {
@@ -79,14 +79,11 @@ std::string urlDecode(std::string_view value) {
 }
 
 std::string urlEncode(std::string_view value) {
-    static std::set<char> const allowedCharacters {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                                                   'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    static const std::set<char> allowedCharacters {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 
-                                                   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                                                   'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                                                   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 
-                                                   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '.',
-                                                   '~', '/'};
+                                                   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_', '.', '~', '/'};
 
     std::stringstream result;
     for (auto&& c : value) {
@@ -95,14 +92,13 @@ std::string urlEncode(std::string_view value) {
             continue;
         }
 
-        result << "%" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-               << static_cast<std::uint64_t>(static_cast<std::uint8_t>(c));
+        result << "%" << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << static_cast<std::uint64_t>(static_cast<std::uint8_t>(c));
     }
 
     return result.str();
 }
 
-bool isEnvTrueish(char const* name) {
+bool isEnvTrueish(const char* name) {
     static std::set<std::string_view> trueIshValues {"1"sv, "TRUE"sv, "ON"sv, "Y"sv, "YES"sv};
 
     auto rawValue = std::getenv(name);

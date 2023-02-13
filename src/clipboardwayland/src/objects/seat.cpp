@@ -20,7 +20,7 @@ wl_seat_listener WlSeatSpec::listener {
         .name = &eventHandler<&WlSeat::onName>,
 };
 
-void WlSeat::onName(char const* name) {
+void WlSeat::onName(const char* name) {
     m_name = name;
 }
 

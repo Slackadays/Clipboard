@@ -69,12 +69,11 @@ UINT old_code_page;
 
 bool stopIndicator(bool change_condition_variable = true) {
     ProgressState expect = ProgressState::Active;
-    if (!change_condition_variable) {
-        return progress_state.exchange(ProgressState::Cancel) == expect;
-    }
-    if (!progress_state.compare_exchange_strong(expect, ProgressState::Done)) {
-        return false;
-    }
+
+    if (!change_condition_variable) return progress_state.exchange(ProgressState::Cancel) == expect;
+
+    if (!progress_state.compare_exchange_strong(expect, ProgressState::Done)) return false;
+
     cv.notify_one();
     indicator.join();
     return true;
@@ -93,13 +92,13 @@ TerminalSize getTerminalSize() {
     return TerminalSize(80, 24);
 }
 
-std::string fileContents(fs::path const& path) {
+std::string fileContents(const fs::path& path) {
     std::stringstream buffer;
     buffer << std::ifstream(path).rdbuf();
     return buffer.str();
 }
 
-void writeToFile(fs::path const& path, std::string const& content, bool append = false) {
+void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
     std::ofstream file(path, append ? std::ios::app : std::ios::trunc);
     file << content;
 }
@@ -118,57 +117,51 @@ bool isAWriteAction() {
     return action != Paste && action != Show;
 }
 
-[[nodiscard]] CopyPolicy userDecision(std::string const& item) {
+[[nodiscard]] CopyPolicy userDecision(const std::string& item) {
     using enum CopyPolicy;
-    if (userIsARobot()) {
-        return ReplaceAll;
-    }
+
+    if (userIsARobot()) return ReplaceAll;
+
     fprintf(stderr, item_already_exists_message().data(), item.data());
     std::string decision;
     while (true) {
         std::getline(std::cin, decision);
         fprintf(stderr, "%s", replaceColors("[blank]").data());
-        if (decision == "y" || decision == "yes") {
+
+        if (decision == "y" || decision == "yes")
             return ReplaceOnce;
-        } else if (decision == "a" || decision == "all") {
+        else if (decision == "a" || decision == "all")
             return ReplaceAll;
-        } else if (decision == "n" || decision == "no") {
+        else if (decision == "n" || decision == "no")
             return SkipOnce;
-        } else if (decision == "s" || decision == "skip") {
+        else if (decision == "s" || decision == "skip")
             return SkipAll;
-        } else {
+        else
             fprintf(stderr, "%s", bad_response_message().data());
-        }
     }
 }
 
 namespace PerformAction {
-void copyItem(fs::path const& f) {
-    auto actuallyCopyItem = [&](bool const use_regular_copy = copying.use_safe_copy) {
+void copyItem(const fs::path& f) {
+    auto actuallyCopyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
         if (fs::is_directory(f)) {
             auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
             fs::create_directories(path.main / target);
             fs::copy(f, path.main / target, copying.opts);
             successes.directories++;
         } else {
-            fs::copy(
-                    f,
-                    path.main / f.filename(),
-                    use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links
-            );
+            fs::copy(f, path.main / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
             successes.files++;
         }
-        if (action == Action::Cut) {
-            writeToFile(path.original_files, fs::absolute(f).string() + "\n", true);
-        }
+        if (action == Action::Cut) writeToFile(path.original_files, fs::absolute(f).string() + "\n", true);
     };
     try {
         actuallyCopyItem();
-    } catch (fs::filesystem_error const& e) {
+    } catch (const fs::filesystem_error& e) {
         if (!copying.use_safe_copy && e.code() == std::errc::cross_device_link) {
             try {
                 actuallyCopyItem(true);
-            } catch (fs::filesystem_error const& e) {
+            } catch (const fs::filesystem_error& e) {
                 copying.failedItems.emplace_back(f.string(), e.code());
             }
         } else {
@@ -181,36 +174,28 @@ void copy() {
     if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
         copying.buffer = copying.items.at(0).string();
         writeToFile(path.data, copying.buffer);
-        printf(replaceColors("[green]✓ Copied text \"[bold]%s[blank][green]\"[blank]\n").data(),
-               copying.items.at(0).string().data());
+        printf(replaceColors("[green]✓ Copied text \"[bold]%s[blank][green]\"[blank]\n").data(), copying.items.at(0).string().data());
         return;
     }
-    for (auto const& f : copying.items) {
+    for (const auto& f : copying.items)
         copyItem(f);
-    }
 }
 
 void paste() {
-    for (auto const& f : fs::directory_iterator(path.main)) {
-        auto pasteItem = [&](bool const use_regular_copy = copying.use_safe_copy) {
-            if (fs::exists(fs::current_path() / f.path().filename())
-                && fs::equivalent(f, fs::current_path() / f.path().filename())) {
-                if (fs::is_directory(f)) {
+    for (const auto& f : fs::directory_iterator(path.main)) {
+        auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
+            if (fs::exists(fs::current_path() / f.path().filename()) && fs::equivalent(f, fs::current_path() / f.path().filename())) {
+                if (fs::is_directory(f))
                     successes.directories++;
-                } else {
+                else
                     successes.files++;
-                }
                 return;
             }
             if (fs::is_directory(f)) {
                 fs::copy(f, fs::current_path() / f.path().filename(), copying.opts);
                 successes.directories++;
             } else {
-                fs::copy(
-                        f,
-                        fs::current_path() / f.path().filename(),
-                        use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links
-                );
+                fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
                 successes.files++;
             }
         };
@@ -234,11 +219,11 @@ void paste() {
             } else {
                 pasteItem();
             }
-        } catch (fs::filesystem_error const& e) {
+        } catch (const fs::filesystem_error& e) {
             if (!copying.use_safe_copy) {
                 try {
                     pasteItem(true);
-                } catch (fs::filesystem_error const& e) {
+                } catch (const fs::filesystem_error& e) {
                     copying.failedItems.emplace_back(f.path().filename().string(), e.code());
                 }
             } else {
@@ -263,7 +248,7 @@ void pipeIn() {
 }
 
 void pipeOut() {
-    for (auto const& entry : fs::recursive_directory_iterator(path.main)) {
+    for (const auto& entry : fs::recursive_directory_iterator(path.main)) {
         std::string content(fileContents(entry.path()));
         printf("%s", content.data());
         fflush(stdout);
@@ -272,11 +257,9 @@ void pipeOut() {
 }
 
 void clear() {
-    if (fs::is_empty(path.main)) {
-        printf("%s", clear_success_message().data());
-    } else {
-        printf("%s", clear_fail_message().data());
-    }
+    if (fs::is_empty(path.main))
+        printf("%s", no_clipboard_contents_message().data());
+    clearTempDirectory(true);
 }
 
 void show() {
@@ -286,9 +269,7 @@ void show() {
         if (fs::is_regular_file(path.data)) {
             std::string content(fileContents(path.data));
             content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
-            printf(clipboard_text_contents_message().data(),
-                   std::min(static_cast<size_t>(250), content.size()),
-                   clipboard_name.data());
+            printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
             printf(replaceColors("[bold][blue]%s\n[blank]").data(), content.substr(0, 250).data());
             if (content.size() > 250) {
                 printf(and_more_items_message().data(), content.size() - 250);
@@ -296,13 +277,13 @@ void show() {
             return;
         }
         size_t total_items = 0;
-        for (auto dummy : fs::directory_iterator(path.main)) {
+
+        for (auto dummy : fs::directory_iterator(path.main))
             total_items++;
-        }
+
         size_t rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_many_contents_message().length());
         rowsAvailable -= 3;
-        printf(total_items > rowsAvailable ? clipboard_item_too_many_contents_message().data()
-                                           : clipboard_item_many_contents_message().data(),
+        printf(total_items > rowsAvailable ? clipboard_item_too_many_contents_message().data() : clipboard_item_many_contents_message().data(),
                std::min(rowsAvailable, total_items),
                clipboard_name.data());
         auto it = fs::directory_iterator(path.main);
@@ -310,18 +291,12 @@ void show() {
 
             printf(replaceColors("[blue]▏ [bold][pink]%s[blank]\n").data(), it->path().filename().string().data());
 
-            if (i == rowsAvailable - 1 && total_items > rowsAvailable) {
-                printf(and_more_items_message().data(), total_items - rowsAvailable);
-            }
+            if (i == rowsAvailable - 1 && total_items > rowsAvailable) printf(and_more_items_message().data(), total_items - rowsAvailable);
 
             it++;
         }
     } else {
-        printf(no_clipboard_contents_message().data(),
-               actions[Action::Cut].data(),
-               actions[Action::Copy].data(),
-               actions[Action::Paste].data(),
-               actions[Action::Copy].data());
+        printf(no_clipboard_contents_message().data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
     }
 }
 
@@ -349,9 +324,8 @@ void add() {
                             .data());
         }
     } else if (!fs::is_empty(path.main)) {
-        for (auto const& f : copying.items) {
+        for (const auto& f : copying.items)
             copyItem(f);
-        }
     }
 }
 
@@ -360,20 +334,29 @@ void remove() {}
 
 void clearTempDirectory(bool force_clear = false) {
     using enum Action;
-    if (force_clear || action == Cut || action == Copy || action == Clear) {
+    if (force_clear || action == Cut || action == Copy) {
         fs::remove(path.original_files);
-        for (auto const& entry : fs::directory_iterator(path.main)) {
+        if (fs::is_regular_file(path.data)) {
+            successes.bytes += fs::file_size(path.data);
+            fs::remove(path.data);
+        }
+        for (const auto& entry : fs::directory_iterator(path.main)) {
             fs::remove_all(entry.path());
+            if (action == Clear)
+                if (entry.is_directory())
+                    successes.directories++;
+                else
+                    successes.files++;
         }
     }
 }
 
-void convertFromGUIClipboard(std::string const& text) {
+void convertFromGUIClipboard(const std::string& text) {
     clearTempDirectory(true);
     writeToFile(path.data, text);
 }
 
-void convertFromGUIClipboard(ClipboardPaths const& clipboard) {
+void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
     auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
@@ -382,34 +365,28 @@ void convertFromGUIClipboard(ClipboardPaths const& clipboard) {
         return firstElement == fs::path("..");
     });
 
-    if (allOutsideFilepath) {
-        clearTempDirectory(true);
-    }
+    if (allOutsideFilepath) clearTempDirectory(true);
 
     for (auto&& path : clipboard.paths()) {
-        if (!fs::exists(path)) {
-            continue;
-        }
+        if (!fs::exists(path)) continue;
 
         auto target = ::path.main / path.filename();
-        if (fs::exists(target) && fs::equivalent(path, target)) {
-            continue;
-        }
+
+        if (fs::exists(target) && fs::equivalent(path, target)) continue;
 
         try {
             fs::copy(path, target, copying.opts | fs::copy_options::create_hard_links);
-        } catch (fs::filesystem_error const& e) {
+        } catch (const fs::filesystem_error& e) {
             try {
                 fs::copy(path, target, copying.opts);
-            } catch (fs::filesystem_error const& e) {} // Give up
+            } catch (const fs::filesystem_error& e) {} // Give up
         }
     }
 
     if (clipboard.action() == ClipboardPathsAction::Cut) {
         std::ofstream originalFiles {path.original_files};
-        for (auto&& path : clipboard.paths()) {
+        for (auto&& path : clipboard.paths())
             originalFiles << path.string() << std::endl;
-        }
     }
 }
 
@@ -421,25 +398,19 @@ void convertFromGUIClipboard(ClipboardPaths const& clipboard) {
         std::string line;
         while (!originalFiles.eof()) {
             std::getline(originalFiles, line);
-            if (!line.empty()) {
-                files.emplace_back(line);
-            }
+            if (!line.empty()) files.emplace_back(line);
         }
 
         return {std::move(files), ClipboardPathsAction::Cut};
     }
 
-    if (!copying.buffer.empty()) {
-        return {copying.buffer};
-    }
+    if (!copying.buffer.empty()) return {copying.buffer};
 
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
 
-        for (auto const& entry :
-             fs::directory_iterator(path.main)) { // count all items which were actually successfully actioned on
+        for (const auto& entry : fs::directory_iterator(path.main)) // count all items which were actually successfully actioned on
             paths.push_back(entry.path());
-        }
 
         return ClipboardContent(ClipboardPaths(std::move(paths)));
     }
@@ -482,13 +453,12 @@ void setupHandlers() {
 
 void setLocale() {
     try {
-        if (std::locale("").name().substr(0, 2) == "es") {
+        if (std::locale("").name().substr(0, 2) == "es")
             setLanguageES();
-        } else if (std::locale("").name().substr(0, 2) == "pt") {
+        else if (std::locale("").name().substr(0, 2) == "pt")
             setLanguagePT();
-        } else if (std::locale("").name().substr(0, 2) == "tr") {
+        else if (std::locale("").name().substr(0, 2) == "tr")
             setLanguageTR();
-        }
     } catch (...) {}
 }
 
@@ -501,12 +471,10 @@ void setClipboardName() {
         } else {
             clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
         }
-        if (clipboard_name.empty()) {
+        if (clipboard_name.empty())
             clipboard_name = constants.default_clipboard_name;
-        } else {
-            arguments.at(0
-            ) = arguments.at(0).substr(0, arguments.at(0).length() - (clipboard_name.length() + copying.is_persistent));
-        }
+        else
+            arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - (clipboard_name.length() + copying.is_persistent));
     }
 }
 
@@ -535,27 +503,22 @@ void setupVariables(int& argc, char* argv[]) {
 }
 
 void syncWithGUIClipboard(bool force = false) {
-    if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI"))
-        || force) {
+    if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || force) {
         using enum ClipboardContentType;
         auto content = getGUIClipboard();
-        if (content.type() == Text) {
+        if (content.type() == Text)
             convertFromGUIClipboard(content.text());
-        } else if (content.type() == Paths) {
+        else if (content.type() == Paths)
             convertFromGUIClipboard(content.paths());
-        }
     }
 }
 
 void showClipboardStatus() {
     syncWithGUIClipboard(true);
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
-    auto iterateClipboards = [&](fs::path const& path, bool persistent) { // use zip ranges here when gcc 13 comes out
-        for (const auto& entry : fs::directory_iterator(path)) {
-            if (fs::is_directory(entry.path() / "data") && !fs::is_empty(entry.path() / "data")) {
-                clipboards_with_contents.push_back({entry.path(), persistent});
-            }
-        }
+    auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
+        for (const auto& entry : fs::directory_iterator(path))
+            if (fs::is_directory(entry.path() / "data") && !fs::is_empty(entry.path() / "data")) clipboards_with_contents.push_back({entry.path(), persistent});
     };
     iterateClipboards(path.temporary.parent_path().parent_path(), false);
     iterateClipboards(path.persistent.parent_path().parent_path(), true);
@@ -572,33 +535,26 @@ void showClipboardStatus() {
 
         printf("%s", check_clipboard_status_message().data());
 
-        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), termSizeAvailable.rows);
-             clipboard++) {
+        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), termSizeAvailable.rows); clipboard++) {
 
-            int widthRemaining =
-                    termSizeAvailable.columns
-                    - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
-                       + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
+            int widthRemaining = termSizeAvailable.columns
+                                 - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
+                                    + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
             printf(replaceColors("[bold][blue]▏ %s%s: [blank]").data(),
                    clipboards_with_contents.at(clipboard).first.filename().string().data(),
                    clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name)) {
-                std::string content(
-                        fileContents(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name)
-                );
+                std::string content(fileContents(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
                 printf(replaceColors("[pink]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
 
-            for (bool first = true;
-                 auto const& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / "data")) {
+            for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / "data")) {
                 int entryWidth = entry.path().filename().string().length();
 
-                if (widthRemaining <= 0) {
-                    break;
-                }
+                if (widthRemaining <= 0) break;
 
                 if (!first) {
                     if (entryWidth <= widthRemaining - 2) {
@@ -623,8 +579,8 @@ void showClipboardStatus() {
 }
 
 template <typename T>
-[[nodiscard]] auto flagIsPresent(std::string_view const& flag, std::string_view const& shortcut = "") {
-    for (auto const& entry : arguments) {
+[[nodiscard]] auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcut = "") {
+    for (const auto& entry : arguments) {
         if (entry == flag || entry == (std::string(shortcut).append(flag))) {
             if constexpr (std::is_same_v<T, std::string>) {
                 std::string temp(*arguments.erase(std::find(arguments.begin(), arguments.end(), entry)));
@@ -636,30 +592,26 @@ template <typename T>
             }
         }
     }
-    if constexpr (std::is_same_v<T, std::string>) {
+
+    if constexpr (std::is_same_v<T, std::string>)
         return std::string();
-    } else {
+    else
         return false;
-    }
 }
 
 Action getAction() {
     using enum Action;
     using enum IOType;
     if (arguments.size() >= 1) {
-        for (auto const& entry : {Cut, Copy, Add, Remove}) {
+        for (const auto& entry : {Cut, Copy, Add, Remove}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
-                if (!is_tty.in) {
-                    io_type = Pipe;
-                }
+                if (!is_tty.in) io_type = Pipe;
                 return entry;
             }
         }
-        for (auto const& entry : {Paste, Show, Clear, Edit}) {
+        for (const auto& entry : {Paste, Show, Clear, Edit}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
-                if (!is_tty.out) {
-                    io_type = Pipe;
-                }
+                if (!is_tty.out) io_type = Pipe;
                 return entry;
             }
         }
@@ -678,24 +630,18 @@ Action getAction() {
 }
 
 void setFlags() {
-    if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) {
-        copying.use_safe_copy = false;
-    }
+    if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
     if (flagIsPresent<bool>("--ee")) {
         printf("%s", replaceColors("[bold][blue]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
-    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") {
-        clipboard_name = flag;
-    }
-    if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") {
-        clipboard_name = flag;
-    }
+    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
+    if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") clipboard_name = flag;
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
         exit(EXIT_SUCCESS);
     }
-    for (auto const& entry : arguments) {
+    for (const auto& entry : arguments) {
         if (entry == "--") {
             arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
             break;
@@ -716,10 +662,8 @@ void setFilepaths() {
                                                  : fs::temp_directory_path())
                      / constants.temporary_directory_name / clipboard_name / "data";
 
-    path.persistent =
-            (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR")
-                                            : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : path.home))
-            / constants.persistent_directory_name / clipboard_name / "data";
+    path.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : path.home))
+                      / constants.persistent_directory_name / clipboard_name / "data";
 
     path.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? path.persistent : path.temporary;
 
@@ -730,10 +674,7 @@ void setFilepaths() {
 
 void checkForNoItems() {
     if ((action == Action::Cut || action == Action::Copy) && io_type == IOType::File && copying.items.size() < 1) {
-        printf(choose_action_items_message().data(),
-               actions[action].data(),
-               actions[action].data(),
-               actions[action].data());
+        printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
     if (action == Action::Paste && fs::is_empty(path.main)) {
@@ -743,89 +684,40 @@ void checkForNoItems() {
 }
 
 void setupIndicator() {
-    if (!is_tty.err) {
-        return;
-    }
+    if (!is_tty.err) return;
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
-    const std::array<std::string_view, 10> spinner_steps {
-            "━       ",
-            "━━      ",
-            " ━━     ",
-            "  ━━    ",
-            "   ━━   ",
-            "    ━━  ",
-            "     ━━ ",
-            "      ━━",
-            "       ━",
-            "        "};
-    static unsigned int percent_done = 0;
-    if ((action == Action::Cut || action == Action::Copy) && io_type == IOType::File) {
-        static size_t items_size = copying.items.size();
-        for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
-            percent_done =
-                    ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size + 1);
-            output_length =
-                    fprintf(stderr,
-                            working_message().data(),
-                            doing_action[action].data(),
-                            percent_done,
-                            "%",
-                            spinner_steps.at(i).data());
+    const std::array<std::string_view, 10> spinner_steps {"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
+    auto itemsToProcess = [&] {
+        size_t items = 1;
+        for (auto dummy : fs::directory_iterator(path.main))
+            items++;
+        return items;
+    };
+    static size_t items_size = (action == Action::Cut || action == Action::Copy) ? copying.items.size() : itemsToProcess();
+    auto percent_done = [&] {
+        return ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size + 1);
+    };
+    for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
+        auto display_progress = [&](const auto& num, const auto& unit) {
+            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), num, unit, spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(50), [&] { return progress_state != ProgressState::Active; });
-        }
-    } else if (io_type == IOType::Pipe) {
-        for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
-            output_length =
-                    fprintf(stderr,
-                            working_message().data(),
-                            doing_action[action].data(),
-                            static_cast<int>(successes.bytes),
-                            "B",
-                            spinner_steps.at(i).data());
-            fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&] { return progress_state != ProgressState::Active; });
-        }
-    } else if (action == Action::Paste) {
-        static size_t items_size = 0;
-        if (items_size == 0) {
-            for (auto dummy : fs::directory_iterator(path.main)) {
-                items_size++;
-            }
-            if (items_size == 0) {
-                items_size = 1;
-            }
-        }
-        for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
-            percent_done =
-                    ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size + 1);
-            output_length =
-                    fprintf(stderr,
-                            working_message().data(),
-                            doing_action[action].data(),
-                            percent_done,
-                            "%",
-                            spinner_steps.at(i).data());
-            fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&] { return progress_state != ProgressState::Active; });
-        }
-    } else {
-        while (progress_state == ProgressState::Active) {
-            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), 0, "%", "");
-            fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&] { return progress_state != ProgressState::Active; });
-        }
+        };
+
+        if (io_type == IOType::File)
+            display_progress(percent_done(), "%");
+        else if (io_type == IOType::Pipe)
+            display_progress(static_cast<int>(successes.bytes), "B");
     }
     fprintf(stderr, "\r%*s\r", output_length, "");
     fflush(stderr);
     if (progress_state == ProgressState::Cancel) {
         fprintf(stderr, cancelled_message().data(), actions[action].data());
-        if (action == Action::Copy || action == Action::Cut) {
+        if (action == Action::Copy || action == Action::Cut)
             fprintf(stderr, "\n");
-        } else {
+        else
             fflush(stderr);
-        }
         _exit(EXIT_FAILURE);
     }
     fflush(stderr);
@@ -839,16 +731,14 @@ void startIndicator() { // If cancelled, leave cancelled
 
 unsigned long long totalItemSize() {
     unsigned long long total_item_size = 0;
-    for (auto const& i : copying.items) {
+    for (const auto& i : copying.items) {
         try {
-            if (fs::is_directory(i)) {
-                for (auto const& entry : fs::recursive_directory_iterator(i)) {
+            if (fs::is_directory(i))
+                for (const auto& entry : fs::recursive_directory_iterator(i))
                     total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
-                }
-            } else {
+            else
                 total_item_size += fs::is_regular_file(i) ? fs::file_size(i) : 16;
-            }
-        } catch (fs::filesystem_error const& e) {
+        } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(i.string(), e.code());
         }
     }
@@ -857,7 +747,7 @@ unsigned long long totalItemSize() {
 
 void checkItemSize(unsigned long long total_item_size) {
     if (action == Action::Cut || action == Action::Copy) {
-        unsigned long long const space_available = fs::space(path.main).available;
+        const unsigned long long space_available = fs::space(path.main).available;
         if (total_item_size > (space_available / 2)) {
             stopIndicator();
             fprintf(stderr, not_enough_storage_message().data(), total_item_size / 1024.0, space_available / 1024.0);
@@ -873,14 +763,12 @@ void removeOldFiles() {
         while (std::getline(files, line)) {
             try {
                 fs::remove_all(line);
-            } catch (fs::filesystem_error const& e) {
+            } catch (const fs::filesystem_error& e) {
                 copying.failedItems.emplace_back(line, e.code());
             }
         }
         files.close();
-        if (copying.failedItems.empty()) {
-            fs::remove(path.original_files);
-        }
+        if (copying.failedItems.empty()) fs::remove(path.original_files);
         action = Action::Cut;
     }
 }
@@ -934,8 +822,7 @@ void performAction() {
 }
 
 void updateGUIClipboard() {
-    if (isAWriteAction() && clipboard_name == constants.default_clipboard_name
-        && !getenv("CLIPBOARD_NOGUI")) { // only update GUI clipboard on write operations
+    if (isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) { // only update GUI clipboard on write operations
         writeToGUIClipboard(thisClipboard());
     }
 }
@@ -944,20 +831,16 @@ void showFailures() {
     if (copying.failedItems.size() > 0) {
         TerminalSize available(getTerminalSize());
         available.accountRowsFor(clipboard_failed_many_message().length());
-        if (copying.failedItems.size() > available.rows) {
-            available.accountRowsFor(and_more_fails_message().length());
-        }
+
+        if (copying.failedItems.size() > available.rows) available.accountRowsFor(and_more_fails_message().length());
+
         available.rows -= 3;
-        printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data()
-                                              : clipboard_failed_one_message().data(),
-               actions[action].data());
+        printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
         for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-            printf(replaceColors("[red]▏ [bold]%s[blank][red]: %s[blank]\n").data(),
-                   copying.failedItems.at(i).first.data(),
-                   copying.failedItems.at(i).second.message().data());
-            if (i == available.rows - 1 && copying.failedItems.size() > available.rows) {
-                printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
-            }
+
+            printf(replaceColors("[red]▏ [bold]%s[blank][red]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+
+            if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
         }
         printf("%s", fix_problem_message().data());
     }
@@ -966,36 +849,23 @@ void showFailures() {
 void showSuccesses() {
     if (successes.bytes > 0 && is_tty.err) {
         fprintf(stderr, byte_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
-        return;
-    }
-    if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
+    } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
         printf(one_item_success_message().data(),
                did_action[action].data(),
-               action == Action::Paste ? (*(fs::directory_iterator(path.main))).path().filename().string().data()
-                                       : copying.items.at(0).string().data());
+               action == Action::Paste ? (*(fs::directory_iterator(path.main))).path().filename().string().data() : copying.items.at(0).string().data());
     } else {
-        if ((successes.files > 1) && (successes.directories == 0)) {
+        if ((successes.files > 1) && (successes.directories == 0))
             printf(many_files_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
-        } else if ((successes.files == 0) && (successes.directories > 1)) {
-            printf(many_directories_success_message().data(),
-                   did_action[action].data(),
-                   static_cast<int>(successes.directories));
-        } else if ((successes.files == 1) && (successes.directories == 1)) {
+        else if ((successes.files == 0) && (successes.directories > 1))
+            printf(many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
+        else if ((successes.files == 1) && (successes.directories == 1))
             printf(one_file_one_directory_success_message().data(), did_action[action].data());
-        } else if ((successes.files > 1) && (successes.directories == 1)) {
-            printf(many_files_one_directory_success_message().data(),
-                   did_action[action].data(),
-                   static_cast<int>(successes.files));
-        } else if ((successes.files == 1) && (successes.directories > 1)) {
-            printf(one_file_many_directories_success_message().data(),
-                   did_action[action].data(),
-                   static_cast<int>(successes.directories));
-        } else if ((successes.files > 1) && (successes.directories > 1)) {
-            printf(many_files_many_directories_success_message().data(),
-                   did_action[action].data(),
-                   static_cast<int>(successes.files),
-                   static_cast<int>(successes.directories));
-        }
+        else if ((successes.files > 1) && (successes.directories == 1))
+            printf(many_files_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
+        else if ((successes.files == 1) && (successes.directories > 1))
+            printf(one_file_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
+        else if ((successes.files > 1) && (successes.directories > 1))
+            printf(many_files_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
     }
 }
 
@@ -1044,10 +914,8 @@ int main(int argc, char* argv[]) {
         showFailures();
 
         showSuccesses();
-    } catch (std::exception const& e) {
-        if (stopIndicator()) {
-            fprintf(stderr, internal_error_message().data(), e.what());
-        }
+    } catch (const std::exception& e) {
+        if (stopIndicator()) fprintf(stderr, internal_error_message().data(), e.what());
         exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);

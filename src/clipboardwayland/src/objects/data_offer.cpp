@@ -21,7 +21,7 @@ wl_data_offer_listener WlDataOfferSpec::listener {
         .action = &noHandler,
 };
 
-void WlDataOffer::onOffer(char const* mime) {
+void WlDataOffer::onOffer(const char* mime) {
     m_mimeTypes.emplace(mime);
 }
 

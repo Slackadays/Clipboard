@@ -31,7 +31,7 @@ class WlCallback : public WlObject<WlCallbackSpec> {
     std::optional<std::uint32_t> m_serial {};
 
 public:
-    explicit WlCallback(WlDisplay const&);
+    explicit WlCallback(const WlDisplay&);
 
     [[nodiscard]] inline bool hasSerial() const { return m_serial.has_value(); }
     [[nodiscard]] inline std::uint32_t serial() const { return m_serial.value_or(0); }

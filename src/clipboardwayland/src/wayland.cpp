@@ -29,15 +29,12 @@ class SimpleWindow {
     static constexpr auto stride = width * 4;
     static constexpr auto format = wl_shm_format::WL_SHM_FORMAT_XRGB8888;
 
-    WlDisplay const& m_display;
+    const WlDisplay& m_display;
     WlSurface m_surface;
     WlKeyboard m_keyboard;
 
 public:
-    explicit SimpleWindow(WlDisplay const& display, WlRegistry const& registry)
-            : m_display {display}
-            , m_surface {registry}
-            , m_keyboard {registry} {
+    explicit SimpleWindow(const WlDisplay& display, const WlRegistry& registry) : m_display {display}, m_surface {registry}, m_keyboard {registry} {
 
         m_surface.setTitle("Clipboard");
 
@@ -54,19 +51,14 @@ public:
 };
 
 class PasteDaemon {
-    ClipboardContent const& m_clipboard;
+    const ClipboardContent& m_clipboard;
     WlDisplay m_display;
     WlRegistry m_registry;
     WlDataDevice m_dataDevice;
     WlDataSource m_dataSource;
 
 public:
-    explicit PasteDaemon(ClipboardContent const& clipboard)
-            : m_clipboard {clipboard}
-            , m_display()
-            , m_registry {m_display}
-            , m_dataDevice {m_registry}
-            , m_dataSource {m_registry} {
+    explicit PasteDaemon(const ClipboardContent& clipboard) : m_clipboard {clipboard}, m_display(), m_registry {m_display}, m_dataDevice {m_registry}, m_dataSource {m_registry} {
 
         MimeType::forEachSupporting(m_clipboard, [&](auto&& x) { m_dataSource.offer(x.name()); });
 
@@ -106,7 +98,7 @@ static ClipboardContent getWaylandClipboardInternal() {
 
     PipeFd pipe;
     FdStream stream {pipe};
-    auto request = [&](MimeType const& type) -> std::istream& {
+    auto request = [&](const MimeType& type) -> std::istream& {
         offer->receive(type.name(), pipe.writeFd());
         display.roundtrip();
         pipe.closeWrite();
@@ -116,7 +108,7 @@ static ClipboardContent getWaylandClipboardInternal() {
     return MimeType::decode(offeredTypes, request);
 }
 
-static void setWaylandClipboardInternal(WriteGuiContext const& context) {
+static void setWaylandClipboardInternal(const WriteGuiContext& context) {
     context.forker.fork([&]() {
         PasteDaemon daemon {context.clipboard};
         daemon.run();
@@ -128,7 +120,7 @@ extern void* getWaylandClipboard() noexcept {
     try {
         auto clipboard = std::make_unique<ClipboardContent>(getWaylandClipboardInternal());
         return clipboard.release();
-    } catch (std::exception const& e) {
+    } catch (const std::exception& e) {
         debugStream << "Error getting clipboard data: " << e.what() << std::endl;
         return nullptr;
     } catch (...) {
@@ -139,9 +131,9 @@ extern void* getWaylandClipboard() noexcept {
 
 extern void setWaylandClipboard(void* ptr) noexcept {
     try {
-        WriteGuiContext const& context = *reinterpret_cast<WriteGuiContext const*>(ptr);
+        const WriteGuiContext& context = *reinterpret_cast<const WriteGuiContext*>(ptr);
         setWaylandClipboardInternal(context);
-    } catch (std::exception const& e) {
+    } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
     } catch (...) {
         debugStream << "Unknown error setting clipboard data" << std::endl;

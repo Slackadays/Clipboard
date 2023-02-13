@@ -25,7 +25,7 @@ struct XdgToplevelSpec {
 
 class XdgToplevel : public WlObject<XdgToplevelSpec> {
 public:
-    explicit XdgToplevel(XdgSurface const&);
+    explicit XdgToplevel(const XdgSurface&);
 
-    void setTitle(char const*) const;
+    void setTitle(const char*) const;
 };

@@ -27,14 +27,14 @@ class WlSurface : public WlObject<WlSurfaceSpec> {
     std::unique_ptr<XdgSurface> m_xdg;
 
 public:
-    explicit WlSurface(WlCompositor const&, XdgWmBase const&);
-    explicit WlSurface(WlRegistry const&);
+    explicit WlSurface(const WlCompositor&, const XdgWmBase&);
+    explicit WlSurface(const WlRegistry&);
 
     void attach(std::unique_ptr<WlBuffer>&&);
     void damage(std::int32_t x, std::int32_t y, std::int32_t width, std::int32_t height) const;
     void commit() const;
 
-    void setTitle(char const*) const;
+    void setTitle(const char*) const;
     void scheduleAttach(std::unique_ptr<WlBuffer>&&);
     void scheduleDamage(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 };

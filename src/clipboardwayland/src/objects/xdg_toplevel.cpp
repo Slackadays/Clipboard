@@ -15,8 +15,8 @@
 #include "xdg_toplevel.hpp"
 #include "all.hpp"
 
-XdgToplevel::XdgToplevel(XdgSurface const& surface) : WlObject {xdg_surface_get_toplevel(surface.value())} {}
+XdgToplevel::XdgToplevel(const XdgSurface& surface) : WlObject {xdg_surface_get_toplevel(surface.value())} {}
 
-void XdgToplevel::setTitle(char const* title) const {
+void XdgToplevel::setTitle(const char* title) const {
     xdg_toplevel_set_title(value(), title);
 }

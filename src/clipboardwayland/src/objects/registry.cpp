@@ -22,9 +22,7 @@ wl_registry_listener WlRegistrySpec::listener {
         .global_remove = &eventHandler<&WlRegistry::onGlobalRemove>,
 };
 
-WlRegistry::WlRegistry(WlDisplay const& display)
-        : WlObject<spec_t> {wl_display_get_registry(display.value())}
-        , m_display {display} {
+WlRegistry::WlRegistry(const WlDisplay& display) : WlObject<spec_t> {wl_display_get_registry(display.value())}, m_display {display} {
 
     // Ensure all globals are bound before exiting the constructor
     m_display.roundtrip();
@@ -39,42 +37,30 @@ void WlRegistry::bind(std::uint32_t name, std::uint32_t version) {
 
     auto&& existing = m_boundObjectsByName.find(name);
     if (existing != m_boundObjectsByName.end()) {
-        debugStream << "Tried to bind global " << name << " with interface " << interfaceName << " version "
-                    << chosenVersion << " but it was already bound to " << existing->second.interface << ", ignoring"
-                    << std::endl;
+        debugStream << "Tried to bind global " << name << " with interface " << interfaceName << " version " << chosenVersion << " but it was already bound to "
+                    << existing->second.interface << ", ignoring" << std::endl;
         return;
     }
 
     auto voidPtr = wl_registry_bind(value(), name, &spec::interface, chosenVersion);
     if (voidPtr == nullptr) {
-        throw WlException(
-                "Unable to bind global ",
-                name,
-                " with interface ",
-                interfaceName,
-                " version ",
-                chosenVersion
-        );
+        throw WlException("Unable to bind global ", name, " with interface ", interfaceName, " version ", chosenVersion);
     }
 
     auto rawPtr = reinterpret_cast<spec::obj_t*>(voidPtr);
     auto sharedPtr = std::make_shared<T>(rawPtr);
 
-    BoundObject boundObject {
-            .name = name,
-            .interface {interfaceName},
-            .object = std::static_pointer_cast<void>(sharedPtr)};
+    BoundObject boundObject {.name = name, .interface {interfaceName}, .object = std::static_pointer_cast<void>(sharedPtr)};
     m_boundObjectsByName.insert({boundObject.name, boundObject});
     m_boundObjectsByInterface.insert({boundObject.interface, boundObject});
 
-    debugStream << "Bound global " << name << " with interface " << interfaceName << " version " << chosenVersion
-                << std::endl;
+    debugStream << "Bound global " << name << " with interface " << interfaceName << " version " << chosenVersion << std::endl;
 
     // Roundtrip to ensure the bound global is fully initialized
     m_display.roundtrip();
 }
 
-void WlRegistry::onGlobal(std::uint32_t name, char const* interface, std::uint32_t version) {
+void WlRegistry::onGlobal(std::uint32_t name, const char* interface, std::uint32_t version) {
     debugStream << "Got global " << name << " of type " << interface << " version " << version << std::endl;
 
     std::string_view interfaceName {interface};

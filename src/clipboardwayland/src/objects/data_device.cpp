@@ -26,12 +26,11 @@ wl_data_device_listener WlDataDeviceSpec::listener {
         .selection = &eventHandler<&WlDataDevice::onSelection>,
 };
 
-WlDataDevice::WlDataDevice(WlDataDeviceManager const& manager, WlSeat const& seat)
-        : WlObject<spec_t> {wl_data_device_manager_get_data_device(manager.value(), seat.value())} {
+WlDataDevice::WlDataDevice(const WlDataDeviceManager& manager, const WlSeat& seat) : WlObject<spec_t> {wl_data_device_manager_get_data_device(manager.value(), seat.value())} {
     debugStream << "Created a data device for seat " << seat.name() << std::endl;
 }
 
-WlDataDevice::WlDataDevice(WlRegistry const& registry)
+WlDataDevice::WlDataDevice(const WlRegistry& registry)
         : WlDataDevice {
                 registry.get<WlDataDeviceManager>(),
                 registry.get<WlSeat>(),
@@ -63,8 +62,7 @@ void WlDataDevice::onSelection(wl_data_offer* offer) {
     }
 
     if (getValue(m_bufferedOffer) != offer) {
-        debugStream << "Got a selection but its offer didn't match the one that was initialized earlier, ignoring"
-                    << std::endl;
+        debugStream << "Got a selection but its offer didn't match the one that was initialized earlier, ignoring" << std::endl;
         return;
     }
 
@@ -73,6 +71,6 @@ void WlDataDevice::onSelection(wl_data_offer* offer) {
     debugStream << "Offer was promoted to selection" << std::endl;
 }
 
-void WlDataDevice::setSelection(WlDataSource const& source, std::uint32_t serial) const {
+void WlDataDevice::setSelection(const WlDataSource& source, std::uint32_t serial) const {
     wl_data_device_set_selection(value(), source.value(), serial);
 }

@@ -25,8 +25,8 @@ class Fd {
     int m_value {0};
 
 public:
-    Fd(Fd const&) = delete;
-    Fd& operator=(Fd const&) = delete;
+    Fd(const Fd&) = delete;
+    Fd& operator=(const Fd&) = delete;
 
     Fd(Fd&& other) noexcept;
     Fd& operator=(Fd&& other) noexcept;
@@ -51,8 +51,8 @@ class PipeFd {
     Fd m_writeFd {};
 
 public:
-    PipeFd(PipeFd const&) = delete;
-    PipeFd& operator=(PipeFd const&) = delete;
+    PipeFd(const PipeFd&) = delete;
+    PipeFd& operator=(const PipeFd&) = delete;
 
     PipeFd(PipeFd&&) noexcept;
     PipeFd& operator=(PipeFd&&) noexcept;
@@ -80,10 +80,10 @@ class FdBuffer : public std::streambuf {
     std::array<char, bufferSize> m_writeBuf;
 
     [[nodiscard]] std::size_t safeRead(std::span<char>) const;
-    std::size_t safeWrite(std::span<char const>) const;
+    std::size_t safeWrite(std::span<const char>) const;
 
     [[nodiscard]] std::size_t repeatedRead(std::span<char>) const;
-    std::size_t repeatedWrite(std::span<char const>) const;
+    std::size_t repeatedWrite(std::span<const char>) const;
 
     std::size_t flushWrite();
     [[nodiscard]] std::size_t constrainSize(std::size_t) const;
@@ -91,8 +91,8 @@ class FdBuffer : public std::streambuf {
 public:
     explicit FdBuffer(int fd);
     FdBuffer(int readFd, int writeFd);
-    explicit FdBuffer(Fd const&);
-    explicit FdBuffer(PipeFd const&);
+    explicit FdBuffer(const Fd&);
+    explicit FdBuffer(const PipeFd&);
 
 protected:
     int sync() override;
@@ -101,7 +101,7 @@ protected:
     std::streamsize xsgetn(char_type*, std::streamsize) override;
 
     int_type overflow(int_type = traits_type::eof()) override;
-    std::streamsize xsputn(char_type const*, std::streamsize) override;
+    std::streamsize xsputn(const char_type*, std::streamsize) override;
 };
 
 /**
@@ -114,6 +114,6 @@ public:
     explicit FdStream(FdBuffer&&);
     explicit FdStream(int fd);
     FdStream(int readFd, int writeFd);
-    explicit FdStream(Fd const&);
-    explicit FdStream(PipeFd const&);
+    explicit FdStream(const Fd&);
+    explicit FdStream(const PipeFd&);
 };

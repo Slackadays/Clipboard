@@ -18,11 +18,11 @@
 #include "clipboard.hpp"
 
 extern "C" {
-char const* textContent();
+const char* textContent();
 char** fileContent();
 
-void writeText(char const* text);
-void writeFiles(char const** files);
+void writeText(const char* text);
+void writeFiles(const char** files);
 }
 
 ClipboardContent getGUIClipboard() {
@@ -40,12 +40,12 @@ ClipboardContent getGUIClipboard() {
     return ClipboardContent();
 }
 
-void writeToGUIClipboard(ClipboardContent const& clipboard) {
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
     if (clipboard.type() == ClipboardContentType::Text) {
         writeText(clipboard.text().c_str());
     } else if (clipboard.type() == ClipboardContentType::Paths) {
         std::vector<fs::path> paths(clipboard.paths().paths());
-        std::unique_ptr<char const*[]> files = std::make_unique<char const*[]>(paths.size() + 1);
+        std::unique_ptr<const char*[]> files = std::make_unique<const char*[]>(paths.size() + 1);
         for (int i = 0; i < paths.size(); i++) {
             files[i] = paths[i].c_str();
         }

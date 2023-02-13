@@ -45,8 +45,7 @@ struct Copying {
     bool is_persistent = false;
     bool use_safe_copy = true;
     CopyPolicy policy = CopyPolicy::Unknown;
-    fs::copy_options opts =
-            fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
+    fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
     std::vector<fs::path> items;
     std::vector<std::pair<std::string, std::error_code>> failedItems;
     std::string buffer;
@@ -99,9 +98,7 @@ enum class IOType : unsigned int { File, Pipe };
 template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
 public:
-    T& operator[](Action index) {
-        return std::array<T, N>::operator[](static_cast<unsigned int>(index));
-    } // switch to std::to_underlying when available
+    T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
 extern ActionArray<std::string_view, 8> actions;
@@ -123,18 +120,16 @@ class TerminalSize {
 public:
     size_t rows;
     size_t columns;
-    TerminalSize(unsigned int const& rows, unsigned int const& columns)
-            : rows {std::max(1u, rows)}
-            , columns {std::max(1u, columns)} {}
-    unsigned int accountRowsFor(auto const&... args) {
+    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
+    unsigned int accountRowsFor(const auto&... args) {
         ((rows -= (static_cast<unsigned int>(args) / columns) + 1), ...);
         return columns;
     }
 };
 
-static std::string replaceColors(std::string_view const& str, bool colorful = !no_color) {
+static std::string replaceColors(const std::string_view& str, bool colorful = !no_color) {
     std::string temp(str);           // a string to do scratch work on
-    for (auto const& key : colors) { // iterate over all the possible colors to replace
+    for (const auto& key : colors) { // iterate over all the possible colors to replace
         for (size_t i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
             temp.replace(i, key.first.length(), colorful ? key.second : "");
         }
@@ -147,7 +142,7 @@ private:
     std::string_view internal_message;
 
 public:
-    Message(auto const& message) : internal_message(std::move(message)) {}
+    Message(const auto& message) : internal_message(std::move(message)) {}
     std::string operator()() const { return std::move(replaceColors(internal_message)); }
 };
 
@@ -196,8 +191,8 @@ void setupItems(int& argc, char* argv[]);
 void setClipboardName(int& argc, char* argv[]);
 void setupVariables(int& argc, char* argv[]);
 void createTempDirectory();
-void syncWithGUIClipboard(std::string const& text);
-void syncWithGUIClipboard(ClipboardPaths const& clipboard);
+void syncWithGUIClipboard(const std::string& text);
+void syncWithGUIClipboard(const ClipboardPaths& clipboard);
 void showClipboardStatus();
 void showClipboardContents();
 void setupAction(int& argc, char* argv[]);
@@ -220,4 +215,4 @@ void showFailures();
 void showSuccesses();
 
 extern ClipboardContent getGUIClipboard();
-extern void writeToGUIClipboard(ClipboardContent const& clipboard);
+extern void writeToGUIClipboard(const ClipboardContent& clipboard);

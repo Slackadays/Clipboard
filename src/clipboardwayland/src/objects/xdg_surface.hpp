@@ -36,9 +36,9 @@ class XdgSurface : public WlObject<XdgSurfaceSpec> {
     std::optional<std::tuple<int32_t, int32_t, int32_t, int32_t>> m_pendingDamage {};
 
 public:
-    explicit XdgSurface(XdgWmBase const&, WlSurface&);
+    explicit XdgSurface(const XdgWmBase&, WlSurface&);
 
-    void setTitle(char const*) const;
+    void setTitle(const char*) const;
     void scheduleAttach(std::unique_ptr<WlBuffer>&&);
     void scheduleDamage(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 

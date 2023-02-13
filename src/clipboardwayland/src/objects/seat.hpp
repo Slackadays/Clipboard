@@ -40,6 +40,6 @@ public:
     [[nodiscard]] bool hasCapability(wl_seat_capability) const;
 
 private:
-    void onName(char const*);
+    void onName(const char*);
     void onCapability(std::uint32_t);
 };

@@ -72,15 +72,7 @@ void onWindowsError(const std::string_view function) {
     auto errorCode = GetLastError();
 
     char* errorMessage;
-    FormatMessageA(
-            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-            nullptr,
-            errorCode,
-            0,
-            static_cast<LPTSTR>(static_cast<void*>(&errorMessage)),
-            0,
-            nullptr
-    );
+    FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, errorCode, 0, static_cast<LPTSTR>(static_cast<void*>(&errorMessage)), 0, nullptr);
     std::cerr << function << ": " << errorMessage << std::endl;
     exit(EXIT_FAILURE);
 }
@@ -158,8 +150,8 @@ void setWindowsClipboardDataPipe() {
 void setWindowsClipboardDataFiles() {
 
     std::vector<wchar_t> data;
-    for (auto const& entry : fs::directory_iterator(path.main)) {
-        for (auto const& c : entry.path().wstring()) {
+    for (const auto& entry : fs::directory_iterator(path.main)) {
+        for (const auto& c : entry.path().wstring()) {
             data.push_back(c);
         }
 
@@ -197,7 +189,7 @@ void setWindowsClipboardDataFiles() {
     }
 }
 
-void writeToGUIClipboard(ClipboardContent const& clipboard) {
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
     if (OpenClipboard(nullptr) == 0) {
         onWindowsError("OpenClipboard");
     }

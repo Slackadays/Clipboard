@@ -54,12 +54,12 @@ enum class MimeOption {
  * Combines two MimeOption values into an aggregate value that encodes both of
  * them at the same time. Use hasFlag to extract the values later.
  */
-MimeOption operator|(MimeOption const& a, MimeOption const& b);
+MimeOption operator|(const MimeOption& a, const MimeOption& b);
 
 /**
  * Checks if a MimeOption has a specific flag.
  */
-bool hasFlag(MimeOption const& value, MimeOption const& flag);
+bool hasFlag(const MimeOption& value, const MimeOption& flag);
 
 /**
  * A possible MIME Type for the contents of the system GUI clipboard.
@@ -73,20 +73,16 @@ class MimeType {
 
     static std::map<std::string_view, MimeType> s_typesByName;
 
-    MimeType(unsigned int priority, std::string_view name, ClipboardContentType type, MimeOption options)
-            : m_priority(priority)
-            , m_name(name)
-            , m_type(type)
-            , m_options(options) {}
+    MimeType(unsigned int priority, std::string_view name, ClipboardContentType type, MimeOption options) : m_priority(priority), m_name(name), m_type(type), m_options(options) {}
 
     static decltype(s_typesByName) initializeTypes();
 
     [[nodiscard]] ClipboardContent decodeText(std::istream&) const;
     [[nodiscard]] ClipboardContent decodePaths(std::istream&) const;
 
-    bool encode(ClipboardContent const&, std::ostream&) const;
-    bool encode(std::string const&, std::ostream&) const;
-    bool encode(ClipboardPaths const&, std::ostream&) const;
+    bool encode(const ClipboardContent&, std::ostream&) const;
+    bool encode(const std::string&, std::ostream&) const;
+    bool encode(const ClipboardPaths&, std::ostream&) const;
 
 public:
     [[nodiscard]] inline std::string_view name() const { return m_name; }
@@ -98,7 +94,7 @@ public:
     /**
      * Checks if the contents of the clipboard can be converted to this MIME Type.
      */
-    [[nodiscard]] bool supports(ClipboardContent const&) const;
+    [[nodiscard]] bool supports(const ClipboardContent&) const;
 
     /** Decodes the contents of the system GUI clipboard using this MIME Type. */
     [[nodiscard]] ClipboardContent decode(std::istream&) const;
@@ -106,8 +102,8 @@ public:
     /**
      * Performs an action for all MIME Types that support a given set of clipboard contents.
      */
-    template <std::invocable<MimeType const&> func_t>
-    static void forEachSupporting(ClipboardContent const& clipboard, func_t func);
+    template <std::invocable<const MimeType&> func_t>
+    static void forEachSupporting(const ClipboardContent& clipboard, func_t func);
 
     /** Finds a specific MIME type by name. */
     static std::optional<MimeType> find(std::string_view);
@@ -116,9 +112,7 @@ public:
      * Finds the best MIME Type from a list of MIME Types.
      * The "best" type is defined as the one with the lowest priority.
      */
-    template <
-            std::ranges::range range_t,
-            std::convertible_to<std::string_view> element_t = std::ranges::range_value_t<range_t>>
+    template <std::ranges::range range_t, std::convertible_to<std::string_view> element_t = std::ranges::range_value_t<range_t>>
     static std::optional<MimeType> findBest(range_t range);
 
     /**
@@ -131,7 +125,7 @@ public:
      * @return If the encoding process was successful or not. The process can fail for a variety of reasons, including
      *  incompatible MIME Types.
      */
-    static bool encode(ClipboardContent const& clipboard, std::string_view mime, std::ostream& stream);
+    static bool encode(const ClipboardContent& clipboard, std::string_view mime, std::ostream& stream);
 
     /**
      * Decodes the contents of the system GUI clipboard, automatically selecting the best available
@@ -143,7 +137,7 @@ public:
     requires requires {
         requires std::ranges::range<range_t>;
         requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
-        requires std::same_as<std::istream&, std::invoke_result_t<request_t, MimeType const&>>;
+        requires std::same_as<std::istream&, std::invoke_result_t<request_t, const MimeType&>>;
     }
     static ClipboardContent decode(range_t offeredTypes, request_t request);
 };
@@ -171,7 +165,7 @@ template <typename range_t, typename query_t>
 requires requires {
     requires std::ranges::range<range_t>;
     requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
-    requires std::same_as<std::istream&, std::invoke_result_t<query_t, MimeType const&>>;
+    requires std::same_as<std::istream&, std::invoke_result_t<query_t, const MimeType&>>;
 }
 ClipboardContent MimeType::decode(range_t offeredTypes, query_t request) {
     auto type = MimeType::findBest(offeredTypes);
@@ -186,8 +180,8 @@ ClipboardContent MimeType::decode(range_t offeredTypes, query_t request) {
     return type->decode(stream);
 }
 
-template <std::invocable<MimeType const&> func_t>
-void MimeType::forEachSupporting(ClipboardContent const& clipboard, func_t func) {
+template <std::invocable<const MimeType&> func_t>
+void MimeType::forEachSupporting(const ClipboardContent& clipboard, func_t func) {
     for (auto&& [key, value] : s_typesByName) {
         if (value.supports(clipboard)) {
             func(value);

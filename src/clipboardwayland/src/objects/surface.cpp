@@ -15,12 +15,11 @@
 #include "surface.hpp"
 #include "all.hpp"
 
-WlSurface::WlSurface(WlCompositor const& compositor, XdgWmBase const& xdgWmBase)
+WlSurface::WlSurface(const WlCompositor& compositor, const XdgWmBase& xdgWmBase)
         : WlObject<spec_t> {wl_compositor_create_surface(compositor.value())}
         , m_xdg {std::make_unique<XdgSurface>(xdgWmBase, *this)} {}
 
-WlSurface::WlSurface(WlRegistry const& registry)
-        : WlSurface {registry.get<WlCompositor>(), registry.get<XdgWmBase>()} {}
+WlSurface::WlSurface(const WlRegistry& registry) : WlSurface {registry.get<WlCompositor>(), registry.get<XdgWmBase>()} {}
 
 void WlSurface::attach(std::unique_ptr<WlBuffer>&& buffer) {
     m_buffer = std::move(buffer);
@@ -35,7 +34,7 @@ void WlSurface::commit() const {
     wl_surface_commit(value());
 }
 
-void WlSurface::setTitle(char const* title) const {
+void WlSurface::setTitle(const char* title) const {
     m_xdg->setTitle(title);
 }
 

@@ -65,7 +65,7 @@ void WlDisplay::dispatchUntil(predicate_t predicate) const {
     while (!predicate()) {
         dispatchWithTimeout();
 
-        auto const time = std::chrono::steady_clock::now() - start;
+        const auto time = std::chrono::steady_clock::now() - start;
         if (time > maxWaitTime) {
             throw WlException("Timed out waiting for the Wayland server to reply");
         }

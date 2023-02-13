@@ -30,17 +30,17 @@ class WlKeyboard : public WlObject<WlKeyboardSpec> {
 
     std::map<wl_surface*, std::uint32_t> m_focus {};
 
-    static wl_keyboard* initKeyboard(WlSeat const&);
+    static wl_keyboard* initKeyboard(const WlSeat&);
 
 public:
-    explicit WlKeyboard(WlSeat const&);
-    explicit WlKeyboard(WlRegistry const&);
+    explicit WlKeyboard(const WlSeat&);
+    explicit WlKeyboard(const WlRegistry&);
 
     bool hasFocus(wl_surface*) const;
-    bool hasFocus(WlSurface const&) const;
+    bool hasFocus(const WlSurface&) const;
 
     std::uint32_t getFocusSerial(wl_surface*) const;
-    std::uint32_t getFocusSerial(WlSurface const&) const;
+    std::uint32_t getFocusSerial(const WlSurface&) const;
 
 private:
     void onEnter(std::uint32_t serial, wl_surface*, wl_array*);

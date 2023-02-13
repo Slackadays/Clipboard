@@ -37,14 +37,14 @@ public:
     void receive(std::string_view mime, int fd) const;
 
     /** Performs an action for each MIME Type supported by this offer. */
-    template <std::invocable<std::string const&> func_t>
+    template <std::invocable<const std::string&> func_t>
     void forEachMimeType(func_t func) const;
 
 private:
-    void onOffer(char const*);
+    void onOffer(const char*);
 };
 
-template <std::invocable<std::string const&> func_t>
+template <std::invocable<const std::string&> func_t>
 void WlDataOffer::forEachMimeType(func_t func) const {
     for (auto&& value : m_mimeTypes) {
         func(value);

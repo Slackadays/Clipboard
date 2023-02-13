@@ -46,4 +46,4 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer);
 void setWindowsClipboardDataPipe();
 void setWindowsClipboardDataFiles();
 ClipboardContent getGUIClipboard();
-void writeToGUIClipboard(ClipboardContent const& clipboard);
+void writeToGUIClipboard(const ClipboardContent& clipboard);

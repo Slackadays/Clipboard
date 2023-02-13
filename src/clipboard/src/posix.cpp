@@ -29,7 +29,7 @@ constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 using getClipboard_t = void* (*)();
 using setClipboard_t = void (*)(void*);
 
-static void posixClipboardFailure(char const* object) {
+static void posixClipboardFailure(const char* object) {
     if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
         indicator.detach();
         exit(EXIT_FAILURE);
@@ -40,7 +40,7 @@ static void posixClipboardFailure(char const* object) {
 }
 
 template <typename proc_t, typename... args_t, typename return_t = std::invoke_result_t<proc_t, args_t...>>
-static return_t dynamicCall(char const* object, char const* symbol, args_t... args) {
+static return_t dynamicCall(const char* object, const char* symbol, args_t... args) {
     auto objectHandle = dlopen(object, RTLD_LAZY | RTLD_NODELETE);
     if (objectHandle == nullptr) {
         debugStream << "Opening " << object << " to look for " << symbol << " failed, aborting operation" << std::endl;
@@ -62,18 +62,17 @@ static return_t dynamicCall(char const* object, char const* symbol, args_t... ar
     return funcPointer(args...);
 }
 
-static ClipboardContent dynamicGetGUIClipboard(char const* object, char const* symbol) {
+static ClipboardContent dynamicGetGUIClipboard(const char* object, const char* symbol) {
     auto posixClipboardPtr = dynamicCall<getClipboard_t>(object, symbol);
     if (posixClipboardPtr == nullptr) {
         return {};
     }
 
-    std::unique_ptr<ClipboardContent const> posixClipboard {
-            reinterpret_cast<ClipboardContent const*>(posixClipboardPtr)};
+    std::unique_ptr<const ClipboardContent> posixClipboard {reinterpret_cast<const ClipboardContent*>(posixClipboardPtr)};
     return *posixClipboard;
 }
 
-static void dynamicSetGUIClipboard(char const* object, char const* symbol, ClipboardContent const& clipboard) {
+static void dynamicSetGUIClipboard(const char* object, const char* symbol, const ClipboardContent& clipboard) {
     WriteGuiContext context {
             .forker = forker,
             .clipboard = clipboard,
@@ -96,18 +95,18 @@ ClipboardContent getGUIClipboard() {
 
         return clipboard;
 
-    } catch (std::exception const& e) {
+    } catch (const std::exception& e) {
         debugStream << "Error getting clipboard data: " << e.what() << std::endl;
         return {};
     }
 }
 
-void writeToGUIClipboard(ClipboardContent const& clipboard) {
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
         dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard);
         dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard);
 
-    } catch (std::exception const& e) {
+    } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
     }
 }

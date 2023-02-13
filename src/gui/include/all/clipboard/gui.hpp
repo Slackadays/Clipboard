@@ -24,7 +24,7 @@ namespace fs = std::filesystem;
 
 enum class ClipboardPathsAction { Copy, Cut };
 
-std::ostream& operator<<(std::ostream&, ClipboardPathsAction const&);
+std::ostream& operator<<(std::ostream&, const ClipboardPathsAction&);
 
 class ClipboardPaths {
 private:
@@ -33,10 +33,10 @@ private:
 
 public:
     ClipboardPaths(std::vector<fs::path>&&, ClipboardPathsAction = ClipboardPathsAction::Copy);
-    ClipboardPaths(std::vector<fs::path> const& paths, ClipboardPathsAction = ClipboardPathsAction::Copy);
+    ClipboardPaths(const std::vector<fs::path>& paths, ClipboardPathsAction = ClipboardPathsAction::Copy);
 
     [[nodiscard]] inline ClipboardPathsAction action() const { return m_action; }
-    [[nodiscard]] inline std::vector<fs::path> const& paths() const { return m_paths; }
+    [[nodiscard]] inline const std::vector<fs::path>& paths() const { return m_paths; }
 };
 
 enum class ClipboardContentType { Empty, Text, Paths };
@@ -49,18 +49,18 @@ private:
 public:
     ClipboardContent();
 
-    ClipboardContent(std::string const&);
+    ClipboardContent(const std::string&);
     ClipboardContent(std::string&&);
 
-    ClipboardContent(ClipboardPaths const&);
+    ClipboardContent(const ClipboardPaths&);
     ClipboardContent(ClipboardPaths&&);
 
     ClipboardContent(std::vector<fs::path>&&, ClipboardPathsAction = ClipboardPathsAction::Copy);
-    ClipboardContent(std::vector<fs::path> const&, ClipboardPathsAction = ClipboardPathsAction::Copy);
+    ClipboardContent(const std::vector<fs::path>&, ClipboardPathsAction = ClipboardPathsAction::Copy);
 
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
-    [[nodiscard]] inline std::string const& text() const { return std::get<std::string>(m_data); }
-    [[nodiscard]] inline ClipboardPaths const& paths() const { return std::get<ClipboardPaths>(m_data); }
+    [[nodiscard]] inline const std::string& text() const { return std::get<std::string>(m_data); }
+    [[nodiscard]] inline const ClipboardPaths& paths() const { return std::get<ClipboardPaths>(m_data); }
 };
 
 /**
@@ -68,6 +68,6 @@ public:
  * implementations on Write calls.
  */
 struct WriteGuiContext {
-    Forker const& forker;
-    ClipboardContent const& clipboard;
+    const Forker& forker;
+    const ClipboardContent& clipboard;
 };

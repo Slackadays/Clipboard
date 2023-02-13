@@ -37,8 +37,8 @@ private:
     std::function<sendCallback_t> m_sendCallback;
 
 public:
-    explicit WlDataSource(WlDataDeviceManager const&);
-    explicit WlDataSource(WlRegistry const&);
+    explicit WlDataSource(const WlDataDeviceManager&);
+    explicit WlDataSource(const WlRegistry&);
 
     [[nodiscard]] inline bool isCancelled() const { return m_isCancelled; }
 
@@ -46,6 +46,6 @@ public:
     void offer(std::string_view) const;
 
 private:
-    void onSend(char const* mime, std::int32_t fd);
+    void onSend(const char* mime, std::int32_t fd);
     void onCancelled();
 };

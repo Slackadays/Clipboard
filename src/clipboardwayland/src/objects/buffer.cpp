@@ -15,24 +15,11 @@
 #include "buffer.hpp"
 #include "all.hpp"
 
-WlBuffer::WlBuffer(
-        std::unique_ptr<WlShmPool>&& pool,
-        std::int32_t offset,
-        std::int32_t width,
-        std::int32_t height,
-        std::int32_t stride,
-        wl_shm_format format
-)
+WlBuffer::WlBuffer(std::unique_ptr<WlShmPool>&& pool, std::int32_t offset, std::int32_t width, std::int32_t height, std::int32_t stride, wl_shm_format format)
         : WlObject<spec_t> {wl_shm_pool_create_buffer(getValue(pool), offset, width, height, stride, format)}
         , m_shmPool {std::move(pool)} {}
 
-std::unique_ptr<WlBuffer> WlBuffer::fromMemfd(
-        WlRegistry const& registry,
-        std::int32_t width,
-        std::int32_t height,
-        std::int32_t stride,
-        wl_shm_format format
-) {
+std::unique_ptr<WlBuffer> WlBuffer::fromMemfd(const WlRegistry& registry, std::int32_t width, std::int32_t height, std::int32_t stride, wl_shm_format format) {
     if (!registry.get<WlShm>().supports(format)) {
         throw WlException("wl_shm doesn't support format ", format);
     }

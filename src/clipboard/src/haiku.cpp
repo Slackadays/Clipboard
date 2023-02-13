@@ -32,7 +32,7 @@ ClipboardContent getGUIClipboard() {
     return ClipboardContent();
 }
 
-void writeToGUIClipboard(ClipboardContent const& clipboard) {
+void writeToGUIClipboard(const ClipboardContent& clipboard) {
     if (clipboard.type() == ClipboardContentType::Text) {
 
     } else if (clipboard.type() == ClipboardContentType::Paths) {

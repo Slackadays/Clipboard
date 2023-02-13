@@ -102,8 +102,8 @@ FdStream::FdStream(FdBuffer&& buffer) : m_fdBuffer {std::make_unique<FdBuffer>(b
 
 FdStream::FdStream(int fd) : FdStream(FdBuffer {fd}) {}
 FdStream::FdStream(int readFd, int writeFd) : FdStream(FdBuffer {readFd, writeFd}) {}
-FdStream::FdStream(Fd const& fd) : FdStream(FdBuffer {fd}) {}
-FdStream::FdStream(PipeFd const& fd) : FdStream(FdBuffer {fd}) {}
+FdStream::FdStream(const Fd& fd) : FdStream(FdBuffer {fd}) {}
+FdStream::FdStream(const PipeFd& fd) : FdStream(FdBuffer {fd}) {}
 
 FdBuffer::FdBuffer(int readFd, int writeFd) : m_readFd {readFd}, m_writeFd {writeFd} {
 
@@ -112,8 +112,8 @@ FdBuffer::FdBuffer(int readFd, int writeFd) : m_readFd {readFd}, m_writeFd {writ
 }
 
 FdBuffer::FdBuffer(int fd) : FdBuffer {fd, fd} {}
-FdBuffer::FdBuffer(Fd const& fd) : FdBuffer {fd.value()} {}
-FdBuffer::FdBuffer(PipeFd const& fd) : FdBuffer {fd.readFd(), fd.writeFd()} {}
+FdBuffer::FdBuffer(const Fd& fd) : FdBuffer {fd.value()} {}
+FdBuffer::FdBuffer(const PipeFd& fd) : FdBuffer {fd.readFd(), fd.writeFd()} {}
 
 std::size_t FdBuffer::safeRead(std::span<char> span) const {
     if (span.empty()) {
@@ -128,7 +128,7 @@ std::size_t FdBuffer::safeRead(std::span<char> span) const {
     return result;
 }
 
-std::size_t FdBuffer::safeWrite(std::span<char const> span) const {
+std::size_t FdBuffer::safeWrite(std::span<const char> span) const {
     if (span.empty()) {
         throw WlException("Tried to write a nonpositive number of bytes");
     }
@@ -160,7 +160,7 @@ std::size_t FdBuffer::repeatedRead(std::span<char> span) const {
     return total;
 }
 
-std::size_t FdBuffer::repeatedWrite(std::span<char const> span) const {
+std::size_t FdBuffer::repeatedWrite(std::span<const char> span) const {
     std::size_t total = 0;
     while (!span.empty()) {
         auto result = safeWrite(span);
@@ -235,7 +235,7 @@ FdBuffer::int_type FdBuffer::overflow(int_type ch) {
     return 1;
 }
 
-std::streamsize FdBuffer::xsputn(char_type const* input, std::streamsize count) {
+std::streamsize FdBuffer::xsputn(const char_type* input, std::streamsize count) {
     flushWrite();
     return repeatedWrite({input, static_cast<std::size_t>(count)});
 }

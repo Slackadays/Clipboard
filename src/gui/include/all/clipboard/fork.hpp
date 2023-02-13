@@ -80,7 +80,7 @@ void Forker::fork(func_t func) const {
         }
 
         func();
-    } catch (std::exception const& e) {
+    } catch (const std::exception& e) {
         debugStream << "Error during fork operation: " << e.what() << std::endl;
     } catch (...) {
         debugStream << "Unknown error during fork operation" << std::endl;

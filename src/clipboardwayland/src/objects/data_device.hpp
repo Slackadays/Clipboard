@@ -31,14 +31,14 @@ class WlDataDevice : public WlObject<WlDataDeviceSpec> {
     std::unique_ptr<WlDataOffer> m_selectionOffer {};
 
 public:
-    explicit WlDataDevice(WlDataDeviceManager const&, WlSeat const&);
-    explicit WlDataDevice(WlRegistry const&);
+    explicit WlDataDevice(const WlDataDeviceManager&, const WlSeat&);
+    explicit WlDataDevice(const WlRegistry&);
 
     [[nodiscard]] inline bool receivedSelectionEvent() const { return m_receivedSelectionEvent; }
     [[nodiscard]] inline bool hasSelectionOffer() const { return m_selectionOffer != nullptr; }
     [[nodiscard]] inline std::unique_ptr<WlDataOffer> releaseSelectionOffer() { return std::move(m_selectionOffer); }
 
-    void setSelection(WlDataSource const&, std::uint32_t serial) const;
+    void setSelection(const WlDataSource&, std::uint32_t serial) const;
 
 private:
     void onDataOffer(wl_data_offer*);

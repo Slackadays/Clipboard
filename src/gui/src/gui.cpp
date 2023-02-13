@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <clipboard/gui.hpp>
 
-std::ostream& operator<<(std::ostream& stream, ClipboardPathsAction const& action) {
+std::ostream& operator<<(std::ostream& stream, const ClipboardPathsAction& action) {
     if (action == ClipboardPathsAction::Copy) {
         stream << "copy";
     } else if (action == ClipboardPathsAction::Cut) {
@@ -26,28 +26,20 @@ std::ostream& operator<<(std::ostream& stream, ClipboardPathsAction const& actio
     return stream;
 }
 
-ClipboardPaths::ClipboardPaths(std::vector<fs::path>&& paths, ClipboardPathsAction action)
-        : m_action(action)
-        , m_paths(std::move(paths)) {}
+ClipboardPaths::ClipboardPaths(std::vector<fs::path>&& paths, ClipboardPathsAction action) : m_action(action), m_paths(std::move(paths)) {}
 
-ClipboardPaths::ClipboardPaths(std::vector<fs::path> const& paths, ClipboardPathsAction action)
-        : m_action(action)
-        , m_paths(paths) {}
+ClipboardPaths::ClipboardPaths(const std::vector<fs::path>& paths, ClipboardPathsAction action) : m_action(action), m_paths(paths) {}
 
-ClipboardContent::ClipboardContent(std::string const& text) : m_type(ClipboardContentType::Text), m_data(text) {}
+ClipboardContent::ClipboardContent(const std::string& text) : m_type(ClipboardContentType::Text), m_data(text) {}
 
 ClipboardContent::ClipboardContent(std::string&& text) : m_type(ClipboardContentType::Text), m_data(std::move(text)) {}
 
-ClipboardContent::ClipboardContent(ClipboardPaths const& paths) : m_type(ClipboardContentType::Paths), m_data(paths) {}
+ClipboardContent::ClipboardContent(const ClipboardPaths& paths) : m_type(ClipboardContentType::Paths), m_data(paths) {}
 
-ClipboardContent::ClipboardContent(ClipboardPaths&& paths)
-        : m_type(ClipboardContentType::Paths)
-        , m_data(std::move(paths)) {}
+ClipboardContent::ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)) {}
 
-ClipboardContent::ClipboardContent(std::vector<fs::path>&& paths, ClipboardPathsAction action)
-        : ClipboardContent(ClipboardPaths(std::move(paths), action)) {}
+ClipboardContent::ClipboardContent(std::vector<fs::path>&& paths, ClipboardPathsAction action) : ClipboardContent(ClipboardPaths(std::move(paths), action)) {}
 
-ClipboardContent::ClipboardContent(std::vector<fs::path> const& paths, ClipboardPathsAction action)
-        : ClipboardContent(ClipboardPaths(paths, action)) {}
+ClipboardContent::ClipboardContent(const std::vector<fs::path>& paths, ClipboardPathsAction action) : ClipboardContent(ClipboardPaths(paths, action)) {}
 
 ClipboardContent::ClipboardContent() : m_type(ClipboardContentType::Empty), m_data(nullptr) {}

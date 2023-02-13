@@ -35,7 +35,7 @@ class WlRegistry : public WlObject<WlRegistrySpec> {
         std::shared_ptr<void> object;
     };
 
-    WlDisplay const& m_display;
+    const WlDisplay& m_display;
     std::map<std::uint32_t, BoundObject> m_boundObjectsByName {};
     std::multimap<std::string_view, BoundObject> m_boundObjectsByInterface {};
 
@@ -43,7 +43,7 @@ class WlRegistry : public WlObject<WlRegistrySpec> {
     void bind(std::uint32_t name, std::uint32_t version);
 
 public:
-    explicit WlRegistry(WlDisplay const& display);
+    explicit WlRegistry(const WlDisplay& display);
 
     /**
      * Gets a C++-managed global Wayland object bound in this registry.
@@ -54,7 +54,7 @@ public:
     T const& get() const;
 
 private:
-    void onGlobal(std::uint32_t name, char const* interface, std::uint32_t version);
+    void onGlobal(std::uint32_t name, const char* interface, std::uint32_t version);
     void onGlobalRemove(std::uint32_t name);
 };
 
