@@ -693,7 +693,7 @@ void checkForNoItems() {
 }
 
 void setupIndicator() {
-    if (!is_tty.err) return;
+    if (!is_tty.err || output_silent) return;
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
     const std::array<std::string_view, 10> spinner_steps {"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
@@ -857,6 +857,7 @@ void showFailures() {
 }
 
 void showSuccesses() {
+    if (output_silent) return;
     if (successes.bytes > 0 && is_tty.err) {
         fprintf(stderr, byte_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {

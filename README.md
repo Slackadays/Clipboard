@@ -50,7 +50,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 Get the latest release instead by adding `--branch 0.3.1` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
-git clone https://github.com/slackadays/Clipboard 
+git clone https://github.com/Slackadays/Clipboard 
 cd Clipboard/build
 cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
 cmake --build .
@@ -67,7 +67,7 @@ You can substitute `cb` for `clipboard` in all commands, and add a number to the
 
 ---
 
-**Copy** &emsp; `clipboard ([--]copy|[-]cp)[(num)|_(id)] (file) [files]`
+**Copy** &emsp; `clipboard ([--]copy|[-]cp)[(num)|_(id)] (file) [files]` or `(something) | clipboard [([--]copy|[-]cp)][(num)|_(id)]`
 
 ---
 
@@ -76,15 +76,11 @@ You can substitute `cb` for `clipboard` in all commands, and add a number to the
 
 ---
 
-**Paste** &emsp; `clipboard ([--]paste|[-]p)[(num)|_(id)]`
+**Paste** &emsp; `clipboard ([--]paste|[-]p)[(num)|_(id)]` or `clipboard [([--]paste|[-]p][(num)|_(id)] | (something)` or `clipboard [([--]paste|[-]p)][(num)|_(id)] > (some file)`
 
 ---
 
-**Pipe In** &emsp; `(something) | clipboard [([--]copy|[-]cp)][(num)|_(id)]`
-
----
-
-**Pipe Out** &emsp; `clipboard [([--]paste|[-]p][(num)|_(id)] | (something)` or `clipboard [([--]paste|[-]p)][(num)|_(id)] > (some file)`
+**Add Contents** &emsp; `clipboard ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]` or `(something) | clipboard [([--]add|[-]ad)][(num)|_(id)]`
 
 ---
 
@@ -132,6 +128,10 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ---
 
+**`CLIPBOARD_SILENT`** &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.
+
+---
+
 **`FORCE_COLOR`** &emsp; Set this to anything to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
 ---
@@ -152,9 +152,7 @@ cb cp800 bar.conf AnotherDirectory baz.txt
 
 ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join our Discord group!  
-
-[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join our Discord group! [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
 ![Thank You!](documentation/readme-assets/ThankYou.png)
 
