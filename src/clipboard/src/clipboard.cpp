@@ -184,6 +184,8 @@ void copy() {
         copying.buffer = copying.items.at(0).string();
         writeToFile(path.data, copying.buffer);
         printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
+        if (action == Action::Cut)
+            writeToFile(path.original_files, path.data.string());
         successes.bytes = 0; // temporarily disable the bytes success message
         return;
     }
@@ -248,6 +250,8 @@ void pipeIn() {
     copying.buffer = pipedInContent();
     successes.bytes += copying.buffer.size();
     writeToFile(path.data, copying.buffer);
+    if (action == Action::Cut)
+        writeToFile(path.original_files, path.data.string());
 }
 
 void pipeOut() {
@@ -257,6 +261,7 @@ void pipeOut() {
         fflush(stdout);
         successes.bytes += content.size();
     }
+    removeOldFiles();
 }
 
 void clear() {
@@ -522,7 +527,7 @@ void syncWithGUIClipboard(bool force = false) {
     }
 }
 
-void showClipboardStatus() {
+void showClipboardStatus(bool show_prompt = false) {
     syncWithGUIClipboard(true);
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
@@ -584,7 +589,8 @@ void showClipboardStatus() {
             printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
         }
     }
-    printf("%s", clipboard_action_prompt().data());
+    if (show_prompt)
+        printf("%s", clipboard_action_prompt().data());
 }
 
 template <typename T>
@@ -633,7 +639,7 @@ Action getAction() {
         io_type = Pipe;
         return Paste;
     } else {
-        showClipboardStatus();
+        showClipboardStatus(true);
         exit(EXIT_SUCCESS);
     }
 }
@@ -687,6 +693,7 @@ void checkForNoItems() {
         exit(EXIT_FAILURE);
     }
     if (action == Action::Paste && fs::is_empty(path.main)) {
+        fprintf(stderr, "%s", no_clipboard_contents_message().data());
         showClipboardStatus();
         exit(EXIT_SUCCESS);
     }
@@ -778,7 +785,6 @@ void removeOldFiles() {
         }
         files.close();
         if (copying.failedItems.empty()) fs::remove(path.original_files);
-        action = Action::Cut;
     }
 }
 
