@@ -184,8 +184,7 @@ void copy() {
         copying.buffer = copying.items.at(0).string();
         writeToFile(path.data, copying.buffer);
         printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
-        if (action == Action::Cut)
-            writeToFile(path.original_files, path.data.string());
+        if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
         successes.bytes = 0; // temporarily disable the bytes success message
         return;
     }
@@ -250,8 +249,7 @@ void pipeIn() {
     copying.buffer = pipedInContent();
     successes.bytes += copying.buffer.size();
     writeToFile(path.data, copying.buffer);
-    if (action == Action::Cut)
-        writeToFile(path.original_files, path.data.string());
+    if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
 }
 
 void pipeOut() {
@@ -589,8 +587,7 @@ void showClipboardStatus(bool show_prompt = false) {
             printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
         }
     }
-    if (show_prompt)
-        printf("%s", clipboard_action_prompt().data());
+    if (show_prompt) printf("%s", clipboard_action_prompt().data());
 }
 
 template <typename T>
