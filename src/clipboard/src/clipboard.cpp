@@ -764,7 +764,7 @@ void setupIndicator() {
         static size_t items_size = copying.items.size();
         for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
             percent_done =
-                    ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size + 1;
+                    ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size + 1);
             output_length =
                     fprintf(stderr,
                             working_message().data(),
@@ -799,7 +799,7 @@ void setupIndicator() {
         }
         for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
             percent_done =
-                    ((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size + 1;
+                    ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size + 1);
             output_length =
                     fprintf(stderr,
                             working_message().data(),
