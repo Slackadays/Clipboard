@@ -184,7 +184,7 @@ void copy() {
         copying.buffer = copying.items.at(0).string();
         writeToFile(path.data, copying.buffer);
         printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
-        successes.bytes = 0; //temporarily disable the bytes success message
+        successes.bytes = 0; // temporarily disable the bytes success message
         return;
     }
     for (const auto& f : copying.items)
@@ -329,10 +329,10 @@ void addData() {
         writeToFile(path.data, content, true);
     } else if (!fs::is_empty(path.main)) {
         fprintf(stderr,
-            "%s",
-            replaceColors("[red]╳ You can't add text to items. [blank][pink]Try copying text first, or add a "
-                  "file instead.[blank]\n")
-                   .data());
+                "%s",
+                replaceColors("[red]╳ You can't add text to items. [blank][pink]Try copying text first, or add a "
+                              "file instead.[blank]\n")
+                        .data());
     } else {
         pipeIn();
     }
