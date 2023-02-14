@@ -13,8 +13,19 @@ jobs:
           wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
           sudo add-apt-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs) main"
           sudo apt-get update
-          sudo apt-get install -y clang-format-15 shellcheck
+          sudo apt-get install -y clang-format-15
           
           cd src
           ./clang-format-check.sh
-          shellcheck install.sh
+  shellcheck:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          
+          shellcheck src/install.sh
