@@ -94,21 +94,40 @@ TerminalSize getTerminalSize() {
 
 std::string fileContents(const fs::path& path) {
     std::stringstream buffer;
-    buffer << std::ifstream(path).rdbuf();
+    buffer << std::ifstream(path, std::ios::binary).rdbuf();
     return buffer.str();
 }
 
 std::string pipedInContent() {
     std::string content;
-    std::string line;
-    while (std::getline(std::cin, line)) {
-        content.append(line);
+#if !defined(_WIN32) && !defined(_WIN64)
+    std::string buffer(65535, '\0');
+    int len = -1;
+    while (len != 0) {
+        len = read(fileno(stdin), buffer.data(), buffer.size());
+        content.append(buffer.data(), len);
     }
+#elif defined(_WIN32) || defined(_WIN64)
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hStdin, &mode);
+    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
+
+    DWORD dwRead;
+    CHAR chBuf[1024];
+    BOOL bSuccess = FALSE;
+
+    while (true) {
+        bSuccess = ReadFile(hStdin, chBuf, 1024, &dwRead, NULL);
+        if (!bSuccess || dwRead == 0) break;
+        content.append(chBuf, dwRead);
+    }
+#endif
     return content;
 }
 
 void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
-    std::ofstream file(path, append ? std::ios::app : std::ios::trunc);
+    std::ofstream file(path, append ? std::ios::app : std::ios::trunc | std::ios::binary);
     file << content;
 }
 
@@ -255,7 +274,13 @@ void pipeIn() {
 void pipeOut() {
     for (const auto& entry : fs::recursive_directory_iterator(path.main)) {
         std::string content(fileContents(entry.path()));
-        printf("%s", content.data());
+#if !defined(_WIN32) && !defined(_WIN64)
+        int len = write(fileno(stdout), content.data(), content.size());
+        if (len < 0)
+            throw std::runtime_error("write() failed");
+#elif defined(_WIN32) || defined(_WIN64)
+        fwrite(content.data(), sizeof(char), content.size(), stdout);
+#endif
         fflush(stdout);
         successes.bytes += content.size();
     }
