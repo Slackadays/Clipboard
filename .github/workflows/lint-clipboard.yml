@@ -29,3 +29,13 @@ jobs:
           sudo apt-get install -y shellcheck
           
           shellcheck src/install.sh
+  psscriptanalyzer:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: psscriptanalyzer
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force
+          Invoke-ScriptAnalyzer -Path src\install.ps1
