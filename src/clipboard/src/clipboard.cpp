@@ -276,8 +276,7 @@ void pipeOut() {
         std::string content(fileContents(entry.path()));
 #if !defined(_WIN32) && !defined(_WIN64)
         int len = write(fileno(stdout), content.data(), content.size());
-        if (len < 0)
-            throw std::runtime_error("write() failed");
+        if (len < 0) throw std::runtime_error("write() failed");
 #elif defined(_WIN32) || defined(_WIN64)
         fwrite(content.data(), sizeof(char), content.size(), stdout);
 #endif
