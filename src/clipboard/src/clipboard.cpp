@@ -111,7 +111,6 @@ std::string pipedInContent() {
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
     DWORD mode;
     GetConsoleMode(hStdin, &mode);
-    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));
 
     DWORD dwRead;
     CHAR chBuf[1024];
