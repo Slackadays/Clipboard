@@ -109,9 +109,6 @@ std::string pipedInContent() {
     }
 #elif defined(_WIN32) || defined(_WIN64)
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD mode;
-    GetConsoleMode(hStdin, &mode);
-
     DWORD dwRead;
     CHAR chBuf[1024];
     BOOL bSuccess = FALSE;
