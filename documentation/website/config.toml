@@ -23,7 +23,8 @@ render_emoji = true
 juice_logo_name = "Clipboard"
 juice_logo_path = "cb_small.png"
 juice_extra_menu = [
-    { title = "Github", link = "https://github.com/Slackadays/Clipboard" },
+    { title = "GitHub", link = "https://github.com/Slackadays/Clipboard" },
     { title = "Discord", link = "https://discord.gg/jc7bcEeR" },
+    { title = "Merch", link = "https://open-source-zone.creator-spring.com" },
 ]
 repository_url = "https://github.com/Slackadays/Clipboard"
