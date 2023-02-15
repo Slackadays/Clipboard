@@ -101,12 +101,12 @@ std::string fileContents(const fs::path& path) {
 std::string pipedInContent() {
     std::string content;
 #if !defined(_WIN32) && !defined(_WIN64)
-    std::string buffer(65535, '\0');
+    std::array<unsigned char, 65535> buffer;
     int len = -1;
     while (len != 0) {
         len = read(fileno(stdin), buffer.data(), buffer.size());
         content.append(buffer.data(), len);
-        successes.bytes += len;
+        successes.bytes.store(successes.bytes.load(std::memory_order_relaxed) + len, std::memory_order_relaxed);
     }
 #elif defined(_WIN32) || defined(_WIN64)
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -742,7 +742,7 @@ void setupIndicator() {
         if (io_type == IOType::File)
             display_progress(static_cast<unsigned long long>(percent_done()), "%");
         else if (io_type == IOType::Pipe)
-            display_progress(successes.bytes.load(), "B");
+            display_progress(successes.bytes.load(std::memory_order_relaxed), "B");
     }
     fprintf(stderr, "\r%*s\r", output_length, "");
     fflush(stderr);
