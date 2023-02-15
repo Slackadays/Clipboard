@@ -106,6 +106,7 @@ std::string pipedInContent() {
     while (len != 0) {
         len = read(fileno(stdin), buffer.data(), buffer.size());
         content.append(buffer.data(), len);
+        successes.bytes += len;
     }
 #elif defined(_WIN32) || defined(_WIN64)
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -117,6 +118,7 @@ std::string pipedInContent() {
         bSuccess = ReadFile(hStdin, chBuf, 1024, &dwRead, NULL);
         if (!bSuccess || dwRead == 0) break;
         content.append(chBuf, dwRead);
+        successes.bytes += dwRead;
     }
 #endif
     return content;
@@ -262,7 +264,6 @@ void paste() {
 
 void pipeIn() {
     copying.buffer = pipedInContent();
-    successes.bytes += copying.buffer.size();
     writeToFile(path.data, copying.buffer);
     if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
 }
@@ -739,9 +740,9 @@ void setupIndicator() {
         };
 
         if (io_type == IOType::File)
-            display_progress(percent_done(), "%");
+            display_progress(static_cast<unsigned long long>(percent_done()), "%");
         else if (io_type == IOType::Pipe)
-            display_progress(static_cast<int>(successes.bytes), "B");
+            display_progress(successes.bytes.load(), "B");
     }
     fprintf(stderr, "\r%*s\r", output_length, "");
     fflush(stderr);
