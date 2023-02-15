@@ -101,7 +101,7 @@ std::string fileContents(const fs::path& path) {
 std::string pipedInContent() {
     std::string content;
 #if !defined(_WIN32) && !defined(_WIN64)
-    std::array<unsigned char, 65535> buffer;
+    std::array<char, 65535> buffer;
     int len = -1;
     while (len != 0) {
         len = read(fileno(stdin), buffer.data(), buffer.size());
