@@ -106,7 +106,7 @@ std::string pipedInContent() {
     while (len != 0) {
         len = read(fileno(stdin), buffer.data(), buffer.size());
         content.append(buffer.data(), len);
-        successes.bytes.store(successes.bytes.load(std::memory_order_relaxed) + len, std::memory_order_relaxed);
+        successes.bytes += len;
     }
 #elif defined(_WIN32) || defined(_WIN64)
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
