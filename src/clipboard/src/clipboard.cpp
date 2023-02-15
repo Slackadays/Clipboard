@@ -882,24 +882,24 @@ void showFailures() {
 void showSuccesses() {
     if (output_silent) return;
     if (successes.bytes > 0 && is_tty.err) {
-        fprintf(stderr, byte_success_message().data(), did_action[action].data(), static_cast<int>(successes.bytes));
+        fprintf(stderr, byte_success_message().data(), did_action[action].data(), successes.bytes.load());
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
         printf(one_item_success_message().data(),
                did_action[action].data(),
                action == Action::Paste ? (*(fs::directory_iterator(path.main))).path().filename().string().data() : copying.items.at(0).string().data());
     } else {
         if ((successes.files > 1) && (successes.directories == 0))
-            printf(many_files_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
+            printf(many_files_success_message().data(), did_action[action].data(), successes.files.load());
         else if ((successes.files == 0) && (successes.directories > 1))
-            printf(many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
+            printf(many_directories_success_message().data(), did_action[action].data(), successes.directories.load());
         else if ((successes.files == 1) && (successes.directories == 1))
             printf(one_file_one_directory_success_message().data(), did_action[action].data());
         else if ((successes.files > 1) && (successes.directories == 1))
-            printf(many_files_one_directory_success_message().data(), did_action[action].data(), static_cast<int>(successes.files));
+            printf(many_files_one_directory_success_message().data(), did_action[action].data(), successes.files.load());
         else if ((successes.files == 1) && (successes.directories > 1))
-            printf(one_file_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.directories));
+            printf(one_file_many_directories_success_message().data(), did_action[action].data(), successes.directories.load());
         else if ((successes.files > 1) && (successes.directories > 1))
-            printf(many_files_many_directories_success_message().data(), did_action[action].data(), static_cast<int>(successes.files), static_cast<int>(successes.directories));
+            printf(many_files_many_directories_success_message().data(), did_action[action].data(), successes.files.load(), successes.directories.load());
     }
 }
 

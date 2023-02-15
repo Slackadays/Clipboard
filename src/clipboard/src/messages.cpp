@@ -93,14 +93,14 @@ Message item_already_exists_message = "[yellow]• The item [bold]%s[blank][yell
 Message bad_response_message = "[red]╳ Sorry, that wasn't a valid choice. Try again: [blank][pink][bold][(y)es/(n)o)] ";
 Message working_message = "[yellow]• %s... %i%s %s[blank]\r";
 Message cancelled_message = "[green]✓ Cancelled %s[blank]";
-Message byte_success_message = "[green]✓ %s %i bytes[blank]\n";
+Message byte_success_message = "[green]✓ %s %llu bytes[blank]\n";
 Message one_item_success_message = "[green]✓ %s %s[blank]\n";
-Message many_files_success_message = "[green]✓ %s %i files[blank]\n";
-Message many_directories_success_message = "[green]✓ %s %i directories[blank]\n";
+Message many_files_success_message = "[green]✓ %s %lu files[blank]\n";
+Message many_directories_success_message = "[green]✓ %s %lu directories[blank]\n";
 Message one_file_one_directory_success_message = "[green]✓ %s one file and one directory[blank]\n";
-Message one_file_many_directories_success_message = "[green]✓ %s one file and %i directories[blank]\n";
-Message many_files_one_directory_success_message = "[green]✓ %s %i files and one directory[blank]\n";
-Message many_files_many_directories_success_message = "[green]✓ %s %i files and %i directories[blank]\n";
+Message one_file_many_directories_success_message = "[green]✓ %s one file and %lu directories[blank]\n";
+Message many_files_one_directory_success_message = "[green]✓ %s %lu files and one directory[blank]\n";
+Message many_files_many_directories_success_message = "[green]✓ %s %lu files and %lu directories[blank]\n";
 Message internal_error_message = "[red]╳ Internal error: %s\n▏ This is probably a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 
@@ -164,10 +164,10 @@ void setLanguageES() {
     not_enough_storage_message = "[red]╳ No habrá espacio suficiente para pegar todas tus cosas (%gkB a pegar, %gkB "
                                  "disponible).[blank][pink] Vuelve a revisar las cosas que especificaste o saca "
                                  "algunas cosas para hacer más espacio.[blank]\n";
-    byte_success_message = "[green]✓ %s %i bytes[blank]\n";
-    many_files_success_message = "[green]✓ %s %i archivos[blank]\n";
-    many_directories_success_message = "[green]✓ %s %i carpetas[blank]\n";
-    many_files_many_directories_success_message = "[green]✓ %s %i archivos y %i carpetas[blank]\n";
+    byte_success_message = "[green]✓ %s %llu bytes[blank]\n";
+    many_files_success_message = "[green]✓ %s %lu archivos[blank]\n";
+    many_directories_success_message = "[green]✓ %s %lu carpetas[blank]\n";
+    many_files_many_directories_success_message = "[green]✓ %s %lu archivos y %lu carpetas[blank]\n";
     internal_error_message = "[red]╳ Error internal: %s[blank]\n";
 }
 
@@ -217,10 +217,10 @@ void setLanguagePT() {
     and_more_items_message = "[blue]▏ ...e mais [bold]%i[blank][blue].[blank]\n";
     fix_problem_message = "[pink]▏ Veja se você possui as permissões necessárias, ou\n"
                           "▏ verifique a ortografia do arquivo ou diretório que voce está.[blank]\n";
-    byte_success_message = "[green]✓ %s %i bytes[blank]\n";
-    many_files_success_message = "[green]✓ %s %i arquivos[blank]\n";
-    many_directories_success_message = "[green]✓ %s %i diretórios[blank]\n";
-    many_files_many_directories_success_message = "[green]✓ %s %i arquivos e %i diretórios[blank]\n";
+    byte_success_message = "[green]✓ %s %llu bytes[blank]\n";
+    many_files_success_message = "[green]✓ %s %lu arquivos[blank]\n";
+    many_directories_success_message = "[green]✓ %s %lu diretórios[blank]\n";
+    many_files_many_directories_success_message = "[green]✓ %s %lu arquivos e %lu diretórios[blank]\n";
     internal_error_message = "[red]╳ Erro interno: %s\n▏ Isso é provavelmente um bug.[blank]\n";
 }
 
@@ -295,9 +295,9 @@ void setLanguageTR() {
     not_enough_storage_message = "[red]╳ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gkB "
                                  "yapıştırılacak, %gkB boş).[blank][pink] Hangi öğeleri seçtiğinizi ikinci kez kontrol "
                                  "etmeyi deneyin veya yer açmak için bazı dosyaları silin.[blank]\n";
-    byte_success_message = "[green]✓ %s %i bayt[blank]\n";
-    many_files_success_message = "[green]✓ %s %i dosya[blank]\n";
-    many_directories_success_message = "[green]✓ %s %i dizin[blank]\n";
-    many_files_many_directories_success_message = "[green]✓ %s %i dosya ve %i dizin[blank]\n";
+    byte_success_message = "[green]✓ %s %llu bayt[blank]\n";
+    many_files_success_message = "[green]✓ %s %lu dosya[blank]\n";
+    many_directories_success_message = "[green]✓ %s %lu dizin[blank]\n";
+    many_files_many_directories_success_message = "[green]✓ %s %lu dosya ve %lu dizin[blank]\n";
     internal_error_message = "[red]╳ İçsel hata: %s\n▏ Bu yüksek ihtimal bir hata veya bu sistemde erişim sorunu yaşıyorsunuz.[blank]\n";
 }
