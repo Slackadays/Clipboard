@@ -748,10 +748,7 @@ void setupIndicator() {
     fflush(stderr);
     if (progress_state == ProgressState::Cancel) {
         fprintf(stderr, cancelled_message().data(), actions[action].data());
-        if (action == Action::Copy || action == Action::Cut)
-            fprintf(stderr, "\n");
-        else
-            fflush(stderr);
+        fflush(stderr);
         _exit(EXIT_FAILURE);
     }
     fflush(stderr);
