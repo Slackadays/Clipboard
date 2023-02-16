@@ -881,9 +881,8 @@ void showSuccesses() {
     if (successes.bytes > 0 && is_tty.err) {
         fprintf(stderr, byte_success_message().data(), did_action[action].data(), successes.bytes.load());
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
-        printf(one_item_success_message().data(),
-               did_action[action].data(),
-               action == Action::Clear ? "" : (*(fs::directory_iterator(path.main))).path().filename().string().data());
+        printf(one_item_success_message().data(), did_action[action].data(), action == Action::Clear ? "" : (*(fs::directory_iterator(path.main))).path().filename().string().data()
+        );
     } else {
         if ((successes.files > 1) && (successes.directories == 0))
             printf(many_files_success_message().data(), did_action[action].data(), successes.files.load());
