@@ -38,13 +38,15 @@ char** fileContent() {
     return NULL;
 }
 
-void writeText(const char* text) {
+void clearContent() {
     [[NSPasteboard generalPasteboard] clearContents];
+}
+
+void writeText(const char* text) {
     [[NSPasteboard generalPasteboard] setString:[NSString stringWithUTF8String:text] forType:NSPasteboardTypeString];
 }
 
 void writeFiles(const char** files) {
-    [[NSPasteboard generalPasteboard] clearContents];
     NSMutableArray *fileArray = [[NSMutableArray alloc] init];
     for (int i = 0; files[i] != NULL; i++) {
         [fileArray addObject:[NSURL fileURLWithPath:[NSString stringWithUTF8String:files[i]]]];

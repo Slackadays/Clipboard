@@ -21,6 +21,7 @@ extern "C" {
 const char* textContent();
 char** fileContent();
 
+void clearContent();
 void writeText(const char* text);
 void writeFiles(const char** files);
 }
@@ -41,6 +42,7 @@ ClipboardContent getGUIClipboard() {
 }
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
+    clearContent();
     if (clipboard.type() == ClipboardContentType::Text) {
         writeText(clipboard.text().c_str());
     } else if (clipboard.type() == ClipboardContentType::Paths) {
