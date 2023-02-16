@@ -546,7 +546,7 @@ void syncWithGUIClipboard(bool force = false) {
     }
 }
 
-void showClipboardStatus(bool show_prompt = false) {
+void showClipboardStatus() {
     syncWithGUIClipboard(true);
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
@@ -608,7 +608,6 @@ void showClipboardStatus(bool show_prompt = false) {
             printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
         }
     }
-    if (show_prompt) printf("%s", clipboard_action_prompt().data());
 }
 
 template <typename T>
@@ -657,7 +656,7 @@ Action getAction() {
         io_type = Pipe;
         return Paste;
     } else {
-        showClipboardStatus(true);
+        showClipboardStatus();
         exit(EXIT_SUCCESS);
     }
 }
@@ -713,6 +712,7 @@ void checkForNoItems() {
     if (action == Action::Paste && fs::is_empty(path.main)) {
         fprintf(stderr, "%s", no_clipboard_contents_message().data());
         showClipboardStatus();
+        printf("%s", clipboard_action_prompt().data());
         exit(EXIT_SUCCESS);
     }
 }
