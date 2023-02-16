@@ -558,10 +558,11 @@ void showClipboardStatus() {
     std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
+        printf("%s", clipboard_action_prompt().data());
     } else {
         TerminalSize termSizeAvailable(getTerminalSize());
 
-        termSizeAvailable.accountRowsFor(clipboard_action_prompt().size(), check_clipboard_status_message().size());
+        termSizeAvailable.accountRowsFor(check_clipboard_status_message().size());
         if (clipboards_with_contents.size() > termSizeAvailable.rows) {
             termSizeAvailable.accountRowsFor(and_more_items_message().size());
         }
@@ -710,9 +711,7 @@ void checkForNoItems() {
         exit(EXIT_FAILURE);
     }
     if (action == Action::Paste && fs::is_empty(path.main)) {
-        fprintf(stderr, "%s", no_clipboard_contents_message().data());
         showClipboardStatus();
-        printf("%s", clipboard_action_prompt().data());
         exit(EXIT_SUCCESS);
     }
 }
@@ -884,7 +883,7 @@ void showSuccesses() {
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
         printf(one_item_success_message().data(),
                did_action[action].data(),
-               action == Action::Paste ? (*(fs::directory_iterator(path.main))).path().filename().string().data() : copying.items.at(0).string().data());
+               action == Action::Clear ? "one item" : (*(fs::directory_iterator(path.main))).path().filename().string().data());
     } else {
         if ((successes.files > 1) && (successes.directories == 0))
             printf(many_files_success_message().data(), did_action[action].data(), successes.files.load());
