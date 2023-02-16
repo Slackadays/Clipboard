@@ -200,7 +200,11 @@ void copy() {
     if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
         copying.buffer = copying.items.at(0).string();
         writeToFile(path.data, copying.buffer);
-        printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
+
+        if (!output_silent) {
+            printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
+        }
+
         if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
         successes.bytes = 0; // temporarily disable the bytes success message
         return;
@@ -375,11 +379,12 @@ void clearTempDirectory(bool force_clear = false) {
         }
         for (const auto& entry : fs::directory_iterator(path.main)) {
             fs::remove_all(entry.path());
-            if (action == Clear)
+            if (action == Clear) {
                 if (entry.is_directory())
                     successes.directories++;
                 else
                     successes.files++;
+            }
         }
     }
 }
