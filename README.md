@@ -20,7 +20,7 @@ Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like 
 - **`Unified.`** Functions exactly the same everywhere.
 - **`Compatible.`** Works on anything that supports C++20.
 - **`Scriptable.`** Embed it right into your own programs.
-- **`Universal.`** Supports English, Spanish, Portuguese, and Turkish.
+- **`Universal.`** Supports English, español, português, and Türkçe.
 - **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
 - **`Tiny.`** Mere tens of kilobytes in size.
 - **`FOSS.`** 100% free and open-source.
