@@ -87,11 +87,11 @@ Message fix_problem_message = "[pink]▏ See if you have the needed permissions,
 Message not_enough_storage_message = "[red]❌ There won't be enough storage available to paste everything (%gkB to "
                                      "paste, %gkB available).[blank][pink] Try double-checking what items you've "
                                      "selected or delete some files to free up space.[blank]\n";
-Message item_already_exists_message = "[yellow]• The item [bold]%s[blank][yellow] already exists here. Do you want to "
+Message item_already_exists_message = "[yellow]🟡 The item [bold]%s[blank][yellow] already exists here. Do you want to "
                                       "replace it? [pink]Use [bold]all [blank][pink]to replace all existing, or "
                                       "[bold]skip[blank][pink] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "[red]❌ Sorry, that wasn't a valid choice. Try again: [blank][pink][bold][(y)es/(n)o)] ";
-Message working_message = "[yellow]• %s... %llu%s %s[blank]\r";
+Message working_message = "[yellow]🟡 %s... %llu%s %s[blank]\r";
 Message cancelled_message = "[green]✅ Cancelled %s[blank]";
 Message byte_success_message = "[green]✅ %s %llu bytes[blank]\n";
 Message one_item_success_message = "[green]✅ %s %s[blank]\n";
