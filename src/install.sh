@@ -53,9 +53,13 @@ compile() {
     fi
 }
 
+
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir"
 
+if [ "$(nix-info --host-os > info.txt && grep -ow "NixOS" info.txt)" = "NixOS" ]; then
+    compile_nixos
+fi
 
 if [ "$(uname)" = "Linux" ]
 then
