@@ -2,8 +2,25 @@
 set -eu
 
 unsupported() {
-    printf "\033[31mSorry, but the installer script doesn't support %s yet.\n\033[0m" "$1"
-    printf '\033[32m👉 However, you can still install Clipboard with the other methods in the readme!\n\033[0m'
+    printf "\033[31mSorry, but this installer script doesn't support %s.\n\033[0m" "$1"
+    printf '\033[32m👉 However, you can still install Clipboard using the other methods in the readme!\n\033[0m'
+}
+
+verify() {
+    if command -v clipboard >/dev/null 2>&1
+    then
+        if ! clipboard >/dev/null 2>&1
+        then
+            unsupported "this system"
+            exit 1
+        else
+            printf "\033[32mClipboard installed successfully!\n\033[0m"
+            exit 0
+        fi
+    else
+        printf "\033[31mCouldn't install Clipboard\n\033[0m"
+        exit 1
+    fi
 }
 
 compile() {
@@ -19,7 +36,6 @@ compile() {
     else
         sudo cmake --install .
     fi
-    printf "\033[32mClipboard installed successfully!\033[0m"
 }
 
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
@@ -50,7 +66,7 @@ then
     fi
     if [ "$download_link" != "skip" ]
     then
-        curl -SsLl $download_link -o clipboard-linux.zip
+        curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
         sudo mv bin/clipboard /usr/bin/clipboard
@@ -64,7 +80,6 @@ then
         then
             sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
         fi
-        printf "\033[32mClipboard installed successfully!\033[0m"
     fi
 elif [ "$(uname)" = "Darwin" ]
 then
@@ -74,7 +89,6 @@ then
     sudo mv bin/clipboard /usr/local/bin/clipboard
     chmod +x /usr/local/bin/clipboard
     sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
-    printf "\033[32mClipboard installed successfully!\033[0m"
 elif [ "$(uname)" = "FreeBSD" ]
 then
     unsupported "FreeBSD"
@@ -91,3 +105,5 @@ fi
 cd ..
 
 rm -rf "$tmp_dir"
+
+verify
