@@ -56,7 +56,7 @@ Message help_message = "[blue]▏This is Clipboard %s (commit %s), the cut, copy
                        "[blue]▏You can show this help screen anytime with [bold]clipboard -h[blank][blue], [bold]clipboard "
                        "--help[blank][blue], or[bold] clipboard help[blank][blue].\n"
                        "[blue]▏You can also get more help in our Discord server at [bold]https://discord.gg/J6asnc3pEG[blank]\n"
-                       "[blue]▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                       "[blue]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                        "[blue]▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                        "redistribute it under certain conditions.[blank]\n";
 Message check_clipboard_status_message = "[blue]• There are items in these clipboards:\n";
@@ -138,7 +138,7 @@ void setLanguageES() {
                    "[orange]▏cb pegar[blank]\n"
                    "[blue]▏Muestra este mensaje de ayudar en cualquier tiempo que quieras con [bold]clipboard "
                    "-h[blank][blue], [bold]clipboard --help[blank][blue] o[bold] clipboard help[blank][blue].\n"
-                   "[blue]▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[blue]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[blue]▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
                    "to redistribute it under certain conditions.[blank]\n";
     no_valid_action_message = "[red]❌ No especificaste ninguna acción válida o se te olvidó. [pink]Inténta usar o añadir [bold]cortar, "
@@ -197,7 +197,7 @@ void setLanguagePT() {
                    "[orange]▏cb colar[blank]\n"
                    "[blue]▏Você pode rever esta tela de instruções à qualquer momento com [bold]clipboard "
                    "-h[blank][blue], [bold]clipboard --help[blank][blue] ou[bold] clipboard help[blank][blue].\n"
-                   "[blue]▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[blue]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[blue]▏Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
                    "bem-vindo a redistribuí-lo sob certas condições.[blank]\n";
     no_valid_action_message = "[red]❌ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. [pink]Tente utilizar "
@@ -267,7 +267,7 @@ void setLanguageTR() {
                    "[blue]▏    [bold]clipboard -h[blank][blue], [bold]clipboard --help[blank][blue], ya da[bold] clipboard "
                    "help[blank][blue].\n"
                    "[blue]▏Discord sunucumuzdan daha fazla yardım alabilirsiniz: [bold]https://discord.gg/J6asnc3pEG[blank]\n"
-                   "[blue]▏Copyright (C) 2022 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[blue]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[blue]▏                                 GPLv3 altında lisanslanmıştır.[blank]\n"
                    "[blue]▏Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
                    "koşullar altında yeniden dağıtabilirsiniz.[blank]\n";
