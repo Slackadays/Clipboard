@@ -734,7 +734,7 @@ void setupIndicator() {
     if (!is_tty.err || output_silent) return;
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
-    const std::array<std::string_view, 10> spinner_steps {"━       ", "━━      ", " ━━     ", "  ━━    ", "   ━━   ", "    ━━  ", "     ━━ ", "      ━━", "       ━", "        "};
+    const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ", "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ", "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     auto itemsToProcess = [&] {
         size_t items = 1;
         for (auto dummy : fs::directory_iterator(path.main))
@@ -746,11 +746,11 @@ void setupIndicator() {
     auto percent_done = [&] {
         return ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size);
     };
-    for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
+    for (int i = 0; progress_state == ProgressState::Active; i == 21 ? i = 0 : i++) {
         auto display_progress = [&](const auto& num, const auto& unit) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), num, unit, spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(50), [&] { return progress_state != ProgressState::Active; });
+            cv.wait_for(lock, std::chrono::milliseconds(25), [&] { return progress_state != ProgressState::Active; });
         };
 
         if (io_type == IOType::File)
