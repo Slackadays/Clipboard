@@ -35,7 +35,7 @@ compile_nixos() {
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
     printf "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
     printf "\e[1;32mClipboard installed successfully!\e[0m"
-    rm -rfv "$tmp_dir"
+    rm -rf "$tmp_dir"
     exit 0
 }
 
