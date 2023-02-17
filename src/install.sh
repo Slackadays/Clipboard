@@ -92,12 +92,15 @@ then
 elif [ "$(uname)" = "FreeBSD" ]
 then
     unsupported "FreeBSD"
+    exit 0
 elif [ "$(uname)" = "OpenBSD" ]
 then
     unsupported "OpenBSD"
+    exit 0
 elif [ "$(uname)" = "NetBSD" ]
 then
     unsupported "NetBSD"
+    exit 0
 else
 compile
 fi
