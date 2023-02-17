@@ -42,8 +42,17 @@ compile_nixos() {
 compile() {
     git clone --depth 1 https://github.com/slackadays/Clipboard
     cd Clipboard/build
-    download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-amd64.zip
-    curl -SL $download_link -o clipboard-linux.zip
+    link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-amd64.zip
+    curl -SL $link -o clipboard.zip
+
+    if [ ! "$(7z)" ]
+    then
+        ZIP_EXTRACTER="unzip"
+    else
+        ZIP_EXTRACTER="7z"
+    fi
+
+    $ZIP_EXTRACTER clipboard.zip
     cmake ..
     cmake --build .
     cmake --install .
@@ -63,6 +72,8 @@ compile() {
      then
             sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
      fi
+     rm -rfv "$tmp_dir"
+     exit 0
 }
 
 
