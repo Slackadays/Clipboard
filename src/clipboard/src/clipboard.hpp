@@ -93,7 +93,7 @@ constexpr Constants constants;
 
 enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove };
 
-enum class IOType : unsigned int { File, Pipe };
+enum class IOType : unsigned int { File, Pipe, Text };
 
 template <typename T, size_t N>
 class ActionArray : public std::array<T, N> {
