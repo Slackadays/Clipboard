@@ -197,20 +197,20 @@ void copyItem(const fs::path& f) {
 }
 
 void copy() {
-    if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
-        copying.buffer = copying.items.at(0).string();
-        writeToFile(path.data, copying.buffer);
-
-        if (!output_silent) {
-            printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.items.at(0).string().data());
-        }
-
-        if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
-        successes.bytes = 0; // temporarily disable the bytes success message
-        return;
-    }
     for (const auto& f : copying.items)
         copyItem(f);
+}
+
+void copyText() {
+    copying.buffer = copying.items.at(0).string();
+    writeToFile(path.data, copying.buffer);
+
+    if (!output_silent) {
+        printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
+    }
+
+    if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
+    successes.bytes = 0; // temporarily disable the bytes success message
 }
 
 void paste() {
@@ -334,16 +334,11 @@ void edit() {}
 
 void addFiles() {
     if (fs::is_regular_file(path.data)) {
-        if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) {
-            writeToFile(path.data, copying.items.at(0).string(), true);
-            successes.bytes += copying.items.at(0).string().size();
-        } else {
-            fprintf(stderr,
-                    "%s",
-                    replaceColors("[red]╳ You can't add items to text. [blank][pink]Try copying text first, or add "
-                                  "text instead.[blank]\n")
-                            .data());
-        }
+        fprintf(stderr,
+                "%s",
+                replaceColors("[red]╳ You can't add items to text. [blank][pink]Try copying text first, or add "
+                              "text instead.[blank]\n")
+                        .data());
         return;
     }
     for (const auto& f : copying.items)
@@ -366,7 +361,14 @@ void addData() {
     }
 }
 
+void addText() {
+    writeToFile(path.data, copying.items.at(0).string(), true);
+    successes.bytes += copying.items.at(0).string().size();
+}
+
 void remove() {}
+
+void note() {}
 } // namespace PerformAction
 
 void clearTempDirectory(bool force_clear = false) {
@@ -639,32 +641,39 @@ template <typename T>
 
 Action getAction() {
     using enum Action;
-    using enum IOType;
     if (arguments.size() >= 1) {
         for (const auto& entry : {Cut, Copy, Add, Remove}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
-                if (!is_tty.in) io_type = Pipe;
                 return entry;
             }
         }
         for (const auto& entry : {Paste, Show, Clear, Edit}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
-                if (!is_tty.out) io_type = Pipe;
                 return entry;
             }
         }
         printf(no_valid_action_message().data(), arguments.at(0).data());
         exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
-        io_type = Pipe;
         return Copy;
     } else if (!is_tty.out) {
-        io_type = Pipe;
         return Paste;
     } else {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
     }
+}
+
+IOType getIOType() {
+    using enum Action;
+    using enum IOType;
+    if (action == Cut || action == Copy || action == Add || action == Remove) {
+        if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
+        if (!is_tty.in) return Pipe;
+    } else if (action == Paste || action == Show || action == Clear || action == Edit) {
+        if (!is_tty.out) return Pipe;
+    }
+    return File;
 }
 
 void setFlags() {
@@ -845,12 +854,26 @@ void performAction() {
         case Paste:
             pipeOut();
             break;
-        case Clear:
-        case Show:
-        case Edit:
         case Add:
             addData();
+            break;
         case Remove:
+            break;
+        default:
+            break;
+        }
+    } else if (io_type == Text) {
+        switch (action) {
+        case Copy:
+        case Cut:
+            copyText();
+            break;
+        case Add:
+            addText();
+            break;
+        case Remove:
+            break;
+        default:
             break;
         }
     }
@@ -924,9 +947,11 @@ int main(int argc, char* argv[]) {
 
         action = getAction();
 
-        verifyAction();
-
         copying.items.assign(arguments.begin(), arguments.end());
+
+        io_type = getIOType();
+
+        verifyAction();
 
         checkForNoItems();
 
