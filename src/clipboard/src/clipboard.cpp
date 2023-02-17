@@ -742,8 +742,9 @@ void setupIndicator() {
         return items;
     };
     static size_t items_size = (action == Action::Cut || action == Action::Copy) ? copying.items.size() : itemsToProcess();
+    if (items_size == 0) items_size++;
     auto percent_done = [&] {
-        return ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size + 1);
+        return ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size);
     };
     for (int i = 0; progress_state == ProgressState::Active; i == 9 ? i = 0 : i++) {
         auto display_progress = [&](const auto& num, const auto& unit) {
