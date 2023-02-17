@@ -25,7 +25,7 @@ verify() {
 }
 
 compile_nixos() {
-    printf "%s" "\e[1;32mInstalling Clipboard for NixOS...\e[0m"
+    printf "\e[1;32mInstalling Clipboard for NixOS...\e[0m"
     git clone --depth 1 https://github.com/Slackadays/Clipboard
     cd Clipboard/build
     cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
@@ -33,8 +33,8 @@ compile_nixos() {
     mkdir -p ~/.local/bin
     sudo cp clipboard ~/.local/bin
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
-    printf "%s" "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
-    printf "%s" "\e[1;32mClipboard installed successfully!\e[0m"
+    printf "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
+    printf "\e[1;32mClipboard installed successfully!\e[0m"
     rm -rfv "$tmp_dir"
     exit 0
 }
