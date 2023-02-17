@@ -41,6 +41,8 @@ compile_nixos() {
 compile() {
     git clone --depth 1 https://github.com/slackadays/Clipboard
     cd Clipboard/build
+    download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-amd64.zip
+    curl -SL $download_link -o clipboard-linux.zip
     cmake ..
     cmake --build .
     cmake --install .
@@ -51,6 +53,15 @@ compile() {
     else
         sudo cmake --install .
     fi
+
+     if [ -f "lib/libclipboardx11.so" ]
+     then
+            sudo mv lib/libclipboardx11.so /usr/lib/libclipboardx11.so
+     fi
+     if [ -f "lib/libclipboardwayland.so" ]
+     then
+            sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
+     fi
 }
 
 
