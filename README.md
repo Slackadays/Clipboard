@@ -47,7 +47,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 ---
 
 ### **Install Manually**
-Get the latest release instead by adding `--branch 0.3.1` right after `git clone...`.
+Get the latest release instead by adding `--branch 0.3.2` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
 git clone https://github.com/Slackadays/Clipboard 
@@ -63,7 +63,7 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
-You can substitute `cb` for `clipboard` in all commands, and add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
+You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
 ---
 
