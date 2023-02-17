@@ -25,8 +25,8 @@ verify() {
 }
 
 compile_nixos() {
-    printf "\e[1;32mInstalling Clipboard for NixOS...\e[0m"
-    git clone --depth 1 https://github.com/Slackadays/Clipboard
+    printf "\e[1;32mInstalling Clipboard for NixOS...\e[0m\n"
+    git clone --depth 1 -q https://github.com/Slackadays/Clipboard
     cd Clipboard/build
     cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
     cmake --build .
@@ -40,7 +40,8 @@ compile_nixos() {
 }
 
 compile() {
-    git clone --depth 1 https://github.com/slackadays/Clipboard
+    printf "\e[1;32mInstalling Clipboard...\e[0m\n"
+    git clone --depth 1 -q https://github.com/Slackadays/Clipboard
     cd Clipboard/build
     link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-amd64.zip
     curl -SL $link -o clipboard.zip
@@ -109,6 +110,7 @@ then
     fi
     if [ "$download_link" != "skip" ]
     then
+        printf "\e[1;32mInstalling Clipboard...\e[0m\n"
         curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
@@ -123,6 +125,7 @@ then
         then
             sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
         fi
+        printf "\e[1;32mInstalled Clipboard!\e[0m\n"
     fi
 elif [ "$(uname)" = "Darwin" ]
 then
