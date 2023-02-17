@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2046
 set -eu
 
 unsupported() {
