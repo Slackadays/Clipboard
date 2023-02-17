@@ -112,9 +112,9 @@ then
         curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
-        sudo mv bin/clipboard /usr/bin/clipboard
-        chmod +x /usr/bin/clipboard
-        sudo ln -sf /usr/bin/clipboard /usr/bin/cb
+        sudo mv bin/clipboard /usr/local/bin/clipboard
+        chmod +x /usr/local/bin/clipboard
+        sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
         if [ -f "lib/libclipboardx11.so" ]
         then
             sudo mv lib/libclipboardx11.so /usr/lib/libclipboardx11.so
