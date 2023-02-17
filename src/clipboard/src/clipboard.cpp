@@ -734,7 +734,9 @@ void setupIndicator() {
     if (!is_tty.err || output_silent) return;
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
-    const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ", "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ", "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
+    const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ",
+                                                          "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
+                                                          "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     auto itemsToProcess = [&] {
         size_t items = 1;
         for (auto dummy : fs::directory_iterator(path.main))
