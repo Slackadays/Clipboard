@@ -34,7 +34,7 @@ compile_nixos() {
     sudo cp clipboard ~/.local/bin
     sudo ln -s ~/.local/bin/clipboard ~/.local/bin/cb
     printf "\e[1;33mMake sure to add Clipboard to your PATH!\e[0m"
-    printf "\e[1;32mClipboard installed successfully!\e[0m"
+    printf "\e[1;32mClipboard installed successfully!\e[0m\n"
     rm -rf "$tmp_dir"
     exit 0
 }
@@ -73,7 +73,8 @@ compile() {
      then
             sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
      fi
-     rm -rfv "$tmp_dir"
+     rm -rf "$tmp_dir"
+     printf "\e[1;32mClipboard installed successfully!\e[0m\n"
      exit 0
 }
 
