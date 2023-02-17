@@ -26,7 +26,7 @@ verify() {
 
 compile_nixos() {
     printf "%s" "\e[1;32mInstalling Clipboard for NixOS...\e[0m"
-    git clone --depth 1 https://github.com/slackadays/Clipboard
+    git clone --depth 1 https://github.com/Slackadays/Clipboard
     cd Clipboard/build
     cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
     cmake --build .
