@@ -59,7 +59,7 @@ compile() {
      then
             sudo mv lib/libclipboardx11.so /usr/lib/libclipboardx11.so
      fi
-     if [[ -f "lib/libclipboardwayland.so" && ! -f "lib/libclipboardwayland.so ]]
+     if [[ -f "lib/libclipboardwayland.so" && ! -f "lib/libclipboardwayland.so" ]]
      then
             sudo mv lib/libclipboardwayland.so /usr/lib/libclipboardwayland.so
      fi
