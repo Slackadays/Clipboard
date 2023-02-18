@@ -91,8 +91,8 @@ Message item_already_exists_message = "[yellow]🟡 The item [bold]%s[blank][yel
                                       "replace it? [pink]Use [bold]all [blank][pink]to replace all existing, or "
                                       "[bold]skip[blank][pink] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "[red]❌ Sorry, that wasn't a valid choice. Try again: [blank][pink][bold][(y)es/(n)o)] ";
-Message working_message = "[yellow]🟡 %s... %llu%s %s[blank]\r";
-Message cancelled_message = "[green]✅ Cancelled %s[blank]";
+Message working_message = "\r[yellow]🟡 %s... %llu%s %s[blank]";
+Message cancelled_message = "[green]✅ Cancelled %s[blank]\n";
 Message byte_success_message = "[green]✅ %s %llu bytes[blank]\n";
 Message one_item_success_message = "[green]✅ %s %s[blank]\n";
 Message many_files_success_message = "[green]✅ %s %lu files[blank]\n";
