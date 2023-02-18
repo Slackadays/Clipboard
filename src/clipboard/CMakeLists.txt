@@ -78,6 +78,13 @@ if(NOT WIN32)
       \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/cb\" \
     )"
   )
+else()
+  install(CODE "execute_process( \
+    COMMAND ${CMAKE_COMMAND} -E create_symlink \
+      clipboard.exe \
+      \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/cb.exe\" \
+    )"
+  )
 endif()
 
 if(POSIX)
