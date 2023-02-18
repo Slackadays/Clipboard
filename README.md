@@ -31,6 +31,7 @@ Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like 
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 ```
+**NOTE:** For nix users. head down to the install manually section.
 ### [**Windows (run as Administrator)** ](https://github.com/Slackadays/Clipboard/blob/main/src/install.ps1)
 ```powershell
 (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
@@ -47,6 +48,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 ---
 
 ### **Install Manually**
+
 Get the latest release instead by adding `--branch 0.3.2` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
@@ -55,6 +57,16 @@ cd Clipboard/build
 cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
 cmake --build .
 cmake --install .
+```
+
+For nix users, run `nix build` and copy `clipboard` from `./result/bin` to `~/.local/bin`, and then create a symlink and add `~/.local/bin` to PATH.
+```bash
+git clone https://github.com/Slackadays/Clipboard 
+cd Clipboard
+nix build
+cp ./result/bin/clipboard ~/.local/bin/clipboard
+ln -s ~/.local/bin/clipboard ~/.local/bin/cb
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 ### **Uninstall**
