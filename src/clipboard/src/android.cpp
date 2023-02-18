@@ -29,4 +29,3 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
     } else if (clipboard.type() == ClipboardContentType::Paths) {
     }
 }
-
