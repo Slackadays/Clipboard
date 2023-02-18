@@ -62,7 +62,7 @@ cmake --install .
 For nix users, run `nix build` and copy `clipboard` from `./result/bin` to `~/.local/bin`, and then create a symlink and add `~/.local/bin` to PATH.
 ```bash
 git clone https://github.com/Slackadays/Clipboard 
-cd Clipboard
+cd Clipboard/nix
 nix build
 cp ./result/bin/clipboard ~/.local/bin/clipboard
 ln -s ~/.local/bin/clipboard ~/.local/bin/cb
