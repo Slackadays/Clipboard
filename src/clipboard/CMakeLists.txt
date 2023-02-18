@@ -32,6 +32,10 @@ elseif(HAIKU)
     src/haiku.cpp
   )
   target_link_libraries(clipboard be)
+elseif(ANDROID)
+  target_sources(clipboard PRIVATE
+    src/android.cpp
+  )
 elseif(POSIX)
   target_sources(clipboard PRIVATE src/posix.cpp)
 
