@@ -943,13 +943,13 @@ int main(int argc, char* argv[]) {
         setFlags();
 
         setFilepaths();
-		
+
         fs::create_directories(path.temporary), fs::create_directories(path.persistent);
-        
+
         action = getAction();
 
         syncWithGUIClipboard();
-		
+
         copying.items.assign(arguments.begin(), arguments.end());
 
         io_type = getIOType();

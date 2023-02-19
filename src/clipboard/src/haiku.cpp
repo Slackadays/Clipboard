@@ -20,30 +20,30 @@
 #include "clipboard.hpp"
 
 ClipboardContent getGUIClipboard() {
-	std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
+    std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
     if (!gui_clipboard->Lock()) return {};
-    BMessage *content = gui_clipboard->Data();
+    BMessage* content = gui_clipboard->Data();
     gui_clipboard->Unlock();
     const char* temp;
     ssize_t tempLength = 0;
     if (!content->FindData("text/plain", B_MIME_TYPE, (const void**)&temp, &tempLength)) {
-    	std::string CBcontent(temp, tempLength);
-    	return ClipboardContent(CBcontent);
+        std::string CBcontent(temp, tempLength);
+        return ClipboardContent(CBcontent);
     }
     return {};
 }
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
-	std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
-	if (!gui_clipboard->Lock()) return;
-	gui_clipboard->Clear();
-	BMessage *content = (BMessage *)NULL;
-	if (content = gui_clipboard->Data()) {
-    	if (clipboard.type() == ClipboardContentType::Text) {
-			content->AddData("text/plain", B_MIME_TYPE, clipboard.text().data(), clipboard.text().length());
-    	} else if (clipboard.type() == ClipboardContentType::Paths) {
-    	}
-    	gui_clipboard->Commit();
-	}
+    std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
+    if (!gui_clipboard->Lock()) return;
+    gui_clipboard->Clear();
+    BMessage* content = (BMessage*)NULL;
+    if (content = gui_clipboard->Data()) {
+        if (clipboard.type() == ClipboardContentType::Text) {
+            content->AddData("text/plain", B_MIME_TYPE, clipboard.text().data(), clipboard.text().length());
+        } else if (clipboard.type() == ClipboardContentType::Paths) {
+        }
+        gui_clipboard->Commit();
+    }
     gui_clipboard->Unlock();
 }
