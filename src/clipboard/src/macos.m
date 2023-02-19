@@ -18,7 +18,8 @@ const char* textContent() {
     NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
     if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]]) {
         NSString *text = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString];
-        return [text UTF8String];
+        char* textContent = strdup([text UTF8String]);
+        return textContent;
     }
     return NULL;
 }
