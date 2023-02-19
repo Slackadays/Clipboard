@@ -67,6 +67,19 @@ You can substitute `cb` for `clipboard` in all commands. Add a number to the end
 
 ---
 
+**Examples**
+
+```
+clipboard copy contacts/JohnSmith NuclearLaunchCodes.pdf
+clipboard cut1 MyDirectory
+cb cp420 bar.conf AnotherDirectory baz.txt
+cb show420
+cb add1 SomeFile
+clipboard clr
+```
+
+---
+
 **Copy** &emsp; `clipboard ([--]copy|[-]cp)[(num)|_(id)] (file) [files]` or `(something) | clipboard [([--]copy|[-]cp)][(num)|_(id)]`
 
 ---
@@ -93,16 +106,6 @@ You can substitute `cb` for `clipboard` in all commands. Add a number to the end
 ---
 
 **Show Help Message** &emsp; `clipboard (-h|[--]help)`
-
----
-
-**Examples**
-
-```
-cb copy foo.txt launchcodes.doc
-clipboard cut1 MyDirectory
-cb cp800 bar.conf AnotherDirectory baz.txt
-```
 
 ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
