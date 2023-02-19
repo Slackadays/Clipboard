@@ -15,8 +15,8 @@
 #include <AppKit/AppKit.h>
 
 const char* textContent() {
-    NSArray *classes = [[NSArray alloc] initWithObjects:[NSString class], [NSAttributedString class], nil];
-    if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]]) {
+    NSArray *classes = @[ [NSString class], [NSAttributedString class] ];
+    if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:nil]) {
         NSString *text = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString];
         return [text UTF8String];
     }
@@ -24,13 +24,13 @@ const char* textContent() {
 }
 
 char** fileContent() {
-    NSArray *classes = [[NSArray alloc] initWithObjects:[NSURL class], nil];
-    if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:[NSDictionary dictionary]]) {
-        NSArray *files = [[NSPasteboard generalPasteboard] readObjectsForClasses:classes options:[NSDictionary dictionary]];
+    NSArray *classes = @[ [NSURL class] ];
+    if ([[NSPasteboard generalPasteboard] canReadObjectForClasses:classes options:nil]) {
+        NSArray *files = [[NSPasteboard generalPasteboard] readObjectsForClasses:classes options:nil];
         int numberOfFiles = [files count];
         char** stringArray = malloc((numberOfFiles + 1) * sizeof(char*));
         for (unsigned i = 0; i < numberOfFiles; i++) {
-            stringArray[i] = strdup([[[files objectAtIndex:i] path] UTF8String]);
+            stringArray[i] = strdup([[files[i] path] UTF8String]);
         }
         stringArray[numberOfFiles] = NULL;
         return stringArray;
@@ -43,13 +43,13 @@ void clearContent() {
 }
 
 void writeText(const char* text) {
-    [[NSPasteboard generalPasteboard] setString:[NSString stringWithUTF8String:text] forType:NSPasteboardTypeString];
+    [[NSPasteboard generalPasteboard] setString:@(text) forType:NSPasteboardTypeString];
 }
 
 void writeFiles(const char** files) {
-    NSMutableArray *fileArray = [[NSMutableArray alloc] init];
+    NSMutableArray *fileArray = [NSMutableArray new];
     for (int i = 0; files[i] != NULL; i++) {
-        [fileArray addObject:[NSURL fileURLWithPath:[NSString stringWithUTF8String:files[i]]]];
+        [fileArray addObject:[NSURL fileURLWithPath:@(files[i])]];
     }
     [[NSPasteboard generalPasteboard] writeObjects:fileArray];
 }
