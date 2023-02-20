@@ -12,7 +12,7 @@
 
 Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
 
-Now, have a _powerful_ clipboard to use **anywhere in the terminal**, just like a GUI!
+Now, have a _powerful_ clipboard to use **anywhere in the terminal** to cut, copy, and paste things with, just like a GUI!
 
 - **`Easy.`** Friendly to newbies and power users.
 - **`Breezy.`** Zero configuration needed to use.
@@ -107,6 +107,10 @@ clipboard clr
 
 **Show Help Message** &emsp; `clipboard (-h|[--]help)`
 
+---
+
+**Check Clipboard Status** &emsp; `clipboard`
+
 ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
 ### **Environment Variables**
@@ -155,7 +159,7 @@ clipboard clr
 
 ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join our Discord group! [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+Go to the [Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join our [Discord group](https://discord.gg/J6asnc3pEG)! [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
 ![Thank You!](documentation/readme-assets/ThankYou.png)
 
