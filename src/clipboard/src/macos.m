@@ -21,7 +21,7 @@ const char* textContent() {
         char* textContent = strdup([text UTF8String]);
         return textContent;
     }
-    return NULL;
+    return "";
 }
 
 char** fileContent() {

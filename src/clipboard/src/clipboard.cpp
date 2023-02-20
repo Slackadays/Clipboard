@@ -847,6 +847,8 @@ void performAction() {
         case Remove:
             remove();
             break;
+        default:
+            break;
         }
     } else if (io_type == Pipe) {
         switch (action) {
