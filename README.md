@@ -65,16 +65,14 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
----
-
 **Examples**
 
 ```
 clipboard copy contacts/JohnSmith NuclearLaunchCodes.pdf
-clipboard cut1 MyDirectory
-cb cp420 bar.conf AnotherDirectory baz.txt
+clipboard cut69 MyDirectory
+cb cp420 bar.conf NotAVirus.pdf.mp3.exe baz.txt
 cb show420
-cb add1 SomeFile
+cb add69 SomeFile
 clipboard clr
 ```
 

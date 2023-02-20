@@ -83,7 +83,7 @@ jobs:
           export TMPDIR=/tmp
           export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
-          bash ../tests/suite.sh
+          bash ../src/tests/suite.sh
   macos-arm64-amd64:
     runs-on: macos-latest
 
@@ -96,7 +96,7 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Debug
           cmake --build . --config Debug --parallel 2
           cmake --install .
-          bash ../tests/suite.sh
+          bash ../src/tests/suite.sh
   windows-amd64:
     strategy:
      matrix:
@@ -119,7 +119,7 @@ jobs:
           #installs to C:/Program Files (x86)/Clipboard/bin/clipboard.exe
           #add to path
           export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
-          bash ../tests/suite.sh
+          bash ../src/tests/suite.sh
   freebsd-amd64:
     runs-on: ubuntu-latest
 
@@ -140,7 +140,7 @@ jobs:
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
-            bash ../tests/suite.sh
+            bash ../src/tests/suite.sh
   openbsd-amd64:
     runs-on: ubuntu-latest
 
@@ -161,7 +161,7 @@ jobs:
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
-            bash ../tests/suite.sh
+            bash ../src/tests/suite.sh
   openbsd-arm64:
     runs-on: ubuntu-latest
 
@@ -182,7 +182,7 @@ jobs:
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
-            bash ../tests/suite.sh
+            bash ../src/tests/suite.sh
   netbsd-amd64:
     runs-on: ubuntu-latest
 
@@ -203,4 +203,4 @@ jobs:
             cmake --build . -j 2
             sudo cmake --install .
             export TMPDIR=/tmp
-            bash ../tests/suite.sh
+            bash ../src/tests/suite.sh
