@@ -797,7 +797,7 @@ void checkItemSize(unsigned long long total_item_size) {
         const unsigned long long space_available = fs::space(path.main).available;
         if (total_item_size > (space_available / 2)) {
             stopIndicator();
-            fprintf(stderr, not_enough_storage_message().data(), total_item_size / 1024.0, space_available / 1024.0);
+            fprintf(stderr, not_enough_storage_message().data(), total_item_size / (1024.0 * 1024.0), space_available / (1024.0 * 1024.0));
             exit(EXIT_FAILURE);
         }
     }

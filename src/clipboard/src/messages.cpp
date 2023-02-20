@@ -84,8 +84,8 @@ Message and_more_fails_message = "[red]▏ ...and [bold]%i[blank][red] more.[bla
 Message and_more_items_message = "[blue]▏ ...and [bold]%i[blank][blue] more.[blank]\n";
 Message fix_problem_message = "[pink]▏ See if you have the needed permissions, or\n"
                               "▏ try double-checking the spelling of the files or what directory you're in.[blank]\n";
-Message not_enough_storage_message = "[red]❌ There won't be enough storage available to paste everything (%gkB to "
-                                     "paste, %gkB available).[blank][pink] Try double-checking what items you've "
+Message not_enough_storage_message = "[red]❌ There won't be enough storage available to paste everything (%gMB to "
+                                     "paste, %gMB available).[blank][pink] Try double-checking what items you've "
                                      "selected or delete some files to free up space.[blank]\n";
 Message item_already_exists_message = "[yellow]🟡 The item [bold]%s[blank][yellow] already exists here. Do you want to "
                                       "replace it? [pink]Use [bold]all [blank][pink]to replace all existing, or "
@@ -161,7 +161,7 @@ void setLanguageES() {
     and_more_items_message = "[blue]▏ ...y [bold]%i[blank][blue] más.[blank]\n";
     fix_problem_message = "[pink]▏ Verífica si tengas los permisos necesarios, o\n"
                           "▏ vuelve a revisar el deletro de los archivos o la carpeta en que estás.[blank]\n";
-    not_enough_storage_message = "[red]❌ No habrá espacio suficiente para pegar todas tus cosas (%gkB a pegar, %gkB "
+    not_enough_storage_message = "[red]❌ No habrá espacio suficiente para pegar todas tus cosas (%gMB a pegar, %gMB "
                                  "disponible).[blank][pink] Vuelve a revisar las cosas que especificaste o saca "
                                  "algunas cosas para hacer más espacio.[blank]\n";
     byte_success_message = "[green]✅ %s %llu bytes[blank]\n";
@@ -292,8 +292,8 @@ void setLanguageTR() {
     and_more_items_message = "[blue]▏ ...ve [bold]%i[blank][blue] fazla.[blank]\n";
     fix_problem_message = "[pink]▏ Erişime ihtiyacınız varsa şuna bakın, veya\n"
                           "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.[blank]\n";
-    not_enough_storage_message = "[red]❌ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gkB "
-                                 "yapıştırılacak, %gkB boş).[blank][pink] Hangi öğeleri seçtiğinizi ikinci kez kontrol "
+    not_enough_storage_message = "[red]❌ Bütün öğelerinizi yapıştırabileceğin kadar yeterli bir alanınız yok (%gMB "
+                                 "yapıştırılacak, %gMB boş).[blank][pink] Hangi öğeleri seçtiğinizi ikinci kez kontrol "
                                  "etmeyi deneyin veya yer açmak için bazı dosyaları silin.[blank]\n";
     byte_success_message = "[green]✅ %s %llu bayt[blank]\n";
     many_files_success_message = "[green]✅ %s %lu dosya[blank]\n";
