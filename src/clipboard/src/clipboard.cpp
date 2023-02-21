@@ -206,7 +206,7 @@ void copyText() {
     writeToFile(path.data, copying.buffer);
 
     if (!output_silent) {
-        printf(replaceColors("[green]✓ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
+        printf(replaceColors("[green]✅ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
     }
 
     if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
@@ -336,7 +336,7 @@ void addFiles() {
     if (fs::is_regular_file(path.data)) {
         fprintf(stderr,
                 "%s",
-                replaceColors("[red]╳ You can't add items to text. [blank][pink]Try copying text first, or add "
+                replaceColors("[red]❌ You can't add items to text. [blank][pink]Try copying text first, or add "
                               "text instead.[blank]\n")
                         .data());
         return;
@@ -353,7 +353,7 @@ void addData() {
     } else if (!fs::is_empty(path.main)) {
         fprintf(stderr,
                 "%s",
-                replaceColors("[red]╳ You can't add text to items. [blank][pink]Try copying text first, or add a "
+                replaceColors("[red]❌ You can't add text to items. [blank][pink]Try copying text first, or add a "
                               "file instead.[blank]\n")
                         .data());
     } else {

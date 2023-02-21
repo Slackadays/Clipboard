@@ -16,3 +16,5 @@ sh paste-pipe.sh
 sh paste-text.sh
 
 rm -r test_*
+
+echo "🐢 All tests passed!"

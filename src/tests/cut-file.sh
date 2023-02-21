@@ -13,6 +13,8 @@ clipboard paste
 
 cd ../
 
+ls -a
+
 item_is_not_here testfile
 
 item_is_not_here testdir/testfile
