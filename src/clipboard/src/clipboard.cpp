@@ -125,7 +125,6 @@ std::string pipedInContent() {
 }
 
 void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
-    std::cout << content << std::endl;
     std::ofstream file(path, append ? std::ios::app : std::ios::trunc | std::ios::binary);
     file << content;
 }
@@ -806,9 +805,9 @@ void checkItemSize(unsigned long long total_item_size) {
 
 void removeOldFiles() {
     if (fs::is_regular_file(path.original_files)) {
-        std::ifstream files(path.original_files);
+        std::string content(fileContents(path.original_files));
         std::string line;
-        while (std::getline(files, line)) {
+        while (std::getline(content, line)) {
             try {
                 fs::remove_all(line);
             } catch (const fs::filesystem_error& e) {
