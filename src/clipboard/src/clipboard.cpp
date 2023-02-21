@@ -125,6 +125,7 @@ std::string pipedInContent() {
 }
 
 void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
+    std::cout << content << std::endl;
     std::ofstream file(path, append ? std::ios::app : std::ios::trunc | std::ios::binary);
     file << content;
 }
@@ -809,7 +810,6 @@ void removeOldFiles() {
         std::string line;
         while (std::getline(files, line)) {
             try {
-                std::cout << line << std::endl;
                 fs::remove_all(line);
             } catch (const fs::filesystem_error& e) {
                 copying.failedItems.emplace_back(line, e.code());
