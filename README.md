@@ -65,7 +65,7 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
-**Examples**
+### **Examples**
 
 ```
 clipboard copy contacts/JohnSmith NuclearLaunchCodes.pdf
