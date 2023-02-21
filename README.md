@@ -45,7 +45,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 
 ---
 
-### **Premade Builds**
+### Premade Builds
 
 <a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status"></a>
 
@@ -53,7 +53,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 
 ---
 
-### **Install Manually**
+### Install Manually (you'll need CMake and C++20 support)
 Get the latest release instead by adding `--branch 0.3.2` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
@@ -64,7 +64,7 @@ cmake --build .
 cmake --install .
 ```
 
-### **Uninstall**
+### Uninstall
 
 Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
@@ -72,7 +72,7 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
-### **Examples**
+### Examples
 
 ```
 clipboard copy contacts/JohnSmith NuclearLaunchCodes.pdf
@@ -118,7 +118,7 @@ clipboard clr
 
 ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
-### **Environment Variables**
+### Environment Variables
 
 **`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
@@ -154,7 +154,7 @@ clipboard clr
 
 ---
 
-### **Flags**
+### Flags
 
 **`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
 
