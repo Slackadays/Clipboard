@@ -778,28 +778,35 @@ void startIndicator() { // If cancelled, leave cancelled
 
 unsigned long long totalItemSize() {
     unsigned long long total_item_size = 0;
-    for (const auto& i : copying.items) {
-        try {
-            if (fs::is_directory(i))
-                for (const auto& entry : fs::recursive_directory_iterator(i))
-                    total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
-            else
-                total_item_size += fs::is_regular_file(i) ? fs::file_size(i) : 16;
-        } catch (const fs::filesystem_error& e) {
-            copying.failedItems.emplace_back(i.string(), e.code());
+    if ((action == Action::Cut || action == Action::Copy || action == Action::Add) && io_type == IOType::File) {
+        for (const auto& i : copying.items) {
+            try {
+                if (fs::is_directory(i))
+                    for (const auto& entry : fs::recursive_directory_iterator(i))
+                        total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
+                else
+                    total_item_size += fs::is_regular_file(i) ? fs::file_size(i) : 16;
+            } catch (const fs::filesystem_error& e) {
+                copying.failedItems.emplace_back(i.string(), e.code());
+            }
         }
+    } else if (action == Action::Paste && io_type == IOType::File) {
+        for (const auto& entry : fs::recursive_directory_iterator(path.main))
+            total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
     }
     return total_item_size;
 }
 
 void checkItemSize(unsigned long long total_item_size) {
-    if (action == Action::Cut || action == Action::Copy) {
-        const unsigned long long space_available = fs::space(path.main).available;
-        if (total_item_size > (space_available / 2)) {
-            stopIndicator();
-            fprintf(stderr, not_enough_storage_message().data(), total_item_size / (1024.0 * 1024.0), space_available / (1024.0 * 1024.0));
-            exit(EXIT_FAILURE);
-        }
+    unsigned long long space_available = 0;
+    if ((action == Action::Cut || action == Action::Copy || action == Action::Add) && io_type == IOType::File)
+        space_available = fs::space(path.main).available;
+    else if (action == Action::Paste && io_type == IOType::File)
+        space_available = fs::space(fs::current_path()).available;
+    if (total_item_size > space_available) {
+        stopIndicator();
+        fprintf(stderr, not_enough_storage_message().data(), actions[action].data(), total_item_size / (1024.0 * 1024.0), space_available / (1024.0 * 1024.0));
+        exit(EXIT_FAILURE);
     }
 }
 
