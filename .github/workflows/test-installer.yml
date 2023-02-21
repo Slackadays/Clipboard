@@ -30,6 +30,7 @@ jobs:
 
       - name: Run a script
         run: |
+          export CLIPBOARD_TMPDIR=$TMPDIR
           sh src/install.sh
           bash src/tests/suite.sh
   windows-amd64:

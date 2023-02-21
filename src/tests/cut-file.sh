@@ -13,8 +13,6 @@ clipboard paste
 
 cd ../
 
-pwd
-
 item_is_not_here testfile
 
 item_is_not_here testdir/testfile

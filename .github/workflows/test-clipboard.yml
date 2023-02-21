@@ -96,7 +96,7 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Debug
           cmake --build . --config Debug --parallel 2
           cmake --install .
-          export CLIPBOARD_TMPDIR=/tmp
+          export CLIPBOARD_TMPDIR=$TMPDIR
           bash ../src/tests/suite.sh
   windows-amd64:
     strategy:
