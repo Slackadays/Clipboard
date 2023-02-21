@@ -1,6 +1,6 @@
 #!/bin/sh
 . ./resources.sh
-
+export CLIPBOARD_FORCETTY=1
 setup_dir cut-text
 
 clipboard cut "Foobar"

@@ -3,8 +3,6 @@ set -eux
 
 BASEDIR="$(dirname "$0")"
 
-export CLIPBOARD_FORCETTY=1
-
 cd "$BASEDIR" || exit 1
 
 sh copy-file.sh

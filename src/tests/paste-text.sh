@@ -1,5 +1,6 @@
 #!/bin/sh
 . ./resources.sh
+export CLIPBOARD_FORCETTY=1
 setup_dir paste-text
 
 clipboard copy "Foobar"
