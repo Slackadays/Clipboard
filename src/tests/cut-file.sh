@@ -11,7 +11,7 @@ setup_dir pastehere
 
 clipboard paste
 
-cd ..
+cd ../
 
 item_is_not_here testfile
 
