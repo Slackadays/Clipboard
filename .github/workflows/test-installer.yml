@@ -20,7 +20,7 @@ jobs:
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
           sh src/install.sh
-          export TMPDIR=/tmp
+          export CLIPBOARD_TMPDIR=/tmp
           bash src/tests/suite.sh
   macos-arm64-amd64:
     runs-on: macos-latest
@@ -48,6 +48,7 @@ jobs:
           Start-Process powershell -Verb runAs -ArgumentList '-Command "Set-ExecutionPolicy RemoteSigned"'
           (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
           #restart powershell to get the new path
+          $env:CLIPBOARD_TMPDIR = "C:\Users\runneradmin\AppData\Local\Temp"
           Start-Process powershell -Verb runAs -ArgumentList '-Command bash src/tests/suite.sh'
   freebsd-amd64:
     runs-on: ubuntu-latest
@@ -64,7 +65,7 @@ jobs:
           shell: bash
           run: |
             sh src/install.sh
-            #export TMPDIR=/tmp
+            #export CLIPBOARD_TMPDIR=/tmp
             #bash src/tests/suite.sh
   openbsd-amd64:
     runs-on: ubuntu-latest
@@ -81,7 +82,7 @@ jobs:
           shell: bash
           run: |
             sh src/install.sh
-            #export TMPDIR=/tmp
+            #export CLIPBOARD_TMPDIR=/tmp
             #bash src/tests/suite.sh
   openbsd-arm64:
     runs-on: ubuntu-latest
@@ -98,7 +99,7 @@ jobs:
           shell: bash
           run: |
             sh src/install.sh
-            #export TMPDIR=/tmp
+            #export CLIPBOARD_TMPDIR=/tmp
             #bash src/tests/suite.sh
   netbsd-amd64:
     runs-on: ubuntu-latest
@@ -115,5 +116,5 @@ jobs:
           shell: bash
           run: |
             sh src/install.sh
-            #export TMPDIR=/tmp
+            #export CLIPBOARD_TMPDIR=/tmp
             #bash src/tests/suite.sh

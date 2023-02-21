@@ -1,6 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 setup_dir copy-pipe
+export CLIPBOARD_FORCETTY=1
 
 echo "Foobar" | clipboard
 
