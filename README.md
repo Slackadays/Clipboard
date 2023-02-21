@@ -8,7 +8,7 @@
     </a>
 </p>
 
-:sparkles::rocket: **Clipboard is the power tool that saves you time and effort.** 🏖️🌴
+:sparkles::rocket: **Save time and effort the easy way with Clipboard.** 🏖️🌴
 
 Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
 
