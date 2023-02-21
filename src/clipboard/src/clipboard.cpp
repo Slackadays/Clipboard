@@ -124,8 +124,8 @@ std::string pipedInContent() {
     return content;
 }
 
-void writeToFile(const fs::path& path, const std::string& content, bool append = false, bool binary = true) {
-    std::ofstream file(path, append ? std::ios::app : std::ios::trunc | binary ? std::ios::binary : std::ios::out);
+void writeToFile(const fs::path& path, const std::string& content, bool append = false) {
+    std::ofstream file(path, append ? std::ios::app : std::ios::trunc | std::ios::binary);
     file << content;
 }
 
@@ -179,7 +179,7 @@ void copyItem(const fs::path& f) {
             fs::copy(f, path.main / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
             successes.files++;
         }
-        if (action == Action::Cut) writeToFile(path.original_files, fs::absolute(f).string() + "\n", true, false);
+        if (action == Action::Cut) writeToFile(path.original_files, fs::absolute(f).string() + "\n", true);
     };
     try {
         actuallyCopyItem();
@@ -805,6 +805,7 @@ void checkItemSize(unsigned long long total_item_size) {
 
 void removeOldFiles() {
     if (fs::is_regular_file(path.original_files)) {
+        std::cout << "Removing old files... " << std::endl;
         std::ifstream files(path.original_files);
         std::string line;
         while (std::getline(files, line)) {
