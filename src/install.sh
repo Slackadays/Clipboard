@@ -45,22 +45,22 @@ if [ "$(uname)" = "Linux" ]
 then
     if [ "$(uname -m)" = "x86_64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-amd64.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-amd64.zip
     elif [ "$(uname -m)" = "aarch64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-arm64.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-arm64.zip
     elif [ "$(uname -m)" = "riscv64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-riscv64.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-riscv64.zip
     elif [ "$(uname -m)" = "i386" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-i386.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-i386.zip
     elif [ "$(uname -m)" = "ppc64le" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-ppc64le.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-ppc64le.zip
     elif [ "$(uname -m)" = "s390x" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-linux-s390x.zip
+        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-s390x.zip
     else
         download_link="skip"
     fi
@@ -83,7 +83,7 @@ then
     fi
 elif [ "$(uname)" = "Darwin" ]
 then
-    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/main/main/clipboard-macos-arm64-amd64.zip -o clipboard-macos.zip
+    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64-amd64.zip -o clipboard-macos.zip
     unzip clipboard-macos.zip
     rm clipboard-macos.zip
     sudo mv bin/clipboard /usr/local/bin/clipboard
