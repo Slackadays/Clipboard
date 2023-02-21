@@ -8,7 +8,8 @@
     </a>
 </p>
 
-### :sparkles::rocket: **Save time and effort the easy way with Clipboard.** 🏖️🌴
+<h2 align="center" style="border-bottom: none;"> 
+:sparkles::rocket: Save time and effort the easy way with Clipboard. 🏖️🌴 </h2>
 
 Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
 
