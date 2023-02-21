@@ -9,15 +9,19 @@
 </p>
 
 <h2 align="center" style="border-bottom: none;"> 
-:sparkles::rocket: Save time and effort the easy way with Clipboard. 🏖️🌴 </h2>
+:tropical_drink::turtle: Save time and effort the easy way with Clipboard. 🏖️🌴
+</h2>
 
 Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
 
 Now, have a _powerful_ clipboard to use **anywhere in the terminal** to cut, copy, and paste things with, just like a GUI!
 
+<details><summary><h3>Reasons to use Clipboard</h3></summary>
+
 - **`Easy.`** Friendly to newbies and power users.
 - **`Breezy.`** Zero configuration needed to use.
 - **`Beautiful.`** Breaks the rules to look pretty.
+- **`Versatile.`** Filled with useful features.
 - **`Unified.`** Functions exactly the same everywhere.
 - **`Compatible.`** Works on anything that supports C++20.
 - **`Scriptable.`** Embed it right into your own programs.
@@ -25,6 +29,8 @@ Now, have a _powerful_ clipboard to use **anywhere in the terminal** to cut, cop
 - **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
 - **`Tiny.`** Mere tens of kilobytes in size.
 - **`FOSS.`** 100% free and open-source.
+
+</details>
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
