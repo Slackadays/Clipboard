@@ -11,8 +11,12 @@ setup_dir pastehere
 
 clipboard paste
 
-item_is_not_here ../testfile
+cd ../
 
-item_is_not_here ../testdir/testfile
+pwd
+
+item_is_not_here testfile
+
+item_is_not_here testdir/testfile
 
 pass_test cut-file
