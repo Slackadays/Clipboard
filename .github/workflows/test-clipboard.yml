@@ -97,6 +97,7 @@ jobs:
           cmake --build . --config Debug --parallel 2
           cmake --install .
           export CLIPBOARD_TMPDIR=$TMPDIR
+          export CLIPBOARD_NOGUI=1
           bash ../src/tests/suite.sh
   windows-amd64:
     strategy:
