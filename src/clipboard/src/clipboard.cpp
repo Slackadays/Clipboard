@@ -809,6 +809,7 @@ void removeOldFiles() {
         std::string line;
         while (std::getline(files, line)) {
             try {
+                std::cout << line << std::endl;
                 fs::remove_all(line);
             } catch (const fs::filesystem_error& e) {
                 copying.failedItems.emplace_back(line, e.code());
