@@ -805,9 +805,9 @@ void checkItemSize(unsigned long long total_item_size) {
 
 void removeOldFiles() {
     if (fs::is_regular_file(path.original_files)) {
-        std::string content(fileContents(path.original_files));
+        std::ifstream files(path.original_files, std::ios::binary);
         std::string line;
-        while (std::getline(content, line)) {
+        while (std::getline(files, line)) {
             try {
                 fs::remove_all(line);
             } catch (const fs::filesystem_error& e) {
