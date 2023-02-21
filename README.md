@@ -16,19 +16,14 @@ Before, you've always had to think about where exactly you want to move things, 
 
 Now, have a _powerful_ clipboard to use **anywhere in the terminal** to cut, copy, and paste things with, just like a GUI!
 
-<details><summary><h3>Reasons to use Clipboard</h3></summary>
+<details><summary><h3>Why use Clipboard</h3></summary>
 
-- **`Easy.`** Friendly to newbies and power users.
-- **`Breezy.`** Zero configuration needed to use.
-- **`Beautiful.`** Breaks the rules to look pretty.
-- **`Versatile.`** Filled with useful features.
-- **`Unified.`** Functions exactly the same everywhere.
-- **`Compatible.`** Works on anything that supports C++20.
-- **`Scriptable.`** Embed it right into your own programs.
-- **`Universal.`** Supports English, español, português, and Türkçe.
+- **`Easy.`** Friendly to newbies and power users. &emsp; **`Breezy.`** Zero configuration needed to use.
+- **`Beautiful.`** Breaks the rules to look pretty. &emsp; **`Versatile.`** Filled with useful features.
+- **`Unified.`** Functions exactly the same everywhere. &emsp; **`Compatible.`** Works on anything that supports C++20.
+- **`Scriptable.`** Embed it right into your own programs. &emsp; **`Universal.`** Supports English, español, português, and Türkçe.
+- **`Tiny.`** Mere tens of kilobytes in size. &emsp; **`FOSS.`** 100% free and open-source.
 - **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
-- **`Tiny.`** Mere tens of kilobytes in size.
-- **`FOSS.`** 100% free and open-source.
 
 </details>
 
