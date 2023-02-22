@@ -98,13 +98,15 @@ std::vector<fs::path> getWindowsClipboardDataFiles(void* clipboardPointer) {
 std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
     auto utf16 = static_cast<wchar_t*>(clipboardPointer);
 
-    auto utf8Len = WideCharToMultiByte(CP_UTF8, 0, utf16, -1, nullptr, 0, nullptr, nullptr);
+    auto length = wcslen(utf16);
+
+    auto utf8Len = WideCharToMultiByte(CP_UTF8, 0, utf16, length, nullptr, 0, nullptr, nullptr);
     if (utf8Len <= 0) {
         onWindowsError("WideCharToMultiByte");
     }
 
     std::vector<char> utf8Buffer(utf8Len);
-    auto bytesWritten = WideCharToMultiByte(CP_UTF8, 0, utf16, -1, &utf8Buffer[0], utf8Len, nullptr, nullptr);
+    auto bytesWritten = WideCharToMultiByte(CP_UTF8, 0, utf16, utf8Len, &utf8Buffer[0], utf8Len, nullptr, nullptr);
     if (bytesWritten <= 0) {
         onWindowsError("WideCharToMultiByte");
     }
