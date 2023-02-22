@@ -102,6 +102,7 @@ jobs:
     strategy:
      matrix:
        windows: [2022, 2019]
+     fail-fast: false
      
     runs-on: windows-${{ matrix.windows }}
 
