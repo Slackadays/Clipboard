@@ -1,0 +1,6 @@
+*
+/.vscode/*
+*idea*
+settings.json
+dummy/
+!.gitignore
