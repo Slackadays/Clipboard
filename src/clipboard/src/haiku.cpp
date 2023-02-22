@@ -19,6 +19,8 @@
 
 #include "clipboard.hpp"
 
+const bool GUIClipboardSupportsCut = false;
+
 ClipboardContent getGUIClipboard() {
     std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
     if (!gui_clipboard->Lock()) return {};

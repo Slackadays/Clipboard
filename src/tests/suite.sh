@@ -5,6 +5,8 @@ BASEDIR="$(dirname "$0")"
 
 cd "$BASEDIR" || exit 1
 
+rm -rf test_*
+
 sh copy-file.sh
 sh copy-pipe.sh
 sh copy-text.sh

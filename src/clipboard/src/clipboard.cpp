@@ -392,6 +392,7 @@ void clearTempDirectory(bool force_clear = false) {
 }
 
 void convertFromGUIClipboard(const std::string& text) {
+    if (fs::is_regular_file(path.data) && fileContents(path.data) == text) return;
     clearTempDirectory(true);
     writeToFile(path.data, text);
 }
@@ -431,7 +432,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 [[nodiscard]] ClipboardContent thisClipboard() {
-    if (fs::exists(path.original_files)) {
+    if (fs::exists(path.original_files) && GUIClipboardSupportsCut) {
         std::ifstream originalFiles {path.original_files};
         std::vector<fs::path> files;
 

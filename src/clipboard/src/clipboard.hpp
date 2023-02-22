@@ -223,3 +223,4 @@ void showSuccesses();
 
 extern ClipboardContent getGUIClipboard();
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);
+extern const bool GUIClipboardSupportsCut;

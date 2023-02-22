@@ -26,6 +26,8 @@ void writeText(const char* text);
 void writeFiles(const char** files);
 }
 
+const bool GUIClipboardSupportsCut = false;
+
 ClipboardContent getGUIClipboard() {
     if (char** files = fileContent(); files != nullptr) {
         std::vector<fs::path> fileVector;

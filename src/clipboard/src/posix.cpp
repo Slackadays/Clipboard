@@ -26,6 +26,8 @@ constexpr auto objectWayland = "libclipboardwayland.so";
 constexpr auto symbolGetWaylandClipboard = "getWaylandClipboard";
 constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 
+const bool GUIClipboardSupportsCut = true;
+
 using getClipboard_t = void* (*)();
 using setClipboard_t = void (*)(void*);
 

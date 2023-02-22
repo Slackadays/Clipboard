@@ -18,6 +18,8 @@
 
 #include "clipboard.hpp"
 
+const bool GUIClipboardSupportsCut = false;
+
 ClipboardContent getGUIClipboard() {
     return ClipboardContent();
 }

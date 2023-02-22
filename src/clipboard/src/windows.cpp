@@ -22,6 +22,8 @@
 #include <iostream>
 #include <vector>
 
+const bool GUIClipboardSupportsCut = false;
+
 ClipboardContent getGUIClipboard() {
     if (OpenClipboard(nullptr) == 0) {
         onWindowsError("OpenClipboard");
