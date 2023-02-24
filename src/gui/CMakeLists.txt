@@ -2,6 +2,7 @@ add_library(gui STATIC
   src/fork.cpp
   src/gui.cpp
   src/utils.cpp
+  src/infermime.cpp
 )
 target_include_directories(gui PUBLIC include/all)
 set_property(TARGET gui PROPERTY POSITION_INDEPENDENT_CODE ON)
