@@ -158,6 +158,13 @@ bool isAWriteAction() {
     return action != Paste && action != Show;
 }
 
+std::string formatBytes(auto bytes) {
+    if (bytes < 1024) return std::to_string(bytes) + "B";
+    if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
+    if (bytes < (1024 * 1024 * 1024)) return std::to_string(bytes / (1024.0 * 1024.0)) + "MB";
+    return std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
+}
+
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
     using enum CopyPolicy;
 
@@ -769,19 +776,19 @@ void setupIndicator() {
     static size_t items_size = (action == Action::Cut || action == Action::Copy) ? copying.items.size() : itemsToProcess();
     if (items_size == 0) items_size++;
     auto percent_done = [&] {
-        return ((successes.files + successes.directories + copying.failedItems.size()) * 100) / (items_size);
+        return std::to_string(((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size) + "%";
     };
     for (int i = 0; progress_state == ProgressState::Active; i == 21 ? i = 0 : i++) {
-        auto display_progress = [&](const auto& num, const auto& unit) {
-            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), num, unit, spinner_steps.at(i).data());
+        auto display_progress = [&](const auto& formattedNum) {
+            output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(i).data());
             fflush(stderr);
             cv.wait_for(lock, std::chrono::milliseconds(25), [&] { return progress_state != ProgressState::Active; });
         };
 
         if (io_type == IOType::File)
-            display_progress(static_cast<unsigned long long>(percent_done()), "%");
+            display_progress(percent_done().data());
         else if (io_type == IOType::Pipe)
-            display_progress(successes.bytes.load(std::memory_order_relaxed), "B");
+            display_progress(formatBytes(successes.bytes.load(std::memory_order_relaxed)).data());
     }
     fprintf(stderr, "\r%*s\r", output_length, "");
     fprintf(stderr, "\033[?25h"); // restore the cursor
@@ -943,7 +950,7 @@ void showFailures() {
 void showSuccesses() {
     if (output_silent) return;
     if (successes.bytes > 0 && is_tty.err) {
-        fprintf(stderr, byte_success_message().data(), did_action[action].data(), successes.bytes.load());
+        fprintf(stderr, byte_success_message().data(), did_action[action].data(), formatBytes(successes.bytes.load()).data());
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
         printf(one_item_success_message().data(), did_action[action].data());
     } else {

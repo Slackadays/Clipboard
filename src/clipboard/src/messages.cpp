@@ -91,9 +91,9 @@ Message item_already_exists_message = "[progress]🟡 The item [bold]%s[blank][p
                                       "replace it? [help]Use [bold]all [blank][help]to replace all existing, or "
                                       "[bold]skip[blank][help] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "[error]❌ Sorry, that wasn't a valid choice. Try again: [blank][help][bold][(y)es/(n)o)] ";
-Message working_message = "\r[progress]🟡 %s... %llu%s %s[blank]";
+Message working_message = "\r[progress]🟡 %s... %s %s[blank]";
 Message cancelled_message = "[success]✅ Cancelled %s[blank]\n";
-Message byte_success_message = "[success]✅ %s %llu bytes[blank]\n";
+Message byte_success_message = "[success]✅ %s %s[blank]\n";
 Message one_item_success_message = "[success]✅ %s one item[blank]\n";
 Message many_files_success_message = "[success]✅ %s %lu files[blank]\n";
 Message many_directories_success_message = "[success]✅ %s %lu directories[blank]\n";
@@ -164,7 +164,6 @@ void setLanguageES() {
     not_enough_storage_message = "[error]❌ No habrá espacio suficiente para %s todas tus cosas (%gMB a pegar, %gMB "
                                  "disponible).[blank][help] Vuelve a revisar las cosas que especificaste o saca "
                                  "algunas cosas para hacer más espacio.[blank]\n";
-    byte_success_message = "[success]✅ %s %llu bytes[blank]\n";
     many_files_success_message = "[success]✅ %s %lu archivos[blank]\n";
     many_directories_success_message = "[success]✅ %s %lu carpetas[blank]\n";
     many_files_many_directories_success_message = "[success]✅ %s %lu archivos y %lu carpetas[blank]\n";
@@ -217,7 +216,6 @@ void setLanguagePT() {
     and_more_items_message = "[info]▏ ...e mais [bold]%i[blank][info].[blank]\n";
     fix_problem_message = "[help]▏ Veja se você possui as permissões necessárias, ou\n"
                           "▏ verifique a ortografia do arquivo ou diretório que voce está.[blank]\n";
-    byte_success_message = "[success]✅ %s %llu bytes[blank]\n";
     many_files_success_message = "[success]✅ %s %lu arquivos[blank]\n";
     many_directories_success_message = "[success]✅ %s %lu diretórios[blank]\n";
     many_files_many_directories_success_message = "[success]✅ %s %lu arquivos e %lu diretórios[blank]\n";
@@ -295,7 +293,6 @@ void setLanguageTR() {
     not_enough_storage_message = "[error]❌ Bütün öğelerinizi %s kadar yeterli bir alanınız yok (%gMB "
                                  "yapıştırılacak, %gMB boş).[blank][help] Hangi öğeleri seçtiğinizi ikinci kez kontrol "
                                  "etmeyi deneyin veya yer açmak için bazı dosyaları silin.[blank]\n";
-    byte_success_message = "[success]✅ %s %llu bayt[blank]\n";
     many_files_success_message = "[success]✅ %s %lu dosya[blank]\n";
     many_directories_success_message = "[success]✅ %s %lu dizin[blank]\n";
     many_files_many_directories_success_message = "[success]✅ %s %lu dosya ve %lu dizin[blank]\n";
