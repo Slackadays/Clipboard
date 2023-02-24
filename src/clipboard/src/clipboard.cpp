@@ -57,11 +57,31 @@ Copying copying;
 bool output_silent = false;
 bool no_color = false;
 
+std::vector<std::string> arguments;
+
 std::string clipboard_name = "0";
+
+std::condition_variable cv;
+std::mutex m;
+std::atomic<ProgressState> progress_state = ProgressState::Done;
+std::thread indicator;
 
 Action action;
 
 IOType io_type;
+
+Successes successes;
+
+IsTTY is_tty;
+
+std::array<std::pair<std::string_view, std::string_view>, 7> colors = {
+        {{"[error]", "\033[38;5;196m"}, // red
+         {"[success]", "\033[38;5;40m"}, // green
+         {"[progress]", "\033[38;5;214m"}, // yellow
+         {"[info]", "\033[38;5;51m"}, // blue
+         {"[help]", "\033[38;5;219m"}, // pink
+         {"[bold]", "\033[1m"},
+         {"[blank]", "\033[0m"}}};
 
 #if defined(_WIN64) || defined(_WIN32)
 UINT old_code_page;
@@ -206,7 +226,7 @@ void copyText() {
     writeToFile(path.data, copying.buffer);
 
     if (!output_silent) {
-        printf(replaceColors("[green]✅ %s text \"[bold]%s[blank][green]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
+        printf(replaceColors("[success]✅ %s text \"[bold]%s[blank][success]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
     }
 
     if (action == Action::Cut) writeToFile(path.original_files, path.data.string());
@@ -300,7 +320,7 @@ void show() {
             std::string content(fileContents(path.data));
             content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
             printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
-            printf(replaceColors("[bold][blue]%s\n[blank]").data(), content.substr(0, 250).data());
+            printf(replaceColors("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
             if (content.size() > 250) {
                 printf(and_more_items_message().data(), content.size() - 250);
             }
@@ -319,7 +339,7 @@ void show() {
         auto it = fs::directory_iterator(path.main);
         for (size_t i = 0; i < std::min(rowsAvailable, total_items); i++) {
 
-            printf(replaceColors("[blue]▏ [bold][pink]%s[blank]\n").data(), it->path().filename().string().data());
+            printf(replaceColors("[info]▏ [bold][help]%s[blank]\n").data(), it->path().filename().string().data());
 
             if (i == rowsAvailable - 1 && total_items > rowsAvailable) printf(and_more_items_message().data(), total_items - rowsAvailable);
 
@@ -336,7 +356,7 @@ void addFiles() {
     if (fs::is_regular_file(path.data)) {
         fprintf(stderr,
                 "%s",
-                replaceColors("[red]❌ You can't add items to text. [blank][pink]Try copying text first, or add "
+                replaceColors("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
                               "text instead.[blank]\n")
                         .data());
         return;
@@ -353,7 +373,7 @@ void addData() {
     } else if (!fs::is_empty(path.main)) {
         fprintf(stderr,
                 "%s",
-                replaceColors("[red]❌ You can't add text to items. [blank][pink]Try copying text first, or add a "
+                replaceColors("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
                               "file instead.[blank]\n")
                         .data());
     } else {
@@ -540,6 +560,8 @@ void setupVariables(int& argc, char* argv[]) {
 
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
+    //if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
+
     arguments.assign(argv + 1, argv + argc);
 }
 
@@ -582,14 +604,14 @@ void showClipboardStatus() {
             int widthRemaining = termSizeAvailable.columns
                                  - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
                                     + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
-            printf(replaceColors("[bold][blue]▏ %s%s: [blank]").data(),
+            printf(replaceColors("[bold][info]▏ %s%s: [blank]").data(),
                    clipboards_with_contents.at(clipboard).first.filename().string().data(),
                    clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name)) {
                 std::string content(fileContents(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
-                printf(replaceColors("[pink]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+                printf(replaceColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
 
@@ -600,13 +622,13 @@ void showClipboardStatus() {
 
                 if (!first) {
                     if (entryWidth <= widthRemaining - 2) {
-                        printf("%s", replaceColors("[pink], [blank]").data());
+                        printf("%s", replaceColors("[help], [blank]").data());
                         widthRemaining -= 2;
                     }
                 }
 
                 if (entryWidth <= widthRemaining) {
-                    printf(replaceColors("[pink]%s[blank]").data(), entry.path().filename().string().data());
+                    printf(replaceColors("[help]%s[blank]").data(), entry.path().filename().string().data());
                     widthRemaining -= entryWidth;
                     first = false;
                 }
@@ -680,7 +702,7 @@ IOType getIOType() {
 void setFlags() {
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
     if (flagIsPresent<bool>("--ee")) {
-        printf("%s", replaceColors("[bold][blue]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
+        printf("%s", replaceColors("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
@@ -909,7 +931,7 @@ void showFailures() {
         printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
         for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
 
-            printf(replaceColors("[red]▏ [bold]%s[blank][red]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+            printf(replaceColors("[error]▏ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
 
             if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
         }

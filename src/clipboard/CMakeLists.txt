@@ -1,6 +1,7 @@
 add_executable(clipboard
   src/clipboard.cpp
   src/messages.cpp
+  src/themes.cpp
 )
 
 include(CheckIPOSupported)

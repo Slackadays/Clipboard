@@ -60,7 +60,7 @@ struct Copying {
 };
 extern Copying copying;
 
-static std::vector<std::string> arguments;
+extern std::vector<std::string> arguments;
 
 extern std::string clipboard_name;
 
@@ -69,24 +69,24 @@ extern bool no_color;
 
 enum class ProgressState : int { Done, Active, Cancel };
 
-static std::condition_variable cv;
-static std::mutex m;
-static std::atomic<ProgressState> progress_state = ProgressState::Done;
-static std::thread indicator;
+extern std::condition_variable cv;
+extern std::mutex m;
+extern std::atomic<ProgressState> progress_state;
+extern std::thread indicator;
 
 struct Successes {
     std::atomic<unsigned long> files;
     std::atomic<unsigned long> directories;
     std::atomic<unsigned long long> bytes;
 };
-static Successes successes;
+extern Successes successes;
 
 struct IsTTY {
     bool in = true;
     bool out = true;
     bool err = true;
 };
-static IsTTY is_tty;
+extern IsTTY is_tty;
 
 struct Constants {
     std::string_view clipboard_version = CLIPBOARD_VERSION;
@@ -114,15 +114,7 @@ extern ActionArray<std::string_view, 8> action_shortcuts;
 extern ActionArray<std::string_view, 8> doing_action;
 extern ActionArray<std::string_view, 8> did_action;
 
-static std::array<std::pair<std::string_view, std::string_view>, 8> colors = {
-        {{"[red]", "\033[38;5;196m"},
-         {"[green]", "\033[38;5;40m"},
-         {"[yellow]", "\033[38;5;214m"},
-         {"[blue]", "\033[38;5;51m"},
-         {"[orange]", "\033[38;5;208m"},
-         {"[pink]", "\033[38;5;219m"},
-         {"[bold]", "\033[1m"},
-         {"[blank]", "\033[0m"}}};
+extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
 class TerminalSize {
 public:
@@ -220,6 +212,7 @@ void performAction();
 void updateGUIClipboard();
 void showFailures();
 void showSuccesses();
+void setTheme(const std::string& theme);
 
 extern ClipboardContent getGUIClipboard();
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);
