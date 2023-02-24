@@ -35,11 +35,29 @@ void setTheme(const std::string& theme) {
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "green") {
         colors = {
-                {{"[error]", "\033[38;5;106m"},
+                {{"[error]", "\033[38;5;112m"},
                  {"[success]", "\033[38;5;41m"},
                  {"[progress]", "\033[38;5;48m"},
                  {"[info]", "\033[38;5;154m"},
                  {"[help]", "\033[38;5;46m"},
+                 {"[bold]", "\033[1m"},
+                 {"[blank]", "\033[0m"}}};
+    } else if (theme == "darkhighcontrast") {
+        colors = {
+                {{"[error]", "\033[38;5;196m"},
+                 {"[success]", "\033[38;5;22m"},
+                 {"[progress]", "\033[38;5;202m"},
+                 {"[info]", "\033[38;5;20m"},
+                 {"[help]", "\033[38;5;200m"},
+                 {"[bold]", "\033[1m"},
+                 {"[blank]", "\033[0m"}}};
+    } else if (theme == "lighthighcontrast") {
+        colors = {
+                {{"[error]", "\033[38;5;196m"},
+                 {"[success]", "\033[38;5;22m"},
+                 {"[progress]", "\033[38;5;202m"},
+                 {"[info]", "\033[38;5;20m"},
+                 {"[help]", "\033[38;5;200m"},
                  {"[bold]", "\033[1m"},
                  {"[blank]", "\033[0m"}}};
     }
