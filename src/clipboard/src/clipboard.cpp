@@ -752,7 +752,7 @@ void setupIndicator() {
     if (!is_tty.err || output_silent) return;
 
     fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
-    fprintf(stderr, "\033[?25l");                                  // hide the cursor
+    fprintf(stderr, "\033[?25l");                                              // hide the cursor
     fflush(stderr);
 
     std::unique_lock<std::mutex> lock(m);
