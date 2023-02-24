@@ -61,11 +61,6 @@ std::vector<std::string> arguments;
 
 std::string clipboard_name = "0";
 
-std::condition_variable cv;
-std::mutex m;
-std::atomic<ProgressState> progress_state = ProgressState::Done;
-std::thread indicator;
-
 Action action;
 
 IOType io_type;

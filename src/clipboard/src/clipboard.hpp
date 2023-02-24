@@ -69,10 +69,10 @@ extern bool no_color;
 
 enum class ProgressState : int { Done, Active, Cancel };
 
-extern std::condition_variable cv;
-extern std::mutex m;
-extern std::atomic<ProgressState> progress_state;
-extern std::thread indicator;
+static std::condition_variable cv;
+static std::mutex m;
+static std::atomic<ProgressState> progress_state;
+static std::thread indicator;
 
 struct Successes {
     std::atomic<unsigned long> files;
