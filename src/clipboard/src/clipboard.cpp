@@ -116,10 +116,12 @@ std::string fileContents(const fs::path& path) {
 std::string pipedInContent() {
     std::string content;
 #if !defined(_WIN32) && !defined(_WIN64)
-    std::array<char, 65536> buffer;
     int len = -1;
+    int stdinFd = fileno(stdin);
+    constexpr int bufferSize = 65536;
+    std::array<char, bufferSize> buffer;
     while (len != 0) {
-        len = read(fileno(stdin), buffer.data(), buffer.size());
+        len = read(stdinFd, buffer.data(), bufferSize);
         content.append(buffer.data(), len);
         successes.bytes += len;
     }
@@ -158,7 +160,7 @@ bool isAWriteAction() {
     return action != Paste && action != Show;
 }
 
-std::string formatBytes(auto bytes) {
+std::string formatBytes(const auto& bytes) {
     if (bytes < 1024) return std::to_string(bytes) + "B";
     if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
     if (bytes < (1024 * 1024 * 1024)) return std::to_string(bytes / (1024.0 * 1024.0)) + "MB";
