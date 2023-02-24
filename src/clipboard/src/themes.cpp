@@ -16,12 +16,13 @@
 
 void setTheme(const std::string& theme) {
     if (theme == "light") {
-        colors = {{{"[error]", "\033[38;5;196m"}, // red
-            {"[success]", "\033[38;5;22m"}, // green
-            {"[progress]", "\033[38;5;202m"}, // yellow
-            {"[info]", "\033[38;5;20m"}, // blue
-            {"[help]", "\033[38;5;200m"}, // pink
-            {"[bold]", "\033[1m"},
-            {"[blank]", "\033[0m"}}};
+        colors = {
+                {{"[error]", "\033[38;5;196m"},    // red
+                 {"[success]", "\033[38;5;22m"},   // green
+                 {"[progress]", "\033[38;5;202m"}, // yellow
+                 {"[info]", "\033[38;5;20m"},      // blue
+                 {"[help]", "\033[38;5;200m"},     // pink
+                 {"[bold]", "\033[1m"},
+                 {"[blank]", "\033[0m"}}};
     }
 }

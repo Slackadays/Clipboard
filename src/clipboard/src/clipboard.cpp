@@ -75,11 +75,11 @@ Successes successes;
 IsTTY is_tty;
 
 std::array<std::pair<std::string_view, std::string_view>, 7> colors = {
-        {{"[error]", "\033[38;5;196m"}, // red
-         {"[success]", "\033[38;5;40m"}, // green
+        {{"[error]", "\033[38;5;196m"},    // red
+         {"[success]", "\033[38;5;40m"},   // green
          {"[progress]", "\033[38;5;214m"}, // yellow
-         {"[info]", "\033[38;5;51m"}, // blue
-         {"[help]", "\033[38;5;219m"}, // pink
+         {"[info]", "\033[38;5;51m"},      // blue
+         {"[help]", "\033[38;5;219m"},     // pink
          {"[bold]", "\033[1m"},
          {"[blank]", "\033[0m"}}};
 
@@ -560,7 +560,7 @@ void setupVariables(int& argc, char* argv[]) {
 
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
-    //if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
+    // if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
     arguments.assign(argv + 1, argv + argc);
 }
