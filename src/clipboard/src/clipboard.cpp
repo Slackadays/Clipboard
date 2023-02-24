@@ -751,7 +751,9 @@ void checkForNoItems() {
 void setupIndicator() {
     if (!is_tty.err || output_silent) return;
 
-    fprintf(stderr, "\033]0;%s\007", doing_action[action].data());
+    fprintf(stderr, "\033]0;%s\007", doing_action[action].data()); // set the terminal title
+    fprintf(stderr, "\033[?25l"); // hide the cursor
+    fflush(stderr);
 
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
@@ -782,6 +784,7 @@ void setupIndicator() {
             display_progress(successes.bytes.load(std::memory_order_relaxed), "B");
     }
     fprintf(stderr, "\r%*s\r", output_length, "");
+    fprintf(stderr, "\033[?25h"); // restore the cursor
     fflush(stderr);
     if (progress_state == ProgressState::Cancel) {
         fprintf(stderr, cancelled_message().data(), actions[action].data());
