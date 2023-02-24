@@ -35,9 +35,9 @@ void setTheme(const std::string& theme) {
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "green") {
         colors = {
-                {{"[error]", "\033[38;5;34m"},
+                {{"[error]", "\033[38;5;106m"},
                  {"[success]", "\033[38;5;41m"},
-                 {"[progress]", "\033[38;5;113m"},
+                 {"[progress]", "\033[38;5;48m"},
                  {"[info]", "\033[38;5;154m"},
                  {"[help]", "\033[38;5;46m"},
                  {"[bold]", "\033[1m"},
