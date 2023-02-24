@@ -750,6 +750,9 @@ void checkForNoItems() {
 
 void setupIndicator() {
     if (!is_tty.err || output_silent) return;
+
+    fprintf(stderr, "\033]0;%s\007", doing_action[action].data());
+
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
     const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ",
