@@ -49,7 +49,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 ---
 
 ### Install Manually (you'll need CMake and C++20 support)
-Get the latest release instead by adding `--branch 0.3.2` right after `git clone...`.
+Get the latest release instead by adding `--branch 0.4.0` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
 git clone https://github.com/Slackadays/Clipboard 
