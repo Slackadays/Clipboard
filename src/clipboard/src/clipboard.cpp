@@ -26,13 +26,13 @@
 #include <iostream>
 #include <locale>
 #include <mutex>
+#include <regex>
 #include <sstream>
 #include <string_view>
 #include <system_error>
 #include <thread>
 #include <utility>
 #include <vector>
-#include <regex>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -422,8 +422,13 @@ void removeRegex() {
         successes.bytes += oldLength - content.size();
         if (oldLength != content.size())
             writeToFile(path.data, content);
-        else 
-            fprintf(stderr, "%s", replaceColors("[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n").data());
+        else
+            fprintf(stderr,
+                    "%s",
+                    replaceColors(
+                            "[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
+                    )
+                            .data());
     } else {
         for (const auto& entry : fs::directory_iterator(path.main)) {
             if (std::regex_match(entry.path().filename().string(), regex)) {
@@ -441,7 +446,12 @@ void removeRegex() {
             }
         }
         if (successes.directories == 0 && successes.files == 0)
-            fprintf(stderr, "%s", replaceColors("[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n").data());
+            fprintf(stderr,
+                    "%s",
+                    replaceColors(
+                            "[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
+                    )
+                            .data());
     }
 }
 
