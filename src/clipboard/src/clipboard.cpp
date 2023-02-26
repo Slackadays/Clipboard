@@ -456,6 +456,8 @@ void removeRegex() {
 }
 
 void note() {}
+
+void swap() {}
 } // namespace PerformAction
 
 void clearTempDirectory(bool force_clear = false) {

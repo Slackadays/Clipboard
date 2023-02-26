@@ -99,20 +99,20 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap };
 
 enum class IOType : unsigned int { File, Pipe, Text };
 
 template <typename T, size_t N>
-class ActionArray : public std::array<T, N> {
+class EnumArray : public std::array<T, N> {
 public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern ActionArray<std::string_view, 8> actions;
-extern ActionArray<std::string_view, 8> action_shortcuts;
-extern ActionArray<std::string_view, 8> doing_action;
-extern ActionArray<std::string_view, 8> did_action;
+extern EnumArray<std::string_view, 9> actions;
+extern EnumArray<std::string_view, 9> action_shortcuts;
+extern EnumArray<std::string_view, 9> doing_action;
+extern EnumArray<std::string_view, 9> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
