@@ -59,6 +59,6 @@ void setTheme(const std::string& theme) {
                  {"[info]", "\033[38;5;18m"},
                  {"[help]", "\033[38;5;161m"},
                  {"[bold]", "\033[1m"},
-                 {"[blank]", "\033[0m"}}};         
+                 {"[blank]", "\033[0m"}}};
     }
 }
