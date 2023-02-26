@@ -14,13 +14,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 9> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "swap"};
+EnumArray<std::string_view, 10> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap"};
 
-EnumArray<std::string_view, 9> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "sw"};
+EnumArray<std::string_view, 10> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw"};
 
-EnumArray<std::string_view, 9> doing_action = {"Cutting", "Copying", "Pasting", "Clearing", "Editing", "Adding", "Removing", "Swapping"};
+EnumArray<std::string_view, 10> doing_action = {"Cutting", "Copying", "Pasting", "Clearing", "Editing", "Adding", "Removing", "Noting", "Swapping"};
 
-EnumArray<std::string_view, 9> did_action = {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Swapped"};
+EnumArray<std::string_view, 10> did_action = {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped"};
 
 Message help_message = "[info]▏This is Clipboard %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]▏How To Use[blank]\n"

@@ -158,7 +158,7 @@ bool userIsARobot() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action != Paste && action != Show;
+    return action != Paste && action != Show && action != Note;
 }
 
 std::string formatBytes(const auto& bytes) {
@@ -455,7 +455,26 @@ void removeRegex() {
     }
 }
 
-void note() {}
+void noteText() {
+    if (copying.items.size() == 1) {
+        if (copying.items.at(0).string() == "") {
+            fs::remove(path.notes);
+            fprintf(stdout, "%s", replaceColors("[success]✅ Removed note\n").data());
+        } else {
+            writeToFile(path.notes, copying.items.at(0).string());
+            fprintf(stdout, replaceColors("[success]✅ Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
+        }
+    } else if (copying.items.empty()) {
+        if (fs::is_regular_file(path.notes)) {
+            std::string content(fileContents(path.notes));
+            fprintf(stdout, replaceColors("[info]• Note for this clipboard: %s\n").data(), content.data());
+        } else {
+            fprintf(stderr, "%s", replaceColors("[info]• There is no note for this clipboard.[blank]\n").data());
+        }
+    } else {
+        fprintf(stderr, "%s", replaceColors("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
+    }
+}
 
 void swap() {}
 } // namespace PerformAction
@@ -629,7 +648,7 @@ void setupVariables(int& argc, char* argv[]) {
 
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
-    // if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
+    if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
     arguments.assign(argv + 1, argv + argc);
 }
@@ -734,12 +753,7 @@ template <typename T>
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Add, Remove}) {
-            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
-                return entry;
-            }
-        }
-        for (const auto& entry : {Paste, Show, Clear, Edit}) {
+        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 return entry;
             }
@@ -766,6 +780,10 @@ IOType getIOType() {
         if (!is_tty.out) return Pipe;
     } else if (action == Remove) {
         if (copying.items.size() == 1) return Text;
+    } else if (action == Note) {
+        if (copying.items.size() == 1) return Text;
+        if (copying.items.size() == 0) return Text;
+        if (!is_tty.in) return Pipe;
     }
     return File;
 }
@@ -809,6 +827,8 @@ void setFilepaths() {
     path.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? path.persistent : path.temporary;
 
     path.original_files = path.main.parent_path() / constants.original_files_name;
+
+    path.notes = path.main.parent_path() / constants.notes_name;
 
     path.data = path.main / constants.data_file_name;
 }
@@ -987,6 +1007,9 @@ void performAction() {
             break;
         case Remove:
             removeRegex();
+            break;
+        case Note:
+            noteText();
             break;
         default:
             break;

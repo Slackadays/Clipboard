@@ -40,6 +40,7 @@ extern Forker forker;
 struct Filepath {
     fs::path main;
     fs::path data;
+    fs::path notes;
     fs::path temporary;
     fs::path persistent;
     fs::path original_files;
@@ -96,6 +97,7 @@ struct Constants {
     std::string_view temporary_directory_name = "Clipboard";
     std::string_view persistent_directory_name = ".clipboard";
     std::string_view original_files_name = "originals";
+    std::string_view notes_name = "notes";
 };
 constexpr Constants constants;
 
@@ -109,10 +111,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 9> actions;
-extern EnumArray<std::string_view, 9> action_shortcuts;
-extern EnumArray<std::string_view, 9> doing_action;
-extern EnumArray<std::string_view, 9> did_action;
+extern EnumArray<std::string_view, 10> actions;
+extern EnumArray<std::string_view, 10> action_shortcuts;
+extern EnumArray<std::string_view, 10> doing_action;
+extern EnumArray<std::string_view, 10> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
