@@ -32,6 +32,7 @@
 #include <thread>
 #include <utility>
 #include <vector>
+#include <regex>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -390,7 +391,59 @@ void addText() {
     successes.bytes += copying.items.at(0).string().size();
 }
 
-void remove() {}
+void removeFiles() {
+    if (fs::is_regular_file(path.data)) {
+        fprintf(stderr, "%s", replaceColors("[error]❌ You can't remove items from text. [blank][help]Try copying files first, or remove text instead.[blank]\n").data());
+        return;
+    }
+    for (const auto& item : copying.items) {
+        try {
+            if (fs::is_directory(path.main / item)) {
+                fs::remove_all(path.main / item);
+                successes.directories++;
+            } else if (fs::is_regular_file(path.main / item)) {
+                fs::remove(path.main / item);
+                successes.files++;
+            } else {
+                copying.failedItems.emplace_back(item.string(), std::make_error_code(std::errc::no_such_file_or_directory));
+            }
+        } catch (const fs::filesystem_error& e) {
+            copying.failedItems.emplace_back(item.string(), e.code());
+        }
+    }
+}
+
+void removeRegex() {
+    std::regex regex(copying.items.at(0).string());
+    if (fs::is_regular_file(path.data)) {
+        std::string content(fileContents(path.data));
+        size_t oldLength = content.size();
+        content = std::regex_replace(content, regex, "");
+        successes.bytes += oldLength - content.size();
+        if (oldLength != content.size())
+            writeToFile(path.data, content);
+        else 
+            fprintf(stderr, "%s", replaceColors("[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n").data());
+    } else {
+        for (const auto& entry : fs::directory_iterator(path.main)) {
+            if (std::regex_match(entry.path().filename().string(), regex)) {
+                try {
+                    if (fs::is_directory(entry.path())) {
+                        fs::remove_all(entry.path());
+                        successes.directories++;
+                    } else {
+                        fs::remove(entry.path());
+                        successes.files++;
+                    }
+                } catch (const fs::filesystem_error& e) {
+                    copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
+                }
+            }
+        }
+        if (successes.directories == 0 && successes.files == 0)
+            fprintf(stderr, "%s", replaceColors("[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n").data());
+    }
+}
 
 void note() {}
 } // namespace PerformAction
@@ -694,11 +747,13 @@ Action getAction() {
 IOType getIOType() {
     using enum Action;
     using enum IOType;
-    if (action == Cut || action == Copy || action == Add || action == Remove) {
+    if (action == Cut || action == Copy || action == Add) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in) return Pipe;
     } else if (action == Paste || action == Show || action == Clear || action == Edit) {
         if (!is_tty.out) return Pipe;
+    } else if (action == Remove) {
+        if (copying.items.size() == 1) return Text;
     }
     return File;
 }
@@ -747,11 +802,12 @@ void setFilepaths() {
 }
 
 void checkForNoItems() {
-    if ((action == Action::Cut || action == Action::Copy) && io_type == IOType::File && copying.items.size() < 1) {
+    using enum Action;
+    if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type == IOType::File && copying.items.size() < 1) {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
-    if (action == Action::Paste && fs::is_empty(path.main)) {
+    if (action == Paste && fs::is_empty(path.main)) {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
     }
@@ -885,7 +941,7 @@ void performAction() {
             addFiles();
             break;
         case Remove:
-            remove();
+            removeFiles();
             break;
         default:
             break;
@@ -903,6 +959,7 @@ void performAction() {
             addData();
             break;
         case Remove:
+            removeRegex();
             break;
         default:
             break;
@@ -917,6 +974,7 @@ void performAction() {
             addText();
             break;
         case Remove:
+            removeRegex();
             break;
         default:
             break;
