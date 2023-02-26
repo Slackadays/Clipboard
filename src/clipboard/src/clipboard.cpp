@@ -75,7 +75,7 @@ std::array<std::pair<std::string_view, std::string_view>, 7> colors = {
          {"[success]", "\033[38;5;40m"},   // green
          {"[progress]", "\033[38;5;214m"}, // yellow
          {"[info]", "\033[38;5;51m"},      // blue
-         {"[help]", "\033[38;5;219m"},     // pink
+         {"[help]", "\033[38;5;213m"},     // pink
          {"[bold]", "\033[1m"},
          {"[blank]", "\033[0m"}}};
 

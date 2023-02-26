@@ -44,11 +44,11 @@ void setTheme(const std::string& theme) {
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "darkhighcontrast") {
         colors = {
-                {{"[error]", "\033[38;5;201m"},
-                 {"[success]", "\033[38;5;22m"},
-                 {"[progress]", "\033[38;5;202m"},
-                 {"[info]", "\033[38;5;20m"},
-                 {"[help]", "\033[38;5;200m"},
+                {{"[error]", "\033[38;5;218m"},
+                 {"[success]", "\033[38;5;157m"},
+                 {"[progress]", "\033[38;5;230m"},
+                 {"[info]", "\033[38;5;195m"},
+                 {"[help]", "\033[38;5;225m"},
                  {"[bold]", "\033[1m"},
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "lighthighcontrast") {
