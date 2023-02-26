@@ -414,7 +414,7 @@ void removeFiles() {
 }
 
 void removeRegex() {
-    std::regex regex(copying.items.at(0).string());
+    std::regex regex(io_type == IOType::Text ? copying.items.at(0).string() : pipedInContent());
     if (fs::is_regular_file(path.data)) {
         std::string content(fileContents(path.data));
         size_t oldLength = content.size();
@@ -627,7 +627,7 @@ void setupVariables(int& argc, char* argv[]) {
 
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
-    // if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
+    if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
     arguments.assign(argv + 1, argv + argc);
 }
