@@ -89,7 +89,7 @@ void Forker::fork(func_t func) const {
     // Always exit no matter what happens, to prevent the forked daemon
     // from returning control to the stack frames above and overwriting the
     // non-forked original process' work
-    std::exit(EXIT_SUCCESS);
+    std::_Exit(EXIT_SUCCESS);
 }
 #else
 template <std::invocable func_t>
