@@ -1,5 +1,6 @@
 add_executable(clipboard
   src/clipboard.cpp
+  src/actions.cpp
   src/messages.cpp
   src/themes.cpp
 )

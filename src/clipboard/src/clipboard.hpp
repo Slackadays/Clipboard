@@ -103,7 +103,11 @@ constexpr Constants constants;
 
 enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap };
 
+extern Action action;
+
 enum class IOType : unsigned int { File, Pipe, Text };
+
+extern IOType io_type;
 
 template <typename T, size_t N>
 class EnumArray : public std::array<T, N> {
@@ -190,6 +194,7 @@ void setupHandlers();
 void setLocale();
 void showHelpMessage(int& argc, char* argv[]);
 void setupItems(int& argc, char* argv[]);
+void writeToFile(const fs::path& path, const std::string& content, bool append = false);
 void setClipboardName(int& argc, char* argv[]);
 void setupVariables(int& argc, char* argv[]);
 void createTempDirectory();
@@ -203,19 +208,43 @@ void startIndicator();
 void setupIndicator();
 void deduplicateItems();
 unsigned long long calculateTotalItemSize();
+bool stopIndicator(bool change_condition_variable = true);
 void checkItemSize();
+TerminalSize getTerminalSize();
 void clearTempDirectory(bool force_clear);
 void copyFiles();
 void removeOldFiles();
+std::string fileContents(const fs::path& path);
 bool userIsARobot();
 void pasteFiles();
 void clearClipboard();
 void performAction();
 void updateGUIClipboard();
+std::string pipedInContent();
 void showFailures();
 void showSuccesses();
+[[nodiscard]] CopyPolicy userDecision(const std::string& item);
 void setTheme(const std::string& theme);
 
 extern ClipboardContent getGUIClipboard();
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);
 extern const bool GUIClipboardSupportsCut;
+
+namespace PerformAction {
+void copyItem(const fs::path& f);
+void copy();
+void copyText();
+void paste();
+void pipeIn();
+void pipeOut();
+void clear();
+void show();
+void edit();
+void addData();
+void addText();
+void removeFiles();
+void removeRegex();
+void noteText();
+void swap();
+void addFiles();
+} // namespace PerformAction
