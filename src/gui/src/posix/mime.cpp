@@ -117,6 +117,8 @@ ClipboardContent MimeType::decodePaths(std::istream& stream) const {
             }
         }
 
+        line.erase(std::remove(line.begin(), line.end(), '\r'), line.end()); // Sanitize carriage returns from KDE
+
         paths.emplace_back(line);
     }
 
