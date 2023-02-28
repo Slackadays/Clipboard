@@ -42,6 +42,7 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     };
 
     insert("x-special/gnome-copied-files", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
+    insert("application/x-kde-cutselection", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("text/uri-list", ClipboardContentType::Paths, MimeOption::EncodePaths);
     insert("text/plain;charset=utf-8", ClipboardContentType::Text);
     insert("UTF8_STRING", ClipboardContentType::Text);
