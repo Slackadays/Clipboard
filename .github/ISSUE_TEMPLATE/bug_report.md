@@ -25,8 +25,8 @@ If applicable, add screenshots to help explain your problem.
 Add any other context about the problem here.
 
 Answer these questions so that we can help you faster:
-- [ ] If I compiled Clipboard myself, then the errors don't mention "LTO error" (this is a bug with the compiler, not Clipboard)
-- [ ] If I compiled Clipboard myself, then the errors don't mention "XYZ has not been defined in namespace std" (this usually means you need a compiler with C++20 support, so upgrade first)
+- [ ] If I compiled Clipboard myself, then any errors that may be present don't mention "LTO error" (this is a bug with the compiler, not Clipboard)
+- [ ] If I compiled Clipboard myself, then any errors that may be present don't mention "XYZ has not been defined in namespace std" (this usually means you need a compiler with C++20 support, so upgrade first)
 - [ ] I check these boxes without reading them
 - [ ] I am using the latest commit/release (we only support the latest)
 - [ ] If I downloaded Clipboard from GitHub Actions or with the install script, any errors that may be present don't mention "GLIBC XYZ not found" (your system is too outdated for Clipboard, so upgrade it)
