@@ -38,7 +38,7 @@ namespace fs = std::filesystem;
 extern Forker forker;
 
 struct Filepath {
-    class DataFilepath {
+    class DataDirectory {
         fs::path self;
 
     public:
@@ -48,9 +48,9 @@ struct Filepath {
         auto operator=(const auto& other) { return self = other; }
         auto operator/(const auto& other) { return self / other; }
     };
-    DataFilepath data;
+    DataDirectory data;
 
-    class MetadataFilepath {
+    class MetadataDirectory {
         fs::path self;
 
     public:
@@ -62,16 +62,16 @@ struct Filepath {
         auto operator=(const auto& other) { return self = other; }
         auto operator/(const auto& other) { return self / other; }
     };
-    MetadataFilepath metadata;
+    MetadataDirectory metadata;
     fs::path temporary;
     fs::path persistent;
     fs::path root;
     fs::path home;
 
-    void init() {
+    void create() {
         [](const auto&... path) {
             (fs::create_directories(path), ...);
-        }(data, metadata, temporary, persistent, root, home);
+        }(data, metadata, temporary, persistent);
     }
 };
 extern Filepath path;

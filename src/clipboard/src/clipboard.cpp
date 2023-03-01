@@ -550,8 +550,6 @@ void setFilepaths() {
     path.data = path.root / constants.data_directory;
 
     path.data.raw = path.data / constants.data_file_name;
-
-    path.init();
 }
 
 void checkForNoItems() {
@@ -798,6 +796,8 @@ int main(int argc, char* argv[]) {
         setFlags();
 
         setFilepaths();
+
+        path.create();
 
         action = getAction();
 
