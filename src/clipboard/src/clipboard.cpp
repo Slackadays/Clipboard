@@ -382,12 +382,13 @@ void showClipboardStatus() {
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path))
-            if (fs::exists(entry.path() / constants.data_directory) && !fs::is_empty(entry.path() / constants.data_directory)) clipboards_with_contents.push_back({entry.path(), persistent});
+            if (fs::exists(entry.path() / constants.data_directory) && !fs::is_empty(entry.path() / constants.data_directory))
+                clipboards_with_contents.push_back({entry.path(), persistent});
     };
     iterateClipboards(path.temporary.parent_path(), false);
     iterateClipboards(path.persistent.parent_path(), true);
     std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
-    
+
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
         printf("%s", clipboard_action_prompt().data());

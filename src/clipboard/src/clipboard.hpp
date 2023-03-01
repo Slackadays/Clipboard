@@ -40,19 +40,20 @@ extern Forker forker;
 struct Filepath {
     class DataFilepath {
         fs::path self;
-        public:
+
+    public:
         fs::path raw;
         operator fs::path() { return self; }
         operator fs::path() const { return self; }
         auto operator=(const auto& other) { return self = other; }
         auto operator/(const auto& other) { return self / other; }
-
     };
     DataFilepath data;
-    
+
     class MetadataFilepath {
         fs::path self;
-        public:
+
+    public:
         fs::path notes;
         fs::path mime;
         fs::path originals;
@@ -67,7 +68,11 @@ struct Filepath {
     fs::path root;
     fs::path home;
 
-    void init() { [](const auto& ...path){ (fs::create_directories(path),...); }(data, metadata, temporary, persistent, root, home); }
+    void init() {
+        [](const auto&... path) {
+            (fs::create_directories(path), ...);
+        }(data, metadata, temporary, persistent, root, home);
+    }
 };
 extern Filepath path;
 
