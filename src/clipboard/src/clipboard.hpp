@@ -38,13 +38,36 @@ namespace fs = std::filesystem;
 extern Forker forker;
 
 struct Filepath {
-    fs::path main;
-    fs::path data;
-    fs::path notes;
+    class DataFilepath {
+        fs::path self;
+        public:
+        fs::path raw;
+        operator fs::path() { return self; }
+        operator fs::path() const { return self; }
+        auto operator=(const auto& other) { return self = other; }
+        auto operator/(const auto& other) { return self / other; }
+
+    };
+    DataFilepath data;
+    
+    class MetadataFilepath {
+        fs::path self;
+        public:
+        fs::path notes;
+        fs::path mime;
+        fs::path originals;
+        operator fs::path() { return self; }
+        operator fs::path() const { return self; }
+        auto operator=(const auto& other) { return self = other; }
+        auto operator/(const auto& other) { return self / other; }
+    };
+    MetadataFilepath metadata;
     fs::path temporary;
     fs::path persistent;
-    fs::path original_files;
+    fs::path root;
     fs::path home;
+
+    void init() { [](const auto& ...path){ (fs::create_directories(path),...); }(data, metadata, temporary, persistent, root, home); }
 };
 extern Filepath path;
 
@@ -98,6 +121,8 @@ struct Constants {
     std::string_view persistent_directory_name = ".clipboard";
     std::string_view original_files_name = "originals";
     std::string_view notes_name = "notes";
+    std::string_view data_directory = "data";
+    std::string_view metadata_directory = "metadata";
 };
 constexpr Constants constants;
 

@@ -115,7 +115,7 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
 }
 
 void setWindowsClipboardDataPipe() {
-    std::ifstream file(path.data);
+    std::ifstream file(path.data.raw);
     std::vector<char> utf8Data((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 
     auto utf16Len = MultiByteToWideChar(CP_UTF8, 0, &utf8Data[0], utf8Data.size(), nullptr, 0);
@@ -154,7 +154,7 @@ void setWindowsClipboardDataPipe() {
 void setWindowsClipboardDataFiles() {
 
     std::vector<wchar_t> data;
-    for (const auto& entry : fs::directory_iterator(path.main)) {
+    for (const auto& entry : fs::directory_iterator(path.data)) {
         for (const auto& c : entry.path().wstring()) {
             data.push_back(c);
         }

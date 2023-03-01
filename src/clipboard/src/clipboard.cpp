@@ -195,12 +195,12 @@ std::string formatBytes(const auto& bytes) {
 void clearTempDirectory(bool force_clear = false) {
     using enum Action;
     if (force_clear || action == Cut || action == Copy) {
-        fs::remove(path.original_files);
-        if (action == Clear && fs::is_regular_file(path.data)) {
-            successes.bytes += fs::file_size(path.data);
-            fs::remove(path.data);
+        fs::remove(path.metadata.originals);
+        if (action == Clear && fs::is_regular_file(path.data.raw)) {
+            successes.bytes += fs::file_size(path.data.raw);
+            fs::remove(path.data.raw);
         }
-        for (const auto& entry : fs::directory_iterator(path.main)) {
+        for (const auto& entry : fs::directory_iterator(path.data)) {
             fs::remove_all(entry.path());
             if (action == Clear) {
                 if (entry.is_directory())
@@ -213,16 +213,16 @@ void clearTempDirectory(bool force_clear = false) {
 }
 
 void convertFromGUIClipboard(const std::string& text) {
-    if (fs::is_regular_file(path.data) && fileContents(path.data) == text) return;
+    if (fs::is_regular_file(path.data.raw) && fileContents(path.data.raw) == text) return;
     clearTempDirectory(true);
-    writeToFile(path.data, text);
+    writeToFile(path.data.raw, text);
 }
 
 void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
     auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
-        auto relative = fs::relative(path, ::path.main);
+        auto relative = fs::relative(path, ::path.data);
         auto firstElement = *(relative.begin());
         return firstElement == fs::path("..");
     });
@@ -232,7 +232,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     for (auto&& path : clipboard.paths()) {
         if (!fs::exists(path)) continue;
 
-        auto target = ::path.main / path.filename();
+        auto target = ::path.data / path.filename();
 
         if (fs::exists(target) && fs::equivalent(path, target)) continue;
 
@@ -246,15 +246,15 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     }
 
     if (clipboard.action() == ClipboardPathsAction::Cut) {
-        std::ofstream originalFiles {path.original_files};
+        std::ofstream originalFiles {path.metadata.originals};
         for (auto&& path : clipboard.paths())
             originalFiles << path.string() << std::endl;
     }
 }
 
 [[nodiscard]] ClipboardContent thisClipboard() {
-    if (fs::exists(path.original_files) && GUIClipboardSupportsCut) {
-        std::ifstream originalFiles {path.original_files};
+    if (fs::exists(path.metadata.originals) && GUIClipboardSupportsCut) {
+        std::ifstream originalFiles {path.metadata.originals};
         std::vector<fs::path> files;
 
         std::string line;
@@ -271,7 +271,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
 
-        for (const auto& entry : fs::directory_iterator(path.main)) // count all items which were actually successfully actioned on
+        for (const auto& entry : fs::directory_iterator(path.data)) // count all items which were actually successfully actioned on
             paths.push_back(entry.path());
 
         return ClipboardContent(ClipboardPaths(std::move(paths)));
@@ -382,11 +382,12 @@ void showClipboardStatus() {
     std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
     auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
         for (const auto& entry : fs::directory_iterator(path))
-            if (fs::is_directory(entry.path() / "data") && !fs::is_empty(entry.path() / "data")) clipboards_with_contents.push_back({entry.path(), persistent});
+            if (fs::exists(entry.path() / constants.data_directory) && !fs::is_empty(entry.path() / constants.data_directory)) clipboards_with_contents.push_back({entry.path(), persistent});
     };
-    iterateClipboards(path.temporary.parent_path().parent_path(), false);
-    iterateClipboards(path.persistent.parent_path().parent_path(), true);
+    iterateClipboards(path.temporary.parent_path(), false);
+    iterateClipboards(path.persistent.parent_path(), true);
     std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
+    
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
         printf("%s", clipboard_action_prompt().data());
@@ -409,14 +410,14 @@ void showClipboardStatus() {
                    clipboards_with_contents.at(clipboard).first.filename().string().data(),
                    clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
-            if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name)) {
-                std::string content(fileContents(clipboards_with_contents.at(clipboard).first / "data" / constants.data_file_name));
+            if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
+                std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
                 content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
                 printf(replaceColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
 
-            for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / "data")) {
+            for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / constants.data_directory)) {
                 int entryWidth = entry.path().filename().string().length();
 
                 if (widthRemaining <= 0) break;
@@ -532,18 +533,24 @@ void setFilepaths() {
     path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR")
                       : getenv("TMPDIR")         ? getenv("TMPDIR")
                                                  : fs::temp_directory_path())
-                     / constants.temporary_directory_name / clipboard_name / "data";
+                     / constants.temporary_directory_name / clipboard_name;
 
     path.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : path.home))
-                      / constants.persistent_directory_name / clipboard_name / "data";
+                      / constants.persistent_directory_name / clipboard_name;
 
-    path.main = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? path.persistent : path.temporary;
+    path.root = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? path.persistent : path.temporary;
 
-    path.original_files = path.main.parent_path() / constants.original_files_name;
+    path.metadata = path.root / constants.metadata_directory;
 
-    path.notes = path.main.parent_path() / constants.notes_name;
+    path.metadata.originals = path.metadata / constants.original_files_name;
 
-    path.data = path.main / constants.data_file_name;
+    path.metadata.notes = path.metadata / constants.notes_name;
+
+    path.data = path.root / constants.data_directory;
+
+    path.data.raw = path.data / constants.data_file_name;
+
+    path.init();
 }
 
 void checkForNoItems() {
@@ -552,7 +559,7 @@ void checkForNoItems() {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
-    if (action == Paste && fs::is_empty(path.main)) {
+    if (action == Paste && fs::is_empty(path.data)) {
         showClipboardStatus();
         exit(EXIT_SUCCESS);
     }
@@ -572,7 +579,7 @@ void setupIndicator() {
                                                           "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     auto itemsToProcess = [&] {
         size_t items = 1;
-        for (auto dummy : fs::directory_iterator(path.main))
+        for (auto dummy : fs::directory_iterator(path.data))
             items++;
         return items;
     };
@@ -625,7 +632,7 @@ unsigned long long totalItemSize() {
             }
         }
     } else if (action == Action::Paste && io_type == IOType::File) {
-        for (const auto& entry : fs::recursive_directory_iterator(path.main))
+        for (const auto& entry : fs::recursive_directory_iterator(path.data))
             total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
     }
     return total_item_size;
@@ -634,7 +641,7 @@ unsigned long long totalItemSize() {
 void checkItemSize(unsigned long long total_item_size) {
     unsigned long long space_available = 0;
     if ((action == Action::Cut || action == Action::Copy || action == Action::Add) && io_type == IOType::File)
-        space_available = fs::space(path.main).available;
+        space_available = fs::space(path.data).available;
     else if (action == Action::Paste && io_type == IOType::File)
         space_available = fs::space(fs::current_path()).available;
     if (total_item_size > space_available) {
@@ -645,8 +652,8 @@ void checkItemSize(unsigned long long total_item_size) {
 }
 
 void removeOldFiles() {
-    if (fs::is_regular_file(path.original_files)) {
-        std::ifstream files(path.original_files);
+    if (fs::is_regular_file(path.metadata.originals)) {
+        std::ifstream files(path.metadata.originals);
         std::string line;
         while (std::getline(files, line)) {
             try {
@@ -656,7 +663,7 @@ void removeOldFiles() {
             }
         }
         files.close();
-        if (copying.failedItems.empty()) fs::remove(path.original_files);
+        if (copying.failedItems.empty()) fs::remove(path.metadata.originals);
     }
 }
 
@@ -790,8 +797,6 @@ int main(int argc, char* argv[]) {
         setFlags();
 
         setFilepaths();
-
-        fs::create_directories(path.temporary), fs::create_directories(path.persistent);
 
         action = getAction();
 
