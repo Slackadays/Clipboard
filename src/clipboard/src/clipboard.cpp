@@ -62,6 +62,8 @@ std::vector<std::string> arguments;
 
 std::string clipboard_name = "0";
 
+std::string mime_type = "text/plain";
+
 Action action;
 
 IOType io_type;
@@ -162,10 +164,10 @@ bool isAWriteAction() {
 }
 
 std::string formatBytes(const auto& bytes) {
-    if (bytes < 1024) return std::to_string(bytes) + "B";
-    if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
-    if (bytes < (1024 * 1024 * 1024)) return std::to_string(bytes / (1024.0 * 1024.0)) + "MB";
-    return std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
+    if (bytes < 1024) return std::move(std::to_string(bytes) + "B");
+    if (bytes < (1024 * 1024)) return std::move(std::to_string(bytes / 1024.0) + "kB");
+    if (bytes < (1024 * 1024 * 1024)) return std::move(std::to_string(bytes / (1024.0 * 1024.0)) + "MB");
+    return std::move(std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB");
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -370,10 +372,13 @@ void syncWithGUIClipboard(bool force = false) {
     if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || force) {
         using enum ClipboardContentType;
         auto content = getGUIClipboard();
-        if (content.type() == Text)
+        if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
-        else if (content.type() == Paths)
+            mime_type = !content.mime().empty() ? content.mime() : inferMIMEType(content.text());
+        } else if (content.type() == Paths) {
             convertFromGUIClipboard(content.paths());
+            mime_type = !content.mime().empty() ? content.mime() : "text/uri-list";
+        }
     }
 }
 
@@ -610,6 +615,10 @@ void setupIndicator() {
     fflush(stderr);
 }
 
+void saveMIMEType() {
+    writeToFile(path.metadata.mime, mime_type);
+}
+
 void startIndicator() { // If cancelled, leave cancelled
     ProgressState expect = ProgressState::Done;
     progress_state.compare_exchange_strong(expect, ProgressState::Active);
@@ -639,7 +648,8 @@ unsigned long long totalItemSize() {
 
 void checkItemSize(unsigned long long total_item_size) {
     unsigned long long space_available = 0;
-    if ((action == Action::Cut || action == Action::Copy || action == Action::Add) && io_type == IOType::File)
+    using enum Action;
+    if ((action == Cut || action == Copy || action == Add) && io_type == IOType::File)
         space_available = fs::space(path.data).available;
     else if (action == Action::Paste && io_type == IOType::File)
         space_available = fs::space(fs::current_path()).available;
@@ -822,6 +832,8 @@ int main(int argc, char* argv[]) {
         performAction();
 
         updateGUIClipboard();
+
+        saveMIMEType();
 
         stopIndicator();
 

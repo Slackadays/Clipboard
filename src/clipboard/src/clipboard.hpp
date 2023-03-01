@@ -93,6 +93,8 @@ extern std::vector<std::string> arguments;
 
 extern std::string clipboard_name;
 
+extern std::string mime_type;
+
 extern bool output_silent;
 extern bool no_color;
 

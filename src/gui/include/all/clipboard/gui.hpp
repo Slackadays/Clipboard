@@ -43,6 +43,7 @@ enum class ClipboardContentType { Empty, Text, Paths };
 
 class ClipboardContent {
 private:
+    std::string mime_type;
     ClipboardContentType m_type = ClipboardContentType::Empty;
     std::variant<std::nullptr_t, std::string, ClipboardPaths> m_data;
 
@@ -61,6 +62,7 @@ public:
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
     [[nodiscard]] inline const std::string& text() const { return std::get<std::string>(m_data); }
     [[nodiscard]] inline const ClipboardPaths& paths() const { return std::get<ClipboardPaths>(m_data); }
+    [[nodiscard]] inline const std::string& mime() const { return mime_type; }
 };
 
 /**
@@ -71,3 +73,5 @@ struct WriteGuiContext {
     const Forker& forker;
     const ClipboardContent& clipboard;
 };
+
+extern std::string_view inferMIMEType(const std::string& temporaryContent);
