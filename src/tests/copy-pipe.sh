@@ -21,6 +21,8 @@ clipboard < ../TurnYourClipboardUp.png
 
 clipboard > temp
 
+file temp
+
 items_match temp ../TurnYourClipboardUp.png
 
 pass_test copy-pipe
