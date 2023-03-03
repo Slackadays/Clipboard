@@ -2,7 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-testname="Show user provided text"
+export testname="Show user provided text"
 
 start_test
 

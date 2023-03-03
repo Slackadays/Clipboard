@@ -1,7 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-testname="Cut piped data"
+export testname="Cut piped data"
 
 start_test
 

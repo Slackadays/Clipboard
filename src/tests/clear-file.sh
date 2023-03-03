@@ -2,7 +2,7 @@
 export CLIPBOARD_FORCETTY=1
 . ./resources.sh
 
-testname="Clear files"
+export testname="Clear files"
 
 start_test
 

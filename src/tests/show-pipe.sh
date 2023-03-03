@@ -1,7 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-testname="Show piped data"
+export testname="Show piped data"
 
 start_test
 

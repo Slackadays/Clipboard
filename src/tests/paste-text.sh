@@ -2,7 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-testname="Paste user provided text"
+export testname="Paste user provided text"
 
 start_test
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-testname="Paste piped data"
+export testname="Paste piped data"
 
 start_test
 

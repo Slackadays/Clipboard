@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+testname="(Unknown)"
+
 make_files() {
   echo "Foobar" > testfile
   mkdir testdir

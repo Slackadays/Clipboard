@@ -1,7 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-testname="Clear piped data"
+export testname="Clear piped data"
 
 start_test
 
