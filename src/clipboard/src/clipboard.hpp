@@ -86,14 +86,13 @@ struct Copying {
     std::vector<fs::path> items;
     std::vector<std::pair<std::string, std::error_code>> failedItems;
     std::string buffer;
+    std::string mime;
 };
 extern Copying copying;
 
 extern std::vector<std::string> arguments;
 
 extern std::string clipboard_name;
-
-extern std::string mime_type;
 
 extern bool output_silent;
 extern bool no_color;

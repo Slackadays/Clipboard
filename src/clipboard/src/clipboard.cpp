@@ -62,8 +62,6 @@ std::vector<std::string> arguments;
 
 std::string clipboard_name = "0";
 
-std::string mime_type = "text/plain";
-
 Action action;
 
 IOType io_type;
@@ -268,7 +266,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         return {std::move(files), ClipboardPathsAction::Cut};
     }
 
-    if (!copying.buffer.empty()) return {copying.buffer};
+    if (!copying.buffer.empty()) return {copying.buffer, copying.mime};
 
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
@@ -374,10 +372,10 @@ void syncWithGUIClipboard(bool force = false) {
         auto content = getGUIClipboard();
         if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
-            mime_type = !content.mime().empty() ? content.mime() : inferMIMEType(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text());
         } else if (content.type() == Paths) {
             convertFromGUIClipboard(content.paths());
-            mime_type = !content.mime().empty() ? content.mime() : "text/uri-list";
+            copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
         }
     }
 }
@@ -618,7 +616,7 @@ void setupIndicator() {
 }
 
 void saveMIMEType() {
-    writeToFile(path.metadata.mime, mime_type);
+    writeToFile(path.metadata.mime, copying.mime);
 }
 
 void startIndicator() { // If cancelled, leave cancelled
@@ -748,6 +746,15 @@ void performAction() {
     }
 }
 
+std::string getMIMEType() {
+    if (io_type == IOType::File) {
+        return "text/uri-list";
+    } else if (io_type == IOType::Pipe || io_type == IOType::Text) {
+        return std::string(inferMIMEType(copying.buffer));
+    }
+    return "text/plain";
+}
+
 void updateGUIClipboard() {
     if (isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) { // only update GUI clipboard on write operations
         writeToGUIClipboard(thisClipboard());
@@ -832,6 +839,10 @@ int main(int argc, char* argv[]) {
         clearTempDirectory();
 
         performAction();
+
+        copying.mime = getMIMEType();
+
+        writeToFile(path.metadata.mime, copying.mime);
 
         updateGUIClipboard();
 

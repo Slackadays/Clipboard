@@ -50,8 +50,8 @@ private:
 public:
     ClipboardContent();
 
-    ClipboardContent(const std::string&);
-    ClipboardContent(std::string&&);
+    ClipboardContent(const std::string&, const std::string& = "text/plain");
+    ClipboardContent(std::string&&, const std::string& = "text/plain");
 
     ClipboardContent(const ClipboardPaths&);
     ClipboardContent(ClipboardPaths&&);
