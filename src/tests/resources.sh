@@ -73,7 +73,7 @@ item_is_not_in_cb() {
 
 items_match() {
     #use diff to compare the contents of the files
-    if diff "$1" "$2"
+    if diff -c --text "$1" "$2"
     then
         return 0
     else
