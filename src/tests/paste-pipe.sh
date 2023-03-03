@@ -1,5 +1,8 @@
 #!/bin/sh
 . ./resources.sh
+
+start_test paste-pipe
+
 setup_dir paste-pipe
 
 echo "Foobar" | clipboard

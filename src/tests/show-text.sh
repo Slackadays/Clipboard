@@ -2,12 +2,12 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test copy-text
-
-setup_dir copy-text
-
 clipboard copy "Foobar"
 
 item_is_in_cb 0 rawdata.clipboard
 
-pass_test copy-text
+output=$(clipboard show)
+
+content_is_shown "$output" "Foobar"
+
+pass_test show-text

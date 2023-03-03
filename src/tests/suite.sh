@@ -1,5 +1,11 @@
 #!/bin/sh
-set -eux
+set -eu
+
+if [ -z "${CLIPBOARD_TMPDIR:-}" ]
+then
+    read -p "Enter Clipboard's temp directory: " CLIPBOARD_TMPDIR
+    export CLIPBOARD_TMPDIR
+fi
 
 BASEDIR="$(dirname "$0")"
 
@@ -7,6 +13,9 @@ cd "$BASEDIR" || exit 1
 
 rm -rf test_*
 
+sh clear-file.sh
+sh clear-pipe.sh
+sh clear-text.sh
 sh copy-file.sh
 sh copy-pipe.sh
 sh copy-text.sh
@@ -16,6 +25,9 @@ sh cut-text.sh
 sh paste-file.sh
 sh paste-pipe.sh
 sh paste-text.sh
+sh show-file.sh
+sh show-pipe.sh
+sh show-text.sh
 
 rm -r test_*
 

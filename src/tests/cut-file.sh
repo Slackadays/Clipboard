@@ -1,6 +1,9 @@
 #!/bin/sh
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
+
+start_test cut-file
+
 setup_dir cut-file
 
 make_files

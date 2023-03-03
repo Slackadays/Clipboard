@@ -7,12 +7,29 @@ make_files() {
   echo "Foobar" > testdir/testfile
 }
 
+start_test() {
+  echo "⏩ Starting test \033[1m$1\033[0m"
+}
+
+fail() {
+  echo "$1"
+  exit 1
+}
+
 verify_contents() {
     contents=$(cat "$1")
     if [ "$contents" != "Foobar" ]
     then
-        echo "❌ The contents don't match: $contents"
-        exit 1
+        fail "😕 The contents don't match: $contents"
+    fi
+}
+
+content_is_shown() {
+    if [ ! "$(echo -e "$1" | grep "$2")" ]
+    then
+        fail "😕 The content $2 isn't shown"
+    else
+        return 0
     fi
 }
 
@@ -22,27 +39,24 @@ item_is_in_cb() {
     verify_contents "$CLIPBOARD_TMPDIR"/Clipboard/"$1"/data/"$2"
     return 0
   else
-    echo "❌ The file $2 doesn't exist in clipboard $1"
-    exit 1
+    fail "😕 The file $2 doesn't exist in clipboard $1"
   fi
 }
 
 item_is_here() {
     if [ -f "$1" ]
     then
-verify_contents "$1"
+        verify_contents "$1"
         return 0
     else
-        echo "❌ The file $1 doesn't exist here"
-        exit 1
+        fail "😕 The file $1 doesn't exist here"
     fi
 }
 
 item_is_not_here() {
     if [ -f "$1" ]
     then
-        echo "❌ The file $1 exists here"
-        exit 1
+        fail "😕 The file $1 exists here"
     else
         return 0
     fi
@@ -51,11 +65,20 @@ item_is_not_here() {
 item_is_not_in_cb() {
   if [ -f "$CLIPBOARD_TMPDIR/Clipboard/$1/data/$2" ]
   then
-    echo "❌ The file $2 exists in clipboard $1"
-    exit 1
+    fail "😕 The file $2 exists in clipboard $1"
   else
     return 0
   fi
+}
+
+items_match() {
+    #use diff to compare the contents of the files
+    if diff "$1" "$2"
+    then
+        return 0
+    else
+        fail "😕 The files don't match"
+    fi
 }
 
 setup_dir() {
@@ -64,5 +87,5 @@ setup_dir() {
 }
 
 pass_test() {
-  echo "🧪 The $1 test passed"
+  echo "🎉 The test \033[1m$1\033[0m passed"
 }

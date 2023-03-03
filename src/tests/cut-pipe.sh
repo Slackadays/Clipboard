@@ -1,5 +1,8 @@
 #!/bin/sh
 . ./resources.sh
+
+start_test cut-pipe
+
 setup_dir cut-pipe
 
 echo "Foobar" | clipboard cut
