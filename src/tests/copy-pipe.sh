@@ -19,9 +19,7 @@ unset CLIPBOARD_FORCETTY
 
 clipboard < ../TurnYourClipboardUp.png
 
-clipboard > temp
-
-file temp
+clipboard paste > temp
 
 items_match temp ../TurnYourClipboardUp.png
 
