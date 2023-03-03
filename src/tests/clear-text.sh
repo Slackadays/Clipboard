@@ -4,7 +4,7 @@ export CLIPBOARD_FORCETTY=1
 
 testname="Clear user provided text"
 
-start_test "$testname"
+start_test
 
 clipboard copy "Foobar"
 
@@ -14,4 +14,4 @@ clipboard clear
 
 item_is_not_in_cb 0 rawdata.clipboard
 
-pass_test "$testname"
+pass_test

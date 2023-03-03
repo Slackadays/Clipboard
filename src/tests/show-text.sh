@@ -4,7 +4,7 @@ export CLIPBOARD_FORCETTY=1
 
 testname="Show user provided text"
 
-start_test "$testname"
+start_test
 
 clipboard copy "Foobar"
 
@@ -14,4 +14,4 @@ output=$(clipboard show)
 
 content_is_shown "$output" "Foobar"
 
-pass_test "$testname"
+pass_test

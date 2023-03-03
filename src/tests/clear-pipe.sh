@@ -3,7 +3,7 @@
 
 testname="Clear piped data"
 
-start_test "$testname"
+start_test
 
 echo "Foobar" | clipboard
 
@@ -15,4 +15,4 @@ clipboard clear
 
 item_is_not_in_cb 0 rawdata.clipboard
 
-pass_test "$testname"
+pass_test

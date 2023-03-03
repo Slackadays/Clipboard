@@ -4,7 +4,7 @@ export CLIPBOARD_FORCETTY=1
 
 testname="Copy files"
 
-start_test "$testname"
+start_test
 
 setup_dir copy-file
 
@@ -22,4 +22,4 @@ clipboard paste
 
 items_match TurnYourClipboardUp.png ../TurnYourClipboardUp.png
 
-pass_test "$testname"
+pass_test

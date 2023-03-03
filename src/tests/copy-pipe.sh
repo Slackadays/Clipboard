@@ -3,7 +3,7 @@
 
 testname="Copy piped data"
 
-start_test "$testname"
+start_test
 
 setup_dir copy-pipe
 
@@ -25,4 +25,4 @@ clipboard paste > temp # work around github actions tty bug
 
 items_match temp ../TurnYourClipboardUp.png
 
-pass_test "$testname"
+pass_test

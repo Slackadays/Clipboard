@@ -4,7 +4,7 @@ export CLIPBOARD_FORCETTY=1
 
 testname="Cut files"
 
-start_test "$testname"
+start_test
 
 setup_dir cut-file
 
@@ -22,4 +22,4 @@ item_is_not_here testfile
 
 item_is_not_here testdir/testfile
 
-pass_test "$testname"
+pass_test

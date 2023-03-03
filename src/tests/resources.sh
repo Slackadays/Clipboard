@@ -8,7 +8,11 @@ make_files() {
 }
 
 start_test() {
-  printf "⏩ Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$1" "$0"
+  printf "⏩ Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$testname" "$0"
+}
+
+pass_test() {
+  printf "🎉 \033[1m%s\033[0m passed\n" "$testname"
 }
 
 fail() {
@@ -84,8 +88,4 @@ items_match() {
 setup_dir() {
     mkdir test_"$1"
     cd test_"$1"
-}
-
-pass_test() {
-  printf "🎉 \033[1m%s\033[0m passed\n" "$1"
 }

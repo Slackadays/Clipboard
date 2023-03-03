@@ -4,7 +4,7 @@ export CLIPBOARD_FORCETTY=1
 
 testname="Show file clipboard content"
 
-start_test "$testname"
+start_test
 
 setup_dir show-file
 
@@ -18,4 +18,4 @@ content_is_shown "$output" testfile
 
 content_is_shown "$output" testdir
 
-pass_test "$testname"
+pass_test

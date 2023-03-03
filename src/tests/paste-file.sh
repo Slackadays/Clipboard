@@ -4,7 +4,7 @@ export CLIPBOARD_FORCETTY=1
 
 testname="Paste files"
 
-start_test "$testname"
+start_test
 
 setup_dir paste-file
 
@@ -20,4 +20,4 @@ item_is_here testfile
 
 item_is_here testdir/testfile
 
-pass_test "$testname"
+pass_test
