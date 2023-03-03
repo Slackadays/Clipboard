@@ -1,7 +1,9 @@
 #!/bin/sh
 . ./resources.sh
 
-start_test copy-pipe
+testname="Copy piped data"
+
+start_test "$testname"
 
 setup_dir copy-pipe
 
@@ -23,4 +25,4 @@ clipboard paste > temp # work around github actions tty bug
 
 items_match temp ../TurnYourClipboardUp.png
 
-pass_test copy-pipe
+pass_test "$testname"

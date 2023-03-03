@@ -2,7 +2,9 @@
 export CLIPBOARD_FORCETTY=1
 . ./resources.sh
 
-start_test copy-file
+testname="Copy files"
+
+start_test "$testname"
 
 setup_dir copy-file
 
@@ -20,4 +22,4 @@ clipboard paste
 
 items_match TurnYourClipboardUp.png ../TurnYourClipboardUp.png
 
-pass_test copy-file
+pass_test "$testname"

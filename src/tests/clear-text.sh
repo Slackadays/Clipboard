@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test clear-text
+testname="Clear user provided text"
+
+start_test "$testname"
 
 clipboard copy "Foobar"
 
@@ -12,4 +14,4 @@ clipboard clear
 
 item_is_not_in_cb 0 rawdata.clipboard
 
-pass_test clear-text
+pass_test "$testname"

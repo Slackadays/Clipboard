@@ -8,7 +8,7 @@ make_files() {
 }
 
 start_test() {
-  printf "⏩ Starting test \033[1m%s\033[0m\n" "$1"
+  printf "⏩ Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$1" "$0"
 }
 
 fail() {
@@ -87,5 +87,5 @@ setup_dir() {
 }
 
 pass_test() {
-  printf "🎉 The test \033[1m%s\033[0m passed\n" "$1"
+  printf "🎉 \033[1m%s\033[0m passed\n" "$1"
 }

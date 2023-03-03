@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test cut-text
+testname="Cut user provided text"
+
+start_test "$testname"
 
 setup_dir cut-text
 
@@ -16,4 +18,4 @@ item_is_here rawdata.clipboard
 
 item_is_not_in_cb 0 rawdata.clipboard
 
-pass_test cut-text
+pass_test "$testname"

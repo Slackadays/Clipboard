@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test show-file
+testname="Show file clipboard content"
+
+start_test "$testname"
 
 setup_dir show-file
 
@@ -16,4 +18,4 @@ content_is_shown "$output" testfile
 
 content_is_shown "$output" testdir
 
-pass_test show-file
+pass_test "$testname"

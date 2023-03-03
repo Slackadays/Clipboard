@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test paste-text
+testname="Paste user provided text"
+
+start_test "$testname"
 
 setup_dir paste-text
 
@@ -12,4 +14,4 @@ clipboard paste
 
 item_is_here rawdata.clipboard
 
-pass_test paste-text
+pass_test "$testname"

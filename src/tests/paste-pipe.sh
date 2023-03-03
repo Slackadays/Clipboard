@@ -1,7 +1,9 @@
 #!/bin/sh
 . ./resources.sh
 
-start_test paste-pipe
+testname="Paste piped data"
+
+start_test "$testname"
 
 setup_dir paste-pipe
 
@@ -13,4 +15,4 @@ clipboard paste
 
 item_is_here rawdata.clipboard
 
-pass_test paste-pipe
+pass_test "$testname"

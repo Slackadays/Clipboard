@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test cut-file
+testname="Cut files"
+
+start_test "$testname"
 
 setup_dir cut-file
 
@@ -20,4 +22,4 @@ item_is_not_here testfile
 
 item_is_not_here testdir/testfile
 
-pass_test cut-file
+pass_test "$testname"

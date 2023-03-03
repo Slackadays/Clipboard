@@ -1,7 +1,9 @@
 #!/bin/sh
 . ./resources.sh
 
-start_test clear-pipe
+testname="Clear piped data"
+
+start_test "$testname"
 
 echo "Foobar" | clipboard
 
@@ -13,4 +15,4 @@ clipboard clear
 
 item_is_not_in_cb 0 rawdata.clipboard
 
-pass_test clear-pipe
+pass_test "$testname"

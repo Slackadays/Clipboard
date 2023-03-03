@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test paste-file
+testname="Paste files"
+
+start_test "$testname"
 
 setup_dir paste-file
 
@@ -18,4 +20,4 @@ item_is_here testfile
 
 item_is_here testdir/testfile
 
-pass_test paste-file
+pass_test "$testname"

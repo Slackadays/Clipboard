@@ -2,7 +2,9 @@
 export CLIPBOARD_FORCETTY=1
 . ./resources.sh
 
-start_test clear-file
+testname="Clear files"
+
+start_test "$testname"
 
 setup_dir clear-file
 
@@ -20,4 +22,4 @@ item_is_not_in_cb 0 testfile
 
 item_is_not_in_cb 0 testdir/testfile
 
-pass_test clear-file
+pass_test "$testname"

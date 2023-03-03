@@ -2,7 +2,9 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-start_test show-text
+testname="Show user provided text"
+
+start_test "$testname"
 
 clipboard copy "Foobar"
 
@@ -12,4 +14,4 @@ output=$(clipboard show)
 
 content_is_shown "$output" "Foobar"
 
-pass_test show-text
+pass_test "$testname"
