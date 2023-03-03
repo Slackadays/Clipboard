@@ -8,11 +8,11 @@ make_files() {
 }
 
 start_test() {
-  echo "⏩ Starting test \033[1m$1\033[0m"
+  printf "⏩ Starting test \033[1m%s\033[0m\n" "$1"
 }
 
 fail() {
-  echo "$1"
+  printf "%s\n" "$1"
   exit 1
 }
 
@@ -25,11 +25,11 @@ verify_contents() {
 }
 
 content_is_shown() {
-    if [ ! "$(echo -e "$1" | grep "$2")" ]
+    if printf "%s" "$1" | grep -q "$2"
     then
-        fail "😕 The content $2 isn't shown"
-    else
         return 0
+    else
+        fail "😕 The content $2 isn't shown"
     fi
 }
 
@@ -87,5 +87,5 @@ setup_dir() {
 }
 
 pass_test() {
-  echo "🎉 The test \033[1m$1\033[0m passed"
+  printf "🎉 The test \033[1m%s\033[0m passed\n" "$1"
 }

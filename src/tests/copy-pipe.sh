@@ -17,7 +17,7 @@ item_is_here rawdata.clipboard
 
 unset CLIPBOARD_FORCETTY
 
-cat ../TurnYourClipboardUp.png | clipboard
+clipboard < ../TurnYourClipboardUp.png
 
 clipboard > temp
 
