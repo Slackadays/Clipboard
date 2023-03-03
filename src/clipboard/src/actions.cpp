@@ -16,8 +16,8 @@
 #include <regex>
 
 #if defined(_WIN32) || defined(_WIN64)
-#include <io.h>
 #include <fcntl.h>
+#include <io.h>
 #endif
 
 namespace PerformAction {
