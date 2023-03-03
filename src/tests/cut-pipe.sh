@@ -1,11 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-export testname="Cut piped data"
-
-start_test
-
-setup_dir cut-pipe
+start_test "Cut piped data"
 
 echo "Foobar" | clipboard cut
 

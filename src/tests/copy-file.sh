@@ -2,11 +2,7 @@
 export CLIPBOARD_FORCETTY=1
 . ./resources.sh
 
-export testname="Copy files"
-
-start_test
-
-setup_dir copy-file
+start_test "Copy files"
 
 make_files
 

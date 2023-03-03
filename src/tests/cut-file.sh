@@ -2,11 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-export testname="Cut files"
-
-start_test
-
-setup_dir cut-file
+start_test "Cut files"
 
 make_files
 

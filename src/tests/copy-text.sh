@@ -2,11 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-export testname="Copy user provided text"
-
-start_test
-
-setup_dir copy-text
+start_test "Copy user provided text"
 
 clipboard copy "Foobar"
 

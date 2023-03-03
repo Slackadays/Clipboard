@@ -9,8 +9,15 @@ make_files() {
   echo "Foobar" > testdir/testfile
 }
 
+setup_dir() {
+    mkdir test_"$1"
+    cd test_"$1"
+}
+
 start_test() {
+  export testname="$1"
   printf "⏩ Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$testname" "$0"
+  setup_dir "${0%.sh}"
 }
 
 pass_test() {
@@ -85,9 +92,4 @@ items_match() {
     else
         fail "😕 The files don't match"
     fi
-}
-
-setup_dir() {
-    mkdir test_"$1"
-    cd test_"$1"
 }

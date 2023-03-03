@@ -2,11 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-export testname="Show file clipboard content"
-
-start_test
-
-setup_dir show-file
+start_test "Show file clipboard content"
 
 make_files
 

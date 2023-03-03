@@ -1,11 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-export testname="Show piped data"
-
-start_test
-
-setup_dir show-pipe
+start_test "Show piped data"
 
 echo "Foobar" | clipboard
 

@@ -1,9 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-export testname="Clear piped data"
-
-start_test
+start_test "Clear piped data"
 
 echo "Foobar" | clipboard
 

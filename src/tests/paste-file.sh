@@ -2,11 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-export testname="Paste files"
-
-start_test
-
-setup_dir paste-file
+start_test "Paste files"
 
 make_files
 

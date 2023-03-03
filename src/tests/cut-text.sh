@@ -2,11 +2,7 @@
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 
-export testname="Cut user provided text"
-
-start_test
-
-setup_dir cut-text
+start_test "Cut user provided text"
 
 clipboard cut "Foobar"
 

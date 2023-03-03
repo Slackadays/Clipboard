@@ -1,11 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 
-export testname="Paste piped data"
-
-start_test
-
-setup_dir paste-pipe
+start_test "Paste piped data"
 
 echo "Foobar" | clipboard
 
