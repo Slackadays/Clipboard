@@ -106,7 +106,7 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
     }
 
     std::vector<char> utf8Buffer(utf8Len);
-    auto bytesWritten = WideCharToMultiByte(CP_UTF8, 0, utf16, utf8Len, &utf8Buffer[0], utf8Len, nullptr, nullptr);
+    auto bytesWritten = WideCharToMultiByte(CP_UTF8, 0, utf16, length, &utf8Buffer[0], utf8Len, nullptr, nullptr);
     if (bytesWritten <= 0) {
         onWindowsError("WideCharToMultiByte");
     }
@@ -115,10 +115,9 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
 }
 
 void setWindowsClipboardDataPipe() {
-    std::ifstream file(path.data.raw);
-    std::vector<char> utf8Data((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+    std::string utf8Data(fileContents(path.data.raw));
 
-    auto utf16Len = MultiByteToWideChar(CP_UTF8, 0, &utf8Data[0], utf8Data.size(), nullptr, 0);
+    auto utf16Len = MultiByteToWideChar(CP_UTF8, 0, utf8Data.data(), utf8Data.size(), nullptr, 0);
     if (utf16Len <= 0) {
         onWindowsError("MultiByteToWideChar");
     }
@@ -138,15 +137,25 @@ void setWindowsClipboardDataPipe() {
     }
 
     ZeroMemory(clipboardPointer, bufferSize);
-    auto bytesWritten = MultiByteToWideChar(CP_UTF8, 0, &utf8Data[0], utf8Data.size(), clipboardPointer, bufferLen);
+    auto bytesWritten = MultiByteToWideChar(CP_UTF8, 0, utf8Data.data(), utf8Data.size(), clipboardPointer, bufferLen);
     if (bytesWritten <= 0) {
         onWindowsError("MultiByteToWideChar");
+    }
+
+    auto PNG_FORMAT = RegisterClipboardFormatA("PNG");
+
+    UINT clipboardFormat;
+
+    if (inferMIMEType(utf8Data) == "image/png") {
+        clipboardFormat = PNG_FORMAT;
+    } else {
+        clipboardFormat = CF_UNICODETEXT;
     }
 
     if (GlobalUnlock(clipboardHandle) == 0 && GetLastError() != NO_ERROR) {
         onWindowsError("GlobalUnlock");
     }
-    if (SetClipboardData(CF_UNICODETEXT, clipboardHandle) == nullptr) {
+    if (SetClipboardData(clipboardFormat, clipboardHandle) == nullptr) {
         onWindowsError("SetClipboardData");
     }
 }

@@ -128,6 +128,7 @@ struct Constants {
     std::string_view persistent_directory_name = ".clipboard";
     std::string_view original_files_name = "originals";
     std::string_view notes_name = "notes";
+    std::string_view mime_name = "mime";
     std::string_view data_directory = "data";
     std::string_view metadata_directory = "metadata";
 };

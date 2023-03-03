@@ -15,6 +15,11 @@
 #include "clipboard.hpp"
 #include <regex>
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <io.h>
+#include <fcntl.h>
+#endif
+
 namespace PerformAction {
 void copyItem(const fs::path& f) {
     auto actuallyCopyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
@@ -127,6 +132,7 @@ void pipeOut() {
         int len = write(fileno(stdout), content.data(), content.size());
         if (len < 0) throw std::runtime_error("write() failed");
 #elif defined(_WIN32) || defined(_WIN64)
+        _setmode(_fileno(stdout), _O_BINARY);
         fwrite(content.data(), sizeof(char), content.size(), stdout);
 #endif
         fflush(stdout);

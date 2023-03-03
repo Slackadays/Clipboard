@@ -552,6 +552,8 @@ void setFilepaths() {
 
     path.metadata.notes = path.metadata / constants.notes_name;
 
+    path.metadata.mime = path.metadata / constants.mime_name;
+
     path.data = path.root / constants.data_directory;
 
     path.data.raw = path.data / constants.data_file_name;
