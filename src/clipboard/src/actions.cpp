@@ -27,11 +27,10 @@ void copyItem(const fs::path& f) {
             auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
             fs::create_directories(path.data / target);
             fs::copy(f, path.data / target, copying.opts);
-            successes.directories++;
         } else {
             fs::copy(f, path.data / f.filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
-            successes.files++;
         }
+        incrementSuccessesForItem(f);
         if (action == Action::Cut) writeToFile(path.metadata.originals, fs::absolute(f).string() + "\n", true);
     };
     try {
@@ -70,19 +69,11 @@ void paste() {
     for (const auto& f : fs::directory_iterator(path.data)) {
         auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
             if (fs::exists(fs::current_path() / f.path().filename()) && fs::equivalent(f, fs::current_path() / f.path().filename())) {
-                if (fs::is_directory(f))
-                    successes.directories++;
-                else
-                    successes.files++;
+                incrementSuccessesForItem(f);
                 return;
             }
-            if (fs::is_directory(f)) {
-                fs::copy(f, fs::current_path() / f.path().filename(), copying.opts);
-                successes.directories++;
-            } else {
-                fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
-                successes.files++;
-            }
+            fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy || fs::is_directory(f) ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
+            incrementSuccessesForItem(f);
         };
         try {
             if (fs::exists(fs::current_path() / f.path().filename())) {
@@ -227,12 +218,9 @@ void removeFiles() {
     }
     for (const auto& item : copying.items) {
         try {
-            if (fs::is_directory(path.data / item)) {
+            if (fs::exists(path.data / item)) {
                 fs::remove_all(path.data / item);
-                successes.directories++;
-            } else if (fs::is_regular_file(path.data / item)) {
-                fs::remove(path.data / item);
-                successes.files++;
+                incrementSuccessesForItem(path.data / item);
             } else {
                 copying.failedItems.emplace_back(item.string(), std::make_error_code(std::errc::no_such_file_or_directory));
             }
@@ -262,13 +250,8 @@ void removeRegex() {
         for (const auto& entry : fs::directory_iterator(path.data)) {
             if (std::regex_match(entry.path().filename().string(), regex)) {
                 try {
-                    if (fs::is_directory(entry.path())) {
-                        fs::remove_all(entry.path());
-                        successes.directories++;
-                    } else {
-                        fs::remove(entry.path());
-                        successes.files++;
-                    }
+                    fs::remove_all(entry.path());
+                    incrementSuccessesForItem(entry.path());
                 } catch (const fs::filesystem_error& e) {
                     copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
                 }

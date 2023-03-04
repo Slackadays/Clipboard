@@ -175,6 +175,13 @@ static std::string replaceColors(const std::string_view& str, bool colorful = !n
     return temp;
 }
 
+void incrementSuccessesForItem(const auto& item) {
+    if (fs::is_directory(item))
+        successes.directories++;
+    else
+        successes.files++;
+}
+
 class Message {
 private:
     std::string_view internal_message;
