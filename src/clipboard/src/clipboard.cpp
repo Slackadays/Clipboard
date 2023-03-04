@@ -203,7 +203,9 @@ void clearTempDirectory(bool force_clear = false) {
         }
         for (const auto& entry : fs::directory_iterator(path.data)) {
             fs::remove_all(entry.path());
-            if (action == Clear) { incrementSuccessesForItem(entry); }
+            if (action == Clear) {
+                incrementSuccessesForItem(entry);
+            }
         }
     }
 }
