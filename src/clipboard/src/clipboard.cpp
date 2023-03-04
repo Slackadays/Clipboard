@@ -24,6 +24,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <locale>
 #include <mutex>
 #include <regex>
@@ -367,7 +368,7 @@ void setupVariables(int& argc, char* argv[]) {
 }
 
 void syncWithGUIClipboard(bool force = false) {
-    if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || force) {
+    if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) {
         using enum ClipboardContentType;
         auto content = getGUIClipboard();
         if (content.type() == Text) {
@@ -582,16 +583,13 @@ void setupIndicator() {
                                                           "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
                                                           "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     auto itemsToProcess = [&] {
-        size_t items = 1;
-        for (auto dummy : fs::directory_iterator(path.data))
-            items++;
-        return items;
+        return std::distance(fs::directory_iterator(path.data), fs::directory_iterator()) + 1;
     };
     static size_t items_size = (action == Action::Cut || action == Action::Copy) ? copying.items.size() : itemsToProcess();
-    if (items_size == 0) items_size++;
     auto percent_done = [&] {
         return std::to_string(((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size) + "%";
     };
+    if (items_size == 0) items_size++;
     for (int i = 0; progress_state == ProgressState::Active; i == 21 ? i = 0 : i++) {
         auto display_progress = [&](const auto& formattedNum) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(i).data());
