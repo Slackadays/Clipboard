@@ -67,27 +67,27 @@ void copyText() {
 
 void paste() {
     for (const auto& f : fs::directory_iterator(path.data)) {
+        auto target = fs::current_path() / f.path().filename();
         auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
-            if (fs::exists(fs::current_path() / f.path().filename()) && fs::equivalent(f, fs::current_path() / f.path().filename())) {
-                incrementSuccessesForItem(f);
-                return;
+            if (!(fs::exists(target) && fs::equivalent(f, target))) {
+                fs::copy(f, target, use_regular_copy || fs::is_directory(f) ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
             }
-            fs::copy(f, fs::current_path() / f.path().filename(), use_regular_copy || fs::is_directory(f) ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
             incrementSuccessesForItem(f);
         };
         try {
-            if (fs::exists(fs::current_path() / f.path().filename())) {
+            if (fs::exists(target)) {
+                using enum CopyPolicy;
                 switch (copying.policy) {
-                case CopyPolicy::SkipAll:
+                case SkipAll:
                     break;
-                case CopyPolicy::ReplaceAll:
+                case ReplaceAll:
                     pasteItem();
                     break;
                 default:
                     stopIndicator();
                     copying.policy = userDecision(f.path().filename().string());
                     startIndicator();
-                    if (copying.policy == CopyPolicy::ReplaceOnce || copying.policy == CopyPolicy::ReplaceAll) {
+                    if (copying.policy == ReplaceOnce || copying.policy == ReplaceAll) {
                         pasteItem();
                     }
                     break;
