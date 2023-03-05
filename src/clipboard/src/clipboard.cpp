@@ -268,7 +268,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
 
-        paths.assign(fs::directory_iterator(path.data), fs::directory_iterator{});
+        paths.assign(fs::directory_iterator(path.data), fs::directory_iterator {});
 
         return ClipboardContent(ClipboardPaths(std::move(paths)));
     }
