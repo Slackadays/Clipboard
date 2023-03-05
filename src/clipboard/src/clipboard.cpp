@@ -163,10 +163,10 @@ bool isAWriteAction() {
 }
 
 std::string formatBytes(const auto& bytes) {
-    if (bytes < 1024) return std::move(std::to_string(bytes) + "B");
-    if (bytes < (1024 * 1024)) return std::move(std::to_string(bytes / 1024.0) + "kB");
-    if (bytes < (1024 * 1024 * 1024)) return std::move(std::to_string(bytes / (1024.0 * 1024.0)) + "MB");
-    return std::move(std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB");
+    if (bytes < 1024) return std::to_string(bytes) + "B";
+    if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
+    if (bytes < (1024 * 1024 * 1024)) return std::to_string(bytes / (1024.0 * 1024.0)) + "MB";
+    return std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -255,8 +255,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         std::ifstream originalFiles {path.metadata.originals};
         std::vector<fs::path> files;
 
-        std::string line;
-        while (!originalFiles.eof()) {
+        for (std::string line; !originalFiles.eof();) {
             std::getline(originalFiles, line);
             if (!line.empty()) files.emplace_back(line);
         }
@@ -269,8 +268,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
 
-        for (const auto& entry : fs::directory_iterator(path.data)) // count all items which were actually successfully actioned on
-            paths.push_back(entry.path());
+        paths.assign(fs::directory_iterator(path.data), fs::directory_iterator{});
 
         return ClipboardContent(ClipboardPaths(std::move(paths)));
     }
@@ -414,7 +412,7 @@ void showClipboardStatus() {
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
                 std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
-                content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
+                std::erase(content, '\n');
                 printf(replaceColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
@@ -580,13 +578,13 @@ void setupIndicator() {
                                                           "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
                                                           "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     auto itemsToProcess = [&] {
-        return std::distance(fs::directory_iterator(path.data), fs::directory_iterator()) + 1;
+        return std::distance(fs::directory_iterator(path.data), fs::directory_iterator());
     };
     static size_t items_size = (action == Action::Cut || action == Action::Copy) ? copying.items.size() : itemsToProcess();
+    if (items_size == 0) items_size++;
     auto percent_done = [&] {
         return std::to_string(((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size) + "%";
     };
-    if (items_size == 0) items_size++;
     for (int i = 0; progress_state == ProgressState::Active; i == 21 ? i = 0 : i++) {
         auto display_progress = [&](const auto& formattedNum) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(i).data());

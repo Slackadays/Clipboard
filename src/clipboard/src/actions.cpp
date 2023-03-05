@@ -143,7 +143,7 @@ void show() {
         TerminalSize termSpaceRemaining(getTerminalSize());
         if (fs::is_regular_file(path.data.raw)) {
             std::string content(fileContents(path.data.raw));
-            content.erase(std::remove(content.begin(), content.end(), '\n'), content.end());
+            std::erase(content, '\n');
             printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
             printf(replaceColors("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
             if (content.size() > 250) {
