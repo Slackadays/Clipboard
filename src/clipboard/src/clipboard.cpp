@@ -197,6 +197,7 @@ void clearTempDirectory(bool force_clear = false) {
     using enum Action;
     if (force_clear || action == Cut || action == Copy) {
         fs::remove(path.metadata.originals);
+        fs::remove(path.metadata.mime);
         if (action == Clear && fs::is_regular_file(path.data.raw)) {
             successes.bytes += fs::file_size(path.data.raw);
             fs::remove(path.data.raw);
@@ -514,12 +515,8 @@ void setFlags() {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
         exit(EXIT_SUCCESS);
     }
-    for (const auto& entry : arguments) {
-        if (entry == "--") {
-            arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
-            break;
-        }
-    }
+    if (auto pos = std::find_if(arguments.begin(), arguments.end(), [](const auto& entry) { return entry == "--"; }); pos != arguments.end())
+        arguments.erase(pos);
 }
 
 void verifyAction() {
@@ -606,10 +603,6 @@ void setupIndicator() {
         _exit(EXIT_FAILURE);
     }
     fflush(stderr);
-}
-
-void saveMIMEType() {
-    writeToFile(path.metadata.mime, copying.mime);
 }
 
 void startIndicator() { // If cancelled, leave cancelled
@@ -835,11 +828,9 @@ int main(int argc, char* argv[]) {
 
         copying.mime = getMIMEType();
 
-        writeToFile(path.metadata.mime, copying.mime);
-
         updateGUIClipboard();
 
-        saveMIMEType();
+        writeToFile(path.metadata.mime, copying.mime);
 
         stopIndicator();
 
