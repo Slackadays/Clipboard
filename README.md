@@ -8,13 +8,15 @@
     </a>
 </p>
 
-<h2 align="center" style="border-bottom: none;"> 
-:tropical_drink::turtle: Save time and effort the easy way with Clipboard. 🏖️🌴
-</h2>
+<h1 align="center" style="border-bottom: none;"> 
+:tropical_drink::turtle: Make your life easier with Clipboard. 🏖️🌴
+</h1>
+
+Our mission is to make your life easier and more productive by saving you time and effort.
 
 Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
 
-Now, have a _powerful_ clipboard to use **anywhere in the terminal** to cut, copy, and paste things with, just like a GUI!
+Now, have a real _power tool_ to use **anywhere in the terminal** to cut, copy, and paste things with, just like a GUI!
 
 <details><summary><h3>Why use Clipboard</h3></summary>
 
@@ -163,4 +165,4 @@ Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for mor
 
 ![Thank You!](documentation/readme-assets/ThankYou.png)
 
-Thank you to all the contributors who have helped make Clipboard great.
+Thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=jnD8Av4Dl4o)
