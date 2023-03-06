@@ -55,7 +55,6 @@ struct Filepath {
 
     public:
         fs::path notes;
-        fs::path mime;
         fs::path originals;
         operator fs::path() { return self; }
         operator fs::path() const { return self; }

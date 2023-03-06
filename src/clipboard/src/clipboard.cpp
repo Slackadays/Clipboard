@@ -197,7 +197,6 @@ void clearTempDirectory(bool force_clear = false) {
     using enum Action;
     if (force_clear || action == Cut || action == Copy) {
         fs::remove(path.metadata.originals);
-        fs::remove(path.metadata.mime);
         if (action == Clear && fs::is_regular_file(path.data.raw)) {
             successes.bytes += fs::file_size(path.data.raw);
             fs::remove(path.data.raw);
@@ -542,8 +541,6 @@ void setFilepaths() {
 
     path.metadata.notes = path.metadata / constants.notes_name;
 
-    path.metadata.mime = path.metadata / constants.mime_name;
-
     path.data = path.root / constants.data_directory;
 
     path.data.raw = path.data / constants.data_file_name;
@@ -828,8 +825,6 @@ int main(int argc, char* argv[]) {
         copying.mime = getMIMEType();
 
         updateGUIClipboard();
-
-        writeToFile(path.metadata.mime, copying.mime);
 
         stopIndicator();
 
