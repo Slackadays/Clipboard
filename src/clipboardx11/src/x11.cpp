@@ -718,8 +718,6 @@ X11Window::~X11Window() noexcept(false) {
         if (e.errorCode() != BadWindow) throw e;
     } // Some platforms throw errors when clearing the event mask here
 
-    XSync(display(), False);
-
     debugStream << "Destroying window " << m_window << std::endl;
 
     if (m_owned) {
@@ -1237,10 +1235,14 @@ void X11SelectionDaemon::run() {
     debugStream << "Starting persistent paste daemon" << std::endl;
 
     while (true) {
-        auto event = nextEvent();
-        handle(event);
-        for (auto&& transfer : m_transfers) {
-            transfer->handle(event);
+        try {
+            auto event = nextEvent();
+            handle(event);
+            for (auto&& transfer : m_transfers)
+                transfer->handle(event);
+        } catch (const X11Exception& e) {
+            if (e.errorCode() != BadWindow)
+                debugStream << "Error handling X11 event: " << e.what() << std::endl;
         }
 
         std::erase_if(m_transfers, [](auto&& transfer) { return transfer->isDone(); });
