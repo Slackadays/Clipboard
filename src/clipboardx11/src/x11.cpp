@@ -78,7 +78,7 @@ X11Pointer<T> capture(T* ptr) {
 class X11Exception : public SimpleException {
     using SimpleException::SimpleException;
 
-    public:
+public:
     unsigned char m_errorCode = 0;
     unsigned char errorCode() const { return m_errorCode; }
 };
@@ -712,9 +712,9 @@ X11Window::X11Window(X11Connection& connection, Window window, bool owned) : m_c
 }
 
 X11Window::~X11Window() noexcept(false) {
-    try { 
-        clearEventMask(); 
-    } catch (const X11Exception& e) { 
+    try {
+        clearEventMask();
+    } catch (const X11Exception& e) {
         if (e.errorCode() != BadWindow) throw e;
     } // Some platforms throw errors when clearing the event mask here
 
@@ -1240,7 +1240,7 @@ void X11SelectionDaemon::run() {
         for (auto&& transfer : m_transfers) {
             transfer->handle(event);
         }
-        
+
         std::erase_if(m_transfers, [](auto&& transfer) { return transfer->isDone(); });
 
         if (!m_transfers.empty()) {
