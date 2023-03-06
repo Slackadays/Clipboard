@@ -45,11 +45,20 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     insert("application/x-kde-cutselection", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("text/uri-list", ClipboardContentType::Paths, MimeOption::EncodePaths);
     insert("text/plain;charset=utf-8", ClipboardContentType::Text);
-    insert("GTK_TEXT_BUFFER_CONTENTS", ClipboardContentType::Text);
     insert("UTF8_STRING", ClipboardContentType::Text);
     insert("text/plain", ClipboardContentType::Text);
     insert("STRING", ClipboardContentType::Text);
     insert("TEXT", ClipboardContentType::Text);
+    insert("GTK_TEXT_BUFFER_CONTENTS", ClipboardContentType::Text);
+    insert("image/jxl", ClipboardContentType::Text);
+    insert("image/png", ClipboardContentType::Text);
+    insert("image/jpeg", ClipboardContentType::Text);
+    insert("image/bmp", ClipboardContentType::Text);
+    insert("image/gif", ClipboardContentType::Text);
+    insert("image/tiff", ClipboardContentType::Text);
+    insert("image/gif", ClipboardContentType::Text);
+    insert("image/webp", ClipboardContentType::Text);
+    insert("application/zip", ClipboardContentType::Text);
 
     return result;
 }

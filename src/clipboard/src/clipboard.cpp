@@ -34,6 +34,7 @@
 #include <thread>
 #include <utility>
 #include <vector>
+#include <optional>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
@@ -368,7 +369,7 @@ void syncWithGUIClipboard(bool force = false) {
         auto content = getGUIClipboard();
         if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
-            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
         } else if (content.type() == Paths) {
             convertFromGUIClipboard(content.paths());
             copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
@@ -732,7 +733,7 @@ std::string getMIMEType() {
     if (io_type == IOType::File) {
         return "text/uri-list";
     } else if (io_type == IOType::Pipe || io_type == IOType::Text) {
-        return std::string(inferMIMEType(copying.buffer));
+        return std::string(inferMIMEType(copying.buffer).value_or("text/plain"));
     }
     return "text/plain";
 }

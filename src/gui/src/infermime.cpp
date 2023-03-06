@@ -14,12 +14,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include <clipboard/gui.hpp>
 #include <string_view>
+#include <optional>
 
-std::string_view inferMIMEType(const std::string& temporaryContent) {
+std::optional<std::string_view> inferMIMEType(const std::string& temporaryContent) {
     std::string_view content(temporaryContent);
 
     // jpeg xl
-    if (content.size() >= 12 && content.substr(0, 12) == "\x00\x00\x00\x0C\x4A\x58\x4C\x20\x0D\x0A\x87\x0A") return "image/jxl";
+    if (content.size() >= 12 && content.substr(0, 12) == "\x00\x00\x00\x0C\x4A\x58\x4C\x20\x0D\x0A\x87\x0A") 
+        return "image/jxl";
 
     // xml
     else if (content.size() >= 24 && content.substr(0, 24) == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
@@ -57,6 +59,5 @@ std::string_view inferMIMEType(const std::string& temporaryContent) {
     else if (content.size() >= 4 && (content.substr(0, 4) == "PK\x03\x04" || content.substr(0, 4) == "PK\x05\x06" || content.substr(0, 4) == "PK\x07\x08"))
         return "application/zip";
 
-    else
-        return "text/plain";
+    return std::nullopt;
 }

@@ -19,6 +19,7 @@
 #include <string>
 #include <variant>
 #include <vector>
+#include <optional>
 
 namespace fs = std::filesystem;
 
@@ -74,4 +75,4 @@ struct WriteGuiContext {
     const ClipboardContent& clipboard;
 };
 
-extern std::string_view inferMIMEType(const std::string& temporaryContent);
+extern std::optional<std::string_view> inferMIMEType(const std::string& temporaryContent);

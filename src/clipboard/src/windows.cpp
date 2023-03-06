@@ -21,6 +21,7 @@
 #include <io.h>
 #include <iostream>
 #include <vector>
+#include <optional>
 
 const bool GUIClipboardSupportsCut = false;
 
@@ -146,7 +147,7 @@ void setWindowsClipboardDataPipe() {
 
     UINT clipboardFormat;
 
-    if (inferMIMEType(utf8Data) == "image/png") {
+    if (inferMIMEType(utf8Data).value_or("text/plain") == "image/png") {
         clipboardFormat = PNG_FORMAT;
     } else {
         clipboardFormat = CF_UNICODETEXT;
