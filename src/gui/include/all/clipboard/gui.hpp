@@ -16,10 +16,10 @@
 
 #include <clipboard/fork.hpp>
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
-#include <optional>
 
 namespace fs = std::filesystem;
 

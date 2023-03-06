@@ -504,7 +504,7 @@ X11Connection::X11Connection() {
         throw X11Exception("XOpenDisplay: failed to open display ", XDisplayName(nullptr));
     }
 
-    //XSynchronize(m_display, True);
+    // XSynchronize(m_display, True);
 
     instance = this;
 }
@@ -1241,8 +1241,7 @@ void X11SelectionDaemon::run() {
             for (auto&& transfer : m_transfers)
                 transfer->handle(event);
         } catch (const X11Exception& e) {
-            if (e.errorCode() != BadWindow)
-                debugStream << "Error handling X11 event: " << e.what() << std::endl;
+            if (e.errorCode() != BadWindow) debugStream << "Error handling X11 event: " << e.what() << std::endl;
         }
 
         std::erase_if(m_transfers, [](auto&& transfer) { return transfer->isDone(); });

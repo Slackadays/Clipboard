@@ -20,8 +20,8 @@
 #include <fstream>
 #include <io.h>
 #include <iostream>
-#include <vector>
 #include <optional>
+#include <vector>
 
 const bool GUIClipboardSupportsCut = false;
 

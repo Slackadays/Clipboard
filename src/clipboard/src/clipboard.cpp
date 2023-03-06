@@ -27,6 +27,7 @@
 #include <iterator>
 #include <locale>
 #include <mutex>
+#include <optional>
 #include <regex>
 #include <sstream>
 #include <string_view>
@@ -34,7 +35,6 @@
 #include <thread>
 #include <utility>
 #include <vector>
-#include <optional>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
