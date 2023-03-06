@@ -504,7 +504,7 @@ X11Connection::X11Connection() {
         throw X11Exception("XOpenDisplay: failed to open display ", XDisplayName(nullptr));
     }
 
-    XSynchronize(m_display, True);
+    //XSynchronize(m_display, True);
 
     instance = this;
 }
@@ -717,6 +717,8 @@ X11Window::~X11Window() noexcept(false) {
     } catch (const X11Exception& e) {
         if (e.errorCode() != BadWindow) throw e;
     } // Some platforms throw errors when clearing the event mask here
+
+    XSync(display(), False);
 
     debugStream << "Destroying window " << m_window << std::endl;
 
