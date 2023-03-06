@@ -77,6 +77,10 @@ X11Pointer<T> capture(T* ptr) {
 
 class X11Exception : public SimpleException {
     using SimpleException::SimpleException;
+
+    public:
+    unsigned char m_errorCode = 0;
+    unsigned char errorCode() const { return m_errorCode; }
 };
 
 class X11Atom {
@@ -259,7 +263,7 @@ private:
 public:
     X11Window(X11Connection&, Window);
     X11Window(X11Connection&, Window, bool owned);
-    ~X11Window();
+    ~X11Window() noexcept(false);
 
     [[nodiscard]] inline X11Connection& connection() const { return m_connection; }
     [[nodiscard]] inline Display* display() const { return m_connection.display(); }
@@ -435,8 +439,11 @@ int X11Connection::localErrorHandler(Display* const errorDisplay, XErrorEvent* c
         message << xmessageBuffer;
     }
 
+    auto exception = X11Exception(message.str());
+    exception.m_errorCode = event->error_code;
+
     debugStream << "Error during X11 call: " << message.str() << std::endl;
-    m_pendingXCallException.emplace(message.str());
+    m_pendingXCallException.emplace(exception);
     return 0;
 }
 
@@ -496,6 +503,8 @@ X11Connection::X11Connection() {
     if (m_display == nullptr) {
         throw X11Exception("XOpenDisplay: failed to open display ", XDisplayName(nullptr));
     }
+
+    XSynchronize(m_display, True);
 
     instance = this;
 }
@@ -702,8 +711,14 @@ X11Window::X11Window(X11Connection& connection, Window window, bool owned) : m_c
     }
 }
 
-X11Window::~X11Window() {
-    clearEventMask();
+X11Window::~X11Window() noexcept(false) {
+    try { 
+        clearEventMask(); 
+    } catch (const X11Exception& e) { 
+        if (e.errorCode() != BadWindow) throw e;
+    } // Some platforms throw errors when clearing the event mask here
+
+    debugStream << "Destroying window " << m_window << std::endl;
 
     if (m_owned) {
         X_CALL(XDestroyWindow, display(), m_window);
@@ -906,6 +921,8 @@ void X11Window::setSelectionOwner(const X11Atom& selection, Time time) {
 void X11Window::changeWindowAttributes(unsigned long valuemask, XSetWindowAttributes* attributes) {
     throwIfDestroyed();
 
+    debugStream << "Setting attributes for window " << window() << std::endl;
+
     X_CALL(XChangeWindowAttributes, display(), window(), valuemask, attributes);
 }
 
@@ -1024,11 +1041,9 @@ XEvent X11SelectionDaemon::nextEvent() {
     if (isSelectionOwner()) {
         return connection().nextEvent();
     }
-
     // If we don't own the selection anymore, we're only alive to finish serving requests made before
     // we lost the selection ownership. To prevent the daemon from staying up forever, we switch to
     // polling to ensure we'll fail if all ongoing requests are stalled.
-
     return pollUntilReturn([this]() { return connection().checkMaskEvent(std::numeric_limits<int>::max()); });
 }
 
@@ -1222,11 +1237,10 @@ void X11SelectionDaemon::run() {
     while (true) {
         auto event = nextEvent();
         handle(event);
-
         for (auto&& transfer : m_transfers) {
             transfer->handle(event);
         }
-
+        
         std::erase_if(m_transfers, [](auto&& transfer) { return transfer->isDone(); });
 
         if (!m_transfers.empty()) {
