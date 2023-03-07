@@ -163,6 +163,11 @@ bool isAWriteAction() {
     return action != Paste && action != Show && action != Note;
 }
 
+bool isAClearingAction() {
+    using enum Action;
+    return action == Copy || action == Cut || action == Clear;
+}
+
 auto thisPID() {
 #if defined(_WIN32) || defined(_WIN64)
     return GetCurrentProcessId();
@@ -318,6 +323,7 @@ void setupHandlers() {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
             // message, directly to standard error. Note: There is no standard C++ interface for this, so this requires
             // an OS call.
+            releaseLock();
             _exit(EXIT_FAILURE);
         } else {
             indicator.join();
@@ -393,7 +399,7 @@ void setupVariables(int& argc, char* argv[]) {
 }
 
 void syncWithGUIClipboard(bool force = false) {
-    if ((!isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) {
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) {
         using enum ClipboardContentType;
         auto content = getGUIClipboard();
         if (content.type() == Text) {
@@ -628,6 +634,7 @@ void setupIndicator() {
     if (progress_state == ProgressState::Cancel) {
         fprintf(stderr, cancelled_message().data(), actions[action].data());
         fflush(stderr);
+        releaseLock();
         _exit(EXIT_FAILURE);
     }
     fflush(stderr);
@@ -716,7 +723,7 @@ void performAction() {
             addFiles();
             break;
         case Remove:
-            removeFiles();
+            removeRegex();
             break;
         default:
             break;
@@ -746,7 +753,7 @@ void performAction() {
             copyText();
             break;
         case Add:
-            addText();
+            addData();
             break;
         case Remove:
             removeRegex();

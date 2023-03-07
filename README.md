@@ -141,6 +141,10 @@ clipboard clr
 
 ---
 
+**`CLIPBOARD_THEME`** &emsp; Set this to the color theme that Clipboard will use. Choose between `light`, `darkhighcontrast`, `lighthighcontrast`, `amber`, and `green` (the default is `dark`).
+
+---
+
 **`FORCE_COLOR`** &emsp; Set this to anything to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
 ---

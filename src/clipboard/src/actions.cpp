@@ -14,6 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 #include <regex>
+#include <algorithm>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <fcntl.h>
@@ -192,7 +193,11 @@ void addFiles() {
 
 void addData() {
     if (fs::is_regular_file(path.data.raw)) {
-        std::string content(pipedInContent());
+        std::string content;
+        if (io_type == IOType::Pipe)
+            content = pipedInContent();
+        else
+            content = copying.items.at(0).string();
         successes.bytes += content.size();
         writeToFile(path.data.raw, content, true);
     } else if (!fs::is_empty(path.data)) {
@@ -206,54 +211,40 @@ void addData() {
     }
 }
 
-void addText() {
-    writeToFile(path.data.raw, copying.items.at(0).string(), true);
-    successes.bytes += copying.items.at(0).string().size();
-}
-
-void removeFiles() {
-    if (fs::is_regular_file(path.data.raw)) {
-        fprintf(stderr, "%s", replaceColors("[error]❌ You can't remove items from text. [blank][help]Try copying files first, or remove text instead.[blank]\n").data());
-        return;
-    }
-    for (const auto& item : copying.items) {
-        try {
-            if (fs::exists(path.data / item)) {
-                fs::remove_all(path.data / item);
-                incrementSuccessesForItem(path.data / item);
-            } else {
-                copying.failedItems.emplace_back(item.string(), std::make_error_code(std::errc::no_such_file_or_directory));
-            }
-        } catch (const fs::filesystem_error& e) {
-            copying.failedItems.emplace_back(item.string(), e.code());
-        }
-    }
-}
-
 void removeRegex() {
-    std::regex regex(io_type == IOType::Text ? copying.items.at(0).string() : pipedInContent());
+    std::vector<std::regex> regexes;
+    if (io_type == IOType::Pipe)
+        regexes.emplace_back(pipedInContent());
+    else
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
+
     if (fs::is_regular_file(path.data.raw)) {
         std::string content(fileContents(path.data.raw));
         size_t oldLength = content.size();
-        content = std::regex_replace(content, regex, "");
+
+        for (const auto& pattern : regexes)
+            content = std::regex_replace(content, pattern, "");
         successes.bytes += oldLength - content.size();
+
         if (oldLength != content.size())
             writeToFile(path.data.raw, content);
         else
             fprintf(stderr,
                     "%s",
                     replaceColors(
-                            "[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
+                            "[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
                     )
                             .data());
     } else {
         for (const auto& entry : fs::directory_iterator(path.data)) {
-            if (std::regex_match(entry.path().filename().string(), regex)) {
-                try {
-                    fs::remove_all(entry.path());
-                    incrementSuccessesForItem(entry.path());
-                } catch (const fs::filesystem_error& e) {
-                    copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
+            for (const auto& pattern : regexes) {
+                if (std::regex_match(entry.path().filename().string(), pattern)) {
+                    try {
+                        fs::remove_all(entry.path());
+                        incrementSuccessesForItem(entry.path());
+                    } catch (const fs::filesystem_error& e) {
+                        copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
+                    }
                 }
             }
         }
@@ -261,7 +252,7 @@ void removeRegex() {
             fprintf(stderr,
                     "%s",
                     replaceColors(
-                            "[error]❌ Clipboard couldn't match your pattern against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
+                            "[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
                     )
                             .data());
     }
