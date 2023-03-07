@@ -163,6 +163,34 @@ bool isAWriteAction() {
     return action != Paste && action != Show && action != Note;
 }
 
+auto thisPID() {
+    #if defined(_WIN32) || defined(_WIN64)
+    return GetCurrentProcessId();
+    #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    return getpid();
+    #endif
+}
+
+void getLock() {
+    if (!fs::exists(path.metadata.lock)) {
+        writeToFile(path.metadata.lock, std::to_string(thisPID()));
+    } else {
+        auto pid = std::stoi(fileContents(path.metadata.lock));
+        while (true) {
+            #if defined(_WIN32) || defined(_WIN64)
+            if (WaitForSingleObject(OpenProcess(SYNCHRONIZE, FALSE, pid), 0) == WAIT_OBJECT_0) break;
+            #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+            if (kill(pid, 0) == -1) break;
+            #endif
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    }
+}
+
+void releaseLock() {
+    fs::remove(path.metadata.lock);
+}
+
 std::string formatBytes(const auto& bytes) {
     if (bytes < 1024) return std::to_string(bytes) + "B";
     if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
@@ -279,6 +307,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
 void setupHandlers() {
     atexit([] {
+        releaseLock();
 #if defined(_WIN64) || defined(_WIN32)
         SetConsoleOutputCP(old_code_page);
 #endif
@@ -541,6 +570,8 @@ void setFilepaths() {
     path.metadata.originals = path.metadata / constants.original_files_name;
 
     path.metadata.notes = path.metadata / constants.notes_name;
+
+    path.metadata.lock = path.metadata / constants.lock_name;
 
     path.data = path.root / constants.data_directory;
 
@@ -817,6 +848,8 @@ int main(int argc, char* argv[]) {
 
         deduplicate(copying.items);
 
+        getLock();
+
         checkItemSize(totalItemSize());
 
         clearTempDirectory();
@@ -826,6 +859,8 @@ int main(int argc, char* argv[]) {
         copying.mime = getMIMEType();
 
         updateGUIClipboard();
+
+        releaseLock();
 
         stopIndicator();
 
