@@ -164,11 +164,11 @@ bool isAWriteAction() {
 }
 
 auto thisPID() {
-    #if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64)
     return GetCurrentProcessId();
-    #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     return getpid();
-    #endif
+#endif
 }
 
 void getLock() {
@@ -177,11 +177,11 @@ void getLock() {
     } else {
         auto pid = std::stoi(fileContents(path.metadata.lock));
         while (true) {
-            #if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64)
             if (WaitForSingleObject(OpenProcess(SYNCHRONIZE, FALSE, pid), 0) == WAIT_OBJECT_0) break;
-            #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
             if (kill(pid, 0) == -1) break;
-            #endif
+#endif
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
