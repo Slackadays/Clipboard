@@ -13,5 +13,3 @@ output="$(clipboard show)"
 content_is_shown "$output" testfile
 
 content_is_shown "$output" testdir
-
-pass_test

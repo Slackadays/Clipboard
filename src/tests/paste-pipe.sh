@@ -10,5 +10,3 @@ export CLIPBOARD_FORCETTY=1
 clipboard paste
 
 item_is_here rawdata.clipboard
-
-pass_test

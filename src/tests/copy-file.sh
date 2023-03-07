@@ -17,5 +17,3 @@ clipboard copy ../TurnYourClipboardUp.png
 clipboard paste
 
 items_match TurnYourClipboardUp.png ../TurnYourClipboardUp.png
-
-pass_test

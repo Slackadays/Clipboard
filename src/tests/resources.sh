@@ -14,14 +14,18 @@ setup_dir() {
     cd test_"$1"
 }
 
-start_test() {
-  export testname="$1"
-  printf "⏩ Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$testname" "$0"
-  setup_dir "${0%.sh}"
+pass_test() {
+  if [ "$?" -eq "0" ]
+  then
+    printf "🎉 \033[1m%s\033[0m passed\n" "$testname"
+  fi
 }
 
-pass_test() {
-  printf "🎉 \033[1m%s\033[0m passed\n" "$testname"
+start_test() {
+  export testname="$1"
+  printf "🏁 Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$testname" "$0"
+  setup_dir "${0%.sh}"
+  trap pass_test 0
 }
 
 fail() {

@@ -3,7 +3,7 @@ set -eu
 
 if [ -z "${CLIPBOARD_TMPDIR:-}" ]
 then
-    printf "Enter Clipboard's temp directory: "
+    printf "\033[1mEnter Clipboard's temp directory (no slash at end):\033[0m "
     read -r CLIPBOARD_TMPDIR
     export CLIPBOARD_TMPDIR
 fi

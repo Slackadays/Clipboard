@@ -871,5 +871,8 @@ int main(int argc, char* argv[]) {
         if (stopIndicator()) fprintf(stderr, internal_error_message().data(), e.what());
         exit(EXIT_FAILURE);
     }
-    exit(EXIT_SUCCESS);
+    if (copying.failedItems.empty())
+        exit(EXIT_SUCCESS);
+    else
+        exit(EXIT_FAILURE);
 }

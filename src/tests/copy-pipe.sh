@@ -20,5 +20,3 @@ clipboard < ../TurnYourClipboardUp.png
 clipboard paste > temp # work around github actions tty bug
 
 items_match temp ../TurnYourClipboardUp.png
-
-pass_test

@@ -17,5 +17,3 @@ clipboard clear
 item_is_not_in_cb 0 testfile
 
 item_is_not_in_cb 0 testdir/testfile
-
-pass_test

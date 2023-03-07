@@ -9,5 +9,3 @@ clipboard copy "Foobar"
 clipboard paste
 
 item_is_here rawdata.clipboard
-
-pass_test

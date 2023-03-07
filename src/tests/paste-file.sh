@@ -15,5 +15,3 @@ clipboard paste
 item_is_here testfile
 
 item_is_here testdir/testfile
-
-pass_test
