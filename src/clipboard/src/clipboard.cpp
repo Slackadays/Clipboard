@@ -860,8 +860,6 @@ int main(int argc, char* argv[]) {
 
         updateGUIClipboard();
 
-        releaseLock();
-
         stopIndicator();
 
         deduplicate(copying.failedItems);
