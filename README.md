@@ -111,7 +111,7 @@ clipboard clr
 
 ---
 
-**Add Note** &emsp; `clipboard ([--]note|[-]nt)[(num)|_(id)] (text)` or `(something) | clipboard [([--]note|[-]nt)][(num)|_(id)]`
+**Set Note** &emsp; `clipboard ([--]note|[-]nt)[(num)|_(id)] (text)` or `(something) | clipboard [([--]note|[-]nt)][(num)|_(id)]`
 
 ---
 
