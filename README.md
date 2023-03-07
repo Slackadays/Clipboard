@@ -99,6 +99,10 @@ clipboard clr
 
 ---
 
+**Remove Contents** &emsp; `clipboard ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]` or `(some regex) | clipboard [([--]remove|[-]rm)][(num)|_(id)]`
+
+---
+
 **Show Contents** &emsp; `clipboard ([--]show|[-]sh)[(num)|_(id)]`
 
 ---
