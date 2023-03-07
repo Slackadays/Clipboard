@@ -165,4 +165,4 @@ Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for mor
 
 ![Thank You!](documentation/readme-assets/ThankYou.png)
 
-Thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=jnD8Av4Dl4o)
+Thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
