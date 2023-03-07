@@ -13,8 +13,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
-#include <regex>
 #include <algorithm>
+#include <regex>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <fcntl.h>
@@ -231,9 +231,8 @@ void removeRegex() {
         else
             fprintf(stderr,
                     "%s",
-                    replaceColors(
-                            "[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
-                    )
+                    replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                                  "stored.[blank]\n")
                             .data());
     } else {
         for (const auto& entry : fs::directory_iterator(path.data)) {
@@ -251,9 +250,8 @@ void removeRegex() {
         if (successes.directories == 0 && successes.files == 0)
             fprintf(stderr,
                     "%s",
-                    replaceColors(
-                            "[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's stored.[blank]\n"
-                    )
+                    replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                                  "stored.[blank]\n")
                             .data());
     }
 }
