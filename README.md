@@ -111,6 +111,14 @@ clipboard clr
 
 ---
 
+**Add Note** &emsp; `clipboard ([--]note|[-]nt)[(num)|_(id)] (text)` or `(something) | clipboard [([--]note|[-]nt)][(num)|_(id)]`
+
+---
+
+**Show Note** &emsp; `clipboard ([--]note|[-]nt)[(num)|_(id)]`
+
+---
+
 **Show Help Message** &emsp; `clipboard (-h|[--]help)`
 
 ---
