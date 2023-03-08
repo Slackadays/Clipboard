@@ -177,9 +177,7 @@ auto thisPID() {
 }
 
 void getLock() {
-    if (!fs::exists(path.metadata.lock)) {
-        writeToFile(path.metadata.lock, std::to_string(thisPID()));
-    } else {
+    if (fs::exists(path.metadata.lock)) {
         auto pid = std::stoi(fileContents(path.metadata.lock));
         while (true) {
 #if defined(_WIN32) || defined(_WIN64)
@@ -187,9 +185,11 @@ void getLock() {
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
             if (kill(pid, 0) == -1) break;
 #endif
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            if (!fs::exists(path.metadata.lock)) break;
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
         }
     }
+    writeToFile(path.metadata.lock, std::to_string(thisPID()));
 }
 
 void releaseLock() {
