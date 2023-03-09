@@ -2,7 +2,7 @@
 . ./resources.sh
 start_test "Add piped data"
 
-printf "Foobar" | clipboard
+printf "Foobar" | clipboard copy
 
 printf "Foobar" | clipboard add
 
