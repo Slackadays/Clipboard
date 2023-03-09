@@ -2,8 +2,9 @@
 . ./resources.sh
 start_test "Add piped data"
 
-printf "Foobar" | clipboard copy
+echo "Foobar" | clipboard
 
-printf "Foobar" | clipboard add
+echo "Foobar" | clipboard add
 
-assert_equals "FoobarFoobar" "$(clipboard)"
+assert_equals "Foobar
+Foobar" "$(clipboard)"
