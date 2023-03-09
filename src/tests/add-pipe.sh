@@ -2,9 +2,8 @@
 . ./resources.sh
 start_test "Add piped data"
 
-echo "Foobar" | clipboard
+printf "Foobar" | clipboard
 
-echo "Foobar" | clipboard add
+printf "Foobar" | clipboard add
 
-assert_equals "Foobar
-Foobar" "$(clipboard)"
+assert_equals "FoobarFoobar" "$(clipboard paste)" # add paste to work around gha bug
