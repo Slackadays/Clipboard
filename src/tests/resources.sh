@@ -33,6 +33,15 @@ fail() {
   exit 1
 }
 
+assert_equals() {
+    if [ "$1" = "$2" ]
+    then
+        return 0
+    else
+        fail "😕 $1 doesn't equal $2"
+    fi
+}
+
 verify_contents() {
     contents=$(cat "$1")
     if [ "$contents" != "Foobar" ]

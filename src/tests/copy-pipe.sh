@@ -1,6 +1,5 @@
 #!/bin/sh
 . ./resources.sh
-
 start_test "Copy piped data"
 
 echo "Foobar" | clipboard

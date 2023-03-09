@@ -7,3 +7,5 @@ src/tests/test_*
 build/*
 
 documentation/website/public/
+
+gmon.out

@@ -1,7 +1,6 @@
 #!/bin/sh
 export CLIPBOARD_FORCETTY=1
 . ./resources.sh
-
 start_test "Clear files"
 
 make_files

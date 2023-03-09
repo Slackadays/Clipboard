@@ -1,7 +1,6 @@
 #!/bin/sh
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
-
 start_test "Clear user provided text"
 
 clipboard copy "Foobar"

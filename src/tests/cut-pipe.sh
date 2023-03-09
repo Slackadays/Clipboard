@@ -1,6 +1,5 @@
 #!/bin/sh
 . ./resources.sh
-
 start_test "Cut piped data"
 
 echo "Foobar" | clipboard cut

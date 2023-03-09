@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+trap "rm -r test_*" 0
+
 if [ -z "${CLIPBOARD_TMPDIR:-}" ]
 then
     printf "\033[1mEnter Clipboard's temp directory (no slash at end):\033[0m "
@@ -14,6 +16,9 @@ cd "$BASEDIR" || exit 1
 
 rm -rf test_*
 
+sh add-file.sh
+sh add-pipe.sh
+sh add-text.sh
 sh clear-file.sh
 sh clear-pipe.sh
 sh clear-text.sh
@@ -29,7 +34,5 @@ sh paste-text.sh
 sh show-file.sh
 sh show-pipe.sh
 sh show-text.sh
-
-rm -r test_*
 
 echo "🐢 All tests passed!"

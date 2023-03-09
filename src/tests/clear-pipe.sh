@@ -1,6 +1,5 @@
 #!/bin/sh
 . ./resources.sh
-
 start_test "Clear piped data"
 
 echo "Foobar" | clipboard
