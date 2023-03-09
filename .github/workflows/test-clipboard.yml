@@ -41,7 +41,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       - name: Run a script
         shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
         run: |
@@ -84,6 +83,9 @@ jobs:
           export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
           bash ../src/tests/suite.sh
+          find . -name '*.gcda' | xargs gcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
   macos-arm64-amd64:
     runs-on: macos-latest
 
@@ -98,6 +100,9 @@ jobs:
           cmake --install .
           export CLIPBOARD_TMPDIR=$TMPDIR
           bash ../src/tests/suite.sh
+          find . -name '*.gcda' | xargs gcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
   windows-amd64:
     strategy:
      matrix:
@@ -144,6 +149,9 @@ jobs:
             sudo cmake --install .
             export CLIPBOARD_TMPDIR=/tmp
             bash ../src/tests/suite.sh
+            find . -name '*.gcda' | xargs gcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
   openbsd-amd64:
     runs-on: ubuntu-latest
 
@@ -165,6 +173,9 @@ jobs:
             sudo cmake --install .
             export CLIPBOARD_TMPDIR=/tmp
             bash ../src/tests/suite.sh
+            find . -name '*.gcda' | xargs gcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
   openbsd-arm64:
     runs-on: ubuntu-latest
 
@@ -186,6 +197,9 @@ jobs:
             sudo cmake --install .
             export CLIPBOARD_TMPDIR=/tmp
             bash ../src/tests/suite.sh
+            find . -name '*.gcda' | xargs gcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
   netbsd-amd64:
     runs-on: ubuntu-latest
 
@@ -207,3 +221,6 @@ jobs:
             sudo cmake --install .
             export CLIPBOARD_TMPDIR=/tmp
             bash ../src/tests/suite.sh
+            find . -name '*.gcda' | xargs gcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
