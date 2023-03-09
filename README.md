@@ -3,8 +3,9 @@
 <p align="center">
     <a href="https://github.com/Slackadays/Clipboard/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/build-clipboard.yml?branch=main&label=BUILDS&style=for-the-badge">
-        <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test-clipboard.yml?branch=main&label=TESTS&style=for-the-badge">
         <img src="https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/lint-clipboard.yml?branch=main&label=CHECKS&style=for-the-badge">
+        <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test-clipboard.yml?branch=main&label=TESTS&style=for-the-badge">
+        <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&token=RO7KDOZ6Q2">
     </a>
 </p>
 
