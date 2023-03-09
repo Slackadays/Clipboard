@@ -9,4 +9,4 @@ clipboard add "Baz"
 
 unset CLIPBOARD_FORCETTY
 
-assert_equals "FoobarBaz" "$(clipboard)"
+assert_equals "FoobarBaz" "$(clipboard paste)"
