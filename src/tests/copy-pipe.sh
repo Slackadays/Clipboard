@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 . ./resources.sh
 start_test "Copy piped data"
 

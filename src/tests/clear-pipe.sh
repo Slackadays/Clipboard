@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 . ./resources.sh
 start_test "Clear piped data"
 

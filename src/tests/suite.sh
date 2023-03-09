@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -u
 
 clear_tempdirs() {
@@ -20,7 +20,7 @@ cd "$BASEDIR" || exit 1
 
 clear_tempdirs
 
-locales=(en_US.UTF-8 es_ES.UTF-8 pt_BR.UTF-8 tr_TR.UTF-8)
+#locales=(en_US.UTF-8 es_ES.UTF-8 pt_BR.UTF-8 tr_TR.UTF-8)
 themes=(dark light darkhighcontrast lighthighcontrast amber green)
 
 run_tests() {
