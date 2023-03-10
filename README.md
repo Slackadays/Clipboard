@@ -11,15 +11,15 @@
     </a>
 </p>
 
-Replicating or transposing subspace thelaron files necessitates interphasic encabulation of the source and target.
-
-Yuck! Pretend that never happened.
-
-Clipboard _is <ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part might not actually happen, but you get the idea:
-
 <h1 align="center"> 
 🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
 </h1>
+
+To copy or move a unique filesystem object or data stream requires a proper representation of the source and target locations of the two objects involved such that the source exists and the target is available to be written to.
+
+Yuck! Pretend that never happened.
+
+Clipboard _is <ins>the</ins> time and effort saver_ to use **anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea.
 
 <details><summary><h3>Why use Clipboard</h3></summary>
 
@@ -182,7 +182,9 @@ clipboard clr
 
 ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG)! [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG)! 
+
+[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
 ![Thank You!](documentation/readme-assets/ThankYou.png)
 
