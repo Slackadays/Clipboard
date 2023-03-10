@@ -11,15 +11,15 @@
     </a>
 </p>
 
-<h1 align="center"> 
-🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
-</h1>
-
-To copy or move a unique filesystem object or data stream requires a proper representation of the source and target locations of the two objects involved such that the source exists and the target is available to be written to.
+Replicating or transposing subspace thelaron files necessitates interphasic encabulation of the source and target.
 
 Yuck! Pretend that never happened.
 
-Clipboard _is <ins>the</ins> time and effort saver_ to use **anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea.
+Clipboard _is <ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part might not actually happen, but you get the idea:
+
+<h1 align="center"> 
+🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
+</h1>
 
 <details><summary><h3>Why use Clipboard</h3></summary>
 
