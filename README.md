@@ -7,21 +7,21 @@
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test-clipboard.yml?branch=main&label=TESTS&style=for-the-badge">
     </a>
     <a href="https://app.codecov.io/gh/Slackadays/Clipboard">
-        <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&token=RO7KDOZ6Q2">
+        <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=TEST COVERAGE&token=RO7KDOZ6Q2">
     </a>
 </p>
 
 The Clipboard project is a terminal clipboard manager with many useful features.
 
-Yuck, ugh, puke! We can do better.
+Yuck, ugh, and puke! We can do better.
 
-Clipboard is _<ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part won't actually happen, but you get the idea.
+Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <h1 align="center"> 
 🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
 </h1>
 
-<details><summary>Click here to see our exquisite features</summary>
+<details><summary>Click here to see our exquisite features.</summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**
