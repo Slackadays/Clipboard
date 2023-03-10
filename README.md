@@ -15,26 +15,27 @@ The Clipboard project is a terminal clipboard manager with many useful features.
 
 Yuck, ugh, puke! Can we do better?
 
-Clipboard is _<ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part might not actually happen, but you get the idea:
+Clipboard is _<ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <h1 align="center"> 
 🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
 </h1>
 
-<details><summary><h3>Why use Clipboard</h3></summary>
+<details><summary><h3>Click here to see our exquisite features</h3></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**
-- **Store everything in an infinite number of different containers at your disposal.**
+- **Store everything in an _infinite_ number of different containers at your disposal.**
 - **Choose if your containers are temporary or totally persistent.**
 - **Connect right with your regular desktop [which Clipboard probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
-- **Do all of this in style with Clipboard's exquisite design.**
+- **Do all of this in style with Clipboard's beautiful design.**
 - **Speak español, português, or Türkçe? You're in luck because Clipboard's in these languages too.**
 - **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
 
 </details>
 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
+
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 ### [**All Except Windows**](https://github.com/Slackadays/Clipboard/blob/main/src/install.sh) 
 ```bash
