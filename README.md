@@ -12,7 +12,7 @@
 </p>
 
 <h1 align="center"> 
-🍹😎 Clipboard makes your life <u>easy</u>. 🏖️🌴
+🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
 </h1>
 
 To copy or move a unique filesystem object requires a proper representation of the target and destination locations of the two objects involved.
