@@ -11,29 +11,26 @@
     </a>
 </p>
 
-<h1 align="center" style="border-bottom: none;"> 
-:tropical_drink::turtle: Make your life easier with Clipboard. 🏖️🌴
+<h1 align="center"> 
+🍹😎 Clipboard makes your life <u>easy</u>. 🏖️🌴
 </h1>
 
-Our mission is to make your life easier and more productive by saving you time and effort.
+To copy or move a unique filesystem object requires a proper representation of the target and destination locations of the two objects involved.
 
-Before, you've always had to think about where exactly you want to move things, which multiplied your mental workload and made many scenarios totally impractical. 
+Yuck! Pretend that never happened.
 
-Now, have a real _power tool_ to use **anywhere in the terminal** to cut, copy, and paste things with, just like a GUI!
+Clipboard is _the power tool_ to use **anywhere in the terminal** to cut, copy, and paste (and more) with, just like on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea.
 
 <details><summary><h3>Why use Clipboard</h3></summary>
 
-- **`Easy.`** Friendly to newbies and power users.
-- **`Breezy.`** Zero configuration needed to use.
-- **`Beautiful.`** Breaks the rules to look pretty.
-- **`Versatile.`** Filled with useful features.
-- **`Unified.`** Functions exactly the same everywhere. 
-- **`Compatible.`** Works on anything that supports C++20.
-- **`Scriptable.`** Embed it right into your own programs. 
-- **`Universal.`** Supports English, español, português, and Türkçe.
-- **`Tiny.`** Mere tens of kilobytes in size. 
-- **`FOSS.`** 100% free and open-source.
-- **`Integrated.`** Connects with [many native GUI clipboards.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)
+- **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
+- **Add, remove, or make note of whatever you hold with Clipboard.**
+- **Store everything in an infinite number of different containers at your disposal.**
+- **Choose if your containers are temporary or totally persistent.**
+- **Connect right with your regular desktop [which Clipboard probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
+- **Do all of this in style with Clipboard's exquisite design.**
+- **Speak español, português, or Türkçe? You're in luck because Clipboard's in these languages too.**
+- **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
 
 </details>
 

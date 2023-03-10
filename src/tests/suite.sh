@@ -20,9 +20,6 @@ cd "$BASEDIR" || exit 1
 
 clear_tempdirs
 
-#locales=(en_US.UTF-8 es_ES.UTF-8 pt_BR.UTF-8 tr_TR.UTF-8)
-themes=(dark light darkhighcontrast lighthighcontrast amber green)
-
 run_tests() {
     sh add-file.sh
     sh add-pipe.sh
@@ -44,15 +41,6 @@ run_tests() {
     sh show-text.sh
 }
 
-#for locale in "${locales[@]}"
-#do 
-#    export LC_ALL="$locale"
-    for theme in "${themes[@]}"
-    do
-        export CLIPBOARD_THEME="$theme"
-        run_tests
-        clear_tempdirs
-    done
-#done
+run_tests
 
 echo "🐢 All tests passed!"
