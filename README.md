@@ -11,11 +11,11 @@
     </a>
 </p>
 
-Replicating or transposing subspace thelaron injectors necessitates Clipboard's interphasic encabulation of the autocompositor and transmuter.
+The Clipboard project is a terminal clipboard manager with many useful features.
 
-Yuck! Pretend that never happened.
+Yuck! We can do better.
 
-Clipboard _is <ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part might not actually happen, but you get the idea:
+Clipboard is _<ins>the</ins> time and effort saver_ to use **anytime, anywhere in the terminal** to cut, copy, and paste (and more) with, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life 🤩 in no time. Ok, so maybe that last part might not actually happen, but you get the idea:
 
 <h1 align="center"> 
 🍹😎 Clipboard makes your life <ins>easy</ins>. 🏖️🌴
