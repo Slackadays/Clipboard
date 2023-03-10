@@ -11,7 +11,7 @@
     </a>
 </p>
 
-Replicating or transposing subspace thelaron injectors necessitates interphasic encabulation of the autocompositor and transmuter.
+Replicating or transposing subspace thelaron injectors necessitates Clipboard's interphasic encabulation of the autocompositor and transmuter.
 
 Yuck! Pretend that never happened.
 
