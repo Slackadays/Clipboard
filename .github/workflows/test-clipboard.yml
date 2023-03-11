@@ -66,7 +66,7 @@ jobs:
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
-          sudo apt-get install -y $PACKAGES
+          sudo apt-get install -y $PACKAGES xvfb
 
           cd build
           cmake .. \
@@ -82,7 +82,7 @@ jobs:
           export CLIPBOARD_TMPDIR=/tmp
           export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
-          bash ../src/tests/suite.sh
+          xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
