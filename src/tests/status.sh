@@ -7,11 +7,11 @@ make_files
 
 clipboard copy testfile testdir
 
-# check CI is true and the runner is Windows
+# check CI is true and the runner is not Linux
 set +u
-if [ "$CI" = "true" ] && [ "$RUNNER_OS" = "Windows" ]
+if [ "$CI" = "true" ] && [ "$(uname)" != "Linux" ]
 then
-    echo "Skipping test on Windows CI due to Not A TTY bug"
+    echo "Skipping test on this platform CI due to Not A TTY bug"
     exit 0
 fi
 
