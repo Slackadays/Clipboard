@@ -33,6 +33,7 @@ jobs:
         run: |
           export CLIPBOARD_TMPDIR=$TMPDIR
           sh src/install.sh
+          stty rows 80 cols 120
           bash src/tests/suite.sh
   windows-amd64:
     strategy:
