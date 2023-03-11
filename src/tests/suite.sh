@@ -44,6 +44,9 @@ run_tests() {
     sh remove-text.sh
     sh note-pipe.sh
     sh note-text.sh
+    sh status.sh
+    sh themes.sh
+    sh languages.sh
 }
 
 run_tests

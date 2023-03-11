@@ -350,14 +350,16 @@ void setupHandlers() {
 }
 
 void setLocale() {
+    std::string locale;
     try {
-        if (std::locale("").name().substr(0, 2) == "es")
-            setLanguageES();
-        else if (std::locale("").name().substr(0, 2) == "pt")
-            setLanguagePT();
-        else if (std::locale("").name().substr(0, 2) == "tr")
-            setLanguageTR();
+        locale = getenv("CLIPBOARD_LOCALE") ? getenv("CLIPBOARD_LOCALE") : std::locale("").name();
     } catch (...) {}
+    if (locale.substr(0, 2) == "es")
+        setLanguageES();
+    else if (locale.substr(0, 2) == "pt")
+        setLanguagePT();
+    else if (locale.substr(0, 2) == "tr")
+        setLanguageTR();
 }
 
 void setClipboardName() {

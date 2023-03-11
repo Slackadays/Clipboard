@@ -57,7 +57,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 ---
 
 ### Install Manually (you'll need CMake and C++20 support)
-Get the latest release instead by adding `--branch 0.4.0` right after `git clone...`.
+Get the latest release instead by adding `--branch 0.5.0` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
 git clone https://github.com/Slackadays/Clipboard 
@@ -136,6 +136,10 @@ clipboard clr
 ### Environment Variables
 
 **`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+
+---
+
+**`CLIPBOARD_LOCALE`** &emsp; Set this to the locale that only Clipboard will use for its commands and output, like `en_US.UTF-8` or `es_DO.UTF-8`.
 
 ---
 
