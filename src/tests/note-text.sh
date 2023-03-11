@@ -7,8 +7,9 @@ clipboard note "Foobar"
 
 unset CLIPBOARD_FORCETTY
 
-#skip macOS and Windows GHA
-if [ "$CI" = "true" ] && [ "$RUNNER_OS" = "macOS" ] || [ "$RUNNER_OS" = "Windows" ];
+#skip anything in CI if it isn't Linux
+set +u
+if [ "$CI" = "true" ] && [ "$(uname)" != "Linux" ]
 then
     echo "Skipping test on macOS CI due to Not A TTY bug"
     exit 0
