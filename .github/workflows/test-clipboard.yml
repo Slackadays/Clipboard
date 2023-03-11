@@ -82,6 +82,7 @@ jobs:
           export CLIPBOARD_TMPDIR=/tmp
           export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
+          stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
