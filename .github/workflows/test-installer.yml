@@ -21,6 +21,7 @@ jobs:
         run: |
           sh src/install.sh
           export CLIPBOARD_TMPDIR=/tmp
+          stty rows 80 cols 120
           bash src/tests/suite.sh
   macos-arm64-amd64:
     runs-on: macos-latest

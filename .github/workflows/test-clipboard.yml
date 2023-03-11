@@ -128,7 +128,6 @@ jobs:
           #add to path
           export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
           export CLIPBOARD_TMPDIR=/c/Users/runneradmin/AppData/Local/Temp
-          stty rows 80 cols 120
           bash ../src/tests/suite.sh
   freebsd-amd64:
     runs-on: ubuntu-latest
