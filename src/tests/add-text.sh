@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
 start_test "Add text"

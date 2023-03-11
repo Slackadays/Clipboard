@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 . ./resources.sh
 start_test "Show piped data"
 

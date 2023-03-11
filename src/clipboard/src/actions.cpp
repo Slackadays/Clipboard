@@ -260,21 +260,38 @@ void noteText() {
     if (copying.items.size() == 1) {
         if (copying.items.at(0).string() == "") {
             fs::remove(path.metadata.notes);
-            fprintf(stdout, "%s", replaceColors("[success]✅ Removed note\n").data());
+            if (output_silent) return;
+            stopIndicator();
+            fprintf(stderr, "%s", replaceColors("[success]✅ Removed note\n").data());
         } else {
             writeToFile(path.metadata.notes, copying.items.at(0).string());
-            fprintf(stdout, replaceColors("[success]✅ Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
+            if (output_silent) return;
+            stopIndicator();
+            fprintf(stderr, replaceColors("[success]✅ Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
         }
     } else if (copying.items.empty()) {
         if (fs::is_regular_file(path.metadata.notes)) {
             std::string content(fileContents(path.metadata.notes));
-            fprintf(stdout, replaceColors("[info]• Note for this clipboard: %s\n").data(), content.data());
+            if (is_tty.out)
+                fprintf(stdout, replaceColors("[info]• Note for this clipboard: %s\n").data(), content.data());
+            else
+                fprintf(stdout, replaceColors("%s").data(), content.data());
         } else {
             fprintf(stderr, "%s", replaceColors("[info]• There is no note for this clipboard.[blank]\n").data());
         }
     } else {
         fprintf(stderr, "%s", replaceColors("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
     }
+}
+
+void notePipe() {
+    std::string content(pipedInContent());
+    writeToFile(path.metadata.notes, content);
+    if (output_silent) return;
+    stopIndicator();
+    fprintf(stderr, replaceColors("[success]✅ Saved note \"%s\"\n").data(), content.data());
+    releaseLock();
+    exit(EXIT_SUCCESS);
 }
 
 void swap() {}

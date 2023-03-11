@@ -47,8 +47,7 @@ struct Filepath {
         operator fs::path() const { return self; }
         auto operator=(const auto& other) { return self = other; }
         auto operator/(const auto& other) { return self / other; }
-    };
-    DataDirectory data;
+    } data;
 
     class MetadataDirectory {
         fs::path self;
@@ -61,8 +60,7 @@ struct Filepath {
         operator fs::path() const { return self; }
         auto operator=(const auto& other) { return self = other; }
         auto operator/(const auto& other) { return self / other; }
-    };
-    MetadataDirectory metadata;
+    } metadata;
     fs::path temporary;
     fs::path persistent;
     fs::path root;
@@ -99,9 +97,9 @@ extern bool no_color;
 
 enum class ProgressState : int { Done, Active, Cancel };
 
-static std::condition_variable cv;
-static std::mutex m;
-static std::atomic<ProgressState> progress_state;
+extern std::condition_variable cv;
+extern std::mutex m;
+extern std::atomic<ProgressState> progress_state;
 static std::thread indicator;
 
 struct Successes {
@@ -227,6 +225,7 @@ extern Message many_files_one_directory_success_message;
 extern Message many_files_many_directories_success_message;
 extern Message internal_error_message;
 
+void releaseLock();
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
@@ -285,6 +284,7 @@ void addText();
 void removeFiles();
 void removeRegex();
 void noteText();
+void notePipe();
 void swap();
 void addFiles();
 } // namespace PerformAction

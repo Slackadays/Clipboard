@@ -1,5 +1,5 @@
-#!/bin/bash
-set -u
+#!/bin/sh
+set -eu
 
 clear_tempdirs() {
     rm -rf test_*
@@ -39,6 +39,11 @@ run_tests() {
     sh show-file.sh
     sh show-pipe.sh
     sh show-text.sh
+    sh remove-file.sh
+    sh remove-pipe.sh
+    sh remove-text.sh
+    sh note-pipe.sh
+    sh note-text.sh
 }
 
 run_tests

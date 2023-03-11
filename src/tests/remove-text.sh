@@ -1,12 +1,14 @@
 #!/bin/sh
 . ./resources.sh
+start_test "Remove text"
 export CLIPBOARD_FORCETTY=1
-start_test "Clear user provided text"
 
 clipboard copy "Foobar"
 
 item_is_in_cb 0 rawdata.clipboard
 
-clipboard clear
+clipboard remove "Foobar"
 
-item_is_not_in_cb 0 rawdata.clipboard
+unset CLIPBOARD_FORCETTY
+
+assert_equals "" "$(clipboard paste)"

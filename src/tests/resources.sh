@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -eu
 
 testname="(Unknown)"
@@ -18,6 +18,8 @@ pass_test() {
   if [ "$?" -eq "0" ]
   then
     printf "🎉 \033[1m%s\033[0m passed\n" "$testname"
+  else
+    printf "💥 \033[1m%s\033[0m failed\n" "$testname"
   fi
 }
 

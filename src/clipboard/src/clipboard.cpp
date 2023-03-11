@@ -72,6 +72,10 @@ Successes successes;
 
 IsTTY is_tty;
 
+std::condition_variable cv;
+std::mutex m;
+std::atomic<ProgressState> progress_state;
+
 std::array<std::pair<std::string_view, std::string_view>, 7> colors = {
         {{"[error]", "\033[38;5;196m"},    // red
          {"[success]", "\033[38;5;40m"},   // green
@@ -530,10 +534,10 @@ IOType getIOType() {
         if (!is_tty.out) return Pipe;
     } else if (action == Remove) {
         if (copying.items.size() == 1) return Text;
-    } else if (action == Note) {
-        if (copying.items.size() == 1) return Text;
-        if (copying.items.size() == 0) return Text;
         if (!is_tty.in) return Pipe;
+    } else if (action == Note) {
+        if (!is_tty.in && copying.items.size() == 0) return Pipe;
+        if (copying.items.size() == 1 || copying.items.size() == 0) return Text;
     }
     return File;
 }
@@ -742,6 +746,9 @@ void performAction() {
             break;
         case Remove:
             removeRegex();
+            break;
+        case Note:
+            notePipe();
             break;
         default:
             break;
