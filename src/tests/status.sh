@@ -9,6 +9,8 @@ clipboard copy testfile testdir
 
 content="$(clipboard)"
 
+echo "$content"
+
 content_is_shown "$content" "testfile"
 
 content_is_shown "$content" "testdir"
