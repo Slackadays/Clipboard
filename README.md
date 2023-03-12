@@ -37,18 +37,18 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
 ![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
 
 ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
-### [**All Except Windows**](https://github.com/Slackadays/Clipboard/blob/main/src/install.sh) 
+### <a href="https://github.com/Slackadays/Clipboard/blob/main/src/install.sh"><img src="documentation/readme-assets/AllExceptWindows.png" alt="All Except Windows" height=20px /></a>
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 ```
-### [**Windows (run as Administrator)** ](https://github.com/Slackadays/Clipboard/blob/main/src/install.ps1)
+### <a href="https://github.com/Slackadays/Clipboard/blob/main/src/install.ps1"><img src="documentation/readme-assets/WindowsRunAsAdmin.png" alt="Windows (run as Administrator)" height=25px /></a>
 ```powershell
 (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
 ```
 
 ---
 
-### Premade Builds
+### <img src="documentation/readme-assets/PremadeBuilds.png" alt="Premade Builds" height=20px />
 
 <a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status"></a>
 
@@ -56,7 +56,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 
 ---
 
-### Install Manually (you'll need CMake and C++20 support)
+### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=20px /> (you'll need CMake and C++20 support)
 Get the latest release instead by adding `--branch 0.5.0` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
@@ -67,7 +67,7 @@ cmake --build .
 cmake --install .
 ```
 
-### Uninstall
+### <img src="documentation/readme-assets/Uninstall.png" alt="Uninstall" height=20px />
 
 Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
@@ -75,7 +75,7 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
-### Examples
+### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=20px />
 
 ```
 clipboard copy contacts/JohnSmith NuclearLaunchCodes.pdf
@@ -133,7 +133,15 @@ clipboard clr
 
 ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
-### Environment Variables
+### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=20px />
+
+**`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
+
+---
+
+**`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+
+### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=20px />
 
 **`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
@@ -172,18 +180,6 @@ clipboard clr
 ---
 
 **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
-
-</details>
-
----
-
-### Flags
-
-**`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
-
----
-
-**`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
 ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
