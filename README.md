@@ -7,7 +7,7 @@
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test-clipboard.yml?branch=main&label=TESTS&style=for-the-badge">
     </a>
     <a href="https://app.codecov.io/gh/Slackadays/Clipboard">
-        <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=TEST COVERAGE&token=RO7KDOZ6Q2">
+        <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2">
     </a>
 </p>
 
@@ -21,6 +21,8 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
 </p>
 
+![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
+
 <details><summary>Click here to see our exquisite features.</summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
@@ -33,8 +35,6 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
 - **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
 
 </details>
-
-![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 ### <a href="https://github.com/Slackadays/Clipboard/blob/main/src/install.sh"><img src="documentation/readme-assets/AllExceptWindows.png" alt="All Except Windows" height=25px /></a>
