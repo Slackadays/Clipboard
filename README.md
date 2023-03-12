@@ -1,4 +1,4 @@
-![Clipboard Banner](documentation/readme-assets/CBBanner.png)
+### ![Clipboard by Jackson Huff](documentation/readme-assets/CBBanner.png)
 
 <p align="center">
     <a href="https://github.com/Slackadays/Clipboard/actions">
@@ -34,9 +34,9 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
 
 </details>
 
-![Clipboard Demo](documentation/readme-assets/ClipboardDemo.gif)
+![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
-![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
+### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 ### <a href="https://github.com/Slackadays/Clipboard/blob/main/src/install.sh"><img src="documentation/readme-assets/AllExceptWindows.png" alt="All Except Windows" height=25px /></a>
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
@@ -60,30 +60,32 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 Get the latest release instead by adding `--branch 0.5.0` right after `git clone...`.
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
-git clone https://github.com/Slackadays/Clipboard 
-cd Clipboard/build
-cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
-cmake --build .
-cmake --install .
+$ git clone https://github.com/Slackadays/Clipboard 
+$ cd Clipboard/build
+$ cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
+$ cmake --build .
+$ cmake --install .
 ```
 
 ### <img src="documentation/readme-assets/Uninstall.png" alt="Uninstall" height=25px />
 
 Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
-![How To Use](documentation/readme-assets/CBHowToUse.png)
+### ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
 You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
 ```
-clipboard copy contacts/JohnSmith NuclearLaunchCodes.pdf
-clipboard cut69 MyDirectory
-cb cp420 bar.conf NotAVirus.pdf.mp3.exe baz.txt
-cb show420
-cb add69 SomeFile
-clipboard clr
+$ clipboard copy NuclearLaunchCodes.pdf
+$ clipboard cut69 MyDirectory
+$ cb note "Keep this a secret"
+$ cb cp420 bar.conf NotAVirus.pdf.mp3.exe baz.txt
+$ cb show420
+$ cb
+$ cb add69 SomeFile
+$ clipboard clr
 ```
 
 ---
@@ -131,7 +133,7 @@ clipboard clr
 
 **Check Clipboard Status** &emsp; `clipboard`
 
-![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
+### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
@@ -181,10 +183,10 @@ clipboard clr
 
 **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
 
-![Need Help?](documentation/readme-assets/NeedHelp.png)
+### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
 Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG)! [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
-![Thank You!](documentation/readme-assets/ThankYou.png)
+### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
 Thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
