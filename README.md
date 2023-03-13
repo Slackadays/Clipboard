@@ -15,7 +15,7 @@ The Clipboard project is an easy-to-use terminal clipboard manager with many use
 
 Yuck, ugh, and puke! We can do better.
 
-Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere in the terminal.** Cut, copy, paste, add, remove, and make note of anything in your path, just how you would on a desktop! It's like having a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
+Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere in the terminal.** Cut, copy, paste, add, remove, and make note of **anything** sitting in your path, just how you would on a desktop! Have a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
@@ -58,6 +58,7 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 
 ### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px /> (you'll need CMake and C++20 support)
 Get the latest release instead by adding `--branch 0.5.0` right after `git clone...`.
+
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
 $ git clone https://github.com/Slackadays/Clipboard 
@@ -73,7 +74,9 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
-You can substitute `cb` for `clipboard` in all commands. Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
+You can substitute `cb` for `clipboard` in all commands. 
+
+Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
@@ -185,8 +188,16 @@ $ clipboard clr
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG)! [![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for more information, ask your questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG)! 
+
+[![Clipboard Wiki](https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge)](https://github.com/Slackadays/Clipboard/wiki)
+[![Questions? Just ask](https://img.shields.io/badge/Questions%3F-Just%20Ask-red?style=for-the-badge)](https://github.com/Slackadays/Clipboard/discussions)
+[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
 
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
-Thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
+Say thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
+
+If you're feeling generous, feel free to give us a :star:!
+
+![GitHub Repo stars](https://img.shields.io/github/stars/Slackadays/Clipboard?style=for-the-badge)
