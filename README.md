@@ -23,7 +23,7 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
 
 ![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
-<details><summary>Click here to see our exquisite features.</summary>
+<details><summary><b>Click here to see our exquisite features.</b></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**
@@ -31,6 +31,7 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
 - **Choose if your containers are temporary or totally persistent.**
 - **Connect right with your regular desktop [which Clipboard probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
 - **Do all of this in style with Clipboard's beautiful design.**
+- **Works great on anything that supports C++20, which is Linux, Windows, macOS, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFlyBSD, Haiku, and probably more.**
 - **Speak español, português, or Türkçe? You're in luck because Clipboard's in these languages too.**
 - **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
 
