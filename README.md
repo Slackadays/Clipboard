@@ -199,5 +199,3 @@ Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for mor
 Say thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
 
 If you're feeling generous, feel free to give us a :star:!
-
-![GitHub Repo stars](https://img.shields.io/github/stars/Slackadays/Clipboard?style=for-the-badge)
