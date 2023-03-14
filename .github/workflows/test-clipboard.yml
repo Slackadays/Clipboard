@@ -66,7 +66,12 @@ jobs:
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
-          sudo apt-get install -y $PACKAGES xvfb sway squeekboard
+          sudo apt-get install -y $PACKAGES xvfb sway
+
+          if [[ "${{ matrix.os.version }}" == "22.04" ]]
+          then
+            sudo apt-get install -y squeekboard
+          fi
 
           cd build
           cmake .. \
@@ -86,7 +91,10 @@ jobs:
           export WLR_LIBINPUT_NO_DEVICES=1
           export WAYLAND_DISPLAY=wayland-1
           sway &
-          squeekboard & # Wayland needs a keyboard for clipboard access >:(
+          if [[ "${{ matrix.os.version }}" == "22.04" ]]
+          then
+            squeekboard & # Wayland needs a keyboard for clipboard access >:(
+          fi
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
