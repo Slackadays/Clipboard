@@ -233,14 +233,18 @@ void removeRegex() {
             content = std::regex_replace(content, pattern, "");
         successes.bytes += oldLength - content.size();
 
-        if (oldLength != content.size())
+        if (oldLength != content.size()) {
             writeToFile(path.data.raw, content);
-        else
+        } else {
             fprintf(stderr,
                     "%s",
                     replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
+            stopIndicator();
+            releaseLock();
+            exit(EXIT_FAILURE);
+        }
     } else {
         for (const auto& entry : fs::directory_iterator(path.data)) {
             for (const auto& pattern : regexes) {
@@ -254,12 +258,16 @@ void removeRegex() {
                 }
             }
         }
-        if (successes.directories == 0 && successes.files == 0)
+        if (successes.directories == 0 && successes.files == 0) {
             fprintf(stderr,
                     "%s",
                     replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
+            stopIndicator();
+            releaseLock();
+            exit(EXIT_FAILURE);
+        }
     }
 }
 
