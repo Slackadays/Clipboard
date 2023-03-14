@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include <clipboard/posix/mime.hpp>
+#include <clipboard/x11wl/mime.hpp>
 
 #include <clipboard/logging.hpp>
 #include <clipboard/utils.hpp>

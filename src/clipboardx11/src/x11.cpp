@@ -29,7 +29,7 @@
 #include <variant>
 #include <vector>
 
-#include "clipboard/posix/mime.hpp"
+#include "clipboard/x11wl/mime.hpp"
 #include <X11/Xlib.h>
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>

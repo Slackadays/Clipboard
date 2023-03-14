@@ -13,11 +13,11 @@ if(HAVE_FORK)
   target_compile_definitions(gui PUBLIC HAVE_FORK)
 endif()
 
-if(POSIX)
+if(X11WL)
   target_sources(gui PRIVATE
-    src/posix/mime.cpp
+    src/x11wl/mime.cpp
   )
 
-  target_include_directories(gui PUBLIC include/posix)
+  target_include_directories(gui PUBLIC include/x11wl)
 endif()
 

@@ -16,7 +16,7 @@
 #include "fd.hpp"
 #include "objects/all.hpp"
 
-#include "clipboard/posix/mime.hpp"
+#include "clipboard/x11wl/mime.hpp"
 #include <clipboard/fork.hpp>
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>

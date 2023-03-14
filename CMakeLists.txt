@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (UNIX AND NOT APPLE AND NOT HAIKU AND NOT ANDROID)
-  set(POSIX ON)
+  set(X11WL ON)
 endif()
 
 execute_process( # save the current branch to GIT_BRANCH
@@ -61,7 +61,7 @@ endif()
 
 if(APPLE AND NOT INSTALL_PREFIX)
   set(INSTALL_PREFIX "/usr/local")
-elseif(POSIX AND NOT INSTALL_PREFIX)
+elseif(X11WL AND NOT INSTALL_PREFIX)
   set(INSTALL_PREFIX "/usr")
 endif()
 

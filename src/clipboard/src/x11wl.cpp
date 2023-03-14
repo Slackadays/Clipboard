@@ -31,7 +31,7 @@ const bool GUIClipboardSupportsCut = true;
 using getClipboard_t = void* (*)();
 using setClipboard_t = void (*)(void*);
 
-static void posixClipboardFailure(const char* object) {
+static void x11wlClipboardFailure(const char* object) {
     if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
         indicator.detach();
         exit(EXIT_FAILURE);
@@ -47,7 +47,7 @@ static return_t dynamicCall(const char* object, const char* symbol, args_t... ar
     if (objectHandle == nullptr) {
         debugStream << "Opening " << object << " to look for " << symbol << " failed, aborting operation" << std::endl;
         debugStream << "Specific error: " << dlerror() << std::endl;
-        posixClipboardFailure(object);
+        x11wlClipboardFailure(object);
         return return_t();
     }
 
@@ -55,7 +55,7 @@ static return_t dynamicCall(const char* object, const char* symbol, args_t... ar
     if (symbolHandle == nullptr) {
         debugStream << "Reading " << symbol << " from object " << object << " failed, aborting operation" << std::endl;
         debugStream << "Specific error: " << dlerror() << std::endl;
-        posixClipboardFailure(object);
+        x11wlClipboardFailure(object);
         return return_t();
     }
 
@@ -65,13 +65,13 @@ static return_t dynamicCall(const char* object, const char* symbol, args_t... ar
 }
 
 static ClipboardContent dynamicGetGUIClipboard(const char* object, const char* symbol) {
-    auto posixClipboardPtr = dynamicCall<getClipboard_t>(object, symbol);
-    if (posixClipboardPtr == nullptr) {
+    auto x11wlClipboardPtr = dynamicCall<getClipboard_t>(object, symbol);
+    if (x11wlClipboardPtr == nullptr) {
         return {};
     }
 
-    std::unique_ptr<const ClipboardContent> posixClipboard {reinterpret_cast<const ClipboardContent*>(posixClipboardPtr)};
-    return *posixClipboard;
+    std::unique_ptr<const ClipboardContent> x11wlClipboard {reinterpret_cast<const ClipboardContent*>(x11wlClipboardPtr)};
+    return *x11wlClipboard;
 }
 
 static void dynamicSetGUIClipboard(const char* object, const char* symbol, const ClipboardContent& clipboard) {

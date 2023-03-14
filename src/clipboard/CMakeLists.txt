@@ -40,8 +40,8 @@ elseif(ANDROID)
   target_sources(clipboard PRIVATE
     src/android.cpp
   )
-elseif(POSIX)
-  target_sources(clipboard PRIVATE src/posix.cpp)
+elseif(X11WL)
+  target_sources(clipboard PRIVATE src/x11wl.cpp)
 
   set_property(
     TARGET clipboard
@@ -91,6 +91,6 @@ else()
   )
 endif()
 
-if(POSIX)
+if(X11WL)
   install(FILES ${CMAKE_SOURCE_DIR}/documentation/manpages/man.1 DESTINATION share/man/man1 RENAME clipboard.1)
 endif()
