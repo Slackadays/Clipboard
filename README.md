@@ -201,4 +201,4 @@ Say thank you to all the contributors who have helped make Clipboard great[.](ht
 
 If you're feeling generous, feel free to give us a :star:!
 
-<p align="center"><sup><sub><code>cb cut haters && cb > /dev/null</code></sub></sup></p>
+<p align="center"><sup><sub><code>cb copy haters && cb > /dev/null</code></sub></sup></p>
