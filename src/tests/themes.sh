@@ -16,3 +16,7 @@ CLIPBOARD_THEME=green clipboard copy testfile testdir
 CLIPBOARD_THEME=lighthighcontrast clipboard copy testfile testdir
 
 CLIPBOARD_THEME=darkhighcontrast clipboard copy testfile testdir
+
+NO_COLOR=1 clipboard copy testfile testdir
+
+NO_COLOR=1 FORCE_COLOR=1 clipboard copy testfile testdir
