@@ -200,3 +200,5 @@ Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for mor
 Say thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
 
 If you're feeling generous, feel free to give us a :star:!
+
+<p align="center"><sup><sub><code>cb cut haters && cb > /dev/null</code></sub></sup></p>
