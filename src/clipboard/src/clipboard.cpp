@@ -148,9 +148,10 @@ std::string pipedInContent() {
     return content;
 }
 
-void writeToFile(const fs::path& path, const std::string& content, bool append) {
+size_t writeToFile(const fs::path& path, const std::string& content, bool append) {
     std::ofstream file(path, append ? std::ios::app : std::ios::trunc | std::ios::binary);
     file << content;
+    return content.size();
 }
 
 void deduplicate(auto& items) {

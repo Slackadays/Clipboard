@@ -198,8 +198,7 @@ void addData() {
             content = pipedInContent();
         else
             content = copying.items.at(0).string();
-        successes.bytes += content.size();
-        writeToFile(path.data.raw, content, true);
+        successes.bytes += writeToFile(path.data.raw, content, true);
     } else if (!fs::is_empty(path.data)) {
         fprintf(stderr,
                 "%s",
@@ -207,7 +206,10 @@ void addData() {
                               "file instead.[blank]\n")
                         .data());
     } else {
-        pipeIn();
+        if (io_type == IOType::Pipe)
+            pipeIn();
+        else if (io_type == IOType::Text)
+            successes.bytes += writeToFile(path.data.raw, copying.items.at(0).string());
     }
 }
 

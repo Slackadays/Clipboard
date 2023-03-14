@@ -233,7 +233,7 @@ void setupHandlers();
 void setLocale();
 void showHelpMessage(int& argc, char* argv[]);
 void setupItems(int& argc, char* argv[]);
-void writeToFile(const fs::path& path, const std::string& content, bool append = false);
+size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
 void setClipboardName(int& argc, char* argv[]);
 void setupVariables(int& argc, char* argv[]);
 void createTempDirectory();

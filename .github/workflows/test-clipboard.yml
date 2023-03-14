@@ -66,7 +66,7 @@ jobs:
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
-          sudo apt-get install -y $PACKAGES xvfb
+          sudo apt-get install -y $PACKAGES xvfb sway
 
           cd build
           cmake .. \
@@ -82,6 +82,7 @@ jobs:
           export CLIPBOARD_TMPDIR=/tmp
           export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
+          sway
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
