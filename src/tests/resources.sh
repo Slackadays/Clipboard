@@ -44,6 +44,16 @@ assert_equals() {
     fi
 }
 
+assert_fails() {
+    echo "⏩ The following should fail:"
+    if "$@"
+    then
+        fail "😕 This command didn't fail"
+    else
+        return 0
+    fi
+}
+
 verify_contents() {
     contents=$(cat "$1")
     if [ "$contents" != "Foobar" ]

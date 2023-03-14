@@ -28,3 +28,9 @@ echo "Foobar" > addeddir/addedfile
 clipboard add addeddir
 
 item_is_in_cb 0 addeddir/addedfile
+
+assert_fails clipboard add foo bar baz
+
+assert_fails clipboard add "Some text"
+
+echo "Some text" | assert_fails clipboard add

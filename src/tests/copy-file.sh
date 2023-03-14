@@ -32,3 +32,5 @@ clipboard --fast-copy copy ../TurnYourClipboardUp.png
 clipboard --fast-copy paste
 
 items_match TurnYourClipboardUp.png ../TurnYourClipboardUp.png
+
+assert_fails clipboard copy foo bar baz

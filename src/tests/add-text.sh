@@ -10,3 +10,5 @@ clipboard add "Baz"
 unset CLIPBOARD_FORCETTY
 
 assert_equals "FoobarBaz" "$(clipboard paste)"
+
+assert_fails clipboard add foo bar baz

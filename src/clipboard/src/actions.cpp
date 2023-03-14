@@ -185,7 +185,9 @@ void addFiles() {
                 replaceColors("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
                               "text instead.[blank]\n")
                         .data());
-        return;
+        stopIndicator();
+        releaseLock();
+        exit(EXIT_FAILURE);
     }
     for (const auto& f : copying.items)
         copyItem(f);
@@ -205,6 +207,9 @@ void addData() {
                 replaceColors("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
                               "file instead.[blank]\n")
                         .data());
+        stopIndicator();
+        releaseLock();
+        exit(EXIT_FAILURE);
     } else {
         if (io_type == IOType::Pipe)
             pipeIn();
