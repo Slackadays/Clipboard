@@ -667,8 +667,6 @@ void performAction() {
             removeRegex();
         else if (action == Note)
             notePipe();
-        else if (action == Status)
-            status();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
@@ -678,8 +676,6 @@ void performAction() {
             removeRegex();
         else if (action == Note)
             noteText();
-        else if (action == Status)
-            status();
     }
 }
 

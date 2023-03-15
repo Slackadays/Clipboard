@@ -13,3 +13,7 @@ then
 fi
 
 assert_equals "Foobar" "$(clipboard note)"
+
+echo "" | clipboard note
+
+assert_equals "" "$(clipboard note)"

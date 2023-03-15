@@ -16,3 +16,7 @@ then
 fi
 
 assert_equals "Foobar" "$(clipboard note)"
+
+clipboard note ""
+
+assert_equals "" "$(clipboard note)"

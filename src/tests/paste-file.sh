@@ -14,3 +14,7 @@ clipboard paste
 item_is_here testfile
 
 item_is_here testdir/testfile
+
+clipboard clear
+
+clipboard paste

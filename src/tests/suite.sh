@@ -45,6 +45,7 @@ run_tests() {
     sh note-pipe.sh
     sh note-text.sh
     sh status.sh
+    sh help.sh
     sh themes.sh
     sh languages.sh
 }
