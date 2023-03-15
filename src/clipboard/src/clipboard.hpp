@@ -132,7 +132,7 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status };
 
 extern Action action;
 
@@ -146,10 +146,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 10> actions;
-extern EnumArray<std::string_view, 10> action_shortcuts;
-extern EnumArray<std::string_view, 10> doing_action;
-extern EnumArray<std::string_view, 10> did_action;
+extern EnumArray<std::string_view, 11> actions;
+extern EnumArray<std::string_view, 11> action_shortcuts;
+extern EnumArray<std::string_view, 11> doing_action;
+extern EnumArray<std::string_view, 11> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
@@ -237,6 +237,7 @@ size_t writeToFile(const fs::path& path, const std::string& content, bool append
 void setClipboardName(int& argc, char* argv[]);
 void setupVariables(int& argc, char* argv[]);
 void createTempDirectory();
+void syncWithGUIClipboard(bool force = false);
 void syncWithGUIClipboard(const std::string& text);
 void syncWithGUIClipboard(const ClipboardPaths& clipboard);
 void showClipboardContents();
@@ -287,4 +288,5 @@ void noteText();
 void notePipe();
 void swap();
 void addFiles();
+void status();
 } // namespace PerformAction

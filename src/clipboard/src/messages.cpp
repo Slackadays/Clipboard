@@ -14,13 +14,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 10> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap"};
+EnumArray<std::string_view, 11> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status"};
 
-EnumArray<std::string_view, 10> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw"};
+EnumArray<std::string_view, 11> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st"};
 
-EnumArray<std::string_view, 10> doing_action = {"Cutting", "Copying", "Pasting", "Clearing", "Showing", "Editing", "Adding", "Removing", "Noting", "Swapping"};
+EnumArray<std::string_view, 11> doing_action = {"Cutting", "Copying", "Pasting", "Clearing", "Showing", "Editing", "Adding", "Removing", "Noting", "Swapping", "Checking status"};
 
-EnumArray<std::string_view, 10> did_action = {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped"};
+EnumArray<std::string_view, 11> did_action = {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped", "Checked status"};
 
 Message help_message = "[info]▏This is Clipboard %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]▏How To Use[blank]\n"

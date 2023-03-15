@@ -310,4 +310,72 @@ void notePipe() {
 }
 
 void swap() {}
+
+void status() {
+    syncWithGUIClipboard(true);
+    stopIndicator();
+    std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
+    auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
+        for (const auto& entry : fs::directory_iterator(path))
+            if (fs::exists(entry.path() / constants.data_directory) && !fs::is_empty(entry.path() / constants.data_directory))
+                clipboards_with_contents.push_back({entry.path(), persistent});
+    };
+    iterateClipboards(path.temporary.parent_path(), false);
+    iterateClipboards(path.persistent.parent_path(), true);
+    std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
+
+    if (clipboards_with_contents.empty()) {
+        printf("%s", no_clipboard_contents_message().data());
+        printf("%s", clipboard_action_prompt().data());
+    } else {
+        TerminalSize termSizeAvailable(getTerminalSize());
+
+        termSizeAvailable.accountRowsFor(check_clipboard_status_message().size());
+        if (clipboards_with_contents.size() > termSizeAvailable.rows) {
+            termSizeAvailable.accountRowsFor(and_more_items_message().size());
+        }
+
+        printf("%s", check_clipboard_status_message().data());
+
+        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), termSizeAvailable.rows); clipboard++) {
+
+            int widthRemaining = termSizeAvailable.columns
+                                 - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
+                                    + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
+            printf(replaceColors("[bold][info]▏ %s%s: [blank]").data(),
+                   clipboards_with_contents.at(clipboard).first.filename().string().data(),
+                   clipboards_with_contents.at(clipboard).second ? " (p)" : "");
+
+            if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
+                std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
+                std::erase(content, '\n');
+                printf(replaceColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+                continue;
+            }
+
+            for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / constants.data_directory)) {
+                int entryWidth = entry.path().filename().string().length();
+
+                if (widthRemaining <= 0) break;
+
+                if (!first) {
+                    if (entryWidth <= widthRemaining - 2) {
+                        printf("%s", replaceColors("[help], [blank]").data());
+                        widthRemaining -= 2;
+                    }
+                }
+
+                if (entryWidth <= widthRemaining) {
+                    printf(replaceColors("[help]%s[blank]").data(), entry.path().filename().string().data());
+                    widthRemaining -= entryWidth;
+                    first = false;
+                }
+            }
+            printf("\n");
+        }
+        if (clipboards_with_contents.size() > termSizeAvailable.rows) {
+            printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
+        }
+    }
+}
 } // namespace PerformAction

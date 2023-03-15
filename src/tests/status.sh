@@ -22,3 +22,11 @@ content_is_shown "$content" "testfile"
 content_is_shown "$content" "testdir"
 
 content_is_shown "$content" "0"
+
+content="$(clipboard status)"
+
+content_is_shown "$content" "testfile"
+
+content_is_shown "$content" "testdir"
+
+content_is_shown "$content" "0"
