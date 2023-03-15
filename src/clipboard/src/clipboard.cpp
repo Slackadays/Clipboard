@@ -672,7 +672,7 @@ void performAction() {
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
-        if (action == Add)
+        else if (action == Add)
             addData();
         else if (action == Remove)
             removeRegex();
