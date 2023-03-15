@@ -15,7 +15,7 @@ The Clipboard project is an easy-to-use terminal clipboard manager with many use
 
 Yuck, ugh, and puke! We can do better.
 
-Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere in the terminal.** Cut, copy, paste, add, remove, and make note of **anything** sitting in your path, just how you would on a desktop! Have a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
+Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere.** Cut, copy, paste, add, remove, and make note of **anything** sitting in your terminal, just how you would on a desktop! Have a helper with a perfect memory by your side. You'll be sitting on a sunny beach sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
@@ -34,6 +34,8 @@ Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime, anywhere 
 - **Works great on anything that supports C++20, which is Linux, Windows, macOS, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFlyBSD, Haiku, and probably more.**
 - **Speak español, português, or Türkçe? You're in luck because Clipboard's in these languages too.**
 - **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
+- **Fan of creativity? Say no more as you can choose any of several color themes to make Clipboard look exactly how you want.**
+- **Addicted to technical details? Have we got something real good for you, as Clipboard is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
 
 </details>
 
@@ -75,67 +77,68 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
-You can substitute `cb` for `clipboard` in all commands. 
-
-Add a number to the end of the action to choose which clipboard you want to use (the default is 0), or `_` to use a persistent clipboard. 
+Add a number to the end of your action to choose which clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
 ```
-$ clipboard copy NuclearLaunchCodes.pdf
-$ clipboard cut69 MyDirectory
+$ cb copy NuclearLaunchCodes.pdf
 $ cb note "Keep this a secret"
-$ cb cp420 bar.conf NotAVirus.pdf.mp3.exe baz.txt
-$ cb show420
-$ cb
+$ cb cut69 MyDirectory
 $ cb add69 SomeFile
-$ clipboard clr
+$ cb cp_420 foo.conf NotAVirus.bar.mp3.exe baz.txt
+$ cb remove_420 "*.mp3\.exe"
+$ cb show_420
+$ cb note
+$ cb clr
+$ cb status
+$ cb
 ```
 
 ---
 
-**Copy** &emsp; `clipboard ([--]copy|[-]cp)[(num)|_(id)] (file) [files]` or `(something) | clipboard [([--]copy|[-]cp)][(num)|_(id)]`
+**Copy** &emsp; `cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]` or `(something) | cb [([--]copy|[-]cp)][(num)|_(id)]`
 
 ---
 
 
-**Cut** &emsp; `clipboard ([--]cut|[-]ct)[(num)|_(id)] (file) [files]`
+**Cut** &emsp; `cb ([--]cut|[-]ct)[(num)|_(id)] (file) [files]`
 
 ---
 
-**Paste** &emsp; `clipboard ([--]paste|[-]p)[(num)|_(id)]` or `clipboard [([--]paste|[-]p][(num)|_(id)] | (something)` or `clipboard [([--]paste|[-]p)][(num)|_(id)] > (some file)`
+**Paste** &emsp; `cb ([--]paste|[-]p)[(num)|_(id)]` or `cb [([--]paste|[-]p][(num)|_(id)] | (something)` or `cb [([--]paste|[-]p)][(num)|_(id)] > (some file)`
 
 ---
 
-**Add Contents** &emsp; `clipboard ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]` or `(something) | clipboard [([--]add|[-]ad)][(num)|_(id)]`
+**Add Contents** &emsp; `cb ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]` or `(something) | cb [([--]add|[-]ad)][(num)|_(id)]`
 
 ---
 
-**Remove Contents** &emsp; `clipboard ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]` or `(some regex) | clipboard [([--]remove|[-]rm)][(num)|_(id)]`
+**Remove Contents** &emsp; `cb ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]` or `(some regex) | cb [([--]remove|[-]rm)][(num)|_(id)]`
 
 ---
 
-**Show Contents** &emsp; `clipboard ([--]show|[-]sh)[(num)|_(id)]`
+**Show Contents** &emsp; `cb ([--]show|[-]sh)[(num)|_(id)]`
 
 ---
 
-**Clear Contents** &emsp; `clipboard ([--]clear|[-]clr)[(num)|_(id)]`
+**Clear Contents** &emsp; `cb ([--]clear|[-]clr)[(num)|_(id)]`
 
 ---
 
-**Set Note** &emsp; `clipboard ([--]note|[-]nt)[(num)|_(id)] (text)` or `(something) | clipboard [([--]note|[-]nt)][(num)|_(id)]`
+**Set Note** &emsp; `cb ([--]note|[-]nt)[(num)|_(id)] (text)` or `(something) | cb [([--]note|[-]nt)][(num)|_(id)]`
 
 ---
 
-**Show Note** &emsp; `clipboard ([--]note|[-]nt)[(num)|_(id)]`
+**Show Note** &emsp; `cb ([--]note|[-]nt)[(num)|_(id)]`
 
 ---
 
-**Show Help Message** &emsp; `clipboard (-h|[--]help)`
+**Show Help Message** &emsp; `cb (-h|[--]help)`
 
 ---
 
-**Check Clipboard Status** &emsp; `clipboard`
+**Check Clipboard Status** &emsp; `cb [[--]status|[-]st]`
 
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
