@@ -13,7 +13,7 @@
 
 The Clipboard project is a super easy-to-use terminal clipboard manager with tons of useful features and _gorgeous_ eye candy.
 
-That's nice. But we can do even better.
+That's nice. But we did even better.
 
 Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime**, and **anywhere**. Have a psychic partner with a perfect memory always by your side. Cut, copy, paste, add, remove, and make note of **anything** that dares lay in your terminal at the mere press of a button. You'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life in your caress in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
 
