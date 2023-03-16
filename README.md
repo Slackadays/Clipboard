@@ -11,11 +11,11 @@
     </a>
 </p>
 
-The Clipboard project is a super easy-to-use terminal clipboard manager with tons of cool and useful features.
+The Clipboard project is an easy-to-use terminal clipboard manager with tons of cool and useful features.
 
 That's nice. But we can do even better.
 
-Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime and anywhere.** Have a helper with a perfect memory always by your side. Cut, copy, paste, add, remove, and make note of **anything** in your terminal at the literal press of a button! You'll be sitting on a sunny beach in the Caribbean sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
+Clipboard is _<ins>your</ins>_ time and effort saver to use **anytime and anywhere.** Have a helper with a perfect memory always by your side. Cut, copy, paste, add, remove, and make note of **anything** in your terminal at the press of a button. You'll be sitting on a sunny beach in the Caribbean sipping a papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
