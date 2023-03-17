@@ -99,6 +99,8 @@ $ cb
 
 <details><summary><b>Copy</b> &emsp; <code>cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]copy|[-]cp)][(num)|_(id)]</code></summary>
 
+---
+
 Copy a file.
 ```
 $ cb copy FooFile
@@ -150,6 +152,8 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 <details><summary><b>Cut</b> &emsp; <code>cb ([--]cut|[-]ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]cut|[-]ct)][(num)|_(id)]</code></summary>
 
+---
+
 Cut a file.
 ```
 $ cb cut FooFile
@@ -200,6 +204,8 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 ---
 
 <details><summary><b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)` or `cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
+
+---
 
 Start by copying or cutting something.
 ```
@@ -262,6 +268,8 @@ Note: If you paste after cutting, then Clipboard will delete the raw data afterw
 
 <details><summary><b>Add Contents</b> &emsp; <code>cb ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [([--]add|[-]ad)][(num)|_(id)]</code></summary>
 
+---
+
 Start by copying something.
 ```
 $ cb copy FooFile
@@ -303,6 +311,8 @@ $ echo " What's yours?" | cb add
 
 <details><summary><b>Remove Contents</b> &emsp; <code>cb ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [([--]remove|[-]rm)][(num)|_(id)]</code></summary>
 
+---
+
 Start by copying something.
 ```
 $ cb copy FooFile BarDir BazDir
@@ -343,6 +353,8 @@ $ echo "music" | cb remove
 
 <details><summary><b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)]</code></summary>
 
+---
+
 Start by copying something.
 ```
 $ cb copy FooFile BarDir BazDir
@@ -371,6 +383,8 @@ Note: If there is a lot of data, Clipboard may only show enough to fill the term
 
 <details><summary><b>Clear Contents</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
 
+---
+
 Start by copying something.
 ```
 $ cb copy FooFile BarDir BazDir
@@ -387,6 +401,8 @@ $ cb clr # These both work great!
 ---
 
 <details><summary><b>Set Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [([--]note|[-]nt)][(num)|_(id)]</code></summary>
+
+---
 
 Add a personal note to a clipboard.
 ```
@@ -411,6 +427,8 @@ $ cb note ""
 
 <details><summary><b>Show Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)]</code></summary>
 
+---
+
 Start by adding a note to a clipboard.
 ```
 $ cb note "For my Aventura music collection"
@@ -427,6 +445,8 @@ $ cb note
 
 <details><summary><b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code></summary>
 
+---
+
 Show the help message.
 ```
 $ cb help
@@ -439,6 +459,8 @@ $ cb -h # These three versions all work great!
 ---
 
 <details><summary><b>Check Clipboard Status</b> &emsp; <code>cb [[--]status|[-]st]</code></summary>
+
+---
 
 Check the status of all clipboards that have content.
 ```
