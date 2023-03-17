@@ -93,6 +93,7 @@ extern std::vector<std::string> arguments;
 extern std::string clipboard_name;
 
 extern bool output_silent;
+extern bool progress_silent;
 extern bool no_color;
 
 enum class ProgressState : int { Done, Active, Cancel };

@@ -58,6 +58,7 @@ Filepath path;
 Copying copying;
 
 bool output_silent = false;
+bool progress_silent = false;
 bool no_color = false;
 
 std::vector<std::string> arguments;
@@ -400,6 +401,8 @@ void setupVariables(int& argc, char* argv[]) {
 
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
+    progress_silent = getenv("CLIPBOARD_NOPROGRESS") ? true : false;
+
     if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
     arguments.assign(argv + 1, argv + argc);
@@ -478,6 +481,7 @@ IOType getIOType() {
 
 void setFlags() {
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
+    if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--ee")) {
         printf("%s", replaceColors("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
@@ -535,7 +539,7 @@ void checkForNoItems() {
 }
 
 void setupIndicator() {
-    if (!is_tty.err || output_silent || getenv("CLIPBOARD_NOPROGRESS") != nullptr) return;
+    if (!is_tty.err || output_silent || progress_silent) return;
 
     fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
     fprintf(stderr, "\033[?25l");                                              // hide the cursor
