@@ -59,7 +59,9 @@ You can also download Clipboard [directly from GitHub Actions.](https://nightly.
 
 ---
 
-### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px /> (you'll need CMake and C++20 support)
+### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px />
+You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatibility, libx11 and/or libwayland.
+
 Get the latest release instead by adding `--branch 0.5.0` right after `git clone...`.
 
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
@@ -257,7 +259,7 @@ Pipe everything from persistent clipboard "2" out to some program.
 $ cb paste_2 | cat
 $ cb p_2 | cat
 $ cb -c _2 | cat # These three versions also all work great.
-$ cb -2 _2 | Write-Output # The version for PowerShell
+$ cb -c _2 | Write-Output # The version for PowerShell
 ```
 
 Note: If you paste after cutting, then Clipboard will delete the raw data afterwards, effectively only letting you paste once.
