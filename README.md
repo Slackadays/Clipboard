@@ -176,6 +176,10 @@ $ cb
 
 ---
 
+**`CLIPBOARD_NOPROGRESS`** &emsp; Set this to anything to disable only progress messages from Clipboard.
+
+---
+
 **`CLIPBOARD_SILENT`** &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.
 
 ---
