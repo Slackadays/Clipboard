@@ -16,47 +16,44 @@
 #include <optional>
 #include <string_view>
 
+using namespace std::string_view_literals;
+
 std::optional<std::string_view> inferMIMEType(const std::string& temporaryContent) {
     std::string_view content(temporaryContent);
+    auto beginning_matches = [&](const std::string_view& pattern) {
+        if (content.size() < pattern.size()) return false;
+        return content.substr(0, pattern.size()) == pattern;
+    };
 
     // jpeg xl
-    if (content.size() >= 12 && content.substr(0, 12) == "\x00\x00\x00\x0C\x4A\x58\x4C\x20\x0D\x0A\x87\x0A") return "image/jxl";
+    if (beginning_matches("\x00\x00\x00\x0C\x4A\x58\x4C\x20\x0D\x0A\x87\x0A"sv)) return "image/jxl";
 
     // xml
-    else if (content.size() >= 24 && content.substr(0, 24) == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-        return "text/xml";
+    if (beginning_matches("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"sv)) return "text/xml";
 
     // html
-    else if (content.size() >= 15 && content.substr(0, 15) == "<!DOCTYPE html>")
-        return "text/html";
+    if (beginning_matches("<!DOCTYPE html>"sv)) return "text/html";
 
     // png
-    else if (content.size() >= 8 && content.substr(0, 8) == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A")
-        return "image/png";
+    if (beginning_matches("\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"sv)) return "image/png";
 
     // jpeg
-    else if (content.size() >= 3 && content.substr(0, 3) == "\xFF\xD8\xFF")
-        return "image/jpeg";
+    if (beginning_matches("\xFF\xD8\xFF"sv)) return "image/jpeg";
 
     // gif
-    else if (content.size() >= 6 && (content.substr(0, 6) == "GIF87a" || content.substr(0, 6) == "GIF89a"))
-        return "image/gif";
+    if (beginning_matches("GIF87a"sv) || beginning_matches("GIF89a"sv)) return "image/gif";
 
     // webp
-    else if (content.size() >= 12 && content.substr(0, 12) == "RIFF\x00\x00\x00\x00WEBPVP8 ")
-        return "image/webp";
+    if (beginning_matches("RIFF\x00\x00\x00\x00WEBPVP8 "sv)) return "image/webp";
 
     // bmp
-    else if (content.size() >= 2 && content.substr(0, 2) == "BM")
-        return "image/bmp";
+    if (beginning_matches("BM"sv)) return "image/bmp";
 
     // tiff
-    else if (content.size() >= 4 && (content.substr(0, 4) == "II\x2A\x00" || content.substr(0, 4) == "MM\x00\x2A"))
-        return "image/tiff";
+    if (beginning_matches("II\x2A\x00"sv) || beginning_matches("MM\x00\x2A"sv)) return "image/tiff";
 
     // zip
-    else if (content.size() >= 4 && (content.substr(0, 4) == "PK\x03\x04" || content.substr(0, 4) == "PK\x05\x06" || content.substr(0, 4) == "PK\x07\x08"))
-        return "application/zip";
+    if (beginning_matches("PK\x03\x04"sv) || beginning_matches("PK\x05\x06"sv) || beginning_matches("PK\x07\x08"sv)) return "application/zip";
 
     return std::nullopt;
 }
