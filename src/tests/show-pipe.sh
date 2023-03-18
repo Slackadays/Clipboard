@@ -2,11 +2,11 @@
 . ./resources.sh
 start_test "Show piped data"
 
-echo "Foobar" | clipboard
+echo "Foobar" | cb
 
 export CLIPBOARD_FORCETTY=1
 
-output=$(clipboard show)
+output=$(cb show)
 
 item_is_in_cb 0 rawdata.clipboard
 

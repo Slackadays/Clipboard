@@ -3,16 +3,16 @@
 export CLIPBOARD_FORCETTY=1
 start_test "Show help message"
 
-output="$(clipboard help)"
+output="$(cb help)"
 
 content_is_shown "$output" "Clipboard"
 
-output="$(clipboard -h)"
+output="$(cb -h)"
 
 content_is_shown "$output" "Clipboard"
 
-output="$(clipboard --help)"
+output="$(cb --help)"
 
 content_is_shown "$output" "Clipboard"
 
-clipboard --ee
+cb --ee

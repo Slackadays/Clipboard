@@ -5,16 +5,16 @@ start_test "Paste files"
 
 make_files
 
-clipboard copy testfile testdir
+cb copy testfile testdir
 
 setup_dir pastehere
 
-clipboard paste
+cb paste
 
 item_is_here testfile
 
 item_is_here testdir/testfile
 
-clipboard clear
+cb clear
 
-clipboard paste
+cb paste

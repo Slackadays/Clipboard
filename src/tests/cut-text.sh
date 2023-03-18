@@ -3,11 +3,11 @@
 export CLIPBOARD_FORCETTY=1
 start_test "Cut user provided text"
 
-clipboard cut "Foobar"
+cb cut "Foobar"
 
 item_is_in_cb 0 rawdata.clipboard
 
-clipboard paste
+cb paste
 
 item_is_here rawdata.clipboard
 

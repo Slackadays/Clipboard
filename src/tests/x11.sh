@@ -25,13 +25,13 @@ fi
 
 make_files
 
-clipboard copy "Some text"
+cb copy "Some text"
 
 assert_equals "Some text" "$(xclip -o -selection clipboard)"
 
 unset CLIPBOARD_FORCETTY
 
-clipboard copy < ../TurnYourClipboardUp.png
+cb copy < ../TurnYourClipboardUp.png
 
 sleep 5
 

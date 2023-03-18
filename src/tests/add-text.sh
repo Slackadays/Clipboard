@@ -3,12 +3,12 @@
 export CLIPBOARD_FORCETTY=1
 start_test "Add text"
 
-clipboard copy "Foobar"
+cb copy "Foobar"
 
-clipboard add "Baz"
+cb add "Baz"
 
 unset CLIPBOARD_FORCETTY
 
-assert_equals "FoobarBaz" "$(clipboard paste)"
+assert_equals "FoobarBaz" "$(cb paste)"
 
-assert_fails clipboard add foo bar baz
+assert_fails cb add foo bar baz

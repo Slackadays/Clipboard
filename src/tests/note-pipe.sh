@@ -2,7 +2,7 @@
 . ./resources.sh
 start_test "Note piped in text"
 
-echo "Foobar" | clipboard note
+echo "Foobar" | cb note
 
 # check CI is true and the runner is macOS
 set +u
@@ -12,8 +12,8 @@ then
     exit 0
 fi
 
-assert_equals "Foobar" "$(clipboard note)"
+assert_equals "Foobar" "$(cb note)"
 
-echo "" | clipboard note
+echo "" | cb note
 
-assert_equals "" "$(clipboard note)"
+assert_equals "" "$(cb note)"

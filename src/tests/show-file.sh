@@ -5,9 +5,9 @@ start_test "Show file clipboard content"
 
 make_files
 
-clipboard copy testfile testdir
+cb copy testfile testdir
 
-output="$(clipboard show)"
+output="$(cb show)"
 
 content_is_shown "$output" testfile
 

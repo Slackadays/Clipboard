@@ -7,9 +7,9 @@ make_files
 
 echo "Foobar" > dummyfile
 
-clipboard copy dummyfile
+cb copy dummyfile
 
-clipboard add testfile testdir
+cb add testfile testdir
 
 item_is_in_cb 0 testfile
 
@@ -17,7 +17,7 @@ item_is_in_cb 0 testdir/testfile
 
 echo "Foobar" > addedfile
 
-clipboard add addedfile
+cb add addedfile
 
 item_is_in_cb 0 addedfile
 
@@ -25,12 +25,12 @@ mkdir addeddir
 
 echo "Foobar" > addeddir/addedfile
 
-clipboard add addeddir
+cb add addeddir
 
 item_is_in_cb 0 addeddir/addedfile
 
-assert_fails clipboard add foo bar baz
+assert_fails cb add foo bar baz
 
-assert_fails clipboard add "Some text"
+assert_fails cb add "Some text"
 
-echo "Some text" | assert_fails clipboard add
+echo "Some text" | assert_fails cb add

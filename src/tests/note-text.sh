@@ -3,9 +3,9 @@
 start_test "Note user provided text"
 export CLIPBOARD_FORCETTY=1
 
-clipboard note "Foobar"
+cb note "Foobar"
 
-assert_fails clipboard note "Foobar" "Baz"
+assert_fails cb note "Foobar" "Baz"
 
 unset CLIPBOARD_FORCETTY
 
@@ -17,10 +17,10 @@ then
     exit 0
 fi
 
-assert_equals "Foobar" "$(clipboard note)"
+assert_equals "Foobar" "$(cb note)"
 
-content_is_shown "$(CLIPBOARD_FORCETTY=1 clipboard note)" "Foobar"
+content_is_shown "$(CLIPBOARD_FORCETTY=1 cb note)" "Foobar"
 
-clipboard note ""
+cb note ""
 
-assert_equals "" "$(clipboard note)"
+assert_equals "" "$(cb note)"

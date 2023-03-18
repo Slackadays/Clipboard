@@ -5,11 +5,11 @@ start_test "Cut files"
 
 make_files
 
-clipboard cut testfile testdir
+cb cut testfile testdir
 
 setup_dir pastehere
 
-clipboard paste
+cb paste
 
 cd ../
 

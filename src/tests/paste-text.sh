@@ -3,8 +3,8 @@
 export CLIPBOARD_FORCETTY=1
 start_test "Paste user provided text"
 
-clipboard copy "Foobar"
+cb copy "Foobar"
 
-clipboard paste
+cb paste
 
 item_is_here rawdata.clipboard

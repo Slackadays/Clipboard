@@ -5,7 +5,7 @@ start_test "Show clipboard status"
 
 make_files
 
-clipboard copy testfile testdir
+cb copy testfile testdir
 
 # check CI is true and the runner is not Linux
 set +u
@@ -15,7 +15,7 @@ then
     exit 0
 fi
 
-content="$(clipboard)"
+content="$(cb)"
 
 content_is_shown "$content" "testfile"
 
@@ -23,7 +23,7 @@ content_is_shown "$content" "testdir"
 
 content_is_shown "$content" "0"
 
-content="$(clipboard status)"
+content="$(cb status)"
 
 content_is_shown "$content" "testfile"
 

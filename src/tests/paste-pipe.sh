@@ -2,10 +2,10 @@
 . ./resources.sh
 start_test "Paste piped data"
 
-echo "Foobar" | clipboard
+echo "Foobar" | cb
 
 export CLIPBOARD_FORCETTY=1
 
-clipboard paste
+cb paste
 
 item_is_here rawdata.clipboard

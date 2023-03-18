@@ -2,10 +2,10 @@
 . ./resources.sh
 start_test "Add piped data"
 
-printf "Foobar" | clipboard
+printf "Foobar" | cb
 
-printf "Foobar" | clipboard add
+printf "Foobar" | cb add
 
-assert_equals "FoobarFoobar" "$(clipboard paste)" # add paste to work around gha bug
+assert_equals "FoobarFoobar" "$(cb paste)" # add paste to work around gha bug
 
-assert_fails clipboard add foo bar baz
+assert_fails cb add foo bar baz
