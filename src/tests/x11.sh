@@ -17,6 +17,12 @@ then
     exit 0
 fi
 
+if [ "$CLIPBOARD_REQUIREX11" = "0" ]
+then
+    echo "⏭️ Skipping X11 tests due to CLIPBOARD_REQUIREX11=0"
+    exit 0
+fi
+
 make_files
 
 clipboard copy "Some text"
