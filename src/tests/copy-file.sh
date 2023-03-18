@@ -11,6 +11,46 @@ item_is_in_cb 0 testfile
 
 item_is_in_cb 0 testdir/testfile
 
+mkdir dir1
+
+mkdir dir2
+
+clipboard copy dir1 dir2
+
+item_is_in_cb 0 dir1
+
+item_is_in_cb 0 dir2
+
+echo "Foobar" > file1
+
+echo "Foobar" > file2
+
+clipboard copy file1 dir1 dir2
+
+item_is_in_cb 0 file1
+
+item_is_in_cb 0 dir1
+
+item_is_in_cb 0 dir2
+
+clipboard copy file1 file2 dir1
+
+item_is_in_cb 0 file1
+
+item_is_in_cb 0 file2
+
+item_is_in_cb 0 dir1
+
+clipboard copy file1 file2 dir1 dir2
+
+item_is_in_cb 0 file1
+
+item_is_in_cb 0 file2
+
+item_is_in_cb 0 dir1
+
+item_is_in_cb 0 dir2
+
 clipboard copy ../TurnYourClipboardUp.png
 
 clipboard paste

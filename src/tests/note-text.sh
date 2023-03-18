@@ -5,6 +5,8 @@ export CLIPBOARD_FORCETTY=1
 
 clipboard note "Foobar"
 
+assert_fails clipboard note "Foobar" "Baz"
+
 unset CLIPBOARD_FORCETTY
 
 #skip anything in CI if it isn't Linux
@@ -16,6 +18,8 @@ then
 fi
 
 assert_equals "Foobar" "$(clipboard note)"
+
+content_is_shown "$(CLIPBOARD_FORCETTY=1 clipboard note)" "Foobar"
 
 clipboard note ""
 

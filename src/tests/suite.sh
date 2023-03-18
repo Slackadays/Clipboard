@@ -24,6 +24,7 @@ run_tests() {
     sh add-file.sh
     sh add-pipe.sh
     sh add-text.sh
+    sh bad-action.sh
     sh clear-file.sh
     sh clear-pipe.sh
     sh clear-text.sh
@@ -48,6 +49,7 @@ run_tests() {
     sh help.sh
     sh themes.sh
     sh languages.sh
+    sh x11.sh
 }
 
 run_tests

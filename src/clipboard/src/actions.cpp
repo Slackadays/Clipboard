@@ -296,6 +296,9 @@ void noteText() {
         }
     } else {
         fprintf(stderr, "%s", replaceColors("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
+        stopIndicator();
+        releaseLock();
+        exit(EXIT_FAILURE);
     }
 }
 

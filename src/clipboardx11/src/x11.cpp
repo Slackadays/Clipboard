@@ -985,10 +985,10 @@ X11SelectionRequest::X11SelectionRequest(XSelectionRequestEvent event, std::shar
         , m_multiple(multiple) {}
 
 X11SelectionRequest::X11SelectionRequest(X11Connection& connection, XSelectionRequestEvent event)
-        : m_window(connection.externalWindow(event.requestor))
-        , m_property(connection.atom(event.property == None ? event.target : event.property))
+        : m_event(event)
+        , m_window(connection.externalWindow(event.requestor))
         , m_target(connection.atom(event.target))
-        , m_event(event)
+        , m_property(connection.atom(event.property == None ? event.target : event.property))
         , m_multiple(false) {}
 
 X11SelectionRequest X11SelectionRequest::forMultiple(const X11Atom& target, const X11Atom& property) const {
@@ -1028,8 +1028,8 @@ void X11IncrTransfer::handle(const XEvent& event) {
 X11SelectionDaemon::X11SelectionDaemon(X11Connection& connection, const X11Atom& selection, const ClipboardContent& content)
         : m_connection(connection)
         , m_selection(selection)
-        , m_window(connection.createWindow())
         , m_content(content)
+        , m_window(connection.createWindow())
         , m_isSelectionOwner(true) {
 
     debugStream << "Setting the selection owner to ourselves" << std::endl;
@@ -1235,14 +1235,10 @@ void X11SelectionDaemon::run() {
     debugStream << "Starting persistent paste daemon" << std::endl;
 
     while (true) {
-        try {
-            auto event = nextEvent();
-            handle(event);
-            for (auto&& transfer : m_transfers)
-                transfer->handle(event);
-        } catch (const X11Exception& e) {
-            if (e.errorCode() != BadWindow) debugStream << "Error handling X11 event: " << e.what() << std::endl;
-        }
+        auto event = nextEvent();
+        handle(event);
+        for (auto&& transfer : m_transfers)
+            transfer->handle(event);
 
         std::erase_if(m_transfers, [](auto&& transfer) { return transfer->isDone(); });
 
@@ -1283,6 +1279,7 @@ static ClipboardContent getX11ClipboardInternal() {
 static void startPasteDaemon(const ClipboardContent& clipboard) {
     X11Connection conn;
     X11SelectionDaemon daemon {conn, conn.atom(atomClipboard), clipboard};
+    XSynchronize(conn.display(), True);
     daemon.run();
 }
 

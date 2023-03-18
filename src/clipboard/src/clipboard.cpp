@@ -474,7 +474,7 @@ IOType getIOType() {
         if (!is_tty.in) return Pipe;
     } else if (action == Note) {
         if (!is_tty.in && copying.items.size() == 0) return Pipe;
-        if (copying.items.size() == 1 || copying.items.size() == 0) return Text;
+        return Text;
     }
     return File;
 }

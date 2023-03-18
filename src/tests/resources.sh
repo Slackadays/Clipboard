@@ -76,6 +76,9 @@ item_is_in_cb() {
   then
     verify_contents "$CLIPBOARD_TMPDIR"/Clipboard/"$1"/data/"$2"
     return 0
+  elif [ -d "$CLIPBOARD_TMPDIR"/Clipboard/"$1"/data/"$2" ]
+  then
+    return 0
   else
     fail "😕 The file $2 doesn't exist in clipboard $1"
   fi
