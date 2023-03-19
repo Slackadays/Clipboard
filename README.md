@@ -11,7 +11,7 @@
     </a>
 </p>
 
-The Clipboard project is a _seriously_ easy-to-use terminal clipboard manager with tons of useful features and _gorgeous_ eye candy.
+The Clipboard project is a _seriously_ easy-to-use clipboard manager with tons of useful features and _gorgeous_ eye candy.
 
 That's nice, but we did even better.
 
