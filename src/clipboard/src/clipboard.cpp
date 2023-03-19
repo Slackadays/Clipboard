@@ -397,7 +397,12 @@ void setupVariables(int& argc, char* argv[]) {
 #endif
     path.home = getenv("USERPROFILE") ? getenv("USERPROFILE") : getenv("HOME");
 
-    no_color = getenv("NO_COLOR") && !getenv("FORCE_COLOR");
+    bool CLICOLOR = getenv("CLICOLOR") && !strcmp(getenv("CLICOLOR"), "0");
+    bool NO_COLOR = getenv("NO_COLOR");
+    bool CLICOLOR_FORCE = getenv("CLICOLOR_FORCE") && strcmp(getenv("CLICOLOR_FORCE"), "0");
+    bool FORCE_COLOR = getenv("FORCE_COLOR");
+
+    no_color = (NO_COLOR || CLICOLOR) && !FORCE_COLOR && !CLICOLOR_FORCE;
 
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
