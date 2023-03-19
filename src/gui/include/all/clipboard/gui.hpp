@@ -44,8 +44,8 @@ enum class ClipboardContentType { Empty, Text, Paths };
 
 class ClipboardContent {
 private:
-    std::string mime_type;
     ClipboardContentType m_type = ClipboardContentType::Empty;
+    std::string mime_type;
     std::variant<std::nullptr_t, std::string, ClipboardPaths> m_data;
 
 public:

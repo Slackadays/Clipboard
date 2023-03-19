@@ -30,13 +30,13 @@ ClipboardPaths::ClipboardPaths(std::vector<fs::path>&& paths, ClipboardPathsActi
 
 ClipboardPaths::ClipboardPaths(const std::vector<fs::path>& paths, ClipboardPathsAction action) : m_action(action), m_paths(paths) {}
 
-ClipboardContent::ClipboardContent(const std::string& text, const std::string& mime) : m_type(ClipboardContentType::Text), m_data(text), mime_type(mime) {}
+ClipboardContent::ClipboardContent(const std::string& text, const std::string& mime) : m_type(ClipboardContentType::Text), mime_type(mime), m_data(text) {}
 
-ClipboardContent::ClipboardContent(std::string&& text, const std::string& mime) : m_type(ClipboardContentType::Text), m_data(std::move(text)), mime_type(mime) {}
+ClipboardContent::ClipboardContent(std::string&& text, const std::string& mime) : m_type(ClipboardContentType::Text), mime_type(mime), m_data(std::move(text)) {}
 
-ClipboardContent::ClipboardContent(const ClipboardPaths& paths) : m_type(ClipboardContentType::Paths), m_data(paths), mime_type("text/uri-list") {}
+ClipboardContent::ClipboardContent(const ClipboardPaths& paths) : m_type(ClipboardContentType::Paths), mime_type("text/uri-list"), m_data(paths) {}
 
-ClipboardContent::ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), m_data(std::move(paths)), mime_type("text/uri-list") {}
+ClipboardContent::ClipboardContent(ClipboardPaths&& paths) : m_type(ClipboardContentType::Paths), mime_type("text/uri-list"), m_data(std::move(paths)) {}
 
 ClipboardContent::ClipboardContent(std::vector<fs::path>&& paths, ClipboardPathsAction action) : ClipboardContent(ClipboardPaths(std::move(paths), action)) {}
 
