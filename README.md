@@ -99,7 +99,7 @@ $ cb
 
 ---
 
-<details><summary><b>Copy</b> &emsp; <code>cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]copy|[-]cp)][(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Copy</b> &emsp; <code>cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]copy|[-]cp)][(num)|_(id)]</code></summary>
 
 ---
 
@@ -152,7 +152,7 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 ---
 
-<details><summary><b>Cut</b> &emsp; <code>cb ([--]cut|[-]ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]cut|[-]ct)][(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Cut</b> &emsp; <code>cb ([--]cut|[-]ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]cut|[-]ct)][(num)|_(id)]</code></summary>
 
 ---
 
@@ -205,7 +205,7 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 ---
 
-<details><summary><b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)` or `cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
+<details><summary> &emsp; <b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)</code> or <code>cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
 
 ---
 
@@ -268,7 +268,7 @@ Note: If you paste after cutting, then Clipboard will delete the raw data afterw
 
 ---
 
-<details><summary><b>Add Contents</b> &emsp; <code>cb ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [([--]add|[-]ad)][(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Add Contents</b> &emsp; <code>cb ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [([--]add|[-]ad)][(num)|_(id)]</code></summary>
 
 ---
 
@@ -311,7 +311,7 @@ $ echo " What's yours?" | cb add
 
 ---
 
-<details><summary><b>Remove Contents</b> &emsp; <code>cb ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [([--]remove|[-]rm)][(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Remove Contents</b> &emsp; <code>cb ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [([--]remove|[-]rm)][(num)|_(id)]</code></summary>
 
 ---
 
@@ -353,7 +353,7 @@ $ echo "music" | cb remove
 
 ---
 
-<details><summary><b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)]</code></summary>
 
 ---
 
@@ -383,7 +383,7 @@ Note: If there is a lot of data, Clipboard may only show enough to fill the term
 
 ---
 
-<details><summary><b>Clear Contents</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Clear Contents</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
 
 ---
 
@@ -402,7 +402,7 @@ $ cb clr # These both work great!
 
 ---
 
-<details><summary><b>Set Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [([--]note|[-]nt)][(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Set Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [([--]note|[-]nt)][(num)|_(id)]</code></summary>
 
 ---
 
@@ -427,7 +427,7 @@ $ cb note ""
 
 ---
 
-<details><summary><b>Show Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)]</code></summary>
+<details><summary> &emsp; <b>Show Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)]</code></summary>
 
 ---
 
@@ -445,7 +445,7 @@ $ cb note
 
 ---
 
-<details><summary><b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code></summary>
+<details><summary> &emsp; <b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code></summary>
 
 ---
 
@@ -460,7 +460,7 @@ $ cb -h # These three versions all work great!
 
 ---
 
-<details><summary><b>Check Clipboard Status</b> &emsp; <code>cb [[--]status|[-]st]</code></summary>
+<details><summary> &emsp; <b>Check Clipboard Status</b> &emsp; <code>cb [[--]status|[-]st]</code></summary>
 
 ---
 
