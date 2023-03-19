@@ -477,59 +477,59 @@ $ cb # These all work great!
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
-**`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
+ &emsp; **`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
 
 ---
 
-**`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+ &emsp; **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
 
 ---
 
-**`--no-progress`, `-np`** &emsp; Add this to disable progress messages from Clipboard.
+ &emsp; **`--no-progress`, `-np`** &emsp; Add this to disable progress messages from Clipboard.
 
 ### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=25px />
 
-**`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+ &emsp; **`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
 ---
 
-**`CLIPBOARD_LOCALE`** &emsp; Set this to the locale that only Clipboard will use for its commands and output, like `en_US.UTF-8` or `es_DO.UTF-8`.
+ &emsp; **`CLIPBOARD_LOCALE`** &emsp; Set this to the locale that only Clipboard will use for its commands and output, like `en_US.UTF-8` or `es_DO.UTF-8`.
 
 ---
 
-**`CLIPBOARD_TMPDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
+ &emsp; **`CLIPBOARD_TMPDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
 
 ---
 
-**`CLIPBOARD_PERSISTDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
+ &emsp; **`CLIPBOARD_PERSISTDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
 
 ---
 
-**`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to anything to make Clipboard always use persistent clipboards.
+ &emsp; **`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to anything to make Clipboard always use persistent clipboards.
 
 ---
 
-**`CLIPBOARD_NOGUI`** &emsp; Set this to anything to disable integration with GUI clipboards.
+ &emsp; **`CLIPBOARD_NOGUI`** &emsp; Set this to anything to disable integration with GUI clipboards.
 
 ---
 
-**`CLIPBOARD_NOPROGRESS`** &emsp; Set this to anything to disable only progress messages from Clipboard.
+ &emsp; **`CLIPBOARD_NOPROGRESS`** &emsp; Set this to anything to disable only progress messages from Clipboard.
 
 ---
 
-**`CLIPBOARD_SILENT`** &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.
+ &emsp; **`CLIPBOARD_SILENT`** &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.
 
 ---
 
-**`CLIPBOARD_THEME`** &emsp; Set this to the color theme that Clipboard will use. Choose between `light`, `darkhighcontrast`, `lighthighcontrast`, `amber`, and `green` (the default is `dark`).
+ &emsp; **`CLIPBOARD_THEME`** &emsp; Set this to the color theme that Clipboard will use. Choose between `light`, `darkhighcontrast`, `lighthighcontrast`, `amber`, and `green` (the default is `dark`).
 
 ---
 
-**`FORCE_COLOR`** &emsp; Set this to anything to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+ &emsp; **`FORCE_COLOR`** &emsp; Set this to anything to make Clipboard always show color regardless of what you set `NO_COLOR` to.
 
 ---
 
-**`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
+ &emsp; **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
