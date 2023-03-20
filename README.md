@@ -61,20 +61,28 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 pkg add clipboard
 ```
 
+---
+
 **AUR** (you can also get `clipboard-bin` and `clipboard-git`)
 ```sh
 sudo pacman -S clipboard
 ```
+
+---
 
 **Homebrew**
 ```sh
 brew install clipboard
 ```
 
+---
+
 **Scoop**
 ```powershell
 scoop install clipboard
 ```
+
+---
 
 **Void Linux**
 ```sh
