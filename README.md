@@ -36,6 +36,7 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 - **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
 - **Fan of creativity? Say no more as you can choose any of several color themes to make Clipboard look exactly how you want.**
 - **Addicted to technical details? Have we got something real good for you, as Clipboard is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
+- **Still not convinced? What if you were told you could easily script Clipboard to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
 
 </details>
 
