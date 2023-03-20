@@ -571,4 +571,4 @@ Say thank you to all the contributors who have helped make Clipboard great[.](ht
 
 If you're feeling generous, feel free to give us a :star:! Every single one helps.
 
-<p align="right"><sup><sub><code>cb copy haters && cb > /dev/null</code></sub></sup></p>
+<p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
