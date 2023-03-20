@@ -1,5 +1,15 @@
 ### ![Clipboard by Jackson Huff](documentation/readme-assets/CBBanner.png)
 
+The Clipboard project is a _ridiculously_ easy-to-use data management tool with tons of useful features and _gorgeous_ eye candy.
+
+That's underselling it a bit.
+
+Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and anywhere**. Have a telepath with a perfect memory always by your side. Feel the sheer power flowing through your body as you cut, copy, paste, add, remove, and make note of **anything** that dares lay in your terminal at the mere press of a button. You'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
+
+<p align="center"> 
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
+</p>
+
 <p align="center">
     <a href="https://github.com/Slackadays/Clipboard/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/build-clipboard.yml?branch=main&label=BUILDS&style=for-the-badge">
@@ -9,16 +19,6 @@
     <a href="https://app.codecov.io/gh/Slackadays/Clipboard">
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2">
     </a>
-</p>
-
-The Clipboard project is a _seriously_ easy-to-use clipboard manager with tons of useful features and _gorgeous_ eye candy.
-
-That's nice, but we did even better.
-
-Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and anywhere**. Have a psychic with a perfect memory always by your side. Cut, copy, paste, add, remove, and make note of **anything** that dares lay in your terminal at the mere press of a button. You'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
-
-<p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
 </p>
 
 ![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
