@@ -56,6 +56,31 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 
 <a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status"></a>
 
+**Alpine** (you'll need to enable the Community packages first)
+```sh
+pkg add clipboard
+```
+
+**AUR** (you can also get `clipboard-bin` and `clipboard-git`)
+```sh
+sudo pacman -S clipboard
+```
+
+**Homebrew**
+```sh
+brew install clipboard
+```
+
+**Scoop**
+```powershell
+scoop install clipboard
+```
+
+**Void Linux**
+```sh
+sudo xbps-install -S clipboard
+```
+
 You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
 
 ---
