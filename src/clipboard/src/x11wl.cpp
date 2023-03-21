@@ -88,11 +88,11 @@ ClipboardContent getGUIClipboard() {
         ClipboardContent clipboard;
 
         if (clipboard.type() == ClipboardContentType::Empty) {
-            clipboard = dynamicGetGUIClipboard(objectWayland, symbolGetWaylandClipboard);
+            clipboard = dynamicGetGUIClipboard(objectX11, symbolGetX11Clipboard);
         }
 
         if (clipboard.type() == ClipboardContentType::Empty) {
-            clipboard = dynamicGetGUIClipboard(objectX11, symbolGetX11Clipboard);
+            clipboard = dynamicGetGUIClipboard(objectWayland, symbolGetWaylandClipboard);
         }
 
         return clipboard;
@@ -105,8 +105,8 @@ ClipboardContent getGUIClipboard() {
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
-        dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard);
         dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard);
+        dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard);
 
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
