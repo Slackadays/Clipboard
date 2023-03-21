@@ -166,7 +166,7 @@ bool userIsARobot() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action != Paste && action != Show && action != Note;
+    return action != Paste && action != Show && action != Note && action != Status;
 }
 
 bool isAClearingAction() {
