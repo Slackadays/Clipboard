@@ -116,7 +116,7 @@ static void setWaylandClipboardInternal(const WriteGuiContext& context) {
         try {
             PasteDaemon daemon {context.clipboard};
             daemon.run();
-        } catch (const std::exception& e) {
+        } catch(const std::exception& e) {
             kill(getppid(), SIGUSR2);
             throw e;
         }

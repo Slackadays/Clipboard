@@ -23,12 +23,12 @@
 #include <optional>
 #include <ranges>
 #include <set>
-#include <signal.h>
 #include <string_view>
 #include <thread>
 #include <utility>
 #include <variant>
 #include <vector>
+#include <signal.h>
 
 #include "clipboard/x11wl/mime.hpp"
 #include <X11/Xlib.h>

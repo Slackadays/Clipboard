@@ -313,6 +313,7 @@ ClipboardContent thisClipboard() {
         return ClipboardContent(ClipboardPaths(std::move(paths)));
     }
 
+    std::cout << "Returning empty clipboard content" << std::endl;
     return {};
 }
 

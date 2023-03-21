@@ -16,8 +16,8 @@
 #include <clipboard/logging.hpp>
 #include <dlfcn.h>
 #include <optional>
-#include <signal.h>
 #include <type_traits>
+#include <signal.h>
 
 constexpr auto objectX11 = "libclipboardx11.so";
 constexpr auto symbolGetX11Clipboard = "getX11Clipboard";
@@ -81,7 +81,7 @@ static bool dynamicSetGUIClipboard(const char* object, const char* symbol, const
             .clipboard = clipboard,
     };
 
-    // create a sig struct to wait for SIGUSR1 and SIGUSR2
+    //create a sig struct to wait for SIGUSR1 and SIGUSR2
     sigset_t sigset;
     sigemptyset(&sigset);
     sigaddset(&sigset, SIGUSR1);
@@ -120,9 +120,10 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
         if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard)) {
             debugStream << "Failed to set clipboard data on Wayland, trying X11" << std::endl;
-
+            
             dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard);
         }
+        
 
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
