@@ -28,6 +28,7 @@
 #include <utility>
 #include <variant>
 #include <vector>
+#include <signal.h>
 
 #include "clipboard/x11wl/mime.hpp"
 #include <X11/Xlib.h>
@@ -1234,6 +1235,8 @@ bool X11SelectionDaemon::handleRegularSelectionRequest(const X11SelectionRequest
 void X11SelectionDaemon::run() {
     debugStream << "Starting persistent paste daemon" << std::endl;
 
+    kill(getppid(), SIGUSR1);
+
     while (true) {
         auto event = nextEvent();
         handle(event);
@@ -1277,10 +1280,15 @@ static ClipboardContent getX11ClipboardInternal() {
 }
 
 static void startPasteDaemon(const ClipboardContent& clipboard) {
-    X11Connection conn;
-    X11SelectionDaemon daemon {conn, conn.atom(atomClipboard), clipboard};
-    XSynchronize(conn.display(), True);
-    daemon.run();
+    try {
+        X11Connection conn;
+        X11SelectionDaemon daemon {conn, conn.atom(atomClipboard), clipboard};
+        XSynchronize(conn.display(), True);
+        daemon.run();
+    } catch (const std::exception& e) {
+        debugStream << "Error starting X11 paste daemon: " << e.what() << std::endl;
+        kill(getppid(), SIGUSR2);
+    }
 }
 
 static void setX11ClipboardInternal(const WriteGuiContext& context) {

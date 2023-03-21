@@ -166,7 +166,7 @@ bool userIsARobot() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action != Paste && action != Show && action != Note;
+    return action != Paste && action != Show && action != Note && action != Status;
 }
 
 bool isAClearingAction() {
@@ -290,7 +290,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     }
 }
 
-[[nodiscard]] ClipboardContent thisClipboard() {
+ClipboardContent thisClipboard() {
     if (fs::exists(path.metadata.originals) && GUIClipboardSupportsCut) {
         std::ifstream originalFiles {path.metadata.originals};
         std::vector<fs::path> files;
@@ -313,6 +313,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         return ClipboardContent(ClipboardPaths(std::move(paths)));
     }
 
+    std::cout << "Returning empty clipboard content" << std::endl;
     return {};
 }
 

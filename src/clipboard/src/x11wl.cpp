@@ -17,6 +17,7 @@
 #include <dlfcn.h>
 #include <optional>
 #include <type_traits>
+#include <signal.h>
 
 constexpr auto objectX11 = "libclipboardx11.so";
 constexpr auto symbolGetX11Clipboard = "getX11Clipboard";
@@ -74,13 +75,25 @@ static ClipboardContent dynamicGetGUIClipboard(const char* object, const char* s
     return *x11wlClipboard;
 }
 
-static void dynamicSetGUIClipboard(const char* object, const char* symbol, const ClipboardContent& clipboard) {
+static bool dynamicSetGUIClipboard(const char* object, const char* symbol, const ClipboardContent& clipboard) {
     WriteGuiContext context {
             .forker = forker,
             .clipboard = clipboard,
     };
+
+    //create a sig struct to wait for SIGUSR1 and SIGUSR2
+    sigset_t sigset;
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIGUSR1);
+    sigaddset(&sigset, SIGUSR2);
+    sigprocmask(SIG_BLOCK, &sigset, nullptr);
+
+    int sig;
+
     auto ptr = reinterpret_cast<void*>(&context);
     dynamicCall<setClipboard_t>(object, symbol, ptr);
+    sigwait(&sigset, &sig);
+    return sig == SIGUSR1;
 }
 
 ClipboardContent getGUIClipboard() {
@@ -105,8 +118,12 @@ ClipboardContent getGUIClipboard() {
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
-        dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard);
-        dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard);
+        if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard)) {
+            debugStream << "Failed to set clipboard data on Wayland, trying X11" << std::endl;
+            
+            dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard);
+        }
+        
 
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;

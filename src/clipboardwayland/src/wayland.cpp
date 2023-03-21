@@ -20,6 +20,7 @@
 #include <clipboard/fork.hpp>
 #include <clipboard/gui.hpp>
 #include <clipboard/logging.hpp>
+#include <signal.h>
 
 #include <exception>
 
@@ -75,6 +76,8 @@ public:
             m_dataDevice.setSelection(m_dataSource, serial);
         }
 
+        kill(getppid(), SIGUSR1);
+
         while (!m_dataSource.isCancelled())
             m_display.dispatch();
     }
@@ -110,8 +113,13 @@ static ClipboardContent getWaylandClipboardInternal() {
 
 static void setWaylandClipboardInternal(const WriteGuiContext& context) {
     context.forker.fork([&]() {
-        PasteDaemon daemon {context.clipboard};
-        daemon.run();
+        try {
+            PasteDaemon daemon {context.clipboard};
+            daemon.run();
+        } catch(const std::exception& e) {
+            kill(getppid(), SIGUSR2);
+            throw e;
+        }
     });
 }
 
