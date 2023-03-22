@@ -622,4 +622,4 @@ Say thank you to all our beautiful contributors who have helped make Clipboard i
 
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
 
-<p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
+<p align="right"><sub><sub><code>cb copy haters && cb > /dev/null</code></sub></sub></p>
