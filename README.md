@@ -567,8 +567,10 @@ Go to [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for mor
 
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
-Say thank you to all the contributors who have helped make Clipboard great[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
+Say thank you to all our beautiful contributors who have helped make Clipboard incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
 
-If you're feeling generous, feel free to give us a :star:! Every single one helps.
+Want to help out? We're always accepting new contributions.
+
+And if you're feeling generous, feel free to give us a :star:! Every single one helps.
 
 <p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
