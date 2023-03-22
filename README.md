@@ -522,7 +522,7 @@ $ cb cp_phi ϕ
 Copy a password securely by deleting it once you've pasted it.
 
 ```sh
-$ cb cp "AReallyStrongPassword!"
+$ cb cut "AReallyStrongPassword!"
 $ cb | some-program
 # Now gone
 ```
