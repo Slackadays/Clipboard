@@ -559,7 +559,7 @@ $ cb # These all work great!
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG)! 
+Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [the Discord group](https://discord.gg/J6asnc3pEG)! 
 
 [![Clipboard Wiki](https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge)](https://github.com/Slackadays/Clipboard/wiki)
 [![Questions? Just ask](https://img.shields.io/badge/Questions%3F-Ask%20Away-red?style=for-the-badge)](https://github.com/Slackadays/Clipboard/discussions)
@@ -570,6 +570,6 @@ Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for
 Say thank you to all our beautiful contributors who have helped make Clipboard incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
  Want to join the club? We're always accepting new contributions too.
 
-And if you're feeling generous, feel free to give us a :star:! We appreciate every single one, including yours.
+And if you're feeling generous, feel free to give us a :star:! Every single one matters - including yours.
 
 <p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
