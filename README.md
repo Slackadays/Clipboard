@@ -105,25 +105,35 @@ Remove all the files in `install_manifest.txt`. If you're not using Windows, you
 
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
-Add a number to the end of your action to choose which clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
-
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
 ```
 $ cb copy NuclearLaunchCodes.pdf
 $ cb note "Keep this a secret"
+$ echo "Keep this a secret OR ELSE" | cb note
+$ cb paste
+
 $ cb cut69 MyDirectory
 $ cb add69 SomeFile
-$ cb cp_420 foo.conf NotAVirus.bar.mp3.exe baz.txt
+$ cb remove69 SomeFile
+$ cb paste69
+
+$ cb cp_420 foo.bar NotAVirus.bar.mp3.exe
 $ cb remove_420 "*.mp3\.exe"
-$ cb show_420
+$ cb note_420 "Some kosher content here"
+$ cb sh_420
+
 $ cb note
 $ cb clr
-$ cb status
+$ cb note_420
 $ cb
 ```
 
 ---
+
+### <img src="documentation/readme-assets/Actions.png" alt="Actions" height=25px />
+
+Add a number to the end of your action to choose which clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
 
 <details><summary> &ensp; <b>Copy</b> &emsp; <code>cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]copy|[-]cp)][(num)|_(id)]</code></summary>
 
@@ -498,6 +508,46 @@ $ cb # These all work great!
 ```
 
 </details>
+
+---
+
+### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Actions" height=25px />
+
+Need to often paste a funky symbol somewhere? Just copy it to a persistent clipboard.
+
+```sh
+$ cb cp_phi ϕ
+```
+
+Copy a password securely by deleting it once you've pasted it.
+
+```sh
+$ cb cp "AReallyStrongPassword!"
+$ cb | some-program
+# Now gone
+```
+
+On a slow system? Cache certain things so you don't have to do them again.
+
+```sh
+$ neofetch | cb cp_neo
+$ cb | cat
+```
+
+Make your own scripts that can fully automate your workflows.
+
+```sh
+#!/bin/sh
+# This script does nothing except serve as an example of automating Clipboard.
+link="https://SomeWebsiteWithLotsOfContent"
+wget link
+cb copy *.jpg *.png
+cb remove "AZ.*\.png"
+cb | tar -cf foobar.tar
+cb -c footar < foobar.tar
+cb note "Latest files from website ABCXYZ"
+```
+
 
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
