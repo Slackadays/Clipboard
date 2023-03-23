@@ -621,5 +621,7 @@ Say thank you to all our beautiful contributors who have helped make Clipboard i
  Want to join the club? We're always accepting new contributions too.
 
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
+    
+<br>
 
-<p align="right"><sub><sub><code>cb copy haters && cb > /dev/null</code></sub></sub></p>
+<p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
