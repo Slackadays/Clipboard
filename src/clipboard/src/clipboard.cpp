@@ -102,7 +102,7 @@ bool stopIndicator(bool change_condition_variable) {
     return true;
 }
 
-TerminalSize getTerminalSize() {
+TerminalSize thisTerminalSize() {
 #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -207,6 +207,10 @@ std::string formatBytes(const auto& bytes) {
     if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
     if (bytes < (1024 * 1024 * 1024)) return std::to_string(bytes / (1024.0 * 1024.0)) + "MB";
     return std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
+}
+
+std::string stripFormatCharacters(const std::string& input) {
+    return std::regex_replace(input, std::regex("\033\\[[0-9;]*[mhl]"), "");
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -704,10 +708,10 @@ void updateGUIClipboard() {
 
 void showFailures() {
     if (copying.failedItems.size() <= 0) return;
-    TerminalSize available(getTerminalSize());
-    available.accountRowsFor(clipboard_failed_many_message().length());
+    TerminalSize available(thisTerminalSize());
+    available.rows -= stripFormatCharacters(clipboard_failed_many_message()).length() / available.columns;
 
-    if (copying.failedItems.size() > available.rows) available.accountRowsFor(and_more_fails_message().length());
+    if (copying.failedItems.size() > available.rows) available.rows -= stripFormatCharacters(and_more_fails_message()).length() / available.columns;
 
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());

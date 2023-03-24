@@ -133,7 +133,7 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info };
 
 extern Action action;
 
@@ -147,10 +147,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 11> actions;
-extern EnumArray<std::string_view, 11> action_shortcuts;
-extern EnumArray<std::string_view, 11> doing_action;
-extern EnumArray<std::string_view, 11> did_action;
+extern EnumArray<std::string_view, 12> actions;
+extern EnumArray<std::string_view, 12> action_shortcuts;
+extern EnumArray<std::string_view, 12> doing_action;
+extern EnumArray<std::string_view, 12> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
@@ -159,10 +159,6 @@ public:
     size_t rows;
     size_t columns;
     TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
-    unsigned int accountRowsFor(const auto&... args) {
-        ((rows -= (static_cast<unsigned int>(args) / columns) + 1), ...);
-        return columns;
-    }
 };
 
 static std::string replaceColors(const std::string_view& str, bool colorful = !no_color) {
@@ -226,6 +222,7 @@ extern Message many_files_one_directory_success_message;
 extern Message many_files_many_directories_success_message;
 extern Message internal_error_message;
 
+std::string stripFormatCharacters(const std::string& input);
 void releaseLock();
 void setLanguagePT();
 void setLanguageTR();
@@ -251,7 +248,7 @@ void deduplicateItems();
 unsigned long long calculateTotalItemSize();
 bool stopIndicator(bool change_condition_variable = true);
 void checkItemSize();
-TerminalSize getTerminalSize();
+TerminalSize thisTerminalSize();
 void clearTempDirectory(bool force_clear);
 void copyFiles();
 void removeOldFiles();

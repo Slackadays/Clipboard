@@ -141,7 +141,6 @@ void clear() {
 void show() {
     stopIndicator();
     if (fs::is_directory(path.data) && !fs::is_empty(path.data)) {
-        TerminalSize termSpaceRemaining(getTerminalSize());
         if (fs::is_regular_file(path.data.raw)) {
             std::string content(fileContents(path.data.raw));
             std::erase(content, '\n');
@@ -157,7 +156,7 @@ void show() {
         for (auto dummy : fs::directory_iterator(path.data))
             total_items++;
 
-        size_t rowsAvailable = termSpaceRemaining.accountRowsFor(clipboard_item_many_contents_message().length());
+        size_t rowsAvailable = thisTerminalSize().rows - (stripFormatCharacters(clipboard_item_many_contents_message()).length() / thisTerminalSize().columns);
         rowsAvailable -= 3;
         printf(total_items > rowsAvailable ? clipboard_item_too_many_contents_message().data() : clipboard_item_many_contents_message().data(),
                std::min(rowsAvailable, total_items),
@@ -331,18 +330,16 @@ void status() {
         printf("%s", no_clipboard_contents_message().data());
         printf("%s", clipboard_action_prompt().data());
     } else {
-        TerminalSize termSizeAvailable(getTerminalSize());
+        TerminalSize available(thisTerminalSize());
 
-        termSizeAvailable.accountRowsFor(check_clipboard_status_message().size());
-        if (clipboards_with_contents.size() > termSizeAvailable.rows) {
-            termSizeAvailable.accountRowsFor(and_more_items_message().size());
-        }
+        available.rows -= stripFormatCharacters(check_clipboard_status_message()).length() / available.columns;
+        if (clipboards_with_contents.size() > available.rows) available.rows -= stripFormatCharacters(and_more_items_message()).length() / available.columns;
 
         printf("%s", check_clipboard_status_message().data());
 
-        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), termSizeAvailable.rows); clipboard++) {
+        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), available.rows); clipboard++) {
 
-            int widthRemaining = termSizeAvailable.columns
+            int widthRemaining = available.columns
                                  - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
                                     + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
             printf(replaceColors("[bold][info]▏ %s%s: [blank]").data(),
@@ -376,9 +373,9 @@ void status() {
             }
             printf("\n");
         }
-        if (clipboards_with_contents.size() > termSizeAvailable.rows) {
-            printf(and_more_items_message().data(), clipboards_with_contents.size() - termSizeAvailable.rows);
-        }
+        if (clipboards_with_contents.size() > available.rows) printf(and_more_items_message().data(), clipboards_with_contents.size() - available.rows);
     }
 }
+
+void info() {}
 } // namespace PerformAction
