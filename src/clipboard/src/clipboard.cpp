@@ -364,25 +364,21 @@ void setLocale() {
         setLanguageTR();
 }
 
-void setClipboardName() {
-    if (arguments.empty()) return;
-    std::string temp = arguments.at(0);
-    if (temp.find_first_of("_") != std::string::npos) {
-        clipboard_name = temp.substr(temp.find_first_of("_"));
-        copying.is_persistent = true;
-    } else if (temp.find_first_of("0123456789") != std::string::npos) {
-        clipboard_name = temp.substr(temp.find_first_of("0123456789"));
-    } else {
-        return;
-    }
-    arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - clipboard_name.length());
-}
-
 void setClipboardName(const std::string& name) {
     if (!name.empty()) {
         clipboard_name = name;
         if (clipboard_name.find_first_of("_") != std::string::npos) copying.is_persistent = true;
     }
+}
+
+void setClipboardName() {
+    if (arguments.empty()) return;
+    std::string temp = arguments.at(0);
+    if (temp.find_first_of("_0123456789") != std::string::npos)
+        setClipboardName(temp.substr(temp.find_first_of("_0123456789")));
+    else
+        return;
+    arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - clipboard_name.length());
 }
 
 void setupVariables(int& argc, char* argv[]) {
