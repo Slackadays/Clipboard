@@ -381,11 +381,9 @@ void setClipboardName() {
 void setClipboardName(const std::string& name) {
     if (!name.empty()) {
         clipboard_name = name;
-        if (clipboard_name.find_first_of("_") != std::string::npos)
-            copying.is_persistent = true;
+        if (clipboard_name.find_first_of("_") != std::string::npos) copying.is_persistent = true;
     }
 }
-
 
 void setupVariables(int& argc, char* argv[]) {
     is_tty.in = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdin));
