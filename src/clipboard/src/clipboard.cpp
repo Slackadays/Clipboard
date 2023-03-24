@@ -365,10 +365,9 @@ void setLocale() {
 }
 
 void setClipboardName(const std::string& name) {
-    if (!name.empty()) {
-        clipboard_name = name;
-        if (clipboard_name.find_first_of("_") != std::string::npos) copying.is_persistent = true;
-    }
+    if (name.empty()) return;
+    clipboard_name = name;
+    if (clipboard_name.find_first_of("_") != std::string::npos) copying.is_persistent = true;
 }
 
 void setClipboardName() {
@@ -630,19 +629,18 @@ void checkItemSize(unsigned long long total_item_size) {
 }
 
 void removeOldFiles() {
-    if (fs::is_regular_file(path.metadata.originals)) {
-        std::ifstream files(path.metadata.originals);
-        std::string line;
-        while (std::getline(files, line)) {
-            try {
-                fs::remove_all(line);
-            } catch (const fs::filesystem_error& e) {
-                copying.failedItems.emplace_back(line, e.code());
-            }
+    if (!fs::is_regular_file(path.metadata.originals)) return;
+    std::ifstream files(path.metadata.originals);
+    std::string line;
+    while (std::getline(files, line)) {
+        try {
+            fs::remove_all(line);
+        } catch (const fs::filesystem_error& e) {
+            copying.failedItems.emplace_back(line, e.code());
         }
-        files.close();
-        if (copying.failedItems.empty()) fs::remove(path.metadata.originals);
     }
+    files.close();
+    if (copying.failedItems.empty()) fs::remove(path.metadata.originals);
 }
 
 void performAction() {
@@ -705,22 +703,19 @@ void updateGUIClipboard() {
 }
 
 void showFailures() {
-    if (copying.failedItems.size() > 0) {
-        TerminalSize available(getTerminalSize());
-        available.accountRowsFor(clipboard_failed_many_message().length());
+    if (copying.failedItems.size() <= 0) return;
+    TerminalSize available(getTerminalSize());
+    available.accountRowsFor(clipboard_failed_many_message().length());
 
-        if (copying.failedItems.size() > available.rows) available.accountRowsFor(and_more_fails_message().length());
+    if (copying.failedItems.size() > available.rows) available.accountRowsFor(and_more_fails_message().length());
 
-        available.rows -= 3;
-        printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
-        for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-
-            printf(replaceColors("[error]▏ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
-
-            if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
-        }
-        printf("%s", fix_problem_message().data());
+    available.rows -= 3;
+    printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
+    for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
+        printf(replaceColors("[error]▏ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+        if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
     }
+    printf("%s", fix_problem_message().data());
 }
 
 void showSuccesses() {
