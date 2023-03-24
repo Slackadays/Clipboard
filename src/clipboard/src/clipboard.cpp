@@ -365,20 +365,27 @@ void setLocale() {
 }
 
 void setClipboardName() {
-    if (arguments.size() >= 1) {
-        clipboard_name = arguments.at(0);
-        if (clipboard_name.find_first_of("_") != std::string::npos) {
-            clipboard_name = clipboard_name.substr(clipboard_name.find_first_of("_") + 1);
+    if (arguments.empty()) return;
+    std::string temp = arguments.at(0);
+    if (temp.find_first_of("_") != std::string::npos) {
+        clipboard_name = temp.substr(temp.find_first_of("_"));
+        copying.is_persistent = true;
+    } else if (temp.find_first_of("0123456789") != std::string::npos) {
+        clipboard_name = temp.substr(temp.find_first_of("0123456789"));
+    } else {
+        return;
+    }
+    arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - clipboard_name.length());
+}
+
+void setClipboardName(const std::string& name) {
+    if (!name.empty()) {
+        clipboard_name = name;
+        if (clipboard_name.find_first_of("_") != std::string::npos)
             copying.is_persistent = true;
-        } else {
-            clipboard_name = clipboard_name.substr(clipboard_name.find_last_not_of("0123456789") + 1);
-        }
-        if (clipboard_name.empty())
-            clipboard_name = constants.default_clipboard_name;
-        else
-            arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - (clipboard_name.length() + copying.is_persistent));
     }
 }
+
 
 void setupVariables(int& argc, char* argv[]) {
     is_tty.in = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdin));
@@ -491,7 +498,7 @@ void setFlags() {
         printf("%s", replaceColors("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
-    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
+    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") setClipboardName(flag);
     if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") clipboard_name = flag;
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
