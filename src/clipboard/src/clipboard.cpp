@@ -209,10 +209,6 @@ std::string formatBytes(const auto& bytes) {
     return std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
-std::string stripFormatCharacters(const std::string& input) {
-    return std::regex_replace(input, std::regex("\033\\[[0-9;]*[mhl]"), "");
-}
-
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
     using enum CopyPolicy;
 
@@ -709,9 +705,9 @@ void updateGUIClipboard() {
 void showFailures() {
     if (copying.failedItems.size() <= 0) return;
     TerminalSize available(thisTerminalSize());
-    available.rows -= stripFormatCharacters(clipboard_failed_many_message()).length() / available.columns;
+    available.rows -= clipboard_failed_many_message.rawLength() / available.columns;
 
-    if (copying.failedItems.size() > available.rows) available.rows -= stripFormatCharacters(and_more_fails_message()).length() / available.columns;
+    if (copying.failedItems.size() > available.rows) available.rows -= and_more_fails_message.rawLength() / available.columns;
 
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());

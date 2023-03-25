@@ -18,6 +18,7 @@
 #include <condition_variable>
 #include <filesystem>
 #include <mutex>
+#include <regex>
 #include <string_view>
 #include <thread>
 #include <vector>
@@ -185,6 +186,7 @@ private:
 public:
     Message(const auto& message) : internal_message(std::move(message)) {}
     std::string operator()() const { return std::move(replaceColors(internal_message)); }
+    size_t rawLength() const { return std::regex_replace(std::string(internal_message), std::regex("\\[[a-z]+\\]"), "").length(); }
 };
 
 extern Message help_message;
@@ -222,7 +224,6 @@ extern Message many_files_one_directory_success_message;
 extern Message many_files_many_directories_success_message;
 extern Message internal_error_message;
 
-std::string stripFormatCharacters(const std::string& input);
 void releaseLock();
 void setLanguagePT();
 void setLanguageTR();

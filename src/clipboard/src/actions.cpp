@@ -156,7 +156,7 @@ void show() {
         for (auto dummy : fs::directory_iterator(path.data))
             total_items++;
 
-        size_t rowsAvailable = thisTerminalSize().rows - (stripFormatCharacters(clipboard_item_many_contents_message()).length() / thisTerminalSize().columns);
+        size_t rowsAvailable = thisTerminalSize().rows - (clipboard_item_many_contents_message.rawLength() / thisTerminalSize().columns);
         rowsAvailable -= 3;
         printf(total_items > rowsAvailable ? clipboard_item_too_many_contents_message().data() : clipboard_item_many_contents_message().data(),
                std::min(rowsAvailable, total_items),
@@ -332,8 +332,8 @@ void status() {
     } else {
         TerminalSize available(thisTerminalSize());
 
-        available.rows -= stripFormatCharacters(check_clipboard_status_message()).length() / available.columns;
-        if (clipboards_with_contents.size() > available.rows) available.rows -= stripFormatCharacters(and_more_items_message()).length() / available.columns;
+        available.rows -= check_clipboard_status_message.rawLength() / available.columns;
+        if (clipboards_with_contents.size() > available.rows) available.rows -= and_more_items_message.rawLength() / available.columns;
 
         printf("%s", check_clipboard_status_message().data());
 
