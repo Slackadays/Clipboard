@@ -513,10 +513,10 @@ $ cb # These all work great!
 
 ### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Actions" height=25px />
 
-Need to often paste a funky symbol somewhere? Just copy it to a persistent clipboard.
+Need to paste a funky symbol somewhere a lot? Just copy it to a persistent clipboard.
 
 ```sh
-$ cb cp_phi ϕ
+$ cb cp_amog ඞ
 ```
 
 Copy a password securely by deleting it once you've pasted it.
