@@ -316,4 +316,5 @@ void notePipe();
 void swap();
 void addFiles();
 void status();
+void info();
 } // namespace PerformAction

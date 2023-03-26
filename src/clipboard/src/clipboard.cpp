@@ -472,7 +472,7 @@ template <typename T>
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status}) {
+        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 return entry;
             }
@@ -500,6 +500,8 @@ IOType getIOType() {
         if (!is_tty.in) return Pipe;
     } else if (action == Note) {
         if (!is_tty.in && copying.items.size() == 0) return Pipe;
+        return Text;
+    } else if (action == Info) {
         return Text;
     }
     return File;
@@ -693,6 +695,8 @@ void performAction() {
             removeRegex();
         else if (action == Note)
             noteText();
+        else if (action == Info)
+            info();
     }
 }
 

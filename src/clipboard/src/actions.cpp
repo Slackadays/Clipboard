@@ -367,5 +367,16 @@ void status() {
     }
 }
 
-void info() {}
+void info() {
+    // display the following information:
+    // clipboard name
+    // number of files and directories or bytes
+    // last write time
+    // filesystem location
+    // locked or not and the pid of the locking process
+    // saved note
+
+    fprintf(stderr, replaceColors("[info]• Clipboard name: [help]%s[blank]\n").data(), clipboard_name.data());
+    
+}
 } // namespace PerformAction
