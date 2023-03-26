@@ -377,6 +377,5 @@ void info() {
     // saved note
 
     fprintf(stderr, replaceColors("[info]• Clipboard name: [help]%s[blank]\n").data(), clipboard_name.data());
-    
 }
 } // namespace PerformAction
