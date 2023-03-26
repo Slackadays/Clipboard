@@ -38,42 +38,84 @@ namespace fs = std::filesystem;
 
 extern Forker forker;
 
-struct Filepath {
+struct GlobalFilepaths {
+    fs::path temporary;
+    fs::path persistent;
+    fs::path home;
+};
+extern GlobalFilepaths global_path;
+
+struct Constants {
+    std::string_view clipboard_version = CLIPBOARD_VERSION;
+    std::string_view clipboard_commit = GIT_COMMIT_HASH;
+    std::string_view data_file_name = "rawdata.clipboard";
+    std::string_view default_clipboard_name = "0";
+    std::string_view temporary_directory_name = "Clipboard";
+    std::string_view persistent_directory_name = ".clipboard";
+    std::string_view original_files_name = "originals";
+    std::string_view notes_name = "notes";
+    std::string_view mime_name = "mime";
+    std::string_view lock_name = "lock";
+    std::string_view data_directory = "data";
+    std::string_view metadata_directory = "metadata";
+};
+constexpr Constants constants;
+
+bool isPersistent(const std::string& clipboard);
+
+class Clipboard {
+    fs::path root;
+
+    public:
     class DataDirectory {
-        fs::path self;
+        fs::path root;
 
     public:
         fs::path raw;
-        operator fs::path() { return self; }
-        operator fs::path() const { return self; }
-        auto operator=(const auto& other) { return self = other; }
-        auto operator/(const auto& other) { return self / other; }
+
+        operator fs::path() { return root; }
+        operator fs::path() const { return root; }
+        auto operator=(const auto& other) { return root = other; }
+        auto operator/(const auto& other) { return root / other; }
     } data;
 
     class MetadataDirectory {
-        fs::path self;
+        fs::path root;
 
     public:
         fs::path notes;
         fs::path originals;
         fs::path lock;
-        operator fs::path() { return self; }
-        operator fs::path() const { return self; }
-        auto operator=(const auto& other) { return self = other; }
-        auto operator/(const auto& other) { return self / other; }
+        operator fs::path() { return root; }
+        operator fs::path() const { return root; }
+        auto operator=(const auto& other) { return root = other; }
+        auto operator/(const auto& other) { return root / other; }
     } metadata;
-    fs::path temporary;
-    fs::path persistent;
-    fs::path root;
-    fs::path home;
 
-    void create() {
-        [](const auto&... path) {
-            (fs::create_directories(path), ...);
-        }(data, metadata, temporary, persistent);
+    Clipboard(const auto& clipboard_name) {
+        root = (isPersistent(clipboard_name) ? global_path.persistent : global_path.temporary) / clipboard_name;
+
+        data = root / constants.data_directory;
+
+        metadata = root / constants.metadata_directory;
+
+        data.raw = data / constants.data_file_name;
+
+        metadata.notes = metadata / constants.notes_name;
+
+        metadata.originals = metadata / constants.original_files_name;
+
+        metadata.lock = metadata / constants.lock_name;
+
+        fs::create_directories(data);
+        fs::create_directories(metadata);
     }
+    operator fs::path() { return root; }
+    operator fs::path() const { return root; }
+    auto operator=(const auto& other) { return root = other; }
+    auto operator/(const auto& other) { return root / other; }
 };
-extern Filepath path;
+extern Clipboard path;
 
 enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
 
@@ -119,22 +161,6 @@ struct IsTTY {
     bool err = true;
 };
 extern IsTTY is_tty;
-
-struct Constants {
-    std::string_view clipboard_version = CLIPBOARD_VERSION;
-    std::string_view clipboard_commit = GIT_COMMIT_HASH;
-    std::string_view data_file_name = "rawdata.clipboard";
-    std::string_view default_clipboard_name = "0";
-    std::string_view temporary_directory_name = "Clipboard";
-    std::string_view persistent_directory_name = ".clipboard";
-    std::string_view original_files_name = "originals";
-    std::string_view notes_name = "notes";
-    std::string_view mime_name = "mime";
-    std::string_view lock_name = "lock";
-    std::string_view data_directory = "data";
-    std::string_view metadata_directory = "metadata";
-};
-constexpr Constants constants;
 
 enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info };
 
@@ -191,41 +217,6 @@ public:
     size_t rawLength() const { return std::regex_replace(std::string(internal_message), std::regex("\\[[a-z]+\\]"), "").length(); }
 };
 
-extern Message help_message;
-extern Message check_clipboard_status_message;
-extern Message clipboard_item_one_contents_message;
-extern Message clipboard_item_many_contents_message;
-extern Message clipboard_item_too_many_contents_message;
-extern Message clipboard_text_contents_message;
-extern Message no_clipboard_contents_message;
-extern Message clipboard_action_prompt;
-extern Message no_valid_action_message;
-extern Message choose_action_items_message;
-extern Message fix_redirection_action_message;
-extern Message redirection_no_items_message;
-extern Message paste_success_message;
-extern Message clear_success_message;
-extern Message clear_fail_message;
-extern Message clipboard_failed_one_message;
-extern Message clipboard_failed_many_message;
-extern Message and_more_fails_message;
-extern Message and_more_items_message;
-extern Message fix_problem_message;
-extern Message not_enough_storage_message;
-extern Message item_already_exists_message;
-extern Message bad_response_message;
-extern Message working_message;
-extern Message cancelled_message;
-extern Message byte_success_message;
-extern Message one_item_success_message;
-extern Message many_files_success_message;
-extern Message many_directories_success_message;
-extern Message one_file_one_directory_success_message;
-extern Message one_file_many_directories_success_message;
-extern Message many_files_one_directory_success_message;
-extern Message many_files_many_directories_success_message;
-extern Message internal_error_message;
-
 void releaseLock();
 void setLanguagePT();
 void setLanguageTR();
@@ -266,6 +257,41 @@ void showFailures();
 void showSuccesses();
 [[nodiscard]] CopyPolicy userDecision(const std::string& item);
 void setTheme(const std::string& theme);
+
+extern Message help_message;
+extern Message check_clipboard_status_message;
+extern Message clipboard_item_one_contents_message;
+extern Message clipboard_item_many_contents_message;
+extern Message clipboard_item_too_many_contents_message;
+extern Message clipboard_text_contents_message;
+extern Message no_clipboard_contents_message;
+extern Message clipboard_action_prompt;
+extern Message no_valid_action_message;
+extern Message choose_action_items_message;
+extern Message fix_redirection_action_message;
+extern Message redirection_no_items_message;
+extern Message paste_success_message;
+extern Message clear_success_message;
+extern Message clear_fail_message;
+extern Message clipboard_failed_one_message;
+extern Message clipboard_failed_many_message;
+extern Message and_more_fails_message;
+extern Message and_more_items_message;
+extern Message fix_problem_message;
+extern Message not_enough_storage_message;
+extern Message item_already_exists_message;
+extern Message bad_response_message;
+extern Message working_message;
+extern Message cancelled_message;
+extern Message byte_success_message;
+extern Message one_item_success_message;
+extern Message many_files_success_message;
+extern Message many_directories_success_message;
+extern Message one_file_one_directory_success_message;
+extern Message one_file_many_directories_success_message;
+extern Message many_files_one_directory_success_message;
+extern Message many_files_many_directories_success_message;
+extern Message internal_error_message;
 
 extern ClipboardContent getGUIClipboard();
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);

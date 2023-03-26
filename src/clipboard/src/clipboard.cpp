@@ -54,7 +54,8 @@ namespace fs = std::filesystem;
 
 Forker forker {};
 
-Filepath path;
+GlobalFilepaths global_path;
+Clipboard path;
 Copying copying;
 
 bool output_silent = false;
@@ -121,6 +122,10 @@ std::string fileContents(const fs::path& path) {
     std::stringstream buffer;
     buffer << std::ifstream(path, std::ios::binary).rdbuf();
     return buffer.str();
+}
+
+bool isPersistent(const std::string& clipboard) {
+    return clipboard.find_first_of("_") != std::string::npos;
 }
 
 std::string pipedInContent() {
@@ -382,7 +387,7 @@ void setLocale() {
 void setClipboardName(const std::string& name) {
     if (name.empty()) return;
     clipboard_name = name;
-    if (clipboard_name.find_first_of("_") != std::string::npos) copying.is_persistent = true;
+    if (isPersistent(clipboard_name)) copying.is_persistent = true;
 }
 
 void setClipboardName() {
@@ -410,7 +415,7 @@ void setupVariables(int& argc, char* argv[]) {
     old_code_page = GetConsoleOutputCP();
     SetConsoleOutputCP(CP_UTF8); // fix broken accents on Windows
 #endif
-    path.home = getenv("USERPROFILE") ? getenv("USERPROFILE") : getenv("HOME");
+    global_path.home = getenv("USERPROFILE") ? getenv("USERPROFILE") : getenv("HOME");
 
     bool CLICOLOR = getenv("CLICOLOR") && !strcmp(getenv("CLICOLOR"), "0");
     bool NO_COLOR = getenv("NO_COLOR");
@@ -523,27 +528,15 @@ void verifyAction() {
 }
 
 void setFilepaths() {
-    path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR")
+    global_path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR")
                       : getenv("TMPDIR")         ? getenv("TMPDIR")
                                                  : fs::temp_directory_path())
-                     / constants.temporary_directory_name / clipboard_name;
+                     / constants.temporary_directory_name;
 
-    path.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : path.home))
-                      / constants.persistent_directory_name / clipboard_name;
+    global_path.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : global_path.home))
+                      / constants.persistent_directory_name;
 
-    path.root = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST")) ? path.persistent : path.temporary;
-
-    path.metadata = path.root / constants.metadata_directory;
-
-    path.metadata.originals = path.metadata / constants.original_files_name;
-
-    path.metadata.notes = path.metadata / constants.notes_name;
-
-    path.metadata.lock = path.metadata / constants.lock_name;
-
-    path.data = path.root / constants.data_directory;
-
-    path.data.raw = path.data / constants.data_file_name;
+    path = Clipboard(clipboard_name);
 }
 
 void checkForNoItems() {
@@ -771,7 +764,7 @@ int main(int argc, char* argv[]) {
 
         setFilepaths();
 
-        path.create();
+        (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
 
         action = getAction();
 

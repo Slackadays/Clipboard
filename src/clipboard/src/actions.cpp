@@ -322,8 +322,8 @@ void status() {
             if (fs::exists(entry.path() / constants.data_directory) && !fs::is_empty(entry.path() / constants.data_directory))
                 clipboards_with_contents.push_back({entry.path(), persistent});
     };
-    iterateClipboards(path.temporary.parent_path(), false);
-    iterateClipboards(path.persistent.parent_path(), true);
+    iterateClipboards(global_path.temporary, false);
+    iterateClipboards(global_path.persistent, true);
     std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
 
     if (clipboards_with_contents.empty()) {
