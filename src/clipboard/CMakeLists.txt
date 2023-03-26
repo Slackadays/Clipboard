@@ -35,7 +35,6 @@ elseif(HAIKU)
     src/haiku.cpp
   )
   target_link_libraries(clipboard be)
-  set_target_properties(clipboard PROPERTIES OUTPUT_NAME "clipboardjh")
 elseif(ANDROID)
   target_sources(clipboard PRIVATE
     src/android.cpp
