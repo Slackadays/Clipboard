@@ -7,14 +7,8 @@ target_link_libraries(clipboardx11
   gui
 )
 
-include(CheckIPOSupported)
-check_ipo_supported(RESULT lto_supported)
-if(lto_supported AND NOT NO_LTO)
-  set_property(TARGET clipboardx11 PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
-  endif()
-endif()
+include(../lto.cmake)
+enable_lto(clipboardx11)
 
 target_include_directories(clipboardx11 PRIVATE ${X11_INCLUDE_DIR})
 
