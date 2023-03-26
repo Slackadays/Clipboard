@@ -61,16 +61,13 @@ elseif(X11WL)
     "${CMAKE_INSTALL_PREFIX}/lib"
   )
   target_link_options(clipboard PRIVATE -z origin) # set the rpath to $ORIGIN
+  target_link_libraries(clipboard ${CMAKE_DL_LIBS})
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD True)
 set(THREADS_PREFER_PTHREAD_FLAG True)
 find_package(Threads REQUIRED)
 target_link_libraries(clipboard Threads::Threads)
-
-if(CMAKE_DL_LIBS)
-  target_link_libraries(clipboard ${CMAKE_DL_LIBS})
-endif()
 
 install(TARGETS clipboard DESTINATION bin)
 

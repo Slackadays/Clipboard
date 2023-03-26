@@ -102,6 +102,3 @@ else()
 endif()
 
 add_subdirectory(src/clipboard)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADD_FLAGS}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADD_FLAGS}")
