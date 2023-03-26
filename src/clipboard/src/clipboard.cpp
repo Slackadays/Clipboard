@@ -65,6 +65,8 @@ std::vector<std::string> arguments;
 
 std::string clipboard_name = "0";
 
+std::string locale;
+
 Action action;
 
 IOType io_type;
@@ -202,11 +204,25 @@ void releaseLock() {
     fs::remove(path.metadata.lock);
 }
 
+std::string formatNumbers(const auto& num) {
+    static std::stringstream ss;
+    static bool once = [&] {
+        try {
+            ss.imbue(std::locale(locale));
+        } catch (...) {}
+        ss << std::fixed << std::setprecision(3);
+        return true;
+    }();
+    ss.str(std::string());
+    ss << num;
+    return ss.str();
+}
+
 std::string formatBytes(const auto& bytes) {
-    if (bytes < 1024) return std::to_string(bytes) + "B";
-    if (bytes < (1024 * 1024)) return std::to_string(bytes / 1024.0) + "kB";
-    if (bytes < (1024 * 1024 * 1024)) return std::to_string(bytes / (1024.0 * 1024.0)) + "MB";
-    return std::to_string(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
+    if (bytes < (1024 * 10.0)) return formatNumbers(bytes) + "B";
+    if (bytes < (1024 * 1024 * 10.0)) return formatNumbers(bytes / 1024.0) + "kB";
+    if (bytes < (1024 * 1024 * 1024 * 10.0)) return formatNumbers(bytes / (1024.0 * 1024.0)) + "MB";
+    return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -352,7 +368,6 @@ void setupHandlers() {
 }
 
 void setLocale() {
-    std::string locale;
     try {
         locale = getenv("CLIPBOARD_LOCALE") ? getenv("CLIPBOARD_LOCALE") : std::locale("").name();
     } catch (...) {}
