@@ -66,7 +66,7 @@ bool isPersistent(const std::string& clipboard);
 class Clipboard {
     fs::path root;
 
-    public:
+public:
     class DataDirectory {
         fs::path root;
 
