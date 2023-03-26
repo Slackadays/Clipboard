@@ -41,6 +41,7 @@ extern Forker forker;
 struct GlobalFilepaths {
     fs::path temporary;
     fs::path persistent;
+    fs::path main;
     fs::path home;
 };
 extern GlobalFilepaths global_path;
@@ -61,7 +62,19 @@ struct Constants {
 };
 constexpr Constants constants;
 
-bool isPersistent(const std::string& clipboard);
+enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
+
+struct Copying {
+    bool is_persistent = false;
+    bool use_safe_copy = true;
+    CopyPolicy policy = CopyPolicy::Unknown;
+    fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
+    std::vector<fs::path> items;
+    std::vector<std::pair<std::string, std::error_code>> failedItems;
+    std::string buffer;
+    std::string mime;
+};
+extern Copying copying;
 
 class Clipboard {
     fs::path root;
@@ -94,7 +107,7 @@ public:
 
     Clipboard() = default;
     Clipboard(const auto& clipboard_name) {
-        root = (isPersistent(clipboard_name) ? global_path.persistent : global_path.temporary) / clipboard_name;
+        root = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary) / clipboard_name;
 
         data = root / constants.data_directory;
 
@@ -117,20 +130,6 @@ public:
     auto operator/(const auto& other) { return root / other; }
 };
 extern Clipboard path;
-
-enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
-
-struct Copying {
-    bool is_persistent = false;
-    bool use_safe_copy = true;
-    CopyPolicy policy = CopyPolicy::Unknown;
-    fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
-    std::vector<fs::path> items;
-    std::vector<std::pair<std::string, std::error_code>> failedItems;
-    std::string buffer;
-    std::string mime;
-};
-extern Copying copying;
 
 extern std::vector<std::string> arguments;
 

@@ -22,6 +22,7 @@
 #endif
 
 namespace PerformAction {
+
 void copyItem(const fs::path& f) {
     auto actuallyCopyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
         if (fs::is_directory(f)) {
@@ -184,8 +185,6 @@ void addFiles() {
                 replaceColors("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
                               "text instead.[blank]\n")
                         .data());
-        stopIndicator();
-        releaseLock();
         exit(EXIT_FAILURE);
     }
     for (const auto& f : copying.items)
@@ -206,8 +205,6 @@ void addData() {
                 replaceColors("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
                               "file instead.[blank]\n")
                         .data());
-        stopIndicator();
-        releaseLock();
         exit(EXIT_FAILURE);
     } else {
         if (io_type == IOType::Pipe)
@@ -240,8 +237,6 @@ void removeRegex() {
                     replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
-            stopIndicator();
-            releaseLock();
             exit(EXIT_FAILURE);
         }
     } else {
@@ -263,8 +258,6 @@ void removeRegex() {
                     replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
-            stopIndicator();
-            releaseLock();
             exit(EXIT_FAILURE);
         }
     }
@@ -295,8 +288,6 @@ void noteText() {
         }
     } else {
         fprintf(stderr, "%s", replaceColors("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
-        stopIndicator();
-        releaseLock();
         exit(EXIT_FAILURE);
     }
 }
@@ -307,7 +298,6 @@ void notePipe() {
     if (output_silent) return;
     stopIndicator();
     fprintf(stderr, replaceColors("[success]✅ Saved note \"%s\"\n").data(), content.data());
-    releaseLock();
     exit(EXIT_SUCCESS);
 }
 

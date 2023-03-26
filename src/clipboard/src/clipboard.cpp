@@ -340,6 +340,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 void setupHandlers() {
     atexit([] {
         releaseLock();
+        stopIndicator(true);
 #if defined(_WIN64) || defined(_WIN32)
         SetConsoleOutputCP(old_code_page);
 #endif
