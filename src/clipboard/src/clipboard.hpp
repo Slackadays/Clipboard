@@ -92,6 +92,7 @@ class Clipboard {
         auto operator/(const auto& other) { return root / other; }
     } metadata;
 
+    Clipboard() = default;
     Clipboard(const auto& clipboard_name) {
         root = (isPersistent(clipboard_name) ? global_path.persistent : global_path.temporary) / clipboard_name;
 
