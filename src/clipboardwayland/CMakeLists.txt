@@ -60,7 +60,6 @@ add_library(clipboardwayland MODULE
 )
 add_dependencies(clipboardwayland clipboardwayland_generatedheaders)
 
-include(../lto.cmake)
 enable_lto(clipboardwayland)
 
 target_link_libraries(clipboardwayland

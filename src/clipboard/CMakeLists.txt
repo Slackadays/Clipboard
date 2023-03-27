@@ -5,7 +5,6 @@ add_executable(clipboard
   src/themes.cpp
 )
 
-include(../lto.cmake)
 enable_lto(clipboard)
 
 target_link_libraries(clipboard gui)

@@ -7,7 +7,6 @@ target_link_libraries(clipboardx11
   gui
 )
 
-include(../lto.cmake)
 enable_lto(clipboardx11)
 
 target_include_directories(clipboardx11 PRIVATE ${X11_INCLUDE_DIR})
