@@ -5,18 +5,44 @@ sort_by = "weight"
 
 # What is Clipboard?
 
-:sparkles: :rocket: Clipboard is the power tool that saves you time and effort. :beach_umbrella: :palm_tree:
+The Clipboard project is a <i>ridiculously</i> easy-to-use data management tool with tons of useful features and <i>gorgeous</i> eye candy.
 
-Before Clipboard, you've always had to think about where exactly you want to move things in the terminal, which multiplied your mental workload and made many scenarios totally impractical. Yuck, ugh, and puke!
+Before Clipboard, you've always had to think about where exactly you want to move things in the terminal, which multiplied your mental workload and made many scenarios totally impractical. 
 
-Clipboard changes all of this.
+Fear no more.
 
-With Clipboard, do anything that involves moving information around way quicker and much simpler. Save time and effort the easy way.
+Now, do anything that involves moving information around <i>way quicker</i> and much simpler. Clipboard is your time and effort saver to use anytime and anywhere.
 
-# Getting started
+# Quick Start
 
-Visit the [official Github repository](https://github.com/Slackadays/Clipboard) to install the latest Clipboard version.
+Visit the [official Clipboard GitHub page](https://github.com/Slackadays/Clipboard) to install the latest version.
 
-After that, set optional environment variables if you wish to configure certain features.
+Once you've installed Clipboard, all that's left to do is to start saving time and effort by using it. Try some of these examples below!
 
-Done! You can now start using Clipboard. It's that easy. 
+```sh
+$ cb copy NuclearLaunchCodes.pdf
+$ cb note "Keep this a secret"
+$ echo "Keep this a secret OR ELSE" | cb note
+$ cb paste
+
+$ cb cut69 MyDirectory
+$ cb add69 SomeFile
+$ cb remove69 SomeFile
+$ cb paste69
+
+$ cb cp_420 foo.bar NotAVirus.bar.mp3.exe
+$ cb remove_420 "*.mp3\.exe"
+$ cb note_420 "Some kosher content here"
+$ cb sh_420
+
+$ cb note
+$ cb clr
+$ cb note_420
+$ cb
+```
+
+Of course, this is only a handful of examples. Check out [the readme on GitHub](https://github.com/Slackadays/Clipboard) again for more detailed instructions and some great tips and tricks.
+
+# Get Help
+
+Feeling stumped? We're here to help. Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG).
