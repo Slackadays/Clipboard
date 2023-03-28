@@ -4,7 +4,7 @@ The Clipboard project is a _ridiculously_ easy-to-use data remembrance tool with
 
 That's underselling it a bit.
 
-Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and anywhere**. Have a telepath with a perfect memory always by your side. Feel the sheer power flowing through your body as you cut, copy, paste, add, remove, and make note of **anything** that dares lay in your terminal at the mere press of a button. You'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life in no time. Ok, so maybe that last part won't actually happen, but you get the idea:
+Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and anywhere**. Have a telepath with a perfect memory always by your side. Feel the sheer power flowing through your body as you cut, copy, paste, add, remove, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
@@ -23,7 +23,7 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 
 ![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
-<details><summary><b>Feast your eyes on our exquisite features.</b></summary>
+<details><summary><b><i>Feast your eyes</i> on our exquisite features.</b></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**
@@ -61,7 +61,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 pkg add clipboard
 ```
 
-**AUR** (Use your favorite AUR helper, example below with `yay`. You can also get `clipboard-bin` and `clipboard-git`)
+**AUR** (Use your favorite AUR helper such as `yay`. You can also get `clipboard-bin` and `clipboard-git`)
 ```sh
 yay -S clipboard
 ```
@@ -81,14 +81,14 @@ scoop install clipboard
 sudo xbps-install -S clipboard
 ```
 
-You can also download Clipboard [directly from GitHub Actions.](https://nightly.link/Slackadays/Clipboard/workflows/main/main)
+You can also get the latest Clipboard revision [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/main/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
 
 ---
 
 ### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px />
-You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatibility, libx11 and/or libwayland.
+You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatibility, you'll also need libx11 and/or libwayland.
 
-Get the latest release instead by adding `--branch 0.5.0` right after `git clone...`.
+Get the latest release instead of the latest commit by adding `--branch 0.5.0` right after `git clone...`.
 
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
 ```bash
@@ -101,7 +101,7 @@ $ cmake --install .
 
 ### <img src="documentation/readme-assets/Uninstall.png" alt="Uninstall" height=25px />
 
-Remove all the files in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
+Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
@@ -618,7 +618,7 @@ Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
 Say thank you to all our beautiful contributors who have helped make Clipboard incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
- Want to join the club? We're always accepting new contributions too.
+ Want to join the club? We're always accepting [new contributions](https://github.com/Slackadays/Clipboard/blob/main/.github/CONTRIBUTING.md) too.
 
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
     
