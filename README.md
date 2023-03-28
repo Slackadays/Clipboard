@@ -1,6 +1,6 @@
 ### ![Clipboard by Jackson Huff](documentation/readme-assets/CBBanner.png)
 
-The Clipboard project is a _ridiculously_ easy-to-use data management tool with tons of useful features and _gorgeous_ eye candy.
+The Clipboard project is a _ridiculously_ easy-to-use data remembrance tool with tons of useful features and _gorgeous_ eye candy.
 
 That's underselling it a bit.
 
