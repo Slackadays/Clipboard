@@ -209,27 +209,6 @@ void releaseLock() {
     fs::remove(path.metadata.lock);
 }
 
-std::string formatNumbers(const auto& num) {
-    static std::stringstream ss;
-    static bool once = [&] {
-        try {
-            ss.imbue(std::locale(locale));
-        } catch (...) {}
-        ss << std::fixed << std::setprecision(3);
-        return true;
-    }();
-    ss.str(std::string());
-    ss << num;
-    return ss.str();
-}
-
-std::string formatBytes(const auto& bytes) {
-    if (bytes < (1024 * 10.0)) return formatNumbers(bytes) + "B";
-    if (bytes < (1024 * 1024 * 10.0)) return formatNumbers(bytes / 1024.0) + "kB";
-    if (bytes < (1024 * 1024 * 1024 * 10.0)) return formatNumbers(bytes / (1024.0 * 1024.0)) + "MB";
-    return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
-}
-
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
     using enum CopyPolicy;
 
@@ -787,7 +766,7 @@ int main(int argc, char* argv[]) {
 
         deduplicate(copying.items);
 
-        getLock();
+        if (action != Action::Info) getLock();
 
         checkItemSize(totalItemSize());
 

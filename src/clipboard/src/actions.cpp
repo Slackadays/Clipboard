@@ -376,6 +376,31 @@ void info() {
     // locked or not and the pid of the locking process
     // saved note
 
-    fprintf(stderr, replaceColors("[info]• Clipboard name: [help]%s[blank]\n").data(), clipboard_name.data());
+    fprintf(stderr, replaceColors("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
+    fprintf(stderr, replaceColors("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
+    fprintf(stderr, replaceColors("[info]• Persistent? [help]%s[blank]\n").data(), copying.is_persistent ? "Yes" : "No");
+    
+    if (fs::exists(path.data.raw)) {
+        fprintf(stderr, replaceColors("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+    } else {
+        size_t files = 0;
+        size_t directories = 0;
+        for (const auto& entry : fs::directory_iterator(path.data)) {
+            if (fs::is_directory(entry.path())) directories++;
+            else files++;
+        }
+        fprintf(stderr, replaceColors("[info]• Files: [help]%zu[blank]\n").data(), files);
+        fprintf(stderr, replaceColors("[info]• Directories: [help]%zu[blank]\n").data(), directories);
+    }
+    
+    fprintf(stderr, replaceColors("[info]• Locked? [help]%s[blank]\n").data(), fs::exists(path.metadata.lock) ? "Yes" : "No");
+    if (fs::exists(path.metadata.lock)) {
+        fprintf(stderr, replaceColors("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
+    }
+    if (fs::exists(path.metadata.notes)) {
+        fprintf(stderr, replaceColors("[info]• Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
+    } else {
+        fprintf(stderr, "%s", replaceColors("[info]• There is no note for this clipboard.[blank]\n").data());
+    }
 }
 } // namespace PerformAction

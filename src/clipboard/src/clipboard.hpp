@@ -128,6 +128,7 @@ public:
     operator fs::path() const { return root; }
     auto operator=(const auto& other) { return root = other; }
     auto operator/(const auto& other) { return root / other; }
+    std::string string() { return root.string(); }
 };
 extern Clipboard path;
 
@@ -217,6 +218,27 @@ public:
     size_t rawLength() const { return std::regex_replace(std::string(internal_message), std::regex("\\[[a-z]+\\]"), "").length(); }
 };
 
+std::string formatNumbers(const auto& num) {
+    static std::stringstream ss;
+    static bool once = [&] {
+        try {
+            ss.imbue(std::locale(locale));
+        } catch (...) {}
+        ss << std::fixed << std::setprecision(3);
+        return true;
+    }();
+    ss.str(std::string());
+    ss << num;
+    return ss.str();
+}
+
+std::string formatBytes(const auto& bytes) {
+    if (bytes < (1024 * 10.0)) return formatNumbers(bytes) + "B";
+    if (bytes < (1024 * 1024 * 10.0)) return formatNumbers(bytes / 1024.0) + "kB";
+    if (bytes < (1024 * 1024 * 1024 * 10.0)) return formatNumbers(bytes / (1024.0 * 1024.0)) + "MB";
+    return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
+}
+
 void releaseLock();
 void setLanguagePT();
 void setLanguageTR();
@@ -239,7 +261,7 @@ bool stopIndicator(bool change_condition_variable);
 void startIndicator();
 void setupIndicator();
 void deduplicateItems();
-unsigned long long calculateTotalItemSize();
+unsigned long long totalItemSize();
 bool stopIndicator(bool change_condition_variable = true);
 void checkItemSize();
 TerminalSize thisTerminalSize();
