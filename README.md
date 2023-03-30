@@ -37,6 +37,7 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 - **Fan of creativity? Say no more as you can choose any of several color themes to make Clipboard look exactly how you want.**
 - **Addicted to technical details? Have we got something real good for you, as Clipboard is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
 - **Still not convinced? What if you were told you could easily script Clipboard to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
+- **Did we mention that Clipboard is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. Clipboard is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
 
 </details>
 
