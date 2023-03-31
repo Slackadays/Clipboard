@@ -163,7 +163,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load };
 
 extern Action action;
 
@@ -177,10 +177,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 12> actions;
-extern EnumArray<std::string_view, 12> action_shortcuts;
-extern EnumArray<std::string_view, 12> doing_action;
-extern EnumArray<std::string_view, 12> did_action;
+extern EnumArray<std::string_view, 13> actions;
+extern EnumArray<std::string_view, 13> action_shortcuts;
+extern EnumArray<std::string_view, 13> doing_action;
+extern EnumArray<std::string_view, 13> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
@@ -284,7 +284,6 @@ extern Message help_message;
 extern Message check_clipboard_status_message;
 extern Message clipboard_item_one_contents_message;
 extern Message clipboard_item_many_contents_message;
-extern Message clipboard_item_too_many_contents_message;
 extern Message clipboard_text_contents_message;
 extern Message no_clipboard_contents_message;
 extern Message clipboard_action_prompt;
@@ -339,4 +338,5 @@ void swap();
 void addFiles();
 void status();
 void info();
+void load();
 } // namespace PerformAction

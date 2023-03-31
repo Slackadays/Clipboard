@@ -451,7 +451,7 @@ template <typename T>
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info}) {
+        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 return entry;
             }
@@ -654,6 +654,8 @@ void performAction() {
             removeRegex();
         else if (action == Status)
             status();
+        else if (action == Load)
+            load();
     } else if (io_type == Pipe) {
         if (action == Copy || action == Cut)
             pipeIn();

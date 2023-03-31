@@ -81,9 +81,8 @@ void paste() {
             }
             incrementSuccessesForItem(entry);
         };
-        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) {
+        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
             continue;
-        }
         try {
             if (fs::exists(target)) {
                 using enum CopyPolicy;
@@ -148,39 +147,35 @@ void clear() {
 }
 
 void show() {
+    std::vector<std::regex> regexes;
+    if (!copying.items.empty()) {
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
+    }
+
     stopIndicator();
-    if (fs::is_directory(path.data) && !fs::is_empty(path.data)) {
-        if (fs::is_regular_file(path.data.raw)) {
-            std::string content(fileContents(path.data.raw));
-            std::erase(content, '\n');
-            printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
-            printf(replaceColors("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
-            if (content.size() > 250) {
-                printf(and_more_items_message().data(), content.size() - 250);
-            }
-            return;
-        }
-        size_t total_items = 0;
 
-        for (auto dummy : fs::directory_iterator(path.data))
-            total_items++;
-
-        size_t rowsAvailable = thisTerminalSize().rows - (clipboard_item_many_contents_message.rawLength() / thisTerminalSize().columns);
-        rowsAvailable -= 3;
-        printf(total_items > rowsAvailable ? clipboard_item_too_many_contents_message().data() : clipboard_item_many_contents_message().data(),
-               std::min(rowsAvailable, total_items),
-               clipboard_name.data());
-        auto it = fs::directory_iterator(path.data);
-        for (size_t i = 0; i < std::min(rowsAvailable, total_items); i++) {
-
-            printf(replaceColors("[info]▏ [bold][help]%s[blank]\n").data(), it->path().filename().string().data());
-
-            if (i == rowsAvailable - 1 && total_items > rowsAvailable) printf(and_more_items_message().data(), total_items - rowsAvailable);
-
-            it++;
-        }
-    } else {
+    if (!fs::exists(path.data) || fs::is_empty(path.data)) {
         printf(no_clipboard_contents_message().data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
+        return;
+    }
+
+    if (fs::is_regular_file(path.data.raw)) {
+        std::string content(fileContents(path.data.raw));
+        std::erase(content, '\n');
+        printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
+        printf(replaceColors("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
+        if (content.size() > 250) {
+            printf(and_more_items_message().data(), content.size() - 250);
+        }
+        return;
+    }
+
+    printf(clipboard_item_many_contents_message().data(), clipboard_name.data());
+
+    for (const auto& entry : fs::directory_iterator(path.data)) {
+        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
+            continue;
+        printf(replaceColors("[info]▏ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
     }
 }
 
@@ -413,4 +408,41 @@ void info() {
         fprintf(stderr, "%s", replaceColors("[info]• There is no note for this clipboard.[blank]\n").data());
     }
 }
+
+void load() {
+    if (!fs::exists(path.data) || fs::is_empty(path.data)) {
+        fprintf(stderr, "%s", replaceColors("[error]❌ The clipboard you're trying to load from is empty. [help]Try choosing a different source instead.[blank]\n").data());
+        exit(EXIT_FAILURE);
+    }
+
+    std::vector<std::string> destinations;
+    if (!copying.items.empty())
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(destinations), [](const auto& item) { return item.string(); });
+    else
+        destinations.emplace_back(constants.default_clipboard_name);
+
+    if (std::find(destinations.begin(), destinations.end(), clipboard_name) != destinations.end()) {
+        stopIndicator();
+        fprintf(stderr,
+                "%s",
+                replaceColors("[error]❌ You can't load a clipboard into itself. [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data());
+        exit(EXIT_FAILURE);
+    }
+
+    for (const auto& destination_number : destinations) {
+        Clipboard destination(destination_number);
+        try {
+            for (const auto& entry : fs::directory_iterator(destination.data)) {
+                fs::remove_all(entry.path());
+            }
+
+            fs::copy(path.data, destination.data, fs::copy_options::overwrite_existing | fs::copy_options::recursive);
+        } catch (const fs::filesystem_error& e) {
+            copying.failedItems.emplace_back(destination_number, e.code());
+        }
+    }
+
+    fprintf(stderr, replaceColors("[success]✅ Loaded %i clipboards[blank]\n").data(), destinations.size());
+}
+
 } // namespace PerformAction

@@ -14,14 +14,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 12> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info"};
+EnumArray<std::string_view, 13> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load"};
 
-EnumArray<std::string_view, 12> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in"};
+EnumArray<std::string_view, 13> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld"};
 
-EnumArray<std::string_view, 12> doing_action =
-        {"Cutting", "Copying", "Pasting", "Clearing", "Showing", "Editing", "Adding", "Removing", "Noting", "Swapping", "Checking status", "Showing info"};
+EnumArray<std::string_view, 13> doing_action =
+        {"Cutting", "Copying", "Pasting", "Clearing", "Showing", "Editing", "Adding", "Removing", "Noting", "Swapping", "Checking status", "Showing info", "Loading"};
 
-EnumArray<std::string_view, 12> did_action = {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped", "Checked status", "Showed info"};
+EnumArray<std::string_view, 13> did_action =
+        {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped", "Checked status", "Showed info", "Loaded"};
 
 Message help_message = "[info]▏This is Clipboard %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]▏How To Use[blank]\n"
@@ -62,8 +63,7 @@ Message help_message = "[info]▏This is Clipboard %s (commit %s), the cut, copy
                        "redistribute it under certain conditions.[blank]\n";
 Message check_clipboard_status_message = "[info]• There are items in these clipboards:\n";
 Message clipboard_item_one_contents_message = "[info]• Here is the [bold]%i[blank][info] item in clipboard [bold]%s[blank][info]: [blank]\n";
-Message clipboard_item_many_contents_message = "[info]• Here are the [bold]%i[blank][info] items in clipboard [bold]%s[blank][info]: [blank]\n";
-Message clipboard_item_too_many_contents_message = "[info]• Here are the first [bold]%i[blank][info] items in clipboard [bold]%s[blank][info]: [blank]\n";
+Message clipboard_item_many_contents_message = "[info]• Here are the items in clipboard [bold]%s[blank][info]: [blank]\n";
 Message clipboard_text_contents_message = "[info]• Here are the first [bold]%i[blank][info] bytes in clipboard [bold]%s[blank][info]: [blank]";
 Message no_clipboard_contents_message = "[info]• There is currently nothing in the clipboard.[blank]\n";
 Message clipboard_action_prompt = "[help]Add [bold]cut, copy, [blank][help]or[bold] paste[blank][help] to the end, "
@@ -144,7 +144,7 @@ void setLanguageES() {
                    "to redistribute it under certain conditions.[blank]\n";
     no_valid_action_message = "[error]❌ No especificaste ninguna acción válida o se te olvidó. [help]Inténta usar o añadir [bold]cortar, "
                               "copiar o pegar[blank][help] en su lugar, como [bold]clipboard copiar.[blank]\n";
-    clipboard_item_many_contents_message = "[info]• Aquí están las [bold]%i[blank][info] cosas primeras del "
+    clipboard_item_many_contents_message = "[info]• Aquí están las cosas primeras del "
                                            "portapapeles [bold]%s[blank][info]: [blank]\n";
     no_clipboard_contents_message = "[info]• No hay nada en Clipboard en este momento.[blank]\n";
     clipboard_action_prompt = "[help]Añade [bold]cortar, copiar [blank][help]o[bold] pegar[blank][help] al final, como "
@@ -271,7 +271,7 @@ void setLanguageTR() {
                    "[info]▏Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
                    "koşullar altında yeniden dağıtabilirsiniz.[blank]\n";
     check_clipboard_status_message = "[info]• Pano içeriği şunlardır:\n";
-    clipboard_item_many_contents_message = "[info]• [bold]%s[blank][info] panoda bulunan ilk [bold]%i[blank][info] öğe: [blank]\n";
+    clipboard_item_many_contents_message = "[info]• [bold]%s[blank][info] panoda bulunan: [blank]\n";
     no_clipboard_contents_message = "[info]• Panoda hiçbir şey yok.[blank]\n";
     clipboard_action_prompt = "[help]Başlamak için sonuna [bold]kes, kopyala, [blank][help]veya[bold] yapistir[blank][help] ekleyin, "
                               "[bold]clipboard kopyala[blank][help] gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için "
