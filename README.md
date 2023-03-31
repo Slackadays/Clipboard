@@ -11,6 +11,9 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 </p>
 
 <p align="center">
+    <a href="https://discord.gg/J6asnc3pEG">
+        <img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge" alt="Discord Support">
+    </a>
     <a href="https://github.com/Slackadays/Clipboard/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/build-clipboard.yml?branch=main&label=BUILDS&style=for-the-badge">
         <img src="https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/lint-clipboard.yml?branch=main&label=CHECKS&style=for-the-badge">
