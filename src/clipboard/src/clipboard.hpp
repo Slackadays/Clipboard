@@ -65,7 +65,6 @@ constexpr Constants constants;
 enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
 
 struct Copying {
-    bool is_persistent = false;
     bool use_safe_copy = true;
     CopyPolicy policy = CopyPolicy::Unknown;
     fs::copy_options opts = fs::copy_options::overwrite_existing | fs::copy_options::recursive | fs::copy_options::copy_symlinks;
@@ -76,10 +75,14 @@ struct Copying {
 };
 extern Copying copying;
 
+bool isPersistent(const std::string& clipboard);
+
 class Clipboard {
     fs::path root;
 
 public:
+    bool is_persistent = false;
+
     class DataDirectory {
         fs::path root;
 
@@ -107,7 +110,9 @@ public:
 
     Clipboard() = default;
     Clipboard(const auto& clipboard_name) {
-        root = (copying.is_persistent || getenv("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary) / clipboard_name;
+        is_persistent = isPersistent(clipboard_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
+
+        root = (is_persistent ? global_path.persistent : global_path.temporary) / clipboard_name;
 
         data = root / constants.data_directory;
 
@@ -273,7 +278,7 @@ bool userIsARobot();
 void pasteFiles();
 void clearClipboard();
 void performAction();
-void updateGUIClipboard();
+void updateGUIClipboard(bool force = false);
 std::string pipedInContent();
 void showFailures();
 void showSuccesses();

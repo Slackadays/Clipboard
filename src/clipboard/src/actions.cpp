@@ -381,7 +381,7 @@ void info() {
 
     fprintf(stderr, replaceColors("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
     fprintf(stderr, replaceColors("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
-    fprintf(stderr, replaceColors("[info]• Persistent? [help]%s[blank]\n").data(), copying.is_persistent ? "Yes" : "No");
+    fprintf(stderr, replaceColors("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
     if (fs::exists(path.data.raw)) {
         fprintf(stderr, replaceColors("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
@@ -436,13 +436,17 @@ void load() {
                 fs::remove_all(entry.path());
             }
 
-            fs::copy(path.data, destination.data, fs::copy_options::overwrite_existing | fs::copy_options::recursive);
+            fs::copy(path.data, destination.data, fs::copy_options::recursive);
         } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(destination_number, e.code());
         }
     }
 
+    stopIndicator();
+
     fprintf(stderr, replaceColors("[success]✅ Loaded %i clipboards[blank]\n").data(), destinations.size());
+
+    if (std::find(destinations.begin(), destinations.end(), constants.default_clipboard_name) != destinations.end()) updateGUIClipboard(true);
 }
 
 } // namespace PerformAction

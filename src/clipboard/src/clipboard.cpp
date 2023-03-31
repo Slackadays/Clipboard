@@ -342,7 +342,7 @@ void setupHandlers() {
         // As the indicator thread still exists in memory in the forked process,
         // the main process exiting creates an exception because it has not been joined in the X11 process.
         // So we need to remove it from our forked memory
-        indicator.detach();
+        //indicator.detach();
     });
 
     forker.atNonFork([]() {
@@ -364,17 +364,11 @@ void setLocale() {
         setLanguageTR();
 }
 
-void setClipboardName(const std::string& name) {
-    if (name.empty()) return;
-    clipboard_name = name;
-    if (isPersistent(clipboard_name)) copying.is_persistent = true;
-}
-
 void setClipboardName() {
     if (arguments.empty()) return;
     std::string temp = arguments.at(0);
     if (temp.find_first_of("_0123456789") != std::string::npos)
-        setClipboardName(temp.substr(temp.find_first_of("_0123456789")));
+        clipboard_name = temp.substr(temp.find_first_of("_0123456789"));
     else
         return;
     arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - clipboard_name.length());
@@ -493,7 +487,7 @@ void setFlags() {
         printf("%s", replaceColors("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
-    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") setClipboardName(flag);
+    if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
     if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") clipboard_name = flag;
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
@@ -690,8 +684,8 @@ std::string getMIMEType() {
     return "text/plain";
 }
 
-void updateGUIClipboard() {
-    if (isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) { // only update GUI clipboard on write operations
+void updateGUIClipboard(bool force) {
+    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) { // only update GUI clipboard on write operations
         writeToGUIClipboard(thisClipboard());
     }
 }
