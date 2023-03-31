@@ -342,7 +342,7 @@ void setupHandlers() {
         // As the indicator thread still exists in memory in the forked process,
         // the main process exiting creates an exception because it has not been joined in the X11 process.
         // So we need to remove it from our forked memory
-        //indicator.detach();
+        // indicator.detach();
     });
 
     forker.atNonFork([]() {
@@ -685,7 +685,8 @@ std::string getMIMEType() {
 }
 
 void updateGUIClipboard(bool force) {
-    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) { // only update GUI clipboard on write operations
+    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI"))
+        || (force && !getenv("CLIPBOARD_NOGUI"))) { // only update GUI clipboard on write operations
         writeToGUIClipboard(thisClipboard());
     }
 }
