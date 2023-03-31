@@ -251,7 +251,7 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 ---
 
-<details><summary> &ensp; <b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)</code> or <code>cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
+<details><summary> &ensp; <b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)</code> or <code>cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
 
 ---
 
@@ -267,6 +267,12 @@ $ cb p
 # These are the same!
 ```
 Note: If you paste after cutting, then Clipboard will delete the original files that you cut.
+
+Paste anything containing "Aventura."
+
+```
+$ cb p ".*Aventura.*"
+```
 
 Now, let's copy some raw data.
 ```
