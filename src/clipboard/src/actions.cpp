@@ -68,14 +68,22 @@ void copyText() {
 }
 
 void paste() {
-    for (const auto& f : fs::directory_iterator(path.data)) {
-        auto target = fs::current_path() / f.path().filename();
+    std::vector<std::regex> regexes;
+    if (!copying.items.empty()) {
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
+    }
+
+    for (const auto& entry : fs::directory_iterator(path.data)) {
+        auto target = fs::current_path() / entry.path().filename();
         auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
-            if (!(fs::exists(target) && fs::equivalent(f, target))) {
-                fs::copy(f, target, use_regular_copy || fs::is_directory(f) ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
+            if (!(fs::exists(target) && fs::equivalent(entry, target))) {
+                fs::copy(entry, target, use_regular_copy || fs::is_directory(entry) ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
             }
-            incrementSuccessesForItem(f);
+            incrementSuccessesForItem(entry);
         };
+        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) {
+            continue;
+        }
         try {
             if (fs::exists(target)) {
                 using enum CopyPolicy;
@@ -87,7 +95,7 @@ void paste() {
                     break;
                 default:
                     stopIndicator();
-                    copying.policy = userDecision(f.path().filename().string());
+                    copying.policy = userDecision(entry.path().filename().string());
                     startIndicator();
                     if (copying.policy == ReplaceOnce || copying.policy == ReplaceAll) {
                         pasteItem();
@@ -102,10 +110,10 @@ void paste() {
                 try {
                     pasteItem(true);
                 } catch (const fs::filesystem_error& e) {
-                    copying.failedItems.emplace_back(f.path().filename().string(), e.code());
+                    copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
                 }
             } else {
-                copying.failedItems.emplace_back(f.path().filename().string(), e.code());
+                copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
             }
         }
     }
