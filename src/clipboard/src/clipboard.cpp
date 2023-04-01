@@ -64,6 +64,8 @@ bool no_color = false;
 
 std::vector<std::string> arguments;
 
+std::string clipboard_invocation;
+
 std::string clipboard_name = "0";
 
 std::string locale;
@@ -404,7 +406,11 @@ void setupVariables(int& argc, char* argv[]) {
 
     if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
+    if (argc == 0) return;
+
     arguments.assign(argv + 1, argv + argc);
+
+    clipboard_invocation = argv[0];
 }
 
 void syncWithGUIClipboard(bool force) {
@@ -450,7 +456,7 @@ Action getAction() {
                 return entry;
             }
         }
-        printf(no_valid_action_message().data(), arguments.at(0).data());
+        printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
         return Copy;

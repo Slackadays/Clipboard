@@ -139,6 +139,8 @@ extern Clipboard path;
 
 extern std::vector<std::string> arguments;
 
+extern std::string clipboard_invocation;
+
 extern std::string clipboard_name;
 
 extern std::string locale;

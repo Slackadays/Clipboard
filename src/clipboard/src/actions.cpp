@@ -321,7 +321,7 @@ void status() {
 
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
-        printf("%s", clipboard_action_prompt().data());
+        printf(clipboard_action_prompt().data(), clipboard_invocation.data(), clipboard_invocation.data());
     } else {
         TerminalSize available(thisTerminalSize());
 

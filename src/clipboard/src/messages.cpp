@@ -67,11 +67,11 @@ Message clipboard_item_many_contents_message = "[info]• Here are the items in 
 Message clipboard_text_contents_message = "[info]• Here are the first [bold]%i[blank][info] bytes in clipboard [bold]%s[blank][info]: [blank]";
 Message no_clipboard_contents_message = "[info]• There is currently nothing in the clipboard.[blank]\n";
 Message clipboard_action_prompt = "[help]Add [bold]cut, copy, [blank][help]or[bold] paste[blank][help] to the end, "
-                                  "like [bold]clipboard copy[blank][help] to get started, or if you need help, try "
-                                  "[bold]clipboard -h[blank][help] to show the help screen.[blank]\n";
+                                  "like [bold]%s copy[blank][help] to get started, or if you need help, try "
+                                  "[bold]%s -h[blank][help] to show the help screen.[blank]\n";
 Message no_valid_action_message = "[error]❌ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
                                   "to include one. [help]Try using or adding [bold]cut, copy, [blank][help]or "
-                                  "[bold]paste[blank][help] instead, like [bold]clipboard copy.[blank]\n";
+                                  "[bold]paste[blank][help] instead, like [bold]%s copy.[blank]\n";
 Message choose_action_items_message = "[error]❌ You need to choose something to %s.[help] Try adding the items you want "
                                       "to %s to the end, like [bold]clipboard %s contacts.txt myprogram.cpp[blank]\n";
 Message fix_redirection_action_message = "[error]❌ You can't use the [bold]%s[blank][error] action with redirection here. [help]Try removing "
@@ -143,13 +143,13 @@ void setLanguageES() {
                    "[info]▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
                    "to redistribute it under certain conditions.[blank]\n";
     no_valid_action_message = "[error]❌ No especificaste ninguna acción válida o se te olvidó. [help]Inténta usar o añadir [bold]cortar, "
-                              "copiar o pegar[blank][help] en su lugar, como [bold]clipboard copiar.[blank]\n";
+                              "copiar o pegar[blank][help] en su lugar, como [bold]%s copiar.[blank]\n";
     clipboard_item_many_contents_message = "[info]• Aquí están las cosas primeras del "
                                            "portapapeles [bold]%s[blank][info]: [blank]\n";
     no_clipboard_contents_message = "[info]• No hay nada en Clipboard en este momento.[blank]\n";
     clipboard_action_prompt = "[help]Añade [bold]cortar, copiar [blank][help]o[bold] pegar[blank][help] al final, como "
-                              "[bold]clipboard copiar[blank][help] para comenzar, o si necesitas ayuda, haz "
-                              "[bold]clipboard -h[blank][help] para mostrar el mensaje de ayudar.[blank]\n";
+                              "[bold]%s copiar[blank][help] para comenzar, o si necesitas ayuda, haz "
+                              "[bold]%s -h[blank][help] para mostrar el mensaje de ayudar.[blank]\n";
     choose_action_items_message = "[error]❌ Necesitas escoger una cosa para %s.[help] Inténta añadir las cosas que "
                                   "quieres %s al final, como [bold]clipboard %s contactos.txt miprograma.cpp[blank]\n";
     fix_redirection_action_message = "[error]❌ No se puede usar la acción [bold]%s[blank][error] con la redirección. [help]Inténta sacar "
@@ -201,7 +201,7 @@ void setLanguagePT() {
                    "[info]▏Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
                    "bem-vindo a redistribuí-lo sob certas condições.[blank]\n";
     no_valid_action_message = "[error]❌ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. [help]Tente utilizar "
-                              "[bold]recortar, copiar ou colar[blank][help], como em [bold]clipboard copiar.[blank]\n";
+                              "[bold]recortar, copiar ou colar[blank][help], como em [bold]%s copiar.[blank]\n";
     no_clipboard_contents_message = "[error]❌ Você não especificou uma ação válida. [help]Tente adicionar [bold]recortar, copiar, or "
                                     "colar[blank][help] no final, como em [bold]clipboard copiar[blank][help]. Caso precise de ajuda, tente "
                                     "[bold]clipboard -h[blank][help] para mostrar a tela de instruções.[blank]\n";
@@ -274,10 +274,10 @@ void setLanguageTR() {
     clipboard_item_many_contents_message = "[info]• [bold]%s[blank][info] panoda bulunan: [blank]\n";
     no_clipboard_contents_message = "[info]• Panoda hiçbir şey yok.[blank]\n";
     clipboard_action_prompt = "[help]Başlamak için sonuna [bold]kes, kopyala, [blank][help]veya[bold] yapistir[blank][help] ekleyin, "
-                              "[bold]clipboard kopyala[blank][help] gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için "
-                              "[bold]clipboard -h[blank][help]'i dene.[blank]\n";
+                              "[bold]%s kopyala[blank][help] gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için "
+                              "[bold]%s -h[blank][help]'i dene.[blank]\n";
     no_valid_action_message = "[error]❌ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz [help]Komutunuza [bold]cut, "
-                              "copy, [blank][help]ya da [bold]paste[blank][help] eklemelisiniz, örneğin [bold]clipboard copy.[blank]\n";
+                              "copy, [blank][help]ya da [bold]paste[blank][help] eklemelisiniz, örneğin [bold]%s copy.[blank]\n";
     choose_action_items_message = "[error]❌ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir.[help] %s işleminden sonra öğeler eklemeyi "
                                   "deneyiniz, örneğin [bold]clipboard %s contacts.txt myprogram.cpp[blank]\n";
     fix_redirection_action_message = "[error]❌ [bold]%s[blank][error](ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. [help] "
