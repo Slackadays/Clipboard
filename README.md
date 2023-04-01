@@ -4,7 +4,7 @@ The Clipboard project is a _ridiculously_ easy-to-use data remembrance tool with
 
 That's underselling it a bit.
 
-Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and anywhere**. Have a telepath with an infallible memory always by your side. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
+Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and anywhere**. Have a telepath with an infallible memory always by your side. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
@@ -461,6 +461,39 @@ $ cb clear
 $ cb clr 
 # These both work great!
 ```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb ([--]load|[-]ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
+
+---
+
+Start by copying something.
+```
+$ cb copy "Yo dawg! I heard you liked bachata music."
+```
+
+Load the contents of the clipboard into other clipboards.
+
+```
+$ cb load 1 2 3 _foo
+$ cb ld 1 2 3 _foo
+# Both work great!
+```
+
+Note: If you don't provide a destination clipboard, then the Load action will load the contents into the default clipboard.
+
+Load the contents of some clipboard into the default.
+
+```
+$ cb load_foo
+$ cb ld_foo
+# Both also work great!
+```
+
+Note: This is useful if you want to load content into GUI clipboard systems, as they only connect to the default clipboard.
 
 </details>
 
