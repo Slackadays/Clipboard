@@ -415,7 +415,7 @@ $ echo "music" | cb remove
 
 ---
 
-<details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes]</code></summary>
 
 ---
 
