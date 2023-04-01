@@ -504,7 +504,7 @@ void setFlags() {
 
 void verifyAction() {
     if (io_type == IOType::Pipe && arguments.size() >= 2) {
-        fprintf(stderr, "%s", redirection_no_items_message().data());
+        fprintf(stderr, redirection_no_items_message().data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);
     }
 }
@@ -524,7 +524,7 @@ void setFilepaths() {
 void checkForNoItems() {
     using enum Action;
     if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type == IOType::File && copying.items.size() < 1) {
-        printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), actions[action].data());
+        printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
     if (action == Paste && fs::is_empty(path.data)) {

@@ -71,11 +71,11 @@ Message no_valid_action_message = "[error]❌ You did not specify a valid action
                                   "to include one. [help]Try using or adding [bold]cut, copy, [blank][help]or "
                                   "[bold]paste[blank][help] instead, like [bold]%s copy.[blank]\n";
 Message choose_action_items_message = "[error]❌ You need to choose something to %s.[help] Try adding the items you want "
-                                      "to %s to the end, like [bold]clipboard %s contacts.txt myprogram.cpp[blank]\n";
+                                      "to %s to the end, like [bold]%s %s contacts.txt myprogram.cpp[blank]\n";
 Message fix_redirection_action_message = "[error]❌ You can't use the [bold]%s[blank][error] action with redirection here. [help]Try removing "
-                                         "[bold]%s[blank][help] or use [bold]%s[blank][help] instead, like [bold]clipboard %s[blank][help].\n";
+                                         "[bold]%s[blank][help] or use [bold]%s[blank][help] instead, like [bold]%s %s[blank][help].\n";
 Message redirection_no_items_message = "[error]❌ You can't specify items when you use redirection. [help]Try removing "
-                                       "the items that come after [bold]clipboard [action].\n";
+                                       "the items that come after [bold]%s [action].\n";
 Message paste_success_message = "[success]✅ Pasted successfully[blank]\n";
 Message clipboard_failed_one_message = "[error]❌ Clipboard couldn't %s this item:[blank]\n";
 Message clipboard_failed_many_message = "[error]❌ Clipboard couldn't %s these items:[blank]\n";
@@ -148,11 +148,11 @@ void setLanguageES() {
                               "[bold]%s copiar[blank][help] para comenzar, o si necesitas ayuda, haz "
                               "[bold]%s -h[blank][help] para mostrar el mensaje de ayudar.[blank]\n";
     choose_action_items_message = "[error]❌ Necesitas escoger una cosa para %s.[help] Inténta añadir las cosas que "
-                                  "quieres %s al final, como [bold]clipboard %s contactos.txt miprograma.cpp[blank]\n";
+                                  "quieres %s al final, como [bold]%s %s contactos.txt miprograma.cpp[blank]\n";
     fix_redirection_action_message = "[error]❌ No se puede usar la acción [bold]%s[blank][error] con la redirección. [help]Inténta sacar "
-                                     "[bold]%s[blank][help] o usa [bold]%s[blank][help] en su lugar, como [bold]clipboard %s[blank][help].\n";
+                                     "[bold]%s[blank][help] o usa [bold]%s[blank][help] en su lugar, como [bold]%s %s[blank][help].\n";
     redirection_no_items_message = "[error]❌ No se pueden especificar las cosas con redirección. [help]Inténta sacar las "
-                                   "cosas que siguen [bold]clipboard [acción].\n";
+                                   "cosas que siguen [bold]%s [acción].\n";
     paste_success_message = "[success]✅ Pegó con éxito[blank]\n";
     clipboard_failed_many_message = "[error]❌ Clipboard no pudo %s estas cosas.[blank]\n";
     and_more_fails_message = "[error]▏ ...y [bold]%i[blank][error] más.[blank]\n";
@@ -202,11 +202,11 @@ void setLanguagePT() {
                                     "colar[blank][help] no final, como em [bold]clipboard copiar[blank][help]. Caso precise de ajuda, tente "
                                     "[bold]clipboard -h[blank][help] para mostrar a tela de instruções.[blank]\n";
     choose_action_items_message = "[error]❌ Você precisa especificar algo para %s.[help] Tenta adicionar os itens que você quer %s ao final, "
-                                  "como em [bold]clipboard %s contatos.txt meuprograma.cpp[blank]\n";
+                                  "como em [bold]%s %s contatos.txt meuprograma.cpp[blank]\n";
     fix_redirection_action_message = "[error]❌ Você não pode [bold]%s[blank][error] com redirecionamento aqui. [help]Tente remover "
-                                     "[bold]%s[blank][help] ou utilizar [bold]%s[blank][help], como em [bold]clipboard %s[blank][help].\n";
+                                     "[bold]%s[blank][help] ou utilizar [bold]%s[blank][help], como em [bold]%s %s[blank][help].\n";
     redirection_no_items_message = "[error]❌ Você não pode especificar itens ao redirecionar. [help]Tente remover itens "
-                                   "que vêm após [bold]clipboard [action].\n";
+                                   "que vêm após [bold]%s [action].\n";
     paste_success_message = "[success]✅ Colado com sucesso[blank]\n";
     clipboard_failed_many_message = "[error]❌ Clipboard não pôde %s esses itens.[blank]\n";
     and_more_fails_message = "[error]▏ ...e mais [bold]%i[blank][error].[blank]\n";
@@ -273,11 +273,11 @@ void setLanguageTR() {
     no_valid_action_message = "[error]❌ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz [help]Komutunuza [bold]cut, "
                               "copy, [blank][help]ya da [bold]paste[blank][help] eklemelisiniz, örneğin [bold]%s copy.[blank]\n";
     choose_action_items_message = "[error]❌ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir.[help] %s işleminden sonra öğeler eklemeyi "
-                                  "deneyiniz, örneğin [bold]clipboard %s contacts.txt myprogram.cpp[blank]\n";
+                                  "deneyiniz, örneğin [bold]%s %s contacts.txt myprogram.cpp[blank]\n";
     fix_redirection_action_message = "[error]❌ [bold]%s[blank][error](ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. [help] "
                                      "[bold]%s[blank][help] işlemini silin veya [bold]%s[blank][help] işlemini kullanın, örneğin "
-                                     "[bold]clipboard %s[blank][help].\n";
-    redirection_no_items_message = "[error]❌ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. [help][bold]clipboard "
+                                     "[bold]%s %s[blank][help].\n";
+    redirection_no_items_message = "[error]❌ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. [help][bold]%s "
                                    "[action][blank][help]'dan sonra  gelen öğeleri siliniz.\n";
     paste_success_message = "[success]✅ Yapıştırma başarıyla tamamlandı[blank]\n";
     clipboard_failed_many_message = "[error]❌ %s(ma/me) işlemi şu öğeler için başarısız oldu:[blank]\n";
