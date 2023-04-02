@@ -26,7 +26,7 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
     </a>
 </p>
 
-<details><summary align="center"><img src="documentation/readme-assets/ClipboardFeatures.png" alt="Feast your eyes on our exquisite features." height=30px /></summary>
+<details><summary align="center"><b><i>Feast your eyes</i> on our exquisite features.</b></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**
