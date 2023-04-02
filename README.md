@@ -114,6 +114,8 @@ $ cmake --install .
 
 Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
+<br>
+
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
@@ -639,6 +641,8 @@ cb -c footar < foobar.tar
 cb note "Latest files from website ABCXYZ"
 ```
 
+<br>
+
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
@@ -699,6 +703,8 @@ cb note "Latest files from website ABCXYZ"
 ---
 
  &emsp; **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
+ 
+<br>
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
