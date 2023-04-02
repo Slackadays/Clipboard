@@ -1,5 +1,7 @@
 ### ![Clipboard by Jackson Huff](documentation/readme-assets/CBBanner.png)
 
+<br>
+
 The Clipboard project is a _ridiculously_ easy-to-use data remembrance tool with tons of useful features and _gorgeous_ eye candy.
 
 That's underselling it a bit.
@@ -9,6 +11,8 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
 </p>
+
+<br>
 
 ![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
@@ -46,9 +50,6 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 
-<br>
-<br>
-
 ### <a href="https://github.com/Slackadays/Clipboard/blob/main/src/install.sh"><img src="documentation/readme-assets/AllExceptWindows.png" alt="All Except Windows" height=25px /></a>
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
@@ -58,7 +59,8 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
 ```
 
-<br><br>
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/PremadeBuilds.png" alt="Premade Builds" height=25px />
 
@@ -112,13 +114,7 @@ $ cmake --install .
 
 Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
-<br>
-<br>
-
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
-
-<br>
-<br>
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
@@ -643,13 +639,7 @@ cb -c footar < foobar.tar
 cb note "Latest files from website ABCXYZ"
 ```
 
-<br>
-<br>
-
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
-    
-<br>
-<br>
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
@@ -709,17 +699,18 @@ cb note "Latest files from website ABCXYZ"
 ---
 
  &emsp; **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
-    
-<br>
-<br>
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
 Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [the Discord group](https://discord.gg/J6asnc3pEG)! 
 
-[![Clipboard Wiki](https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge)](https://github.com/Slackadays/Clipboard/wiki)
-[![Questions? Just ask](https://img.shields.io/badge/Questions%3F-Ask%20Away-red?style=for-the-badge)](https://github.com/Slackadays/Clipboard/discussions)
-[![Discord Support](https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge)](https://discord.gg/J6asnc3pEG)
+<p align="center">
+<a href="https://github.com/Slackadays/Clipboard/wiki"><img src="https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge" alt="Clipboard Wiki">
+&emsp; &emsp; &emsp; &emsp; &emsp;
+<a href="https://github.com/Slackadays/Clipboard/discussions"><img src="https://img.shields.io/badge/Questions%3F-Ask%20Away-red?style=for-the-badge" alt="Questions? Ask Away!"></a>
+&emsp; &emsp; &emsp; &emsp; &emsp;
+<a href="https://discord.gg/J6asnc3pEG"><img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge" alt="Discord Chat"></a>
+</p>
 
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
