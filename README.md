@@ -54,7 +54,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 (Invoke-WebRequest -UseBasicParsing https://github.com/Slackadays/Clipboard/raw/main/src/install.ps1).Content | powershell
 ```
 
----
+<br><br>
 
 ### <img src="documentation/readme-assets/PremadeBuilds.png" alt="Premade Builds" height=25px />
 
@@ -87,7 +87,8 @@ sudo xbps-install -S clipboard
 
 You can also get the latest Clipboard revision [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/main/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
 
----
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px />
 You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatibility, you'll also need libx11 and/or libwayland.
@@ -133,7 +134,8 @@ $ cb note_420
 $ cb
 ```
 
----
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/Actions.png" alt="Actions" height=25px />
 
@@ -588,8 +590,11 @@ $ cb
 ```
 
 </details>
-
+    
 ---
+
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Actions" height=25px />
 
@@ -642,6 +647,9 @@ cb note "Latest files from website ABCXYZ"
 ---
 
  &emsp; **`--no-progress`, `-np`** &emsp; Add this to disable progress messages from Clipboard.
+    
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=25px />
 
