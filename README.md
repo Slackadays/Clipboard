@@ -10,6 +10,8 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
 </p>
 
+![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
+
 <p align="center">
     <a href="https://discord.gg/J6asnc3pEG">
         <img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge" alt="Discord Support">
@@ -23,8 +25,6 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2">
     </a>
 </p>
-
-![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
 <details><summary><b><i>Feast your eyes</i> on our exquisite features.</b></summary>
 
