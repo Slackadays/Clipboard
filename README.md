@@ -45,6 +45,10 @@ Clipboard is **_<ins>your</ins>_** time and effort saver to use **anytime and an
 </details>
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
+
+<br>
+<br>
+
 ### <a href="https://github.com/Slackadays/Clipboard/blob/main/src/install.sh"><img src="documentation/readme-assets/AllExceptWindows.png" alt="All Except Windows" height=25px /></a>
 ```bash
 curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
@@ -108,7 +112,13 @@ $ cmake --install .
 
 Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
+<br>
+<br>
+
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
+
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
@@ -633,8 +643,13 @@ cb -c footar < foobar.tar
 cb note "Latest files from website ABCXYZ"
 ```
 
+<br>
+<br>
 
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
+    
+<br>
+<br>
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
@@ -694,6 +709,9 @@ cb note "Latest files from website ABCXYZ"
 ---
 
  &emsp; **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
+    
+<br>
+<br>
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
