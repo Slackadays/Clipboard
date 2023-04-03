@@ -2,7 +2,7 @@
 
 <br>
 
-The Clipboard project is a _ridonkulously_ easy-to-use data remembrance tool with oodles of useful features and absolutely _gorgeous_ eye candy.
+Clipboard is a _ridonkulously_ easy-to-use data remembrance tool with oodles of useful features and absolutely _gorgeous_ eye candy.
 
 That's underselling it a bit.
 
