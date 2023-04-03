@@ -45,7 +45,7 @@ Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effo
 - **Addicted to technical details? Have we got something real good for you, as Clipboard is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
 - **Still not convinced? What if you were told you could easily script Clipboard to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
 - **Did we mention that Clipboard is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. Clipboard is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
-- **Finally, experience the marvel that is the Clipboard documentation. All you need is in this completely <i>ridonkulicious</i> readme!**
+- **Finally, experience the marvel that is the Clipboard documentation. All you need is in this readme!**
 
 </details>
 
