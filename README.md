@@ -45,6 +45,7 @@ Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effo
 - **Addicted to technical details? Have we got something real good for you, as Clipboard is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
 - **Still not convinced? What if you were told you could easily script Clipboard to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
 - **Did we mention that Clipboard is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. Clipboard is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
+- **Finally, experience the marvel that is the Clipboard documentation. All you need is in this completely <i>ridonkulicious</i> readme!**
 
 </details>
 
@@ -120,7 +121,7 @@ Remove everything listed in `install_manifest.txt`. If you're not using Windows,
 
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
-```
+```sh
 $ cb copy NuclearLaunchCodes.pdf
 $ cb note "Keep this a secret"
 $ echo "Keep this a secret OR ELSE" | cb note
@@ -154,51 +155,51 @@ Add a number to the end of your action to choose which clipboard you want to use
 ---
 
 Copy a file.
-```
+```sh
 $ cb copy FooFile
 $ cb cp FooFile 
 # These are the same!
 ```
 
 Copy a file and a directory.
-```
+```sh
 $ cb copy FooFile BarDir
 $ cb cp FooFile BarDir 
 # These are also the same!
 ```
 
 Copy piped in data.
-```
+```sh
 $ echo "Foobar" | cb
 $ echo "Foobar" | cb copy 
 # Also the same again
 ```
 
 Copy text directly.
-```
+```sh
 $ cb copy "Aventura was the best bachata band"
 ```
 Note: This happens instead of copying a file/directory if there is only one item present and that item doesn't exist as a file/directory.
 
 Copy a file to the clipboard named "4"
-```
+```sh
 $ cb copy4 FooFile
 ```
 
 Copy piped in data to the persistent clipboard named "hello"
-```
+```sh
 $ echo "Foobar" | cb copy_hello
 ```
 
 Copy text to the clipboard named "hey"
-```
+```sh
 $ cb --clipboard hey copy "Aventura was the best bachata band"
 $ cb -c hey copy "Aventura was the best bachata band" 
 # These are the same!
 ```
 
 Copy a file with spaces and many directories to clipboard "50" using the abbreviated action name.
-```
+```sh
 $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 ```
 
@@ -211,49 +212,49 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 ---
 
 Cut a file.
-```
+```sh
 $ cb cut FooFile
 $ cb ct FooFile 
 # These are the same!
 ```
 
 Cut a file and a directory.
-```
+```sh
 $ cb cut FooFile BarDir
 $ cb ct FooFile BarDir 
 # These are also the same!
 ```
 
 Cut piped in data.
-```
+```sh
 $ echo "Foobar" | cb cut
 ```
 Note: Cutting piped in data is the same as copying, except that Clipboard will delete all content after you paste it somewhere.
 
 Cut text directly.
-```
+```sh
 $ cb cut "Hunter2"
 ```
 Note: This happens instead of cutting a file/directory if there is only one item present and that item doesn't exist as a file/directory.
 
 Cut a file to the clipboard named "4"
-```
+```sh
 $ cb cut4 FooFile
 ```
 
 Cut piped in data to the persistent clipboard named "hello"
-```
+```sh
 $ echo "Foobar" | cb cut_hello
 ```
 
 Cut text to the clipboard named "hey"
-```
+```sh
 $ cb --clipboard hey cut "Aventura was the best bachata band"
 $ cb -c hey cut "Aventura was the best bachata band" # These are the same!
 ```
 
 Cut a file with spaces and many directories to clipboard "50" using the abbreviated action name.
-```
+```sh
 $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 ```
 
@@ -266,12 +267,12 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 ---
 
 Start by copying or cutting something.
-```
+```sh
 $ cb copy FooFile WhyAventuraIsTheBest.pdf
 ```
 
 Paste in the current working directory.
-```
+```sh
 $ cb paste
 $ cb p 
 # These are the same!
@@ -280,24 +281,24 @@ Note: If you paste after cutting, then Clipboard will delete the original files 
 
 Paste anything containing "Aventura."
 
-```
+```sh
 $ cb p ".*Aventura.*"
 ```
 
 Now, let's copy some raw data.
-```
+```sh
 $ echo "Bananas!" | cb
 ```
 
 Paste the raw data file in the current working directory.
-```
+```sh
 $ cb paste
 $ cb p 
 # Also the same
 ```
 
 Pipe everything out to some file.
-```
+```sh
 $ cb paste > SomeFile
 $ cb p > SomeFile
 $ cb > SomeFile 
@@ -305,7 +306,7 @@ $ cb > SomeFile
 ```
 
 Pipe everything from clipboard "42" out to some file.
-```
+```sh
 $ cb paste42 > SomeFile
 $ cb p42 > SomeFile
 $ cb -c 42 > SomeFile 
@@ -313,7 +314,7 @@ $ cb -c 42 > SomeFile
 ```
 
 Pipe everything out to some program.
-```
+```sh
 $ cb paste | cat
 $ cb p | cat
 $ cb | cat 
@@ -323,7 +324,7 @@ $ cb | Write-Output
 ```
 
 Pipe everything from persistent clipboard "2" out to some program.
-```
+```sh
 $ cb paste_2 | cat
 $ cb p_2 | cat
 $ cb -c _2 | cat 
@@ -343,12 +344,12 @@ Note: If you paste after cutting, then Clipboard will delete the raw data afterw
 ---
 
 Start by copying something.
-```
+```sh
 $ cb copy FooFile
 ```
 
 Add a file.
-```
+```sh
 $ cb add SomeOtherFile
 $ cb ad SomeOtherFile 
 # Abbreviated
@@ -356,25 +357,25 @@ $ cb ad SomeOtherFile
 ```
 
 Add a directory.
-```
+```sh
 $ cb add "We Broke The Rules"
 $ cb ad "We Broke The Rules"
 # Abbreviated
 ```
 
 Now let's copy some raw data.
-```
+```sh
 $ cb copy "'Let me find that'"
 ```
 
 Add raw data to the end of what's stored.
-```
+```sh
 $ cb add " is one of Romeo Santos' catchphrases."
 # The content is now: 'Let me find that' is one of Romeo Santos' catchphrases.
 ```
 
 Add raw data by piping it in.
-```
+```sh
 $ echo " What's yours?" | cb add 
 # The content is now: 'Let me find that' is one of Romeo Santos' catchphrases. What's yours?
 ```
@@ -388,35 +389,35 @@ $ echo " What's yours?" | cb add
 ---
 
 Start by copying something.
-```
+```sh
 $ cb copy FooFile BarDir BazDir
 ```
 
 Remove everything starting with "B"
-```
+```sh
 $ cb remove "B.*"
 # Clipboard will match this against "BarDir" and "BazDir" and remove them
 ```
 
 Remove everything matching a specific name
-```
+```sh
 $ cb remove "BarDir"
 # Clipboard will match this against "BarDir" only and remove it
 ```
 
-Now let's copy some raw data.
-```
+Now let's shcopy some raw data.
+```sh
 $ cb copy "A bachatero is someone who makes bachata music."
 ```
 
 Remove anything with a space beforehand and that ends with "-ero"
-```
+```sh
 $ cb remove "(?<= ).*ero"
 # The content is now: A  is someone who makes bachata music.
 ```
 
 Remove anything matching "music" by piping the pattern in.
-```
+```sh
 $ echo "music" | cb remove
 # The content is now: A  is someone who makes bachata .
 ```
@@ -430,24 +431,24 @@ $ echo "music" | cb remove
 ---
 
 Start by copying something.
-```
+```sh
 $ cb copy FooFile BarDir BazDir
 ```
 
 List all the items in the clipboard.
-```
+```sh
 $ cb show
 $ cb sh 
 # These both work great!
 ```
 
 Now let's copy some raw data.
-```
+```sh
 $ cb copy "Those who are tired of bachata are tired of life"
 ```
 
 Show the contents of the clipboard.
-```
+```sh
 $ cb show
 ```
 Note: If there is a lot of data, Clipboard may only show enough to fill the terminal screen.
@@ -461,12 +462,12 @@ Note: If there is a lot of data, Clipboard may only show enough to fill the term
 ---
 
 Start by copying something.
-```
+```sh
 $ cb copy FooFile BarDir BazDir
 ```
 
 Clear the clipboard of all data.
-```
+```sh
 $ cb clear
 $ cb clr 
 # These both work great!
@@ -481,13 +482,13 @@ $ cb clr
 ---
 
 Start by copying something.
-```
+```sh
 $ cb copy "Yo dawg! I heard you liked bachata music."
 ```
 
 Load the contents of the clipboard into other clipboards.
 
-```
+```sh
 $ cb load 1 2 3 _foo
 $ cb ld 1 2 3 _foo
 # Both work great!
@@ -497,7 +498,7 @@ Note: If you don't provide a destination clipboard, then the Load action will lo
 
 Load the contents of some clipboard into the default.
 
-```
+```sh
 $ cb load_foo
 $ cb ld_foo
 # Both also work great!
@@ -514,21 +515,21 @@ Note: This is useful if you want to load content into GUI clipboard systems, as 
 ---
 
 Add a personal note to a clipboard.
-```
+```sh
 $ cb note "For my Aventura music collection"
 $ cb nt "For my Aventura music collection"
 # This also works great!
 ```
 
 Add a personal note to a clipboard by piping it in.
-```
+```sh
 $ echo "For my Aventura music collection" | cb note
 $ echo "For my Aventura music collection" | cb nt 
 # This also works great!
 ```
 
 Remove a note from a clipboard.
-```
+```sh
 $ cb note ""
 ```
 
@@ -541,12 +542,12 @@ $ cb note ""
 ---
 
 Start by adding a note to a clipboard.
-```
+```sh
 $ cb note "For my Aventura music collection"
 ```
 
 Show the note you added.
-```
+```sh
 $ cb note
 ```
 
@@ -559,7 +560,7 @@ $ cb note
 ---
 
 Show helpful details for a clipboard.
-```
+```sh
 $ cb info
 $ cb in
 # Both are the same!
@@ -574,7 +575,7 @@ $ cb in
 ---
 
 Show the help message.
-```
+```sh
 $ cb help
 $ cb --help
 $ cb -h 
@@ -590,7 +591,7 @@ $ cb -h
 ---
 
 Check the status of all clipboards that have content.
-```
+```sh
 $ cb status
 $ cb st
 $ cb 
@@ -647,62 +648,280 @@ cb note "Latest files from website ABCXYZ"
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
- &emsp; **`--clipboard (clipboard)`, `-c (clipboard)`** &emsp; Add this to choose which clipboard you want to use.
+<details><summary> &ensp; <b><code>--clipboard (clipboard)</code>, <code>-c (clipboard)</code></b> &emsp; Add this to choose which clipboard you want to use. </summary>
 
 ---
 
- &emsp; **`--fast-copy`, `-fc`** &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+Choose a non-default clipboard.
+```sh
+$ cb -c 5 copy Foobar
+$ cb --clipboard 10 copy BarBaz
+```
+
+Copy to a temporary clipboard that doesn't start with a number.
+```sh
+$ cb -c SomeCB copy "A really really long sentence, and I mean really realy super DUPER long!"
+```
+
+Note: Although copying to a temporary clipboard that doesn't start with a number is impossible using the conventional method of adding it to the end of the action, this alternative method is completely supported and works great.
+
+Choose a persistent clipboard.
+```sh
+$ cb -c _ copy "Generation Next"/*
+```
+
+</details>
 
 ---
 
- &emsp; **`--no-progress`, `-np`** &emsp; Add this to disable progress messages from Clipboard.
+<details><summary> &ensp; <b><code>--fast-copy</code>, <code>-fc</code></b> &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.</summary>
+
+---
+
+Copy a lot of files in much less time than before.
+```sh
+$ cb --fast-copy copy /usr/bin/*
+```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b><code>--no-progress</code>, <code>-np</code></b> &emsp; Add this to disable progress messages from Clipboard. </summary>
+
+---
+
+Reduce distractions while doing a search that takes a while.
+```sh
+$ fzf | cb -np
+```
+
+</details>
+
+---
     
 <br>
 <br>
 
 ### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=25px />
 
- &emsp; **`CI`** &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
+<details><summary> &ensp; <b><code>CI</code></b> &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</summary>
 
 ---
 
- &emsp; **`CLIPBOARD_LOCALE`** &emsp; Set this to the locale that only Clipboard will use for its commands and output, like `en_US.UTF-8` or `es_DO.UTF-8`.
+Use Clipboard in a CI script.
+```sh
+...
+cb cp Temp/*
+...
+cb p
+...
+```
+
+</details>
 
 ---
 
- &emsp; **`CLIPBOARD_TMPDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
+<details><summary> &ensp; <b><code>CLIPBOARD_LOCALE</code></b> &emsp; Set this to the locale that only Clipboard will use for its commands and output, like <code>en_US.UTF-8</code> or <code>es_DO.UTF-8</code>. </summary>
 
 ---
 
- &emsp; **`CLIPBOARD_PERSISTDIR`** &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
+Change the locale to match what you're more comfortable with.
+```sh
+$ export CLIPBOARD_LOCALE=es_DO.UTF-8
+$ cb cp "Amo a Aventura"
+
+> $Env:CLIPBOARD_LOCALE=es_DO.UTF-8
+# Powershell version
+```
+
+Override the locale case-by-case.
+```sh
+$ export CLIPBOARD_LOCALE=fr_CA.UTF-8
+...
+$ CLIPBOARD_LOCALE="" cb cp Foobar
+```
+
+</details>
 
 ---
 
- &emsp; **`CLIPBOARD_ALWAYS_PERSIST`** &emsp; Set this to anything to make Clipboard always use persistent clipboards.
+<details><summary> &ensp; <b><code>CLIPBOARD_TMPDIR</code></b> &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.</summary>
 
 ---
 
- &emsp; **`CLIPBOARD_NOGUI`** &emsp; Set this to anything to disable integration with GUI clipboards.
+Choose a special place to put your temporary clipboards this one time.
+```sh
+$ CLIPBOARD_TMPDIR=/home/jackson/SomeDirectory cb copy *
+```
+
+Choose a special place to put your temporary clipboards every time.
+
+```sh
+$ export CLIPBOARD_TMPDIR=/home/jackson/SomeDirectory
+$ cb copy *
+> $Env:CLIPBOARD_TMPDIR = /home/jackson/SomeDirectory
+# Powershell
+```
+
+</details>
 
 ---
 
- &emsp; **`CLIPBOARD_NOPROGRESS`** &emsp; Set this to anything to disable only progress messages from Clipboard.
+<details><summary> &ensp; <b><code>CLIPBOARD_PERSISTDIR</code></b> &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.</summary>
 
 ---
 
- &emsp; **`CLIPBOARD_SILENT`** &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.
+Choose a special place to put your persistent clipboards this one time.
+```sh
+$ CLIPBOARD_PERSISTDIR=/home/jackson/SomeDirectory cb copy *
+```
+
+Choose a special place to put your persistent clipboards every time.
+
+```sh
+$ export CLIPBOARD_PERSISTDIR=/home/jackson/SomeDirectory
+$ cb copy *
+> $Env:CLIPBOARD_PERSISTDIR = /home/jackson/SomeDirectory
+# Powershell
+```
+
+</details>
 
 ---
 
- &emsp; **`CLIPBOARD_THEME`** &emsp; Set this to the color theme that Clipboard will use. Choose between `light`, `darkhighcontrast`, `lighthighcontrast`, `amber`, and `green` (the default is `dark`).
+<details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to anything to make Clipboard always use persistent clipboards.</summary>
 
 ---
 
- &emsp; **`FORCE_COLOR`** &emsp; Set this to anything to make Clipboard always show color regardless of what you set `NO_COLOR` to.
+Make everything you copy persistent.
+
+```sh
+$ export CLIPBOARD_ALWAYS_PERSIST=1
+$ cb copy Foo Bar Baz
+# This puts everything in the persistent directory but still with the clipboard name "0"
+```
+
+</details>
 
 ---
 
- &emsp; **`NO_COLOR`** &emsp; Set this to anything to make Clipboard not show any colors.
+<details><summary> &ensp; <b><code>CLIPBOARD_NOGUI</code></b> &emsp; Set this to anything to disable integration with GUI clipboards.</summary>
+
+---
+
+Debug a flaky GUI system by disabling its integration with Clipboard.
+
+```sh
+$ CLIPBOARD_NOGUI=1 cb show
+$ export CLIPBOARD_NOGUI=1
+$ cb show
+```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b><code>CLIPBOARD_NOPROGRESS</code></b> &emsp; Set this to anything to disable only progress messages from Clipboard.</summary>
+
+---
+
+Reduce distractions while doing a search that takes a while.
+```sh
+$ fzf | CLIPBOARD_NOPROGRESS=1 cb
+```
+
+Disable progress messages from Clipboard entirely.
+```sh
+$ export CLIPBOARD_NOPROGRESS=1
+$ fzf | cb
+```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b><code>CLIPBOARD_SILENT</code></b> &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.</summary>
+
+---
+
+Rest in peace by seeing nothing that isn't an error.
+```sh
+$ export CLIPBOARD_SILENT=1
+$ cb cp "I'm running out of Aventura references"
+```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b><code>CLIPBOARD_THEME</code></b> &emsp; Set this to the color theme that Clipboard will use. Choose between <code>light</code>, <code>darkhighcontrast</code>, <code>lighthighcontrast</code>, <code>amber</code>, and <code>green</code> (the default is <code>dark</code>).</summary>
+
+---
+
+Remind yourself of the terminals of the past.
+```sh
+$ export CLIPBOARD_THEME=green
+$ cb cp "I'm in the Matrix now"
+$ export CLIPBOARD_THEME=amber
+$ cb cp "Yellow terminals feel just like sitting in front of a nice campfire"
+```
+
+Make Clipboard more accessible.
+```sh
+$ export CLIPBOARD_THEME=darkhighcontrast
+$ cb show
+```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b><code>FORCE_COLOR</code></b> &emsp; Set this to anything to make Clipboard always show color regardless of what you set <code>NO_COLOR</code> to.</summary>
+
+---
+
+Override somebody else's choice to disable colors.
+```sh
+$ export NO_COLOR=1
+...
+$ FORCE_COLOR=1 cb copy "There are almost no bachateros where I live right now"
+```
+
+Note: Clipboard also supports `CLICOLOR_FORCE`.
+
+Override somebody else's choice to disable colors, but in a different way.
+```sh
+$ export CLICOLOR=0
+...
+$ CLICOLOR_FORCE=1 cb copy "There are almost no bachateros where I live right now"
+```
+
+</details>
+
+---
+
+<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to anything to make Clipboard not show any colors.</summary>
+
+---
+
+Make Clipboard look boring.
+```sh
+$ export NO_COLOR=1
+$ cb cp "From the 1960s until the 1990s, bachata was perceived as boring music for poor Dominicans."
+```
+
+Note: Clipboard also supports `CLICOLOR`.
+
+Make Clipboard look boring, but in a different way.
+```sh
+$ export CLICOLOR=0
+$ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachata by using electric guitars with fancy effects."
+```
+
+</details>
+
+---
  
 <br>
 
@@ -718,6 +937,8 @@ Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for
 <a href="https://discord.gg/J6asnc3pEG"><img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge" alt="Discord Chat"></a>
 </p>
 
+<br>
+
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
 Say thank you to all our beautiful contributors who have helped make Clipboard incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
@@ -725,6 +946,7 @@ Say thank you to all our beautiful contributors who have helped make Clipboard i
 
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
     
+<br>
 <br>
 
 <p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
