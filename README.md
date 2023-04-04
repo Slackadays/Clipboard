@@ -152,7 +152,7 @@ Add a number to the end of your action to choose which clipboard you want to use
 
 <details><summary> &ensp; <b>Copy</b> &emsp; <code>cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]copy|[-]cp)][(num)|_(id)]</code></summary>
 
----
+<br>
 
 Copy a file.
 ```sh
@@ -205,11 +205,11 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Cut</b> &emsp; <code>cb ([--]cut|[-]ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]cut|[-]ct)][(num)|_(id)]</code></summary>
 
----
+<br>
 
 Cut a file.
 ```sh
@@ -260,11 +260,11 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)</code> or <code>cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
 
----
+<br>
 
 Start by copying or cutting something.
 ```sh
@@ -337,11 +337,11 @@ Note: If you paste after cutting, then Clipboard will delete the raw data afterw
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Add Contents</b> &emsp; <code>cb ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [([--]add|[-]ad)][(num)|_(id)]</code></summary>
 
----
+<br>
 
 Start by copying something.
 ```sh
@@ -382,11 +382,11 @@ $ echo " What's yours?" | cb add
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Remove Contents</b> &emsp; <code>cb ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [([--]remove|[-]rm)][(num)|_(id)]</code></summary>
 
----
+<br>
 
 Start by copying something.
 ```sh
@@ -424,11 +424,11 @@ $ echo "music" | cb remove
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes]</code></summary>
 
----
+<br>
 
 Start by copying something.
 ```sh
@@ -455,11 +455,11 @@ Note: If there is a lot of data, Clipboard may only show enough to fill the term
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Clear Contents</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
 
----
+<br>
 
 Start by copying something.
 ```sh
@@ -475,11 +475,11 @@ $ cb clr
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb ([--]load|[-]ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
 
----
+<br>
 
 Start by copying something.
 ```sh
@@ -508,11 +508,11 @@ Note: This is useful if you want to load content into GUI clipboard systems, as 
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Set Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [([--]note|[-]nt)][(num)|_(id)]</code></summary>
 
----
+<br>
 
 Add a personal note to a clipboard.
 ```sh
@@ -535,11 +535,11 @@ $ cb note ""
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Show Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)]</code></summary>
 
----
+<br>
 
 Start by adding a note to a clipboard.
 ```sh
@@ -553,11 +553,11 @@ $ cb note
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Show Detailed Info</b> &emsp; <code>cb ([--]info|[-]in)[(num)|_(id)]</code></summary>
 
----
+<br>
 
 Show helpful details for a clipboard.
 ```sh
@@ -568,11 +568,11 @@ $ cb in
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code></summary>
 
----
+<br>
 
 Show the help message.
 ```sh
@@ -584,11 +584,11 @@ $ cb -h
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|[-]st]</code></summary>
 
----
+<br>
 
 Check the status of all clipboards that have content.
 ```sh
@@ -599,8 +599,6 @@ $ cb
 ```
 
 </details>
-    
----
 
 <br>
 <br>
@@ -650,7 +648,7 @@ cb note "Latest files from website ABCXYZ"
 
 <details><summary> &ensp; <b><code>--clipboard (clipboard)</code>, <code>-c (clipboard)</code></b> &emsp; Add this to choose which clipboard you want to use. </summary>
 
----
+<br>
 
 Choose a non-default clipboard.
 ```sh
@@ -672,11 +670,11 @@ $ cb -c _ copy "Generation Next"/*
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>--fast-copy</code>, <code>-fc</code></b> &emsp; Add this to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.</summary>
 
----
+<br>
 
 Copy a lot of files in much less time than before.
 ```sh
@@ -685,11 +683,11 @@ $ cb --fast-copy copy /usr/bin/*
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>--no-progress</code>, <code>-np</code></b> &emsp; Add this to disable progress messages from Clipboard. </summary>
 
----
+<br>
 
 Reduce distractions while doing a search that takes a while.
 ```sh
@@ -697,8 +695,6 @@ $ fzf | cb -np
 ```
 
 </details>
-
----
     
 <br>
 <br>
@@ -707,7 +703,7 @@ $ fzf | cb -np
 
 <details><summary> &ensp; <b><code>CI</code></b> &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</summary>
 
----
+<br>
 
 Use Clipboard in a CI script.
 ```sh
@@ -720,11 +716,11 @@ cb p
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_LOCALE</code></b> &emsp; Set this to the locale that only Clipboard will use for its commands and output, like <code>en_US.UTF-8</code> or <code>es_DO.UTF-8</code>. </summary>
 
----
+<br>
 
 Change the locale to match what you're more comfortable with.
 ```sh
@@ -744,11 +740,11 @@ $ CLIPBOARD_LOCALE="" cb cp Foobar
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_TMPDIR</code></b> &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.</summary>
 
----
+<br>
 
 Choose a special place to put your temporary clipboards this one time.
 ```sh
@@ -766,11 +762,11 @@ $ cb copy *
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_PERSISTDIR</code></b> &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.</summary>
 
----
+<br>
 
 Choose a special place to put your persistent clipboards this one time.
 ```sh
@@ -788,11 +784,11 @@ $ cb copy *
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to anything to make Clipboard always use persistent clipboards.</summary>
 
----
+<br>
 
 Make everything you copy persistent.
 
@@ -804,11 +800,11 @@ $ cb copy Foo Bar Baz
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_NOGUI</code></b> &emsp; Set this to anything to disable integration with GUI clipboards.</summary>
 
----
+<br>
 
 Debug a flaky GUI system by disabling its integration with Clipboard.
 
@@ -820,11 +816,11 @@ $ cb show
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_NOPROGRESS</code></b> &emsp; Set this to anything to disable only progress messages from Clipboard.</summary>
 
----
+<br>
 
 Reduce distractions while doing a search that takes a while.
 ```sh
@@ -839,11 +835,11 @@ $ fzf | cb
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_SILENT</code></b> &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.</summary>
 
----
+<br>
 
 Rest in peace by seeing nothing that isn't an error.
 ```sh
@@ -853,11 +849,11 @@ $ cb cp "I'm running out of Aventura references"
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>CLIPBOARD_THEME</code></b> &emsp; Set this to the color theme that Clipboard will use. Choose between <code>light</code>, <code>darkhighcontrast</code>, <code>lighthighcontrast</code>, <code>amber</code>, and <code>green</code> (the default is <code>dark</code>).</summary>
 
----
+<br>
 
 Remind yourself of the terminals of the past.
 ```sh
@@ -875,11 +871,11 @@ $ cb show
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>FORCE_COLOR</code></b> &emsp; Set this to anything to make Clipboard always show color regardless of what you set <code>NO_COLOR</code> to.</summary>
 
----
+<br>
 
 Override somebody else's choice to disable colors.
 ```sh
@@ -899,11 +895,11 @@ $ CLICOLOR_FORCE=1 cb copy "There are almost no bachateros where I live right no
 
 </details>
 
----
+<br>
 
 <details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to anything to make Clipboard not show any colors.</summary>
 
----
+<br>
 
 Make Clipboard look boring.
 ```sh
@@ -921,7 +917,7 @@ $ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachat
 
 </details>
 
----
+<br>
  
 <br>
 
