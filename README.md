@@ -30,7 +30,11 @@ Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effo
     </a>
 </p>
 
-<details id="this"><summary align="center"><a href="#this"><img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="25px" /></a></summary>
+<details><summary align="center"><picture>
+<source media="(prefers-color-scheme: dark)" srcset="documentation/readme-assets/FeastYourEyes.png">
+<source media="(prefers-color-scheme: light)" srcset="documentation/readme-assets/FeastYourEyes.png">
+<img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="25px" />
+</picture></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**
