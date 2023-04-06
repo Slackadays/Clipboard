@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="70.615616mm"
-   height="10.242236mm"
-   viewBox="0 0 70.615617 10.242236"
+   width="61.071014mm"
+   height="8.1906881mm"
+   viewBox="0 0 61.071015 8.190688"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
@@ -25,7 +25,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="2.6547419"
-     inkscape:cx="218.28864"
+     inkscape:cx="200.96116"
      inkscape:cy="54.995931"
      inkscape:window-width="2560"
      inkscape:window-height="1371"
@@ -65,7 +65,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(16.554449,-102.50474)">
+     transform="translate(11.952678,-102.50474)">
     <text
        xml:space="preserve"
        style="font-size:10.5833px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
@@ -76,6 +76,6 @@
          id="tspan1638"
          style="font-style:italic;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
          x="18.507898"
-         y="110.54556">ridonkulously</tspan></text>
+         y="110.54556">ridonkulous</tspan></text>
   </g>
 </svg>
