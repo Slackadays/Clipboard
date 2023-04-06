@@ -2,7 +2,7 @@
 
 <br>
 
-Clipboard is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="15px" alt="eye candy"/>.
+Clipboard is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="15px" alt="eye candy"/>.
 
 That's underselling it a bit.
 
