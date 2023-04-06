@@ -2,7 +2,7 @@
 
 <br>
 
-Clipboard is a <i color="red">ridonkulously</i> easy-to-use data remembrance tool bursting with oodles of useful features and absolutely _gorgeous_ eye candy.
+Clipboard is a <a href="#"><img src="documentation/readme-assets/ridonkulous.svg" height="13px" alt="ridonkulously"/></a> easy-to-use data remembrance tool bursting with oodles of useful features and absolutely _gorgeous_ eye candy.
 
 That's underselling it a bit.
 

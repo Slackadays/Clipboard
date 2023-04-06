@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="70.615616mm"
+   height="10.242236mm"
+   viewBox="0 0 70.615617 10.242236"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="ridonkulous.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.6547419"
+     inkscape:cx="218.28864"
+     inkscape:cy="54.995931"
+     inkscape:window-width="2560"
+     inkscape:window-height="1371"
+     inkscape:window-x="2560"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient50084">
+      <stop
+         style="stop-color:#fc00ff;stop-opacity:0.99828565"
+         offset="0"
+         id="stop50080" />
+      <stop
+         style="stop-color:#00dbde;stop-opacity:1"
+         offset="1"
+         id="stop50082" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient50084"
+       id="linearGradient50086"
+       x1="-16.554449"
+       y1="107.62585"
+       x2="54.061169"
+       y2="107.62585"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(16.554449,-102.50474)">
+    <text
+       xml:space="preserve"
+       style="font-size:10.5833px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
+       x="18.507898"
+       y="110.54556"
+       id="text1640"><tspan
+         sodipodi:role="line"
+         id="tspan1638"
+         style="font-style:italic;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
+         x="18.507898"
+         y="110.54556">ridonkulously</tspan></text>
+  </g>
+</svg>
