@@ -2,7 +2,7 @@
 
 <br>
 
-Clipboard is a<a href="#"><img src="documentation/readme-assets/ridonkulous.svg" height="13px" alt="ridonkulously"/></a>ly easy-to-use data remembrance tool bursting with oodles of useful features and absolutely _gorgeous_ eye candy.
+Clipboard is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="15px" alt="eye candy"/>.
 
 That's underselling it a bit.
 
@@ -16,7 +16,7 @@ Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effo
 
 ![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
-<p align="center">
+<p align="center" id="dummy">
     <a href="https://discord.gg/J6asnc3pEG">
         <img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge&logo=discord&labelColor=rgb(55,55,55)" alt="Discord Support">
     </a>
@@ -30,7 +30,7 @@ Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effo
     </a>
 </p>
 
-<details><summary align="center"><b><i>Feast your eyes</i> on our exquisite features.</b></summary>
+<details id="this"><summary align="center"><a href="#this"><img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="25px" /></a></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with Clipboard.**

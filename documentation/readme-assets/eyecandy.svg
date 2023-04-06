@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="61.071014mm"
-   height="8.1906881mm"
-   viewBox="0 0 61.071015 8.190688"
+   width="53.74332mm"
+   height="10.242236mm"
+   viewBox="0 0 53.743321 10.242236"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   sodipodi:docname="ridonkulous.svg"
+   sodipodi:docname="eyecandy.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -25,7 +25,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="2.6547419"
-     inkscape:cx="200.96116"
+     inkscape:cx="187.02383"
      inkscape:cy="54.995931"
      inkscape:window-width="2560"
      inkscape:window-height="1371"
@@ -55,17 +55,17 @@
        inkscape:collect="always"
        xlink:href="#linearGradient50084"
        id="linearGradient50086"
-       x1="-11.366108"
-       y1="107.19604"
-       x2="48.776642"
-       y2="107.08994"
+       x1="-6.3898211"
+       y1="107.33183"
+       x2="41.053062"
+       y2="107.63593"
        gradientUnits="userSpaceOnUse" />
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(11.952678,-102.50474)">
+     transform="translate(8.2294026,-102.50474)">
     <text
        xml:space="preserve"
        style="font-size:10.5833px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
@@ -74,8 +74,8 @@
        id="text1640"><tspan
          sodipodi:role="line"
          id="tspan1638"
-         style="font-style:italic;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
+         style="font-style:normal;fill:url(#linearGradient50086);fill-opacity:1;stroke-width:0.264583"
          x="18.507898"
-         y="110.54556">ridonkulous</tspan></text>
+         y="110.54556">eye candy</tspan></text>
   </g>
 </svg>
