@@ -71,7 +71,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 
 <a href="https://repology.org/project/clipboard/versions"><img src="https://repology.org/badge/vertical-allrepos/clipboard.svg" alt="Packaging status" align="right"></a>
 
-**Alpine** (you'll need to enable the Community packages first)
+**Alpine Linux** (you'll need to enable the Community packages first)
 ```sh
 pkg add clipboard
 ```
@@ -84,6 +84,11 @@ yay -S clipboard
 **Homebrew**
 ```sh
 brew install clipboard
+```
+
+**Nix**
+```sh
+nix-env -iA nixpkgs.clipboard-jh
 ```
 
 **Scoop**
