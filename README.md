@@ -73,7 +73,7 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/src/install.sh | sh
 
 **Alpine Linux** (you'll need to enable the Community packages first)
 ```sh
-pkg add clipboard
+apk add clipboard
 ```
 
 **AUR** (Use your favorite AUR helper such as `yay`. You can also get `clipboard-bin` and `clipboard-git`)
