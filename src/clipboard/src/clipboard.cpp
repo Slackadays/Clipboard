@@ -60,7 +60,9 @@ Copying copying;
 
 bool output_silent = false;
 bool progress_silent = false;
+bool confirmation_silent = false;
 bool no_color = false;
+bool no_emoji = false;
 
 std::vector<std::string> arguments;
 
@@ -220,7 +222,7 @@ void releaseLock() {
     std::string decision;
     while (true) {
         std::getline(std::cin, decision);
-        fprintf(stderr, "%s", replaceColors("[blank]").data());
+        fprintf(stderr, "%s", formatMessage("[blank]").data());
 
         if (decision == "y" || decision == "yes")
             return ReplaceOnce;
@@ -400,6 +402,8 @@ void setupVariables(int& argc, char* argv[]) {
 
     no_color = (NO_COLOR || CLICOLOR) && !FORCE_COLOR && !CLICOLOR_FORCE;
 
+    no_emoji = getenv("CLIPBOARD_NOEMOJI") ? true : false;
+
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
     progress_silent = getenv("CLIPBOARD_NOPROGRESS") ? true : false;
@@ -489,8 +493,9 @@ IOType getIOType() {
 void setFlags() {
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
+    if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
     if (flagIsPresent<bool>("--ee")) {
-        printf("%s", replaceColors("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
+        printf("%s", formatMessage("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
@@ -527,7 +532,7 @@ void checkForNoItems() {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
-    if (action == Paste && fs::is_empty(path.data)) {
+    if ((action == Paste || action == Show || action == Clear) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
         PerformAction::status();
         exit(EXIT_SUCCESS);
     }
@@ -667,6 +672,8 @@ void performAction() {
             removeRegex();
         else if (action == Note)
             notePipe();
+        else if (action == Show)
+            showFilepaths();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
@@ -707,7 +714,7 @@ void showFailures() {
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
     for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-        printf(replaceColors("[error]▏ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+        printf(formatMessage("[error]▏ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
         if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
     }
     printf("%s", fix_problem_message().data());

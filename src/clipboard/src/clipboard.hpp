@@ -147,7 +147,9 @@ extern std::string locale;
 
 extern bool output_silent;
 extern bool progress_silent;
+extern bool confirmation_silent;
 extern bool no_color;
+extern bool no_emoji;
 
 enum class ProgressState : int { Done, Active, Cancel };
 
@@ -198,12 +200,18 @@ public:
     TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
 };
 
-static std::string replaceColors(const std::string_view& str, bool colorful = !no_color) {
-    std::string temp(str);           // a string to do scratch work on
-    for (const auto& key : colors) { // iterate over all the possible colors to replace
-        for (size_t i = 0; (i = temp.find(key.first, i)) != std::string::npos; i += key.second.length()) {
-            temp.replace(i, key.first.length(), colorful ? key.second : "");
-        }
+static std::string formatMessage(const std::string_view& str, bool colorful = !no_color) {
+    std::string temp(str); // a string to do scratch work on
+    auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
+        for (size_t i = 0; (i = temp.find(str, i)) != std::string::npos; i += with.length())
+            temp.replace(i, str.length(), with);
+    };
+    for (const auto& key : colors) // iterate over all the possible colors to replace
+        replaceThis(key.first, colorful ? key.second : "");
+    if (no_emoji) {
+        replaceThis("✅", "✓");
+        replaceThis("❌", "✗");
+        replaceThis("🟡", "-");
     }
     return temp;
 }
@@ -221,7 +229,7 @@ private:
 
 public:
     Message(const auto& message) : internal_message(std::move(message)) {}
-    std::string operator()() const { return std::move(replaceColors(internal_message)); }
+    std::string operator()() const { return std::move(formatMessage(internal_message)); }
     size_t rawLength() const { return std::regex_replace(std::string(internal_message), std::regex("\\[[a-z]+\\]"), "").length(); }
 };
 
@@ -346,4 +354,5 @@ void addFiles();
 void status();
 void info();
 void load();
+void showFilepaths();
 } // namespace PerformAction

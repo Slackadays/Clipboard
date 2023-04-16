@@ -60,7 +60,7 @@ void copyText() {
     writeToFile(path.data.raw, copying.buffer);
 
     if (!output_silent) {
-        printf(replaceColors("[success]✅ %s text \"[bold]%s[blank][success]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
+        printf(formatMessage("[success]✅ %s text \"[bold]%s[blank][success]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
     }
 
     if (action == Action::Cut) writeToFile(path.metadata.originals, path.data.raw.string());
@@ -142,7 +142,6 @@ void pipeOut() {
 }
 
 void clear() {
-    if (fs::is_empty(path.data)) printf("%s", no_clipboard_contents_message().data());
     clearTempDirectory(true);
 }
 
@@ -154,16 +153,11 @@ void show() {
 
     stopIndicator();
 
-    if (!fs::exists(path.data) || fs::is_empty(path.data)) {
-        printf(no_clipboard_contents_message().data(), actions[Action::Cut].data(), actions[Action::Copy].data(), actions[Action::Paste].data(), actions[Action::Copy].data());
-        return;
-    }
-
     if (fs::is_regular_file(path.data.raw)) {
         std::string content(fileContents(path.data.raw));
         std::erase(content, '\n');
         printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
-        printf(replaceColors("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
+        printf(formatMessage("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
         if (content.size() > 250) {
             printf(and_more_items_message().data(), content.size() - 250);
         }
@@ -175,7 +169,15 @@ void show() {
     for (const auto& entry : fs::directory_iterator(path.data)) {
         if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
             continue;
-        printf(replaceColors("[info]▏ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
+        printf(formatMessage("[info]▏ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
+    }
+}
+
+void showFilepaths() {
+    // output filepaths of all stored items to stdout
+    for (const auto& entry : fs::directory_iterator(path.data)) {
+        printf("%s ", entry.path().string().data());
+        incrementSuccessesForItem(entry);
     }
 }
 
@@ -185,7 +187,7 @@ void addFiles() {
     if (fs::is_regular_file(path.data.raw)) {
         fprintf(stderr,
                 "%s",
-                replaceColors("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
+                formatMessage("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
                               "text instead.[blank]\n")
                         .data());
         exit(EXIT_FAILURE);
@@ -205,7 +207,7 @@ void addData() {
     } else if (!fs::is_empty(path.data)) {
         fprintf(stderr,
                 "%s",
-                replaceColors("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
+                formatMessage("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
                               "file instead.[blank]\n")
                         .data());
         exit(EXIT_FAILURE);
@@ -237,7 +239,7 @@ void removeRegex() {
         } else {
             fprintf(stderr,
                     "%s",
-                    replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                    formatMessage("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
             exit(EXIT_FAILURE);
@@ -258,7 +260,7 @@ void removeRegex() {
         if (successes.directories == 0 && successes.files == 0) {
             fprintf(stderr,
                     "%s",
-                    replaceColors("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                    formatMessage("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
             exit(EXIT_FAILURE);
@@ -272,25 +274,25 @@ void noteText() {
             fs::remove(path.metadata.notes);
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, "%s", replaceColors("[success]✅ Removed note\n").data());
+            fprintf(stderr, "%s", formatMessage("[success]✅ Removed note\n").data());
         } else {
             writeToFile(path.metadata.notes, copying.items.at(0).string());
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, replaceColors("[success]✅ Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
+            fprintf(stderr, formatMessage("[success]✅ Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
         }
     } else if (copying.items.empty()) {
         if (fs::is_regular_file(path.metadata.notes)) {
             std::string content(fileContents(path.metadata.notes));
             if (is_tty.out)
-                fprintf(stdout, replaceColors("[info]• Note for this clipboard: %s\n").data(), content.data());
+                fprintf(stdout, formatMessage("[info]• Note for this clipboard: %s\n").data(), content.data());
             else
-                fprintf(stdout, replaceColors("%s").data(), content.data());
+                fprintf(stdout, formatMessage("%s").data(), content.data());
         } else {
-            fprintf(stderr, "%s", replaceColors("[info]• There is no note for this clipboard.[blank]\n").data());
+            fprintf(stderr, "%s", formatMessage("[info]• There is no note for this clipboard.[blank]\n").data());
         }
     } else {
-        fprintf(stderr, "%s", replaceColors("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
 }
@@ -300,7 +302,7 @@ void notePipe() {
     writeToFile(path.metadata.notes, content);
     if (output_silent) return;
     stopIndicator();
-    fprintf(stderr, replaceColors("[success]✅ Saved note \"%s\"\n").data(), content.data());
+    fprintf(stderr, formatMessage("[success]✅ Saved note \"%s\"\n").data(), content.data());
     exit(EXIT_SUCCESS);
 }
 
@@ -335,14 +337,14 @@ void status() {
             int widthRemaining = available.columns
                                  - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
                                     + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
-            printf(replaceColors("[bold][info]▏ %s%s: [blank]").data(),
+            printf(formatMessage("[bold][info]▏ %s%s: [blank]").data(),
                    clipboards_with_contents.at(clipboard).first.filename().string().data(),
                    clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
             if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
                 std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
                 std::erase(content, '\n');
-                printf(replaceColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+                printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
                 continue;
             }
 
@@ -353,13 +355,13 @@ void status() {
 
                 if (!first) {
                     if (entryWidth <= widthRemaining - 2) {
-                        printf("%s", replaceColors("[help], [blank]").data());
+                        printf("%s", formatMessage("[help], [blank]").data());
                         widthRemaining -= 2;
                     }
                 }
 
                 if (entryWidth <= widthRemaining) {
-                    printf(replaceColors("[help]%s[blank]").data(), entry.path().filename().string().data());
+                    printf(formatMessage("[help]%s[blank]").data(), entry.path().filename().string().data());
                     widthRemaining -= entryWidth;
                     first = false;
                 }
@@ -379,12 +381,12 @@ void info() {
     // locked or not and the pid of the locking process
     // saved note
 
-    fprintf(stderr, replaceColors("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
-    fprintf(stderr, replaceColors("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
-    fprintf(stderr, replaceColors("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
+    fprintf(stderr, formatMessage("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
+    fprintf(stderr, formatMessage("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
     if (fs::exists(path.data.raw)) {
-        fprintf(stderr, replaceColors("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -394,24 +396,26 @@ void info() {
             else
                 files++;
         }
-        fprintf(stderr, replaceColors("[info]• Files: [help]%zu[blank]\n").data(), files);
-        fprintf(stderr, replaceColors("[info]• Directories: [help]%zu[blank]\n").data(), directories);
+        fprintf(stderr, formatMessage("[info]• Files: [help]%zu[blank]\n").data(), files);
+        fprintf(stderr, formatMessage("[info]• Directories: [help]%zu[blank]\n").data(), directories);
     }
 
-    fprintf(stderr, replaceColors("[info]• Locked? [help]%s[blank]\n").data(), fs::exists(path.metadata.lock) ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]• Cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
+
+    fprintf(stderr, formatMessage("[info]• Locked? [help]%s[blank]\n").data(), fs::exists(path.metadata.lock) ? "Yes" : "No");
     if (fs::exists(path.metadata.lock)) {
-        fprintf(stderr, replaceColors("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
+        fprintf(stderr, formatMessage("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
     if (fs::exists(path.metadata.notes)) {
-        fprintf(stderr, replaceColors("[info]• Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
+        fprintf(stderr, formatMessage("[info]• Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
     } else {
-        fprintf(stderr, "%s", replaceColors("[info]• There is no note for this clipboard.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[info]• There is no note for this clipboard.[blank]\n").data());
     }
 }
 
 void load() {
     if (!fs::exists(path.data) || fs::is_empty(path.data)) {
-        fprintf(stderr, "%s", replaceColors("[error]❌ The clipboard you're trying to load from is empty. [help]Try choosing a different source instead.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. [help]Try choosing a different source instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
 
@@ -425,7 +429,7 @@ void load() {
         stopIndicator();
         fprintf(stderr,
                 "%s",
-                replaceColors("[error]❌ You can't load a clipboard into itself. [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data());
+                formatMessage("[error]❌ You can't load a clipboard into itself. [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
 
@@ -444,7 +448,7 @@ void load() {
 
     stopIndicator();
 
-    fprintf(stderr, replaceColors("[success]✅ Loaded %i clipboards[blank]\n").data(), destinations.size());
+    fprintf(stderr, formatMessage("[success]✅ Loaded %i clipboards[blank]\n").data(), destinations.size());
 
     if (std::find(destinations.begin(), destinations.end(), constants.default_clipboard_name) != destinations.end()) updateGUIClipboard(true);
 }
