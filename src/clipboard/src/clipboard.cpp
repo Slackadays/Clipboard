@@ -508,7 +508,7 @@ void setFlags() {
 }
 
 void verifyAction() {
-    if (io_type == IOType::Pipe && arguments.size() >= 2) {
+    if (io_type == IOType::Pipe && arguments.size() >= 2 && action != Action::Show) {
         fprintf(stderr, redirection_no_items_message().data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);
     }

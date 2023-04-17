@@ -174,10 +174,28 @@ void show() {
 }
 
 void showFilepaths() {
-    // output filepaths of all stored items to stdout
-    for (const auto& entry : fs::directory_iterator(path.data)) {
-        printf("%s ", entry.path().string().data());
+    std::vector<std::regex> regexes;
+    if (!copying.items.empty()) {
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
+    }
+
+    std::vector<fs::path> paths(fs::directory_iterator(path.data), fs::directory_iterator {});
+    if (!regexes.empty())
+        paths.erase(
+                std::remove_if(
+                        paths.begin(),
+                        paths.end(),
+                        [&](const auto& entry) {
+                            return !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.filename().string(), regex); });
+                        }
+                ),
+                paths.end()
+        );
+
+    for (const auto& entry : paths) {
+        printf("\"%s\"", entry.string().data());
         incrementSuccessesForItem(entry);
+        if (entry != paths.back()) printf(" ");
     }
 }
 

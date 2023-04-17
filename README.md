@@ -435,7 +435,7 @@ $ echo "music" | cb remove
 
 <br>
 
-<details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes]</code></summary>
+<details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes]</code> or <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes] | (something)</code></summary>
 
 <br>
 
@@ -460,7 +460,11 @@ Show the contents of the clipboard.
 ```sh
 $ cb show
 ```
-Note: If there is a lot of data, Clipboard may only show enough to fill the terminal screen.
+
+Show the raw filepaths of everything in the clipboard.
+```sh
+$ cb sh | cat
+```
 
 </details>
 
@@ -694,6 +698,19 @@ $ cb --fast-copy copy /usr/bin/*
 
 <br>
 
+<details><summary> &ensp; <b><code>--no-confirmation</code>, <code>-nc</code></b> &emsp; Add this to disable confirmation messages from Clipboard. </summary>
+
+<br>
+
+Reduce distractions after showing some text content.
+```sh
+$ cb -nc sh | cat
+```
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b><code>--no-progress</code>, <code>-np</code></b> &emsp; Add this to disable progress messages from Clipboard. </summary>
 
 <br>
@@ -805,6 +822,20 @@ Make everything you copy persistent.
 $ export CLIPBOARD_ALWAYS_PERSIST=1
 $ cb copy Foo Bar Baz
 # This puts everything in the persistent directory but still with the clipboard name "0"
+```
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b><code>CLIPBOARD_NOEMOJI</code></b> &emsp; Set this to anything to strip emojis from all messages.</summary>
+
+<br>
+
+Get rid of those ugly emojis.
+```sh
+$ export CLIPBOARD_NOEMOJI=1
+$ cb cp "You won't be annoyed 😒 by these things ever again! 😏😋🥵"
 ```
 
 </details>
