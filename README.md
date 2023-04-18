@@ -37,7 +37,7 @@ The Clipboard Project is **_<ins>your</ins>_** one-way golden ticket to saving t
 </picture></summary>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
-- **Add, remove, or make note of whatever you hold with Clipboard.**
+- **Add, remove, or make note of whatever you hold with CB.**
 - **Store everything in an _infinite_ number of different containers at your disposal.**
 - **Choose if your containers are temporary or totally persistent.**
 - **Connect right with your regular desktop [which CB probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
@@ -643,7 +643,7 @@ Make your own scripts that can fully automate your workflows.
 
 ```sh
 #!/bin/sh
-# This script does nothing except serve as an example of automating Clipboard.
+# This script does nothing except serve as an example of automating CB.
 link="https://SomeWebsiteWithLotsOfContent"
 wget link
 cb copy *.jpg *.png
@@ -698,7 +698,7 @@ $ cb --fast-copy copy /usr/bin/*
 
 <br>
 
-<details><summary> &ensp; <b><code>--no-confirmation</code>, <code>-nc</code></b> &emsp; Add this to disable confirmation messages from Clipboard. </summary>
+<details><summary> &ensp; <b><code>--no-confirmation</code>, <code>-nc</code></b> &emsp; Add this to disable confirmation messages from CB. </summary>
 
 <br>
 
@@ -711,7 +711,7 @@ $ cb -nc sh | cat
 
 <br>
 
-<details><summary> &ensp; <b><code>--no-progress</code>, <code>-np</code></b> &emsp; Add this to disable progress messages from Clipboard. </summary>
+<details><summary> &ensp; <b><code>--no-progress</code>, <code>-np</code></b> &emsp; Add this to disable progress messages from CB. </summary>
 
 <br>
 
@@ -846,7 +846,7 @@ $ cb cp "You won't be annoyed 😒 by these things ever again! 😏😋🥵"
 
 <br>
 
-Debug a flaky GUI system by disabling its integration with Clipboard.
+Debug a flaky GUI system by disabling its integration with CB.
 
 ```sh
 $ CLIPBOARD_NOGUI=1 cb show
@@ -858,7 +858,7 @@ $ cb show
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_NOPROGRESS</code></b> &emsp; Set this to anything to disable only progress messages from Clipboard.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_NOPROGRESS</code></b> &emsp; Set this to anything to disable only progress messages from CB.</summary>
 
 <br>
 
@@ -877,7 +877,7 @@ $ fzf | cb
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_SILENT</code></b> &emsp; Set this to anything to disable progress and confirmation messages from Clipboard.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_SILENT</code></b> &emsp; Set this to anything to disable progress and confirmation messages from CB.</summary>
 
 <br>
 
