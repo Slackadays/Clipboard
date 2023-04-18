@@ -1,20 +1,20 @@
-### ![Clipboard by Jackson Huff](documentation/readme-assets/CBBanner.png)
+### ![The Clipboard Project](documentation/readme-assets/CBBanner.png)
 
 <br>
 
-Clipboard is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+CB is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 That's underselling it a bit.
 
-Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always by your side. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
+CB is **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always by your side. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="Clipboard makes your life easy." />
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
 </p>
 
 <br>
 
-![Clipboard Demo Video](documentation/readme-assets/ClipboardDemo.gif)
+![CB Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
 <p align="center" id="dummy">
     <a href="https://discord.gg/J6asnc3pEG">
@@ -40,16 +40,16 @@ Clipboard is **_<ins>your</ins>_** one-way golden ticket to saving time and effo
 - **Add, remove, or make note of whatever you hold with Clipboard.**
 - **Store everything in an _infinite_ number of different containers at your disposal.**
 - **Choose if your containers are temporary or totally persistent.**
-- **Connect right with your regular desktop [which Clipboard probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
+- **Connect right with your regular desktop [which CB probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
 - **Do all of this in style with Clipboard's beautiful design.**
 - **Works great on anything that supports C++20, which is Linux, Windows, macOS, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFlyBSD, Haiku, and probably more.**
 - **Speak español, português, or Türkçe? You're in luck because Clipboard's in these languages too.**
 - **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
-- **Fan of creativity? Say no more as you can choose any of several color themes to make Clipboard look exactly how you want.**
-- **Addicted to technical details? Have we got something real good for you, as Clipboard is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
-- **Still not convinced? What if you were told you could easily script Clipboard to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
-- **Did we mention that Clipboard is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. Clipboard is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
-- **Finally, experience the marvel that is the Clipboard documentation. All you need is in this readme!**
+- **Fan of creativity? Say no more as you can choose any of several color themes to make CB look exactly how you want.**
+- **Addicted to technical details? Have we got something real good for you, as CB is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
+- **Still not convinced? What if you were told you could easily script CB to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
+- **Did we mention that CB is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. CB is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
+- **Finally, experience the marvel that is the CB documentation. All you need is in this readme!**
 
 </details>
 
@@ -101,7 +101,7 @@ scoop install clipboard
 sudo xbps-install -S clipboard
 ```
 
-You can also get the latest Clipboard revision [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/main/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
+You can also get the latest CB revision [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/main/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
 
 <br>
 <br>
@@ -238,7 +238,7 @@ Cut piped in data.
 ```sh
 $ echo "Foobar" | cb cut
 ```
-Note: Cutting piped in data is the same as copying, except that Clipboard will delete all content after you paste it somewhere.
+Note: Cutting piped in data is the same as copying, except that CB will delete all content after you paste it somewhere.
 
 Cut text directly.
 ```sh
@@ -286,7 +286,7 @@ $ cb paste
 $ cb p 
 # These are the same!
 ```
-Note: If you paste after cutting, then Clipboard will delete the original files that you cut.
+Note: If you paste after cutting, then CB will delete the original files that you cut.
 
 Paste anything containing "Aventura."
 
@@ -342,7 +342,7 @@ $ cb -c _2 | Write-Output
 # The version for PowerShell
 ```
 
-Note: If you paste after cutting, then Clipboard will delete the raw data afterwards, effectively only letting you paste once.
+Note: If you paste after cutting, then CB will delete the raw data afterwards, effectively only letting you paste once.
 
 </details>
 
@@ -362,7 +362,7 @@ Add a file.
 $ cb add SomeOtherFile
 $ cb ad SomeOtherFile 
 # Abbreviated
-# Clipboard now holds FooFile and SomeOtherFile
+# CB now holds FooFile and SomeOtherFile
 ```
 
 Add a directory.
@@ -405,13 +405,13 @@ $ cb copy FooFile BarDir BazDir
 Remove everything starting with "B"
 ```sh
 $ cb remove "B.*"
-# Clipboard will match this against "BarDir" and "BazDir" and remove them
+# CB will match this against "BarDir" and "BazDir" and remove them
 ```
 
 Remove everything matching a specific name
 ```sh
 $ cb remove "BarDir"
-# Clipboard will match this against "BarDir" only and remove it
+# CB will match this against "BarDir" only and remove it
 ```
 
 Now let's shcopy some raw data.
@@ -727,11 +727,11 @@ $ fzf | cb -np
 
 ### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=25px />
 
-<details><summary> &ensp; <b><code>CI</code></b> &emsp; Set this to anything to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</summary>
+<details><summary> &ensp; <b><code>CI</code></b> &emsp; Set this to anything to make CB overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</summary>
 
 <br>
 
-Use Clipboard in a CI script.
+Use CB in a CI script.
 ```sh
 ...
 cb cp Temp/*
@@ -744,7 +744,7 @@ cb p
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_LOCALE</code></b> &emsp; Set this to the locale that only Clipboard will use for its commands and output, like <code>en_US.UTF-8</code> or <code>es_DO.UTF-8</code>. </summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_LOCALE</code></b> &emsp; Set this to the locale that only CB will use for its commands and output, like <code>en_US.UTF-8</code> or <code>es_DO.UTF-8</code>. </summary>
 
 <br>
 
@@ -768,7 +768,7 @@ $ CLIPBOARD_LOCALE="" cb cp Foobar
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_TMPDIR</code></b> &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_TMPDIR</code></b> &emsp; Set this to the directory that only CB will use to hold the items you cut or copy into a temporary directory.</summary>
 
 <br>
 
@@ -790,7 +790,7 @@ $ cb copy *
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_PERSISTDIR</code></b> &emsp; Set this to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_PERSISTDIR</code></b> &emsp; Set this to the directory that only CB will use to hold the items you cut or copy into a persistent directory.</summary>
 
 <br>
 
@@ -812,7 +812,7 @@ $ cb copy *
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to anything to make Clipboard always use persistent clipboards.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to anything to make CB always use persistent clipboards.</summary>
 
 <br>
 
@@ -867,7 +867,7 @@ Reduce distractions while doing a search that takes a while.
 $ fzf | CLIPBOARD_NOPROGRESS=1 cb
 ```
 
-Disable progress messages from Clipboard entirely.
+Disable progress messages from CB entirely.
 ```sh
 $ export CLIPBOARD_NOPROGRESS=1
 $ fzf | cb
@@ -891,7 +891,7 @@ $ cb cp "I'm running out of Aventura references"
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_THEME</code></b> &emsp; Set this to the color theme that Clipboard will use. Choose between <code>light</code>, <code>darkhighcontrast</code>, <code>lighthighcontrast</code>, <code>amber</code>, and <code>green</code> (the default is <code>dark</code>).</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_THEME</code></b> &emsp; Set this to the color theme that CB will use. Choose between <code>light</code>, <code>darkhighcontrast</code>, <code>lighthighcontrast</code>, <code>amber</code>, and <code>green</code> (the default is <code>dark</code>).</summary>
 
 <br>
 
@@ -903,7 +903,7 @@ $ export CLIPBOARD_THEME=amber
 $ cb cp "Yellow terminals feel just like sitting in front of a nice campfire"
 ```
 
-Make Clipboard more accessible.
+Make CB more accessible.
 ```sh
 $ export CLIPBOARD_THEME=darkhighcontrast
 $ cb show
@@ -913,7 +913,7 @@ $ cb show
 
 <br>
 
-<details><summary> &ensp; <b><code>FORCE_COLOR</code></b> &emsp; Set this to anything to make Clipboard always show color regardless of what you set <code>NO_COLOR</code> to.</summary>
+<details><summary> &ensp; <b><code>FORCE_COLOR</code></b> &emsp; Set this to anything to make CB always show color regardless of what you set <code>NO_COLOR</code> to.</summary>
 
 <br>
 
@@ -924,7 +924,7 @@ $ export NO_COLOR=1
 $ FORCE_COLOR=1 cb copy "There are almost no bachateros where I live right now"
 ```
 
-Note: Clipboard also supports `CLICOLOR_FORCE`.
+Note: CB also supports `CLICOLOR_FORCE`.
 
 Override somebody else's choice to disable colors, but in a different way.
 ```sh
@@ -937,19 +937,19 @@ $ CLICOLOR_FORCE=1 cb copy "There are almost no bachateros where I live right no
 
 <br>
 
-<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to anything to make Clipboard not show any colors.</summary>
+<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to anything to make CB not show any colors.</summary>
 
 <br>
 
-Make Clipboard look boring.
+Make CB look boring.
 ```sh
 $ export NO_COLOR=1
 $ cb cp "From the 1960s until the 1990s, bachata was perceived as boring music for poor Dominicans."
 ```
 
-Note: Clipboard also supports `CLICOLOR`.
+Note: CB also supports `CLICOLOR`.
 
-Make Clipboard look boring, but in a different way.
+Make CB look boring, but in a different way.
 ```sh
 $ export CLICOLOR=0
 $ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachata by using electric guitars with fancy effects."
@@ -961,10 +961,10 @@ $ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachat
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [the Discord group](https://discord.gg/J6asnc3pEG)!
+Check out [the CB Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [CB Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [the Discord group](https://discord.gg/J6asnc3pEG)!
 
 <p align="center">
-    <a href="https://github.com/Slackadays/Clipboard/wiki"><img src="https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Clipboard Wiki">
+    <a href="https://github.com/Slackadays/Clipboard/wiki"><img src="https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge&labelColor=rgb(55,55,55)" alt="CB Wiki">
     <a href="https://github.com/Slackadays/Clipboard/discussions"><img src="https://img.shields.io/badge/Questions%3F-Ask%20Away-red?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Questions? Ask Away!"></a>
     <a href="https://discord.gg/J6asnc3pEG"><img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge&logo=discord&labelColor=rgb(55,55,55)" alt="Discord Chat"></a>
     <a href="https://twitter.com/GetClipboard"><img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?logo=twitter&style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter"></a>
@@ -974,7 +974,7 @@ Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for
 
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
-Say thank you to all our beautiful contributors who have helped make Clipboard incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
+Say thank you to all our beautiful contributors who have helped make the Clipboard Project incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
  Want to join the club? We're always accepting [new contributions](https://github.com/Slackadays/Clipboard/blob/main/.github/CONTRIBUTING.md) too.
 
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
