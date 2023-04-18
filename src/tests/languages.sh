@@ -1,7 +1,7 @@
 #!/bin/sh
 . ./resources.sh
 export CLIPBOARD_FORCETTY=1
-start_test "Show Clipboard languages"
+start_test "Show CB languages"
 
 make_files
 

@@ -1,11 +1,11 @@
 # Pull Request Requirements
 
-We're always accepting pull requests for contributions to Clipboard. 
-To keep Clipboard's quality high and the PRs flowing smoothly, we have three very simple rules that all PRs must follow.
+We're always accepting pull requests for contributions to the Clipboard Project. 
+To keep quality high and the PRs flowing smoothly, we have three very simple rules that all PRs must follow.
 
-### Use Clipboard's Existing Code Style
+### Use The Existing Code Style
 
-All code PRs must follow a similar code style to that of the existing code in Clipboard, unless the PR is about the code style itself.
+All code PRs must follow a similar code style to that of the existing code, unless the PR is about the code style itself.
 
 ### All Tests Must Pass
 

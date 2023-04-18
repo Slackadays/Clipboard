@@ -23,17 +23,17 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Version**
-The version of Clipboard you're using, how you got it, and what system you're using.
-Ex: I'm using Clipboard 0.42.0 from the Arch repos with AmogOS.
+The version of CB you're using, how you got it, and what system you're using.
+Ex: I'm using CB 0.42.0 from the Arch repos with AmogOS.
 
 **Questionnaire**
 Check these boxes to see if your issue is valid or not.
-- [ ] If I compiled Clipboard, then any errors that may be present don't mention "LTO error" (this is sadly a bug with the compiler, not Clipboard)
-- [ ] If I compiled Clipboard, then any errors that may be present don't mention "XYZ has not been defined in namespace std" (this sadly means you need a compiler with C++20 support, so upgrade first)
+- [ ] If I compiled CB, then any errors that may be present don't mention "LTO error" (this is sadly a bug with the compiler, not Clipboard)
+- [ ] If I compiled CB, then any errors that may be present don't mention "XYZ has not been defined in namespace std" (this sadly means you need a compiler with C++20 support, so upgrade first)
 - [ ] I check all these boxes without reading them
 - [ ] I think bachata is the best music
 - [ ] I'm using the latest commit/release (we only support the latest)
-- [ ] If I downloaded Clipboard from GitHub Actions or with the install script, any errors that may be present don't mention "GLIBC XYZ not found" (your system is sadly too outdated for Clipboard, so upgrade it)
+- [ ] If I downloaded CB from GitHub Actions or with the install script, any errors that may be present don't mention "GLIBC XYZ not found" (your system is sadly too outdated for CB, so upgrade it)
 
 **Additional context**
 Add any other context about the problem here.

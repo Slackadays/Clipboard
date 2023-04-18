@@ -9,7 +9,7 @@ trap clear_tempdirs 0
 
 if [ -z "${CLIPBOARD_TMPDIR:-}" ]
 then
-    printf "\033[1mEnter Clipboard's temp directory (no slash at end):\033[0m "
+    printf "\033[1mEnter CB's temp directory (no slash at end):\033[0m "
     read -r CLIPBOARD_TMPDIR
     export CLIPBOARD_TMPDIR
 fi

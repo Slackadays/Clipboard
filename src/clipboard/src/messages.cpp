@@ -1,4 +1,4 @@
-/*  Clipboard - Cut, copy, and paste anything, anywhere, all from the terminal.
+/*  CB - Cut, copy, and paste anything, anywhere, all from the terminal.
     Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ EnumArray<std::string_view, 13> doing_action =
 EnumArray<std::string_view, 13> did_action =
         {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped", "Checked status", "Showed info", "Loaded"};
 
-Message help_message = "[info]▏This is Clipboard %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
+Message help_message = "[info]▏This is CB %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]▏How To Use[blank]\n"
                        "[progress]▏cb cut (item) [items][blank] [help](This cuts an item or items.)[blank]\n"
                        "[progress]▏cb copy (item) [items][blank] [help](This copies an item or items.)[blank]\n"
@@ -41,18 +41,18 @@ Message help_message = "[info]▏This is Clipboard %s (commit %s), the cut, copy
                        "[progress]▏cb sh4[blank] [help](This shows the contents of clipboard 4.)[blank]\n"
                        "[progress]▏cb clr[blank] [help](This clears the contents of the default clipboard.)[blank]\n"
                        "[info][bold]▏Configuration[blank]\n"
-                       "[progress]▏CI: [help]Set to make Clipboard overwrite existing items without a user prompt when pasting.[blank]\n"
-                       "[progress]▏FORCE_COLOR: [help]Set to make Clipboard always show color regardless of what you set NO_COLOR "
+                       "[progress]▏CI: [help]Set to make CB overwrite existing items without a user prompt when pasting.[blank]\n"
+                       "[progress]▏FORCE_COLOR: [help]Set to make CB always show color regardless of what you set NO_COLOR "
                        "to.[blank]\n"
-                       "[progress]▏TMPDIR: [help]Set to the directory that Clipboard (and other programs) will use to hold the items "
+                       "[progress]▏TMPDIR: [help]Set to the directory that CB (and other programs) will use to hold the items "
                        "you cut or copy into temporary clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_TMPDIR: [help]Set to the directory that only Clipboard will use to hold the items you cut "
+                       "[progress]▏CLIPBOARD_TMPDIR: [help]Set to the directory that only CB will use to hold the items you cut "
                        "or copy into temporary clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_PERSISTDIR: [help]Set to the directory that only Clipboard will use to hold the items you "
+                       "[progress]▏CLIPBOARD_PERSISTDIR: [help]Set to the directory that only CB will use to hold the items you "
                        "cut or copy into persistent clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_ALWAYS_PERSIST: [help]Set to make Clipboard always use persistent clipboards.[blank]\n"
+                       "[progress]▏CLIPBOARD_ALWAYS_PERSIST: [help]Set to make CB always use persistent clipboards.[blank]\n"
                        "[progress]▏CLIPBOARD_NOGUI: [help]Set to disable GUI clipboard integration.[blank]\n"
-                       "[progress]▏NO_COLOR: [help]Set to make Clipboard not show color.[blank]\n"
+                       "[progress]▏NO_COLOR: [help]Set to make CB not show color.[blank]\n"
                        "[info]▏You can show this help screen anytime with [bold]cb -h[blank][info], [bold]cb "
                        "--help[blank][info], or[bold] cb help[blank][info].\n"
                        "[info]▏You can also get more help in our Discord server at [bold]https://discord.gg/J6asnc3pEG[blank]\n"
@@ -77,8 +77,8 @@ Message fix_redirection_action_message = "[error]❌ You can't use the [bold]%s[
 Message redirection_no_items_message = "[error]❌ You can't specify items when you use redirection. [help]Try removing "
                                        "the items that come after [bold]%s [action].\n";
 Message paste_success_message = "[success]✅ Pasted successfully[blank]\n";
-Message clipboard_failed_one_message = "[error]❌ Clipboard couldn't %s this item:[blank]\n";
-Message clipboard_failed_many_message = "[error]❌ Clipboard couldn't %s these items:[blank]\n";
+Message clipboard_failed_one_message = "[error]❌ CB couldn't %s this item:[blank]\n";
+Message clipboard_failed_many_message = "[error]❌ CB couldn't %s these items:[blank]\n";
 Message and_more_fails_message = "[error]▏ ...and [bold]%i[blank][error] more.[blank]\n";
 Message and_more_items_message = "[info]▏ ...and [bold]%i[blank][info] more.[blank]\n";
 Message fix_problem_message = "[help]▏ See if you have the needed permissions, or\n"
@@ -124,7 +124,7 @@ void setLanguageES() {
     did_action[Action::Copy] = "Copió";
     did_action[Action::Paste] = "Pegó";
 
-    help_message = "[info]▏Esto es Clipboard %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
+    help_message = "[info]▏Esto es CB %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
                    "terminal.[blank]\n"
                    "[info][bold]▏Cómo usar[blank]\n"
                    "[progress]▏cb cortar (cosa) [cosas][blank]\n"
@@ -143,7 +143,7 @@ void setLanguageES() {
                               "copiar o pegar[blank][help] en su lugar, como [bold]%s copiar.[blank]\n";
     clipboard_item_many_contents_message = "[info]• Aquí están las cosas primeras del "
                                            "portapapeles [bold]%s[blank][info]: [blank]\n";
-    no_clipboard_contents_message = "[info]• No hay nada en Clipboard en este momento.[blank]\n";
+    no_clipboard_contents_message = "[info]• No hay nada en CB en este momento.[blank]\n";
     clipboard_action_prompt = "[help]Añade [bold]cortar, copiar [blank][help]o[bold] pegar[blank][help] al final, como "
                               "[bold]%s copiar[blank][help] para comenzar, o si necesitas ayuda, haz "
                               "[bold]%s -h[blank][help] para mostrar el mensaje de ayudar.[blank]\n";
@@ -154,7 +154,7 @@ void setLanguageES() {
     redirection_no_items_message = "[error]❌ No se pueden especificar las cosas con redirección. [help]Inténta sacar las "
                                    "cosas que siguen [bold]%s [acción].\n";
     paste_success_message = "[success]✅ Pegó con éxito[blank]\n";
-    clipboard_failed_many_message = "[error]❌ Clipboard no pudo %s estas cosas.[blank]\n";
+    clipboard_failed_many_message = "[error]❌ CB no pudo %s estas cosas.[blank]\n";
     and_more_fails_message = "[error]▏ ...y [bold]%i[blank][error] más.[blank]\n";
     and_more_items_message = "[info]▏ ...y [bold]%i[blank][info] más.[blank]\n";
     fix_problem_message = "[help]▏ Verífica si tengas los permisos necesarios, o\n"
@@ -181,7 +181,7 @@ void setLanguagePT() {
     did_action[Action::Copy] = "Copiou";
     did_action[Action::Paste] = "Colou";
 
-    help_message = "[info]▏Este é Clipboard %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
+    help_message = "[info]▏Este é CB %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
                    "comando.[blank]\n"
                    "[info][bold]▏Como utilizar[blank]\n"
                    "[progress]▏cb recortar (item) [itens][blank]\n"
@@ -208,7 +208,7 @@ void setLanguagePT() {
     redirection_no_items_message = "[error]❌ Você não pode especificar itens ao redirecionar. [help]Tente remover itens "
                                    "que vêm após [bold]%s [action].\n";
     paste_success_message = "[success]✅ Colado com sucesso[blank]\n";
-    clipboard_failed_many_message = "[error]❌ Clipboard não pôde %s esses itens.[blank]\n";
+    clipboard_failed_many_message = "[error]❌ CB não pôde %s esses itens.[blank]\n";
     and_more_fails_message = "[error]▏ ...e mais [bold]%i[blank][error].[blank]\n";
     and_more_items_message = "[info]▏ ...e mais [bold]%i[blank][info].[blank]\n";
     fix_problem_message = "[help]▏ Veja se você possui as permissões necessárias, ou\n"
@@ -240,7 +240,7 @@ void setLanguageTR() {
     did_action[Action::Copy] = "Kopyalandı";
     did_action[Action::Paste] = "Yapıştırıldı";
 
-    help_message = "[info]▏Clipboard %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
+    help_message = "[info]▏CB %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
                    "[info][bold]▏Nasıl kullanılır[blank]\n"
                    "[progress]▏cb kes (öğe) [öğeler][blank] [help](Bu öğe(leri) keser.)[blank]\n"
                    "[progress]▏cb kopyala (öğe) [öğeler][blank] [help](Bu öğe(leri) kopyalar.)[blank]\n"

@@ -14,4 +14,4 @@ Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Co
 Remove-Item .\clipboard-windows-amd64.zip -Force
 Remove-Item .\clipboard-windows-amd64 -Force -Recurse
 
-Write-Host "Please restart to use Clipboard"
+Write-Host "Please restart to use CB"

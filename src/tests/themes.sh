@@ -1,6 +1,6 @@
 #!/bin/sh
 . ./resources.sh
-start_test "Show Clipboard themes"
+start_test "Show CB themes"
 export CLIPBOARD_FORCETTY=1
 
 make_files

@@ -1,4 +1,4 @@
-/*  Clipboard - Cut, copy, and paste anything, anywhere, all from the terminal.
+/*  CB - Cut, copy, and paste anything, anywhere, all from the terminal.
     Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -257,7 +257,7 @@ void removeRegex() {
         } else {
             fprintf(stderr,
                     "%s",
-                    formatMessage("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                    formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
             exit(EXIT_FAILURE);
@@ -278,7 +278,7 @@ void removeRegex() {
         if (successes.directories == 0 && successes.files == 0) {
             fprintf(stderr,
                     "%s",
-                    formatMessage("[error]❌ Clipboard couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                    formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
             exit(EXIT_FAILURE);

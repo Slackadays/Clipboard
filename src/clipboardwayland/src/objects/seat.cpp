@@ -1,4 +1,4 @@
-/*  Clipboard - Cut, copy, and paste anything, anywhere, all from the terminal.
+/*  CB - Cut, copy, and paste anything, anywhere, all from the terminal.
     Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
