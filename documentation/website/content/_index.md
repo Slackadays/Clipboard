@@ -5,19 +5,19 @@ sort_by = "weight"
 
 # What is Clipboard?
 
-The Clipboard project is a <i>ridiculously</i> easy-to-use data management tool with tons of useful features and <i>gorgeous</i> eye candy.
+The Clipboard Project is a <i>ridiculously</i> easy-to-use data management tool with tons of useful features and <i>gorgeous</i> eye candy.
 
-Before Clipboard, you've always had to think about where exactly you want to move things in the terminal, which multiplied your mental workload and made many scenarios totally impractical. 
+Before now, you've always had to think about where exactly you want to move things in the terminal, which multiplied your mental workload and made many scenarios totally impractical. 
 
 Fear no more.
 
-Now, do anything that involves moving information around <i>way quicker</i> and much simpler. Clipboard is your time and effort saver to use anytime and anywhere.
+Do anything that involves moving information around <i>way quicker</i> and much simpler. CB from the Clipboard Project is your time and effort saver to use anytime and anywhere.
 
 # Quick Start
 
-Visit the [official Clipboard GitHub page](https://github.com/Slackadays/Clipboard) to install the latest version.
+Visit the [official Clipboard Project GitHub page](https://github.com/Slackadays/Clipboard) to install the latest version of CB.
 
-Once you've installed Clipboard, all that's left to do is to start saving time and effort by using it. Try some of these examples below!
+Once you've installed it, all that's left to do is to start saving time and effort. Try some of these examples below!
 
 ```sh
 $ cb copy NuclearLaunchCodes.pdf
@@ -45,4 +45,4 @@ Of course, this is only a handful of examples. Check out [the readme on GitHub](
 
 # Get Help
 
-Feeling stumped? We're here to help. Check out [the Clipboard Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG).
+Feeling stumped? We're here to help. Check out [the Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG).
