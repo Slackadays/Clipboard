@@ -2,7 +2,7 @@
 
 <br>
 
-CB (short for Clipboard) is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+CB (or Clipboard) is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 That's underselling it a bit.
 
