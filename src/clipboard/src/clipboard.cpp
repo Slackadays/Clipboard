@@ -309,7 +309,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     if (!copying.buffer.empty()) return {copying.buffer, copying.mime};
 
-    if (fs::exists(path.data.raw)) return {fileContents(path.data.raw), std::string(inferMIMEType(path.data.raw).value_or("text/plain"))};
+    if (fs::exists(path.data.raw)) return {fileContents(path.data.raw), std::string(inferMIMEType(fileContents(path.data.raw)).value_or("text/plain"))};
 
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
