@@ -21,6 +21,11 @@
 #include <io.h>
 #endif
 
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
 namespace PerformAction {
 
 void copyItem(const fs::path& f) {
@@ -391,20 +396,23 @@ void status() {
 }
 
 void info() {
-    // display the following information:
-    // clipboard name
-    // number of files and directories or bytes
-    // last write time
-    // filesystem location
-    // locked or not and the pid of the locking process
-    // saved note
-
     fprintf(stderr, formatMessage("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
+
+    #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+
+    struct stat info;
+    stat(path.string().data(), &info);
+
+    fprintf(stderr, formatMessage("[info]• Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
+
+    #endif
+
     fprintf(stderr, formatMessage("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
     fprintf(stderr, formatMessage("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
     if (fs::exists(path.data.raw)) {
         fprintf(stderr, formatMessage("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]• Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -424,6 +432,8 @@ void info() {
     if (fs::exists(path.metadata.lock)) {
         fprintf(stderr, formatMessage("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
+
+
     if (fs::exists(path.metadata.notes)) {
         fprintf(stderr, formatMessage("[info]• Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
     } else {

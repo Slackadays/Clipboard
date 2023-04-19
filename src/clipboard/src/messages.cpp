@@ -24,7 +24,7 @@ EnumArray<std::string_view, 13> doing_action =
 EnumArray<std::string_view, 13> did_action =
         {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped", "Checked status", "Showed info", "Loaded"};
 
-Message help_message = "[info]▏This is CB %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
+Message help_message = "[info]▏This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]▏How To Use[blank]\n"
                        "[progress]▏cb cut (item) [items][blank] [help](This cuts an item or items.)[blank]\n"
                        "[progress]▏cb copy (item) [items][blank] [help](This copies an item or items.)[blank]\n"
@@ -124,7 +124,7 @@ void setLanguageES() {
     did_action[Action::Copy] = "Copió";
     did_action[Action::Paste] = "Pegó";
 
-    help_message = "[info]▏Esto es CB %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
+    help_message = "[info]▏Esto es Clipboard Project %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
                    "terminal.[blank]\n"
                    "[info][bold]▏Cómo usar[blank]\n"
                    "[progress]▏cb cortar (cosa) [cosas][blank]\n"
@@ -181,7 +181,7 @@ void setLanguagePT() {
     did_action[Action::Copy] = "Copiou";
     did_action[Action::Paste] = "Colou";
 
-    help_message = "[info]▏Este é CB %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
+    help_message = "[info]▏Este é Clipboard Project %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
                    "comando.[blank]\n"
                    "[info][bold]▏Como utilizar[blank]\n"
                    "[progress]▏cb recortar (item) [itens][blank]\n"
@@ -240,7 +240,7 @@ void setLanguageTR() {
     did_action[Action::Copy] = "Kopyalandı";
     did_action[Action::Paste] = "Yapıştırıldı";
 
-    help_message = "[info]▏CB %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
+    help_message = "[info]▏Clipboard Project %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
                    "[info][bold]▏Nasıl kullanılır[blank]\n"
                    "[progress]▏cb kes (öğe) [öğeler][blank] [help](Bu öğe(leri) keser.)[blank]\n"
                    "[progress]▏cb kopyala (öğe) [öğeler][blank] [help](Bu öğe(leri) kopyalar.)[blank]\n"

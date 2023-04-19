@@ -235,14 +235,8 @@ public:
 
 std::string formatNumbers(const auto& num) {
     static std::stringstream ss;
-    static bool once = [&] {
-        try {
-            ss.imbue(std::locale(locale));
-        } catch (...) {}
-        ss << std::fixed << std::setprecision(3);
-        return true;
-    }();
     ss.str(std::string());
+    ss << std::fixed << std::setprecision(3);
     ss << num;
     return ss.str();
 }

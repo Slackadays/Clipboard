@@ -309,6 +309,8 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     if (!copying.buffer.empty()) return {copying.buffer, copying.mime};
 
+    if (fs::exists(path.data.raw)) return {fileContents(path.data.raw), std::string(inferMIMEType(path.data.raw).value_or("text/plain"))};
+
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
 
@@ -359,6 +361,7 @@ void setupHandlers() {
 void setLocale() {
     try {
         locale = getenv("CLIPBOARD_LOCALE") ? getenv("CLIPBOARD_LOCALE") : std::locale("").name();
+        std::locale::global(std::locale(locale));
     } catch (...) {}
     if (locale.substr(0, 2) == "es")
         setLanguageES();
