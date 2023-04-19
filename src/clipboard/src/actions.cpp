@@ -398,14 +398,14 @@ void status() {
 void info() {
     fprintf(stderr, formatMessage("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
 
-    #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
 
     struct stat info;
     stat(path.string().data(), &info);
 
     fprintf(stderr, formatMessage("[info]• Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
 
-    #endif
+#endif
 
     fprintf(stderr, formatMessage("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
     fprintf(stderr, formatMessage("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
@@ -432,7 +432,6 @@ void info() {
     if (fs::exists(path.metadata.lock)) {
         fprintf(stderr, formatMessage("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
-
 
     if (fs::exists(path.metadata.notes)) {
         fprintf(stderr, formatMessage("[info]• Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
