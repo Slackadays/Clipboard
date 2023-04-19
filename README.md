@@ -6,7 +6,7 @@ CB (short for Clipboard) is a _ridonkulously_ easy-to-use data remembrance tool 
 
 That's underselling it a bit.
 
-CB is **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always by your side. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
+This is **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always by your side. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a succulent papaya smoothie with the love of your life all while you watch dolphins leaping from  the shimmering waves of the soft blue water. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
