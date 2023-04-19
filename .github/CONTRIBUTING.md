@@ -1,4 +1,4 @@
-# Thanks for contributing to  the Clipboard Project! 👋
+# Thanks for contributing to the Clipboard Project! 👋
 
 We are always accepting new contributions, whether it's code, documentation, or something else. 
 

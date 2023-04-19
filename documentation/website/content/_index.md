@@ -5,13 +5,13 @@ sort_by = "weight"
 
 # What is Clipboard?
 
-The Clipboard Project is a <i>ridiculously</i> easy-to-use data management tool with tons of useful features and <i>gorgeous</i> eye candy.
+The Clipboard Project (or CB) is a <i>ridiculously</i> easy-to-use data management tool with tons of useful features and <i>gorgeous</i> eye candy.
 
 Before now, you've always had to think about where exactly you want to move things in the terminal, which multiplied your mental workload and made many scenarios totally impractical. 
 
 Fear no more.
 
-Do anything that involves moving information around <i>way quicker</i> and much simpler. CB from the Clipboard Project is your time and effort saver to use anytime and anywhere.
+Do anything that involves moving information around <i>way quicker</i> and much simpler. CB is your time and effort saver to use anytime and anywhere.
 
 # Quick Start
 

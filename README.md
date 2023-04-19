@@ -2,7 +2,7 @@
 
 <br>
 
-CB from the Clipboard Project is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+CB (short for Clipboard) is a _ridonkulously_ easy-to-use data remembrance tool bursting with _oodles_ of useful features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 That's underselling it a bit.
 
@@ -101,7 +101,7 @@ scoop install clipboard
 sudo xbps-install -S clipboard
 ```
 
-You can also get the latest revision of CB [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/main/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
+You can also get the latest revision of the Clipboard Project [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/main/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
 
 <br>
 <br>
@@ -961,7 +961,7 @@ $ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachat
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
-Check out [the CB Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [CB Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [the Discord group](https://discord.gg/J6asnc3pEG)!
+Check out [the Clipboard Project Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [GitHub Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [the Discord group](https://discord.gg/J6asnc3pEG)!
 
 <p align="center">
     <a href="https://github.com/Slackadays/Clipboard/wiki"><img src="https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge&labelColor=rgb(55,55,55)" alt="CB Wiki">
