@@ -6,7 +6,7 @@ Clipboard (or CB) is a _ridonkuliciously_ easy-to-use data remembrance power too
 
 That's underselling it.
 
-Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always at your disposal. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water that's washing up on your feet sinking into the warm flowing sand. Ok, so maybe that last part won't actually happen, but you get the idea:
+Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always at your disposal. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
