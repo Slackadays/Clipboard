@@ -712,6 +712,19 @@ $ cb --fast-copy copy /usr/bin/*
 
 <br>
 
+<details><summary> &ensp; <b><code>--mime</code>, <code>-m</code></b> &emsp; Add this to request a specific content MIME type from GUI clipboard systems.</summary>
+
+<br>
+
+Save GUI clipboard content of a specific MIME type to the main clipboard.
+```sh
+$ cb --mime text/html | cb
+```
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b><code>--no-confirmation</code>, <code>-nc</code></b> &emsp; Add this to disable confirmation messages from CB. </summary>
 
 <br>
