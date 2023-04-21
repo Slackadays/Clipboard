@@ -659,6 +659,20 @@ cb note "Latest files from website ABCXYZ"
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
+<details><summary> &ensp; <b><code>--all</code>, <code>-a</code></b> &emsp; Add this when clearing to clear all clipboards at once.</summary>
+
+<br>
+
+Start from a blank slate.
+```sh
+$ cb --all clear
+```
+WARNING! This will get rid of everything you've stored with CB, so be very careful when clearing with this option.
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b><code>--clipboard (clipboard)</code>, <code>-c (clipboard)</code></b> &emsp; Add this to choose which clipboard you want to use. </summary>
 
 <br>
