@@ -51,7 +51,7 @@ public:
      * @throws WlException If there's no object of that type bound in the registry.
      */
     template <IsWlObject T>
-    T const& get() const;
+    const T& get() const;
 
 private:
     void onGlobal(std::uint32_t name, const char* interface, std::uint32_t version);
@@ -59,7 +59,7 @@ private:
 };
 
 template <IsWlObject T>
-T const& WlRegistry::get() const {
+const T& WlRegistry::get() const {
     std::string_view name {T::spec_t::interface.name};
 
     auto found = m_boundObjectsByInterface.find(name);

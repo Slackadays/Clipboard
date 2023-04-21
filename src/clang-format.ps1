@@ -1,1 +1,1 @@
-clang-format --Werror -i --verbose (Get-ChildItem -Recurse -Include *.cpp,*.hpp)
+clang-format-15 --Werror -i --verbose (Get-ChildItem -Recurse -Include *.cpp,*.hpp)

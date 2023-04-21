@@ -134,11 +134,11 @@ public:
      * @param request Function that can be used to request a specific MIME Type from the selection owner.
      */
     template <typename range_t, typename request_t>
-    requires requires {
-        requires std::ranges::range<range_t>;
-        requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
-        requires std::same_as<std::istream&, std::invoke_result_t<request_t, const MimeType&>>;
-    }
+        requires requires {
+                     requires std::ranges::range<range_t>;
+                     requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
+                     requires std::same_as<std::istream&, std::invoke_result_t<request_t, const MimeType&>>;
+                 }
     static ClipboardContent decode(range_t offeredTypes, request_t request);
 };
 
@@ -162,11 +162,11 @@ std::optional<MimeType> MimeType::findBest(range_t range) {
 }
 
 template <typename range_t, typename query_t>
-requires requires {
-    requires std::ranges::range<range_t>;
-    requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
-    requires std::same_as<std::istream&, std::invoke_result_t<query_t, const MimeType&>>;
-}
+    requires requires {
+                 requires std::ranges::range<range_t>;
+                 requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
+                 requires std::same_as<std::istream&, std::invoke_result_t<query_t, const MimeType&>>;
+             }
 ClipboardContent MimeType::decode(range_t offeredTypes, query_t request) {
     auto type = MimeType::findBest(offeredTypes);
 

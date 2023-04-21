@@ -63,6 +63,7 @@ bool progress_silent = false;
 bool confirmation_silent = false;
 bool no_color = false;
 bool no_emoji = false;
+bool all_option = false;
 
 std::vector<std::string> arguments;
 
@@ -237,7 +238,7 @@ void releaseLock() {
     }
 }
 
-void clearTempDirectory(bool force_clear = false) {
+void clearData(bool force_clear = false) {
     using enum Action;
     if (force_clear || action == Cut || action == Copy) {
         fs::remove(path.metadata.originals);
@@ -256,7 +257,7 @@ void clearTempDirectory(bool force_clear = false) {
 
 void convertFromGUIClipboard(const std::string& text) {
     if (fs::is_regular_file(path.data.raw) && fileContents(path.data.raw) == text) return;
-    clearTempDirectory(true);
+    clearData(true);
     writeToFile(path.data.raw, text);
 }
 
@@ -269,7 +270,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         return firstElement == fs::path("..");
     });
 
-    if (allOutsideFilepath) clearTempDirectory(true);
+    if (allOutsideFilepath) clearData(true);
 
     for (auto&& path : clipboard.paths()) {
         if (!fs::exists(path)) continue;
@@ -495,6 +496,7 @@ IOType getIOType() {
 }
 
 void setFlags() {
+    if (flagIsPresent<bool>("--all") || flagIsPresent<bool>("-a")) all_option = true;
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
@@ -536,7 +538,7 @@ void checkForNoItems() {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
-    if ((action == Paste || action == Show || action == Clear) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
+    if ((action == Paste || action == Show || (action == Clear && !all_option)) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
         PerformAction::status();
         exit(EXIT_SUCCESS);
     }
@@ -784,7 +786,7 @@ int main(int argc, char* argv[]) {
 
         checkItemSize(totalItemSize());
 
-        clearTempDirectory();
+        clearData();
 
         performAction();
 

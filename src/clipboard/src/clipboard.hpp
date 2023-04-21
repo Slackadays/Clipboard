@@ -150,6 +150,7 @@ extern bool progress_silent;
 extern bool confirmation_silent;
 extern bool no_color;
 extern bool no_emoji;
+extern bool all_option;
 
 enum class ProgressState : int { Done, Active, Cancel };
 
@@ -274,7 +275,7 @@ unsigned long long totalItemSize();
 bool stopIndicator(bool change_condition_variable = true);
 void checkItemSize();
 TerminalSize thisTerminalSize();
-void clearTempDirectory(bool force_clear);
+void clearData(bool force_clear);
 void copyFiles();
 void removeOldFiles();
 std::string fileContents(const fs::path& path);

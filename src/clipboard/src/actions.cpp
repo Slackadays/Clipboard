@@ -146,8 +146,44 @@ void pipeOut() {
     removeOldFiles();
 }
 
+bool clipboardHoldsData(const Clipboard& clipboard) {
+    if (!fs::exists(clipboard.data)) return false;
+    if (fs::is_empty(clipboard.data)) return false;
+    if (fs::exists(clipboard.data.raw) && fs::is_empty(clipboard.data.raw)) return false;
+    return true;
+}
+
 void clear() {
-    clearTempDirectory(true);
+    if (all_option) {
+        if (!userIsARobot()) {
+            stopIndicator();
+            fprintf(stderr,
+                    formatMessage("[progress]🟡 Are you sure you want to clear all clipboards?[blank] [help]This will remove everything in locations [bold]%s[blank][help] and "
+                                  "[bold]%s[blank][help]. [bold][y(es)/n(o)] ")
+                            .data(),
+                    global_path.temporary.string().data(),
+                    global_path.persistent.string().data());
+            std::string decision;
+            std::getline(std::cin, decision);
+            int clipboards_cleared = 0;
+            if (decision.substr(0, 1) == "y" || decision.substr(0, 1) == "Y") {
+                for (const auto& entry : fs::directory_iterator(global_path.temporary)) {
+                    bool predicate = clipboardHoldsData(Clipboard(entry.path()));
+                    fs::remove_all(entry);
+                    if (predicate) clipboards_cleared++;
+                }
+                for (const auto& entry : fs::directory_iterator(global_path.persistent)) {
+                    bool predicate = clipboardHoldsData(Clipboard(entry.path()));
+                    fs::remove_all(entry);
+                    if (predicate) clipboards_cleared++;
+                }
+            }
+            fprintf(stderr, "%s", formatMessage("[blank]").data());
+            fprintf(stderr, formatMessage("[success]✅ Cleared %d clipboard%s[blank]\n").data(), clipboards_cleared, clipboards_cleared == 1 ? "" : "s");
+        }
+    } else {
+        clearData(true);
+    }
 }
 
 void show() {

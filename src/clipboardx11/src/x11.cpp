@@ -112,7 +112,7 @@ private:
     static int globalErrorHandler(Display*, XErrorEvent*);
 
     Display* m_display;
-    std::map<std::string_view const, std::shared_ptr<X11Atom>> m_atoms_by_name;
+    std::map<const std::string_view, std::shared_ptr<X11Atom>> m_atoms_by_name;
     std::map<const Atom, std::shared_ptr<X11Atom>> m_atoms_by_value;
     std::map<Window, std::weak_ptr<X11Window>> m_externalWindows;
 
