@@ -442,7 +442,7 @@ int X11Connection::localErrorHandler(Display* const errorDisplay, XErrorEvent* c
     auto exception = X11Exception(message.str());
     exception.m_errorCode = event->error_code;
 
-    debugStream << "Error during X11 call: " << message.str() << std::endl;
+    debugStream << "Error during X11 call for display " << errorDisplay << ": " << message.str() << std::endl;
     m_pendingXCallException.emplace(exception);
     return 0;
 }
@@ -1253,7 +1253,7 @@ void X11SelectionDaemon::run() {
     }
 }
 
-static ClipboardContent getX11ClipboardInternal() {
+static ClipboardContent getX11ClipboardInternal(const std::string& requested_mime) {
     X11Connection conn;
     if (!conn.isClipboardOwned()) {
         debugStream << "No selection owner, aborting" << std::endl;
@@ -1273,7 +1273,7 @@ static ClipboardContent getX11ClipboardInternal() {
         return stream;
     };
 
-    return MimeType::decode(offeredTypes, request);
+    return MimeType::decode(offeredTypes, request, requested_mime);
 }
 
 static void startPasteDaemon(const ClipboardContent& clipboard) {
@@ -1288,9 +1288,10 @@ static void setX11ClipboardInternal(const WriteGuiContext& context) {
 }
 
 extern "C" {
-extern void* getX11Clipboard() {
+extern void* getX11Clipboard(void* ptr) {
     try {
-        auto clipboard = std::make_unique<ClipboardContent>(getX11ClipboardInternal());
+        std::string requested_mime(*reinterpret_cast<std::string*>(ptr));
+        auto clipboard = std::make_unique<ClipboardContent>(getX11ClipboardInternal(requested_mime));
         return clipboard.release();
     } catch (const std::exception& e) {
         debugStream << "Error getting clipboard data: " << e.what() << std::endl;

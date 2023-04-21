@@ -133,13 +133,14 @@ public:
      * @param offeredTypes MIME Types offerred by the selection owner.
      * @param request Function that can be used to request a specific MIME Type from the selection owner.
      */
-    template <typename range_t, typename request_t>
+    template <typename range_t, typename request_t, typename preference_t>
         requires requires {
                      requires std::ranges::range<range_t>;
                      requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
                      requires std::same_as<std::istream&, std::invoke_result_t<request_t, const MimeType&>>;
+                     requires std::same_as<std::string, preference_t>;
                  }
-    static ClipboardContent decode(range_t offeredTypes, request_t request);
+    static ClipboardContent decode(range_t offeredTypes, request_t request, preference_t preferredType = {});
 };
 
 template <std::ranges::range range_t, std::convertible_to<std::string_view> element_t>
@@ -161,14 +162,23 @@ std::optional<MimeType> MimeType::findBest(range_t range) {
     return best;
 }
 
-template <typename range_t, typename query_t>
+template <typename range_t, typename query_t, typename preference_t>
     requires requires {
                  requires std::ranges::range<range_t>;
                  requires std::convertible_to<std::string_view, std::ranges::range_value_t<range_t>>;
                  requires std::same_as<std::istream&, std::invoke_result_t<query_t, const MimeType&>>;
+                 requires std::same_as<std::string, preference_t>;
              }
-ClipboardContent MimeType::decode(range_t offeredTypes, query_t request) {
-    auto type = MimeType::findBest(offeredTypes);
+ClipboardContent MimeType::decode(range_t offeredTypes, query_t request, preference_t preferredType) {
+    std::optional<MimeType> type {};
+
+    debugStream << "Preferred MIME type: " << preferredType << std::endl;
+    debugStream << "Preferred MIME type size: " << preferredType.size() << std::endl;
+
+    if (preferredType.empty())
+        type = MimeType::findBest(offeredTypes);
+    else
+        type = MimeType(0, preferredType, ClipboardContentType::Text, MimeOption::NoOption);
 
     if (!type) {
         debugStream << "No supported MIME Type, aborting" << std::endl;

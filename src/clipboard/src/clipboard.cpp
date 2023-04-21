@@ -65,6 +65,8 @@ bool no_color = false;
 bool no_emoji = false;
 bool all_option = false;
 
+std::string preferred_mime;
+
 std::vector<std::string> arguments;
 
 std::string clipboard_invocation;
@@ -428,7 +430,7 @@ void setupVariables(int& argc, char* argv[]) {
 void syncWithGUIClipboard(bool force) {
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) {
         using enum ClipboardContentType;
-        auto content = getGUIClipboard();
+        auto content = getGUIClipboard(preferred_mime);
         if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
             copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
@@ -501,6 +503,8 @@ IOType getIOType() {
 void setFlags() {
     if (flagIsPresent<bool>("--all") || flagIsPresent<bool>("-a")) all_option = true;
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
+    if (auto flag = flagIsPresent<std::string>("--mime"); flag != "") preferred_mime = flag;
+    if (auto flag = flagIsPresent<std::string>("-m"); flag != "") preferred_mime = flag;
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
     if (flagIsPresent<bool>("--ee")) {

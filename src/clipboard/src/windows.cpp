@@ -25,7 +25,7 @@
 
 const bool GUIClipboardSupportsCut = false;
 
-ClipboardContent getGUIClipboard() {
+ClipboardContent getGUIClipboard(const std::string& requested_mime) {
     if (OpenClipboard(nullptr) == 0) {
         onWindowsError("OpenClipboard");
     }

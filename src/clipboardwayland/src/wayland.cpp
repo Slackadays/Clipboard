@@ -80,7 +80,7 @@ public:
     }
 };
 
-static ClipboardContent getWaylandClipboardInternal() {
+static ClipboardContent getWaylandClipboardInternal(const std::string& requested_mime) {
     WlDisplay display;
     WlRegistry registry {display};
     SimpleWindow window {display, registry};
@@ -105,7 +105,7 @@ static ClipboardContent getWaylandClipboardInternal() {
         return stream;
     };
 
-    return MimeType::decode(offeredTypes, request);
+    return MimeType::decode(offeredTypes, request, requested_mime);
 }
 
 static void setWaylandClipboardInternal(const WriteGuiContext& context) {
@@ -116,9 +116,10 @@ static void setWaylandClipboardInternal(const WriteGuiContext& context) {
 }
 
 extern "C" {
-extern void* getWaylandClipboard() noexcept {
+extern void* getWaylandClipboard(void* ptr) noexcept {
     try {
-        auto clipboard = std::make_unique<ClipboardContent>(getWaylandClipboardInternal());
+        std::string requested_mime(*reinterpret_cast<std::string*>(ptr));
+        auto clipboard = std::make_unique<ClipboardContent>(getWaylandClipboardInternal(requested_mime));
         return clipboard.release();
     } catch (const std::exception& e) {
         debugStream << "Error getting clipboard data: " << e.what() << std::endl;

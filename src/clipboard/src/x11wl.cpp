@@ -28,7 +28,7 @@ constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 
 const bool GUIClipboardSupportsCut = true;
 
-using getClipboard_t = void* (*)();
+using getClipboard_t = void* (*)(void*);
 using setClipboard_t = void (*)(void*);
 
 static void x11wlClipboardFailure(const char* object) {
@@ -64,8 +64,9 @@ static return_t dynamicCall(const char* object, const char* symbol, args_t... ar
     return funcPointer(args...);
 }
 
-static ClipboardContent dynamicGetGUIClipboard(const char* object, const char* symbol) {
-    auto x11wlClipboardPtr = dynamicCall<getClipboard_t>(object, symbol);
+static ClipboardContent dynamicGetGUIClipboard(const char* object, const char* symbol, std::string& requested_mime) {
+    auto mime_ptr = reinterpret_cast<void*>(&requested_mime);
+    auto x11wlClipboardPtr = dynamicCall<getClipboard_t>(object, symbol, mime_ptr);
     if (x11wlClipboardPtr == nullptr) {
         return {};
     }
@@ -83,16 +84,17 @@ static void dynamicSetGUIClipboard(const char* object, const char* symbol, const
     dynamicCall<setClipboard_t>(object, symbol, ptr);
 }
 
-ClipboardContent getGUIClipboard() {
+ClipboardContent getGUIClipboard(const std::string& requested_mime) {
     try {
         ClipboardContent clipboard;
+        std::string mime(requested_mime);
 
         if (clipboard.type() == ClipboardContentType::Empty) {
-            clipboard = dynamicGetGUIClipboard(objectX11, symbolGetX11Clipboard);
+            clipboard = dynamicGetGUIClipboard(objectX11, symbolGetX11Clipboard, mime);
         }
 
         if (clipboard.type() == ClipboardContentType::Empty) {
-            clipboard = dynamicGetGUIClipboard(objectWayland, symbolGetWaylandClipboard);
+            clipboard = dynamicGetGUIClipboard(objectWayland, symbolGetWaylandClipboard, mime);
         }
 
         return clipboard;

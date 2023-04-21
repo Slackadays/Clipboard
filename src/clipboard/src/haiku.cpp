@@ -21,7 +21,7 @@
 
 const bool GUIClipboardSupportsCut = false;
 
-ClipboardContent getGUIClipboard() {
+ClipboardContent getGUIClipboard(const std::string& requested_mime) {
     std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
     if (!gui_clipboard->Lock()) return {};
     BMessage* content = gui_clipboard->Data();

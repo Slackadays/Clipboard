@@ -28,7 +28,7 @@ void writeFiles(const char** files);
 
 const bool GUIClipboardSupportsCut = false;
 
-ClipboardContent getGUIClipboard() {
+ClipboardContent getGUIClipboard(const std::string& requested_mime) {
     if (char** files = fileContent(); files != nullptr) {
         std::vector<fs::path> fileVector;
         for (int i = 0; files[i] != nullptr; i++) {

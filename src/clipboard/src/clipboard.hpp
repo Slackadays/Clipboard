@@ -152,6 +152,8 @@ extern bool no_color;
 extern bool no_emoji;
 extern bool all_option;
 
+extern std::string preferred_mime;
+
 enum class ProgressState : int { Done, Active, Cancel };
 
 extern std::condition_variable cv;
@@ -324,7 +326,7 @@ extern Message many_files_one_directory_success_message;
 extern Message many_files_many_directories_success_message;
 extern Message internal_error_message;
 
-extern ClipboardContent getGUIClipboard();
+extern ClipboardContent getGUIClipboard(const std::string& requested_mime);
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);
 extern const bool GUIClipboardSupportsCut;
 

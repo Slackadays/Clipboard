@@ -20,7 +20,7 @@
 
 const bool GUIClipboardSupportsCut = false;
 
-ClipboardContent getGUIClipboard() {
+ClipboardContent getGUIClipboard(const std::string& requested_mime) {
     return ClipboardContent();
 }
 
