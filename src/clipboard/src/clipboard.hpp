@@ -110,7 +110,7 @@ public:
 
     Clipboard() = default;
     Clipboard(const auto& clipboard_name) {
-        is_persistent = isPersistent(clipboard_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
+        is_persistent = isPersistent(std::string(clipboard_name)) || getenv("CLIPBOARD_ALWAYS_PERSIST");
 
         root = (is_persistent ? global_path.persistent : global_path.temporary) / clipboard_name;
 
