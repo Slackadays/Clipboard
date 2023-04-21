@@ -168,12 +168,12 @@ void clear() {
             int clipboards_cleared = 0;
             if (decision.substr(0, 1) == "y" || decision.substr(0, 1) == "Y") {
                 for (const auto& entry : fs::directory_iterator(global_path.temporary)) {
-                    bool predicate = clipboardHoldsData(Clipboard(entry.path()));
+                    bool predicate = clipboardHoldsData(Clipboard(entry.path().filename()));
                     fs::remove_all(entry);
                     if (predicate) clipboards_cleared++;
                 }
                 for (const auto& entry : fs::directory_iterator(global_path.persistent)) {
-                    bool predicate = clipboardHoldsData(Clipboard(entry.path()));
+                    bool predicate = clipboardHoldsData(Clipboard(entry.path().filename()));
                     fs::remove_all(entry);
                     if (predicate) clipboards_cleared++;
                 }
