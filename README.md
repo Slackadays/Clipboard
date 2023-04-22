@@ -31,7 +31,7 @@ Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effor
 </p>
 
 <p align="center">
-    <img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="25px" />
+    <img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="30px" />
 </p>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
