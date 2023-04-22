@@ -30,11 +30,9 @@ Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effor
     </a>
 </p>
 
-<details><summary align="center"><picture>
-<source media="(prefers-color-scheme: dark)" srcset="documentation/readme-assets/FeastYourEyes.png">
-<source media="(prefers-color-scheme: light)" srcset="documentation/readme-assets/FeastYourEyes.png">
-<img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="25px" />
-</picture></summary>
+<p align="center">
+    <img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="25px" />
+</p>
 
 - **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
 - **Add, remove, or make note of whatever you hold with CB.**
@@ -50,8 +48,6 @@ Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effor
 - **Still not convinced? What if you were told you could easily script CB to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
 - **Did we mention that CB is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. CB is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
 - **Finally, experience the marvel that is the CB documentation. All you need is in this readme!**
-
-</details>
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 
