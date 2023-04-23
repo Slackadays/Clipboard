@@ -2,15 +2,31 @@
 
 <br>
 
-Clipboard (or CB) is a _ridonkuliciously_ easy-to-use data remembrance power tool bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+Clipboard (or CB) is the most advanced clipboard manager available for your terminal, and maybe even for any system.
 
-That's underselling it.
+It supports:
 
-Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always at your disposal. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. Ok, so maybe that last part won't actually happen, but you get the idea:
+- copying files and directories in addition to text, 
+- adding or removing contents (with regex), 
+- an infinite number of compartmentalized clipboards, 
+- metadata descriptions (notes) for any clipboard,
+- interfacing with [GUI clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
+- other languages like español, português, and Türkçe,
+- painless environment variable and flag configuration,
+- any POSIX/Windows platform with C++20 compat,
+- flexible scripting to automate workflows,
+- customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>,
+- a unique filesystem-based implementation,
+- your freedom by being 100% free and open source,
+- and more!
+
+When we first started writing CB, we needed something more versatile than other tools like `xclip`, `wl-clipboard`, or `pbcopy`, and something really easy to use by anyone out there. That's why our mantra is this:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
 </p>
+
+In short, we're here to help you save time and effort.
 
 <br>
 
@@ -31,23 +47,8 @@ Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effor
 </p>
 
 <p align="center">
-    <img src="documentation/readme-assets/FeastYourEyes.png" alt="Feast your eyes on our exquisite features." height="30px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="30px" />
 </p>
-
-- **Cut, copy, or paste files, directories, text, data, or any other kind of information.**
-- **Add, remove, or make note of whatever you hold with CB.**
-- **Store everything in an _infinite_ number of different containers at your disposal.**
-- **Choose if your containers are temporary or totally persistent.**
-- **Connect right with your regular desktop [which CB probably supports.](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat)**
-- **Do all of this in style with Clipboard's beautiful design.**
-- **Works great on anything that supports C++20, which is Linux, Windows, macOS, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFlyBSD, Haiku, and probably more.**
-- **Speak español, português, or Türkçe? You're in luck because Clipboard's in these languages too.**
-- **Love freedom? We've got your back because Clipboard's 100% free and open source under the GPLv3.**
-- **Fan of creativity? Say no more as you can choose any of several color themes to make CB look exactly how you want.**
-- **Addicted to technical details? Have we got something real good for you, as CB is currently the only program (as of this writing) to implement a filesystem-based clipboard storage system and fully support it.**
-- **Still not convinced? What if you were told you could easily script CB to do whatever you wanted. Imagine having your elaborate workflow all automated, and all you had to do is run the script.**
-- **Did we mention that CB is blazingly fast? That's boring. How about <i>blazingly fast</i>? Yawn. Maybe 𝕓𝕝𝕒𝕫𝕚𝕟𝕘𝕝𝕪 𝕗𝕒𝕤𝕥? Snooze. Ok, 𝖇𝖑𝖆𝖟𝖎𝖓𝖌𝖑𝖞 𝖋𝖆𝖘𝖙. Groan. Still more boring than the average BlAzInGlY fAsT project. What about 🇧​​🇱​​🇦​​🇿​​🇮​​🇳​​🇬​​🇱​​🇾​ ​🇫​​🇦​​🇸​​🇹? That's more like it. CB is compiled and optimized to deliver tiny installation sizes with speeds that pack a punch.**
-- **Finally, experience the marvel that is the CB documentation. All you need is in this readme!**
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 
@@ -119,6 +120,10 @@ $ cmake --install .
 ### <img src="documentation/readme-assets/Uninstall.png" alt="Uninstall" height=25px />
 
 Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
+
+<br>
+
+Now that you've installed CB, read below to see how to make it work for you.
 
 <br>
 
@@ -648,6 +653,10 @@ cb | tar -cf foobar.tar
 cb -c footar < foobar.tar
 cb note "Latest files from website ABCXYZ"
 ```
+
+<br>
+
+Want to customize CB to your liking? Check out the next section.
 
 <br>
 

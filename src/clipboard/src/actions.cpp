@@ -457,7 +457,6 @@ void info() {
             }
             fprintf(stderr, "%s", formatMessage("[blank]\n").data());
         }
-
     } else {
         size_t files = 0;
         size_t directories = 0;
