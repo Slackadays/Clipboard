@@ -48,7 +48,7 @@ In short, we're here to help you save time and effort.
 <br>
 
 <p align="center">
-    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="35px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="40px" />
 </p>
 
 <br>
