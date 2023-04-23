@@ -55,5 +55,44 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
     // zip
     if (beginning_matches("PK\x03\x04"sv) || beginning_matches("PK\x05\x06"sv) || beginning_matches("PK\x07\x08"sv)) return "application/zip";
 
+    // 7z
+    if (beginning_matches("7z\xBC\xAF\x27\x1C"sv)) return "application/x-7z-compressed";
+
+    // rar
+    if (beginning_matches("Rar!\x1A\x07\x00"sv)) return "application/vnd.rar";
+
+    // pdf
+    if (beginning_matches("%PDF-"sv)) return "application/pdf";
+
+    // mp3
+    if (beginning_matches("ID3"sv)) return "audio/mpeg";
+
+    // mp4
+    if (beginning_matches("ftypmp42"sv) || beginning_matches("ftypisom"sv) || beginning_matches("ftypM4V "sv) || beginning_matches("ftypM4A "sv)) return "video/mp4";
+
+    // ogg
+    if (beginning_matches("OggS"sv)) return "audio/ogg";
+
+    // flac
+    if (beginning_matches("fLaC"sv)) return "audio/flac";
+
+    // jpeg 2000
+    if (beginning_matches("\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A"sv)) return "image/jp2";
+
+    // tar
+    if (beginning_matches("ustar"sv)) return "application/x-tar";
+
+    // gzip
+    if (beginning_matches("\x1F\x8B"sv)) return "application/gzip";
+
+    // xz
+    if (beginning_matches("\xFD\x37\x7A\x58\x5A\x00"sv)) return "application/x-xz";
+
+    // bzip2
+    if (beginning_matches("BZh"sv)) return "application/x-bzip2";
+
+    // elf
+    if (beginning_matches("\x7F\x45\x4C\x46"sv)) return "application/x-executable";
+
     return std::nullopt;
 }

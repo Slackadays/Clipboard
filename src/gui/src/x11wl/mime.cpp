@@ -47,6 +47,7 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     insert("text/plain;charset=utf-8", ClipboardContentType::Text);
     insert("UTF8_STRING", ClipboardContentType::Text);
     insert("text/plain", ClipboardContentType::Text);
+    insert("text/html", ClipboardContentType::Text);
     insert("STRING", ClipboardContentType::Text);
     insert("TEXT", ClipboardContentType::Text);
     insert("GTK_TEXT_BUFFER_CONTENTS", ClipboardContentType::Text);
@@ -58,7 +59,13 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     insert("image/tiff", ClipboardContentType::Text);
     insert("image/gif", ClipboardContentType::Text);
     insert("image/webp", ClipboardContentType::Text);
+    insert("audio/mpeg", ClipboardContentType::Text);
+    insert("audio/ogg", ClipboardContentType::Text);
+    insert("audio/wav", ClipboardContentType::Text);
+    insert("video/mp4", ClipboardContentType::Text);
+    insert("video/webm", ClipboardContentType::Text);
     insert("application/zip", ClipboardContentType::Text);
+    insert("application/pdf", ClipboardContentType::Text);
 
     return result;
 }

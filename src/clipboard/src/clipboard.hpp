@@ -153,6 +153,7 @@ extern bool no_emoji;
 extern bool all_option;
 
 extern std::string preferred_mime;
+extern std::vector<std::string> available_mimes;
 
 enum class ProgressState : int { Done, Active, Cancel };
 

@@ -449,6 +449,15 @@ void info() {
     if (fs::exists(path.data.raw)) {
         fprintf(stderr, formatMessage("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
         fprintf(stderr, formatMessage("[info]• Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        if (!available_mimes.empty()) {
+            fprintf(stderr, "%s", formatMessage("[info]• Available types from GUI: [help]").data());
+            for (const auto& mime : available_mimes) {
+                fprintf(stderr, "%s", mime.data());
+                if (mime != available_mimes.back()) fprintf(stderr, ", ");
+            }
+            fprintf(stderr, "%s", formatMessage("[blank]\n").data());
+        }
+
     } else {
         size_t files = 0;
         size_t directories = 0;

@@ -66,6 +66,7 @@ bool no_emoji = false;
 bool all_option = false;
 
 std::string preferred_mime;
+std::vector<std::string> available_mimes;
 
 std::vector<std::string> arguments;
 
@@ -180,7 +181,7 @@ bool userIsARobot() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action != Paste && action != Show && action != Note && action != Status;
+    return action != Paste && action != Show && action != Note && action != Status && action != Info;
 }
 
 bool isAClearingAction() {
@@ -438,6 +439,7 @@ void syncWithGUIClipboard(bool force) {
             convertFromGUIClipboard(content.paths());
             copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
         }
+        available_mimes = content.availableTypes();
     }
 }
 

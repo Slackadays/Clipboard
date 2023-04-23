@@ -1273,7 +1273,13 @@ static ClipboardContent getX11ClipboardInternal(const std::string& requested_mim
         return stream;
     };
 
-    return MimeType::decode(offeredTypes, request, requested_mime);
+    auto content = MimeType::decode(offeredTypes, request, requested_mime);
+
+    std::vector<std::string> mimes(offeredTypes.begin(), offeredTypes.end());
+
+    content.makeTypesAvailable(mimes);
+
+    return content;
 }
 
 static void startPasteDaemon(const ClipboardContent& clipboard) {

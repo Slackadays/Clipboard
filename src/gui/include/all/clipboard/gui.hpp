@@ -46,6 +46,7 @@ class ClipboardContent {
 private:
     ClipboardContentType m_type = ClipboardContentType::Empty;
     std::string mime_type;
+    std::vector<std::string> available_types;
     std::variant<std::nullptr_t, std::string, ClipboardPaths> m_data;
 
 public:
@@ -60,10 +61,13 @@ public:
     ClipboardContent(std::vector<fs::path>&&, ClipboardPathsAction = ClipboardPathsAction::Copy);
     ClipboardContent(const std::vector<fs::path>&, ClipboardPathsAction = ClipboardPathsAction::Copy);
 
+    inline void makeTypesAvailable(const std::vector<std::string>& types) { available_types = types; }
+
     [[nodiscard]] inline ClipboardContentType type() const { return m_type; }
     [[nodiscard]] inline const std::string& text() const { return std::get<std::string>(m_data); }
     [[nodiscard]] inline const ClipboardPaths& paths() const { return std::get<ClipboardPaths>(m_data); }
     [[nodiscard]] inline const std::string& mime() const { return mime_type; }
+    [[nodiscard]] inline const std::vector<std::string>& availableTypes() const { return available_types; }
 };
 
 /**
