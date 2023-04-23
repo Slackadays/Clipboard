@@ -12,7 +12,6 @@ It supports:
 - metadata descriptions (notes) for any clipboard,
 - interfacing with [GUI clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - other languages like español, português, and Türkçe,
-- painless environment variable and flag configuration,
 - any POSIX/Windows platform with C++20 compat,
 - flexible scripting to automate workflows,
 - customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>,
@@ -46,9 +45,13 @@ In short, we're here to help you save time and effort.
     </a>
 </p>
 
+<br>
+
 <p align="center">
-    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="40px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="35px" />
 </p>
+
+<br>
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
 
@@ -122,9 +125,6 @@ $ cmake --install .
 Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
 <br>
-
-Now that you've installed CB, read below to see how to make it work for you.
-
 <br>
 
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
@@ -153,7 +153,6 @@ $ cb note_420
 $ cb
 ```
 
-<br>
 <br>
 
 ### <img src="documentation/readme-assets/Actions.png" alt="Actions" height=25px />
@@ -617,18 +616,18 @@ $ cb
 <br>
 <br>
 
-### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Actions" height=25px />
+### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Tips And Tricks" height=25px />
 
 Need to paste a funky symbol somewhere a lot? Just copy it to a persistent clipboard.
 
 ```sh
-$ cb cp_amog ඞ
+$ cb cp_theta θ
 ```
 
 Copy a password securely by deleting it once you've pasted it.
 
 ```sh
-$ cb cut "AReallyStrongPassword!"
+$ cb cut "AVeryStrongPassword!"
 $ cb | some-program
 # Now gone
 ```
@@ -655,9 +654,6 @@ cb note "Latest files from website ABCXYZ"
 ```
 
 <br>
-
-Want to customize CB to your liking? Check out the next section.
-
 <br>
 
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
@@ -989,6 +985,7 @@ $ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachat
 
 </details>
  
+<br>
 <br>
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
