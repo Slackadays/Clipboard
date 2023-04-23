@@ -31,7 +31,7 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
     // xml
     if (beginning_matches("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"sv)) return "text/xml";
 
-    //ico
+    // ico
     if (beginning_matches("\x00\x00\x01\x00"sv)) return "image/x-icon";
 
     // mpeg 1
@@ -98,10 +98,14 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
     if (beginning_matches("\x28\xB5\x2F\xFD"sv)) return "application/zstd";
 
     // x.509
-    if (beginning_matches("-----BEGIN CERTIFICATE-----"sv) || beginning_matches("-----BEGIN CERTIFICATE REQUEST-----") || beginning_matches("-----BEGIN PRIVATE KEY-----") || beginning_matches("-----BEGIN DSA PRIVATE KEY-----") || beginning_matches("-----BEGIN RSA PRIVATE KEY-----")) return "application/x-x509-user-cert";
+    if (beginning_matches("-----BEGIN CERTIFICATE-----"sv) || beginning_matches("-----BEGIN CERTIFICATE REQUEST-----") || beginning_matches("-----BEGIN PRIVATE KEY-----")
+        || beginning_matches("-----BEGIN DSA PRIVATE KEY-----") || beginning_matches("-----BEGIN RSA PRIVATE KEY-----"))
+        return "application/x-x509-user-cert";
 
     // lzh file
-    if (beginning_matches("-lh0-"sv, 2) || beginning_matches("-lh1"sv, 2) || beginning_matches("-lh2-"sv, 2) || beginning_matches("-lh3-"sv, 2) || beginning_matches("-lh4-"sv, 2) || beginning_matches("-lh5-"sv, 2) || beginning_matches("-lhd-"sv, 2)) return "application/x-lzh";
+    if (beginning_matches("-lh0-"sv, 2) || beginning_matches("-lh1"sv, 2) || beginning_matches("-lh2-"sv, 2) || beginning_matches("-lh3-"sv, 2) || beginning_matches("-lh4-"sv, 2)
+        || beginning_matches("-lh5-"sv, 2) || beginning_matches("-lhd-"sv, 2))
+        return "application/x-lzh";
 
     // ace
     if (beginning_matches("**ACE**"sv, 7)) return "application/x-ace";
