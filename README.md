@@ -47,7 +47,7 @@ In short, we're here to help you save time and effort.
 </p>
 
 <p align="center">
-    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="30px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="40px" />
 </p>
 
 ### ![Quick Installation](documentation/readme-assets/CBQuickInstallation.png)
