@@ -44,13 +44,6 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     insert("x-special/gnome-copied-files", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("application/x-kde-cutselection", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("text/uri-list", ClipboardContentType::Paths, MimeOption::EncodePaths);
-    insert("text/plain;charset=utf-8", ClipboardContentType::Text);
-    insert("UTF8_STRING", ClipboardContentType::Text);
-    insert("text/plain", ClipboardContentType::Text);
-    insert("text/html", ClipboardContentType::Text);
-    insert("STRING", ClipboardContentType::Text);
-    insert("TEXT", ClipboardContentType::Text);
-    insert("GTK_TEXT_BUFFER_CONTENTS", ClipboardContentType::Text);
     insert("image/jxl", ClipboardContentType::Text);
     insert("image/png", ClipboardContentType::Text);
     insert("image/jpeg", ClipboardContentType::Text);
@@ -66,6 +59,13 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     insert("video/webm", ClipboardContentType::Text);
     insert("application/zip", ClipboardContentType::Text);
     insert("application/pdf", ClipboardContentType::Text);
+    insert("text/html", ClipboardContentType::Text);
+    insert("text/plain;charset=utf-8", ClipboardContentType::Text);
+    insert("UTF8_STRING", ClipboardContentType::Text);
+    insert("text/plain", ClipboardContentType::Text);
+    insert("STRING", ClipboardContentType::Text);
+    insert("TEXT", ClipboardContentType::Text);
+    insert("GTK_TEXT_BUFFER_CONTENTS", ClipboardContentType::Text);
 
     return result;
 }

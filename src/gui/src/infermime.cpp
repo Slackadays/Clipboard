@@ -20,9 +20,9 @@ using namespace std::string_view_literals;
 
 std::optional<std::string_view> inferMIMEType(const std::string& temporaryContent) {
     std::string_view content(temporaryContent);
-    auto beginning_matches = [&](const std::string_view& pattern) {
-        if (content.size() < pattern.size()) return false;
-        return content.substr(0, pattern.size()) == pattern;
+    auto beginning_matches = [&](const std::string_view& pattern, const unsigned int offset = 0) {
+        if (content.size() < (pattern.size() + offset)) return false;
+        return content.substr(0 + offset, pattern.size() + offset) == pattern;
     };
 
     // jpeg xl
@@ -30,6 +30,84 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
 
     // xml
     if (beginning_matches("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"sv)) return "text/xml";
+
+    //ico
+    if (beginning_matches("\x00\x00\x01\x00"sv)) return "image/x-icon";
+
+    // mpeg 1
+    if (beginning_matches("\x00\x00\x01\xB3"sv)) return "video/mpeg";
+
+    // mpeg 2
+    if (beginning_matches("\x00\x00\x01\xBA"sv)) return "video/mpeg";
+
+    // utf-32be
+    if (beginning_matches("\x00\x00\xFE\xFF"sv)) return "text/plain";
+
+    // ttf
+    if (beginning_matches("\x00\x01\x00\x00\x00"sv)) return "font/ttf";
+
+    // xml
+    if (beginning_matches("\x00\x3C\x00\x3F\x00\x78\x00\x6D\x00\x6C\x00\x20"sv)) return "text/xml";
+
+    // wasm
+    if (beginning_matches("\x00\x61\x73\x6D"sv)) return "application/wasm";
+
+    // jpeg 2000
+    if (beginning_matches("\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A"sv)) return "image/jp2";
+
+    // jpeg 2000
+    if (beginning_matches("\xFF\x4F\xFF\x51"sv)) return "image/jp2";
+
+    // lz4
+    if (beginning_matches("\x04\x22\x4D\x18"sv)) return "application/x-lz4";
+
+    // pcap
+    if (beginning_matches("\x0A\x0D\x0D\x0A"sv)) return "application/vnd.tcpdump.pcap";
+
+    // winbox
+    if (beginning_matches("\x0A\xF0\x1D\xC0"sv)) return "application/x-winbox";
+
+    // lua
+    if (beginning_matches("\x1B\x4C\x75\x61"sv)) return "text/x-lua";
+
+    // gzip
+    if (beginning_matches("\x1F\x8B"sv)) return "application/gzip";
+
+    // lzw compression
+    if (beginning_matches("\x1F\x9D"sv)) return "application/x-lzw";
+
+    // lzh compression
+    if (beginning_matches("\x1F\xA0"sv)) return "application/x-lzh";
+
+    // dss
+    if (beginning_matches("\x02\x64\x73\x73"sv)) return "audio/dss";
+
+    // deb
+    if (beginning_matches("\x21\x3C\x61\x72\x63\x68\x3E\x0A"sv)) return "application/x-deb";
+
+    // postscript
+    if (beginning_matches("\x25\x21\x50\x53"sv)) return "application/postscript";
+
+    // pdf
+    if (beginning_matches("%PDF-"sv)) return "application/pdf";
+
+    // u-boot
+    if (beginning_matches("\x27\x05\x19\x56"sv)) return "application/x-uboot";
+
+    // zstd
+    if (beginning_matches("\x28\xB5\x2F\xFD"sv)) return "application/zstd";
+
+    // x.509
+    if (beginning_matches("-----BEGIN CERTIFICATE-----"sv) || beginning_matches("-----BEGIN CERTIFICATE REQUEST-----") || beginning_matches("-----BEGIN PRIVATE KEY-----") || beginning_matches("-----BEGIN DSA PRIVATE KEY-----") || beginning_matches("-----BEGIN RSA PRIVATE KEY-----")) return "application/x-x509-user-cert";
+
+    // lzh file
+    if (beginning_matches("-lh0-"sv, 2) || beginning_matches("-lh1"sv, 2) || beginning_matches("-lh2-"sv, 2) || beginning_matches("-lh3-"sv, 2) || beginning_matches("-lh4-"sv, 2) || beginning_matches("-lh5-"sv, 2) || beginning_matches("-lhd-"sv, 2)) return "application/x-lzh";
+
+    // ace
+    if (beginning_matches("**ACE**"sv, 7)) return "application/x-ace";
+
+    // utf-7
+    if (beginning_matches("+/v8-"sv) || beginning_matches("+/v9-"sv) || beginning_matches("+/v+"sv) || beginning_matches("+/v-"sv)) return "text/plain";
 
     // html
     if (beginning_matches("<!DOCTYPE html>"sv)) return "text/html";
@@ -61,9 +139,6 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
     // rar
     if (beginning_matches("Rar!\x1A\x07\x00"sv)) return "application/vnd.rar";
 
-    // pdf
-    if (beginning_matches("%PDF-"sv)) return "application/pdf";
-
     // mp3
     if (beginning_matches("ID3"sv)) return "audio/mpeg";
 
@@ -76,14 +151,8 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
     // flac
     if (beginning_matches("fLaC"sv)) return "audio/flac";
 
-    // jpeg 2000
-    if (beginning_matches("\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A"sv)) return "image/jp2";
-
     // tar
     if (beginning_matches("ustar"sv)) return "application/x-tar";
-
-    // gzip
-    if (beginning_matches("\x1F\x8B"sv)) return "application/gzip";
 
     // xz
     if (beginning_matches("\xFD\x37\x7A\x58\x5A\x00"sv)) return "application/x-xz";
