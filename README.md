@@ -124,6 +124,11 @@ $ cmake --install .
 Remove everything listed in `install_manifest.txt`. If you're not using Windows, you can also do `xargs rm < install_manifest.txt`.
 
 <br>
+
+<p align="center">
+    <img src="documentation/readme-assets/HowToUsePrompt.png" alt="Now let's start saving time and effort." height="40px" />
+</p>
+
 <br>
 
 ### ![How To Use](documentation/readme-assets/CBHowToUse.png)
