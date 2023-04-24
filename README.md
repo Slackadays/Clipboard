@@ -110,7 +110,7 @@ You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatib
 
 Get the latest release instead of the latest commit by adding `--branch 0.6.0` right after `git clone...`.
 
-Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`.
+Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`, or the library install location by adding `-DCMAKE_INSTALL_LIBDIR=/custom/dir`.
 ```bash
 $ git clone https://github.com/Slackadays/Clipboard 
 $ cd Clipboard/build
