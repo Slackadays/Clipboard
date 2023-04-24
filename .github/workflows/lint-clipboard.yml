@@ -13,7 +13,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y clang-format-15
           
-          cd src
           sh clang-format-check.sh
   shellcheck:
     runs-on: ubuntu-22.04
@@ -26,7 +25,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y shellcheck
           
-          cd src
           sh shellcheck.sh
   psscriptanalyzer:
     runs-on: windows-latest
@@ -37,4 +35,4 @@ jobs:
       - name: psscriptanalyzer
         run: |
           Install-Module -Name PSScriptAnalyzer -Force
-          Invoke-ScriptAnalyzer -Path src\install.ps1
+          Invoke-ScriptAnalyzer -Path install.ps1
