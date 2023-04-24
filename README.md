@@ -7,8 +7,8 @@ Clipboard (or CB) is one of the most advanced clipboard managers available for y
 It supports:
 
 - copying files and directories in addition to text, 
-- adding or removing contents (with regex), 
-- an infinite number of compartmentalized clipboards, 
+- full regex to manipulate whatever you copy, 
+- an _infinite_ number of compartmentalized clipboards, 
 - interfacing with [GUI clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - multiple languages like español, português, and Türkçe,
 - any POSIX/Windows platform with C++20 compat,
