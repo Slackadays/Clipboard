@@ -71,4 +71,4 @@ target_include_directories(clipboardwayland PRIVATE
   ${GENERATED_INCLUDE_DIR}
 )
 
-install(TARGETS clipboardwayland LIBRARY DESTINATION lib)
+install(TARGETS clipboardwayland LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
