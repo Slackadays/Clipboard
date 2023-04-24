@@ -33,6 +33,10 @@ if (MSVC)
   add_compile_definitions(NOMINMAX) # Prevent min() or max() from being made into macros by windows.h
 endif()
 
+if (NOT CMAKE_INSTALL_LIBDIR)
+  set(CMAKE_INSTALL_LIBDIR "lib")
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()

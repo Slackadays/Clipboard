@@ -45,13 +45,13 @@ elseif(X11WL)
     TARGET clipboard
     APPEND
     PROPERTY BUILD_RPATH
-    "${CMAKE_INSTALL_PREFIX}/lib"
+    "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
   )
   set_property(
     TARGET clipboard
     APPEND
     PROPERTY INSTALL_RPATH
-    "${CMAKE_INSTALL_PREFIX}/lib"
+    "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
   )
   target_link_options(clipboard PRIVATE -z origin) # set the rpath to $ORIGIN
   target_link_libraries(clipboard ${CMAKE_DL_LIBS})
