@@ -736,24 +736,24 @@ void showFailures() {
 }
 
 void showSuccesses() {
-    if (output_silent) return;
+    if (output_silent || !is_tty.err) return;
     if (successes.bytes > 0 && is_tty.err) {
         fprintf(stderr, byte_success_message().data(), did_action[action].data(), formatBytes(successes.bytes.load()).data());
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
-        printf(one_item_success_message().data(), did_action[action].data());
+        fprintf(stderr, one_item_success_message().data(), did_action[action].data());
     } else {
         if ((successes.files > 1) && (successes.directories == 0))
-            printf(many_files_success_message().data(), did_action[action].data(), successes.files.load());
+            fprintf(stderr, many_files_success_message().data(), did_action[action].data(), successes.files.load());
         else if ((successes.files == 0) && (successes.directories > 1))
-            printf(many_directories_success_message().data(), did_action[action].data(), successes.directories.load());
+            fprintf(stderr, many_directories_success_message().data(), did_action[action].data(), successes.directories.load());
         else if ((successes.files == 1) && (successes.directories == 1))
-            printf(one_file_one_directory_success_message().data(), did_action[action].data());
+            fprintf(stderr, one_file_one_directory_success_message().data(), did_action[action].data());
         else if ((successes.files > 1) && (successes.directories == 1))
-            printf(many_files_one_directory_success_message().data(), did_action[action].data(), successes.files.load());
+            fprintf(stderr, many_files_one_directory_success_message().data(), did_action[action].data(), successes.files.load());
         else if ((successes.files == 1) && (successes.directories > 1))
-            printf(one_file_many_directories_success_message().data(), did_action[action].data(), successes.directories.load());
+            fprintf(stderr, one_file_many_directories_success_message().data(), did_action[action].data(), successes.directories.load());
         else if ((successes.files > 1) && (successes.directories > 1))
-            printf(many_files_many_directories_success_message().data(), did_action[action].data(), successes.files.load(), successes.directories.load());
+            fprintf(stderr, many_files_many_directories_success_message().data(), did_action[action].data(), successes.files.load(), successes.directories.load());
     }
 }
 
