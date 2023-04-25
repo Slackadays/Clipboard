@@ -136,24 +136,32 @@ Remove everything listed in `install_manifest.txt`. If you're not using Windows,
 ### <img src="documentation/readme-assets/Examples.png" alt="Examples" height=25px />
 
 ```sh
+# Let's start by copying a file, adding a note to it, changing the note, then pasting the file.
 $ cb copy NuclearLaunchCodes.pdf
 $ cb note "Keep this a secret"
 $ echo "Keep this a secret OR ELSE" | cb note
 $ cb paste
 
+# What if we cut a directory, added a file, and then removed that file? That's what we're doing here, all in the "69" clipboard.
 $ cb cut69 MyDirectory
 $ cb add69 SomeFile
 $ cb remove69 SomeFile
 $ cb paste69
 
+# You can copy multiple files at the same time. We're using the "_420" persistent clipboard this time.
 $ cb cp_420 foo.bar NotAVirus.bar.mp3.exe
 $ cb remove_420 "*.mp3\.exe"
 $ cb note_420 "Some kosher content here"
 $ cb sh_420
 
+# Now let's see our original note and then clear that clipboard. 
 $ cb note
 $ cb clr
+
+# This is the same as "cb note" but for clipboard "_420" again.
 $ cb note_420
+
+# Get a bird's eye view of everything so far.
 $ cb
 ```
 
@@ -170,14 +178,15 @@ Add a number to the end of your action to choose which clipboard you want to use
 Copy a file.
 ```sh
 $ cb copy FooFile
+$ cb --copy FooFile
 $ cb cp FooFile 
+$ cb -cp FooFile
 # These are the same!
 ```
 
 Copy a file and a directory.
 ```sh
 $ cb copy FooFile BarDir
-$ cb cp FooFile BarDir 
 # These are also the same!
 ```
 
@@ -185,7 +194,7 @@ Copy piped in data.
 ```sh
 $ echo "Foobar" | cb
 $ echo "Foobar" | cb copy 
-# Also the same again
+# The "copy" action is optional here since the only possible action here in the first place is "copy"
 ```
 
 Copy text directly.
@@ -227,14 +236,15 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 Cut a file.
 ```sh
 $ cb cut FooFile
+$ cb --cut FooFile
 $ cb ct FooFile 
+$ cb -ct FooFile
 # These are the same!
 ```
 
 Cut a file and a directory.
 ```sh
 $ cb cut FooFile BarDir
-$ cb ct FooFile BarDir 
 # These are also the same!
 ```
 
@@ -263,7 +273,8 @@ $ echo "Foobar" | cb cut_hello
 Cut text to the clipboard named "hey"
 ```sh
 $ cb --clipboard hey cut "Aventura was the best bachata band"
-$ cb -c hey cut "Aventura was the best bachata band" # These are the same!
+$ cb -c hey cut "Aventura was the best bachata band"
+# These are the same!
 ```
 
 Cut a file with spaces and many directories to clipboard "50" using the abbreviated action name.
@@ -287,7 +298,9 @@ $ cb copy FooFile WhyAventuraIsTheBest.pdf
 Paste in the current working directory.
 ```sh
 $ cb paste
-$ cb p 
+$ cb --paste
+$ cb p
+$ cb -p
 # These are the same!
 ```
 Note: If you paste after cutting, then CB will delete the original files that you cut.
@@ -306,16 +319,12 @@ $ echo "Bananas!" | cb
 Paste the raw data file in the current working directory.
 ```sh
 $ cb paste
-$ cb p 
 # Also the same
 ```
 
 Pipe everything out to some file.
 ```sh
 $ cb paste > SomeFile
-$ cb p > SomeFile
-$ cb > SomeFile 
-# These three versions all work great!
 ```
 
 Pipe everything from clipboard "42" out to some file.
@@ -328,9 +337,7 @@ $ cb -c 42 > SomeFile
 
 Pipe everything out to some program.
 ```sh
-$ cb paste | cat
-$ cb p | cat
-$ cb | cat 
+$ cb | cat
 # These three versions also all work great.
 $ cb | Write-Output 
 # The version for PowerShell
@@ -364,16 +371,15 @@ $ cb copy FooFile
 Add a file.
 ```sh
 $ cb add SomeOtherFile
+$ cb --add SomeOtherFile
 $ cb ad SomeOtherFile 
-# Abbreviated
+$ cb -ad SomeOtherFile
 # CB now holds FooFile and SomeOtherFile
 ```
 
 Add a directory.
 ```sh
 $ cb add "We Broke The Rules"
-$ cb ad "We Broke The Rules"
-# Abbreviated
 ```
 
 Now let's copy some raw data.
@@ -409,6 +415,9 @@ $ cb copy FooFile BarDir BazDir
 Remove everything starting with "B"
 ```sh
 $ cb remove "B.*"
+$ cb --remove "B.*"
+$ cb rm "B.*"
+$ cb -rm "B.*"
 # CB will match this against "BarDir" and "BazDir" and remove them
 ```
 
@@ -418,7 +427,7 @@ $ cb remove "BarDir"
 # CB will match this against "BarDir" only and remove it
 ```
 
-Now let's shcopy some raw data.
+Now let's copy some raw data.
 ```sh
 $ cb copy "A bachatero is someone who makes bachata music."
 ```
@@ -451,8 +460,10 @@ $ cb copy FooFile BarDir BazDir
 List all the items in the clipboard.
 ```sh
 $ cb show
+$ cb --show
 $ cb sh 
-# These both work great!
+$ cb -sh
+# These all work great!
 ```
 
 Now let's copy some raw data.
@@ -486,8 +497,10 @@ $ cb copy FooFile BarDir BazDir
 Clear the clipboard of all data.
 ```sh
 $ cb clear
+$ cb --clear
 $ cb clr 
-# These both work great!
+$ cb -clr
+# These all work great!
 ```
 
 </details>
@@ -507,8 +520,10 @@ Load the contents of the clipboard into other clipboards.
 
 ```sh
 $ cb load 1 2 3 _foo
+$ cb --load 1 2 3 _foo
 $ cb ld 1 2 3 _foo
-# Both work great!
+$ cb -ld 1 2 3 _foo
+# All work great!
 ```
 
 Note: If you don't provide a destination clipboard, then the Load action will load the contents into the default clipboard.
@@ -517,8 +532,6 @@ Load the contents of some clipboard into the default.
 
 ```sh
 $ cb load_foo
-$ cb ld_foo
-# Both also work great!
 ```
 
 Note: This is useful if you want to load content into GUI clipboard systems, as they only connect to the default clipboard.
@@ -534,15 +547,15 @@ Note: This is useful if you want to load content into GUI clipboard systems, as 
 Add a personal note to a clipboard.
 ```sh
 $ cb note "For my Aventura music collection"
+$ cb --note "For my Aventura music collection"
 $ cb nt "For my Aventura music collection"
-# This also works great!
+$ cb -nt "For my Aventura music collection"
+# All work great!
 ```
 
 Add a personal note to a clipboard by piping it in.
 ```sh
 $ echo "For my Aventura music collection" | cb note
-$ echo "For my Aventura music collection" | cb nt 
-# This also works great!
 ```
 
 Remove a note from a clipboard.
@@ -566,6 +579,9 @@ $ cb note "For my Aventura music collection"
 Show the note you added.
 ```sh
 $ cb note
+$ cb --note
+$ cb nt
+$ cb -nt
 ```
 
 </details>
@@ -579,7 +595,9 @@ $ cb note
 Show helpful details for a clipboard.
 ```sh
 $ cb info
+$ cb --info
 $ cb in
+$ cb -in
 # Both are the same!
 ```
 
@@ -610,7 +628,9 @@ $ cb -h
 Check the status of all clipboards that have content.
 ```sh
 $ cb status
+$ cb --status
 $ cb st
+$ cb -st
 $ cb 
 # These all work great!
 ```
@@ -658,6 +678,11 @@ cb note "Latest files from website ABCXYZ"
 ```
 
 <br>
+
+<p align="center">
+    <img src="documentation/readme-assets/CustomizeClipboard.png" alt="Let's make CB our own." height="40px" />
+</p>
+
 <br>
 
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
