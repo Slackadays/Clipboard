@@ -663,6 +663,18 @@ $ neofetch | cb cp_neo
 $ cb | cat
 ```
 
+Want CB to look different? Change up the color scheme.
+
+```sh
+# This one looks like The Matrix
+$ export CLIPBOARD_THEME=green
+$ cb
+# This one is for light backgrounds
+$ export CLIPBOARD_THEME=light
+$ cb
+# Check out the other themes too!
+```
+
 Make your own scripts that can fully automate your workflows.
 
 ```sh
