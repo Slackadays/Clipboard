@@ -2,7 +2,7 @@
 
 <br>
 
-Clipboard (or CB) is one of the most advanced clipboard managers available for your terminal, and maybe even in general!
+Clipboard (or CB) is one of the most advanced clipboard managers available for your terminal. And, maybe even in general!
 
 It supports:
 
