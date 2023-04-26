@@ -143,7 +143,7 @@ jobs:
             fi
                       
             apt-get update
-            apt-get install -y $PACKAGES xvfb sway xclip
+            apt-get install -y $PACKAGES xvfb sway xclip cmake
   
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
             then
