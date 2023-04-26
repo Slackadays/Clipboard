@@ -2,29 +2,29 @@
 
 <br>
 
-Clipboard (or CB) is one of the most advanced clipboard managers available for your terminal. And, maybe even in general!
+Clipboard (or CB) is one of _the most advanced_ clipboard managers out there for your terminal. And, maybe even in general!
 
-It supports:
+When we started writing CB, we needed something way more powerful than other tools like `xclip`, `xsel`, `wl-clipboard`, `pbcopy`, or `clip`, and something really easy to use by truly anyone.
+
+Enjoy support for...
 
 - copying files and directories in addition to text, 
-- full regex to manipulate whatever you copy, 
 - an _infinite_ number of compartmentalized clipboards, 
-- interfacing with [GUI clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
-- multiple languages like español, português, and Türkçe,
+- persistent clipboards that stick around just for you,
+- connecting with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
+- more languages like español, português, and Türkçe,
 - any POSIX/Windows platform with C++20 compat,
-- flexible scripting to automate workflows,
-- customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>,
+- superb scripting to automate your workflows,
+- customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
 - a unique filesystem-based implementation,
 - your freedom by being 100% free and open source,
-- and more!
-
-When we first started writing CB, we needed something more versatile than other tools like `xclip`, `wl-clipboard`, or `pbcopy`, and something really easy to use by anyone out there. That's why our mantra is this:
+- and tons more!
+  
+In short, we're here to help you save time and effort.
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
 </p>
-
-In short, we're here to help you save time and effort.
 
 <br>
 
@@ -479,6 +479,14 @@ $ cb show
 Show the raw filepaths of everything in the clipboard.
 ```sh
 $ cb sh | cat
+```
+
+Show raw filepaths to a program.
+```sh
+$ cb copy "02 I Believe.flac"
+$ eval vlc $(cb sh)
+# Use the eval command here to process the raw filepath (which in this case looks like "/tmp/Clipboard/0/02 I Believe.flac") as if it were entered in a shell
+# Otherwise, you'll likely get errors complaining about being unable to process quote characters.
 ```
 
 </details>
