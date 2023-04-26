@@ -211,7 +211,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
         onWindowsError("EmptyClipboard");
     }
 
-    if (clipboard.type() == ClipboardContentType::Text) {
+    if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
         setWindowsClipboardDataPipe();
     } else if (clipboard.type() == ClipboardContentType::Paths) {
         setWindowsClipboardDataFiles();

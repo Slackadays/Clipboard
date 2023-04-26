@@ -44,21 +44,21 @@ decltype(MimeType::s_typesByName) MimeType::initializeTypes() {
     insert("x-special/gnome-copied-files", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("application/x-kde-cutselection", ClipboardContentType::Paths, MimeOption::IncludeAction | MimeOption::EncodePaths);
     insert("text/uri-list", ClipboardContentType::Paths, MimeOption::EncodePaths);
-    insert("image/jxl", ClipboardContentType::Text);
-    insert("image/png", ClipboardContentType::Text);
-    insert("image/jpeg", ClipboardContentType::Text);
-    insert("image/bmp", ClipboardContentType::Text);
-    insert("image/gif", ClipboardContentType::Text);
-    insert("image/tiff", ClipboardContentType::Text);
-    insert("image/gif", ClipboardContentType::Text);
-    insert("image/webp", ClipboardContentType::Text);
-    insert("audio/mpeg", ClipboardContentType::Text);
-    insert("audio/ogg", ClipboardContentType::Text);
-    insert("audio/wav", ClipboardContentType::Text);
-    insert("video/mp4", ClipboardContentType::Text);
-    insert("video/webm", ClipboardContentType::Text);
-    insert("application/zip", ClipboardContentType::Text);
-    insert("application/pdf", ClipboardContentType::Text);
+    insert("image/jxl", ClipboardContentType::Binary);
+    insert("image/png", ClipboardContentType::Binary);
+    insert("image/jpeg", ClipboardContentType::Binary);
+    insert("image/bmp", ClipboardContentType::Binary);
+    insert("image/gif", ClipboardContentType::Binary);
+    insert("image/tiff", ClipboardContentType::Binary);
+    insert("image/gif", ClipboardContentType::Binary);
+    insert("image/webp", ClipboardContentType::Binary);
+    insert("audio/mpeg", ClipboardContentType::Binary);
+    insert("audio/ogg", ClipboardContentType::Binary);
+    insert("audio/wav", ClipboardContentType::Binary);
+    insert("video/mp4", ClipboardContentType::Binary);
+    insert("video/webm", ClipboardContentType::Binary);
+    insert("application/zip", ClipboardContentType::Binary);
+    insert("application/pdf", ClipboardContentType::Binary);
     insert("text/plain;charset=utf-8", ClipboardContentType::Text);
     insert("UTF8_STRING", ClipboardContentType::Text);
     insert("text/plain", ClipboardContentType::Text);
@@ -79,6 +79,12 @@ std::optional<MimeType> MimeType::find(std::string_view name) {
 }
 
 bool MimeType::supports(const ClipboardContent& content) const {
+    static auto type = inferMIMEType(content.text());
+
+    if (type.has_value() && type.value() == m_name) {
+        return true;
+    }
+
     if (m_type == content.type()) {
         return true;
     }
@@ -91,7 +97,7 @@ bool MimeType::supports(const ClipboardContent& content) const {
 }
 
 ClipboardContent MimeType::decode(std::istream& stream) const {
-    if (m_type == ClipboardContentType::Text) {
+    if (m_type == ClipboardContentType::Text || m_type == ClipboardContentType::Binary) {
         return decodeText(stream);
     }
 
@@ -159,7 +165,7 @@ bool MimeType::encode(const ClipboardContent& clipboard, std::ostream& stream) c
         return false;
     }
 
-    if (clipboard.type() == ClipboardContentType::Text) {
+    if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
         return encode(clipboard.text(), stream);
     }
 

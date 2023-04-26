@@ -19,7 +19,9 @@
 using namespace std::string_view_literals;
 
 std::optional<std::string_view> inferMIMEType(const std::string& temporaryContent) {
+
     std::string_view content(temporaryContent);
+
     auto beginning_matches = [&](const std::string_view& pattern, const unsigned int offset = 0) {
         if (content.size() < (pattern.size() + offset)) return false;
         return content.substr(0 + offset, pattern.size() + offset) == pattern;

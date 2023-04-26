@@ -41,7 +41,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
     gui_clipboard->Clear();
     BMessage* content = (BMessage*)NULL;
     if (content = gui_clipboard->Data()) {
-        if (clipboard.type() == ClipboardContentType::Text) {
+        if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
             content->AddData("text/plain", B_MIME_TYPE, clipboard.text().data(), clipboard.text().length());
         } else if (clipboard.type() == ClipboardContentType::Paths) {
         }

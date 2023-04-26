@@ -40,7 +40,7 @@ public:
     [[nodiscard]] inline const std::vector<fs::path>& paths() const { return m_paths; }
 };
 
-enum class ClipboardContentType { Empty, Text, Paths };
+enum class ClipboardContentType { Empty, Text, Paths, Binary };
 
 class ClipboardContent {
 private:

@@ -25,7 +25,7 @@ ClipboardContent getGUIClipboard(const std::string& requested_mime) {
 }
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
-    if (clipboard.type() == ClipboardContentType::Text) {
+    if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
 
     } else if (clipboard.type() == ClipboardContentType::Paths) {
     }
