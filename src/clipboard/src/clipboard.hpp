@@ -240,7 +240,7 @@ public:
 std::string formatNumbers(const auto& num) {
     static std::stringstream ss;
     ss.str(std::string());
-    ss << std::fixed << std::setprecision(3);
+    ss << std::fixed << std::setprecision(2);
     ss << num;
     return ss.str();
 }
