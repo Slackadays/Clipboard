@@ -2,9 +2,9 @@
 
 <br>
 
-Clipboard (or CB) is one of _the most advanced_ clipboard managers you can get!
+Clipboard (or CB) is one of _the_ most advanced clipboard managers you can get.
 
-When we started writing CB, we needed something way more powerful than other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`, and something really easy to use by truly anyone.
+When we started writing CB, we needed something way more powerful than other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`, and something really easy to use by truly anyone. Maybe that person is you!
 
 Enjoy support for...
 
