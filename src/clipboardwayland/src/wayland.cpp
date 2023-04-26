@@ -75,6 +75,8 @@ public:
             m_dataDevice.setSelection(m_dataSource, serial);
         }
 
+        kill(getppid(), SIGUSR1);
+
         while (!m_dataSource.isCancelled())
             m_display.dispatch();
     }
@@ -114,11 +116,12 @@ static ClipboardContent getWaylandClipboardInternal(const std::string& requested
     return content;
 }
 
-static void setWaylandClipboardInternal(const WriteGuiContext& context) {
+static bool setWaylandClipboardInternal(const WriteGuiContext& context) {
     context.forker.fork([&]() {
         PasteDaemon daemon {context.clipboard};
         daemon.run();
     });
+    return waitForSuccessSignal();
 }
 
 extern "C" {
@@ -136,14 +139,16 @@ extern void* getWaylandClipboard(void* ptr) noexcept {
     }
 }
 
-extern void setWaylandClipboard(void* ptr) noexcept {
+extern bool setWaylandClipboard(void* ptr) noexcept {
     try {
         const WriteGuiContext& context = *reinterpret_cast<const WriteGuiContext*>(ptr);
-        setWaylandClipboardInternal(context);
+        return setWaylandClipboardInternal(context);
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
+        return false;
     } catch (...) {
         debugStream << "Unknown error setting clipboard data" << std::endl;
+        return false;
     }
 }
 }

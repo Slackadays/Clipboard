@@ -339,7 +339,7 @@ void setupHandlers() {
 #endif
     });
 
-    signal(SIGINT, [](int dummy) {
+    signal(SIGINT, [](int) {
         if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
             // message, directly to standard error. Note: There is no standard C++ interface for this, so this requires

@@ -21,3 +21,18 @@ void Forker::atFork(Forker::callback_t&& callback) {
 void Forker::atNonFork(Forker::callback_t&& callback) {
     m_nonForkCallbacks.emplace_back(std::move(callback));
 }
+
+#if defined(HAVE_FORK)
+bool waitForSuccessSignal() {
+    sigset_t sigset;
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIGUSR1);
+    sigaddset(&sigset, SIGUSR2);
+    sigprocmask(SIG_BLOCK, &sigset, nullptr);
+    signal(SIGUSR1, SIG_IGN);
+    signal(SIGUSR2, SIG_IGN);
+    int sig;
+    sigwait(&sigset, &sig);
+    return sig == SIGUSR1;
+}
+#endif

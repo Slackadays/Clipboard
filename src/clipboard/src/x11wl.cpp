@@ -29,7 +29,7 @@ constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 const bool GUIClipboardSupportsCut = true;
 
 using getClipboard_t = void* (*)(void*);
-using setClipboard_t = void (*)(void*);
+using setClipboard_t = bool (*)(void*);
 
 static void x11wlClipboardFailure(const char* object) {
     if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
@@ -75,13 +75,13 @@ static ClipboardContent dynamicGetGUIClipboard(const char* object, const char* s
     return *x11wlClipboard;
 }
 
-static void dynamicSetGUIClipboard(const char* object, const char* symbol, const ClipboardContent& clipboard) {
+static bool dynamicSetGUIClipboard(const char* object, const char* symbol, const ClipboardContent& clipboard) {
     WriteGuiContext context {
             .forker = forker,
             .clipboard = clipboard,
     };
     auto ptr = reinterpret_cast<void*>(&context);
-    dynamicCall<setClipboard_t>(object, symbol, ptr);
+    return dynamicCall<setClipboard_t>(object, symbol, ptr);
 }
 
 ClipboardContent getGUIClipboard(const std::string& requested_mime) {
@@ -107,8 +107,11 @@ ClipboardContent getGUIClipboard(const std::string& requested_mime) {
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
-        dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard);
-        dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard);
+        if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard)) {
+            debugStream << "Setting X11 clipboard failed, trying Wayland" << std::endl;
+            if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard))
+                debugStream << "Setting Wayland clipboard failed" << std::endl;
+        }
 
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;

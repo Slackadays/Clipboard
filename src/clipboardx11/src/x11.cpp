@@ -1234,6 +1234,8 @@ bool X11SelectionDaemon::handleRegularSelectionRequest(const X11SelectionRequest
 void X11SelectionDaemon::run() {
     debugStream << "Starting persistent paste daemon" << std::endl;
 
+    kill(getppid(), SIGUSR1);
+
     while (true) {
         auto event = nextEvent();
         handle(event);
@@ -1289,8 +1291,9 @@ static void startPasteDaemon(const ClipboardContent& clipboard) {
     daemon.run();
 }
 
-static void setX11ClipboardInternal(const WriteGuiContext& context) {
+static bool setX11ClipboardInternal(const WriteGuiContext& context) {
     context.forker.fork([&]() { startPasteDaemon(context.clipboard); });
+    return waitForSuccessSignal();
 }
 
 extern "C" {
@@ -1305,12 +1308,13 @@ extern void* getX11Clipboard(void* ptr) {
     }
 }
 
-extern void setX11Clipboard(void* ptr) {
+extern bool setX11Clipboard(void* ptr) {
     try {
         const WriteGuiContext& context = *reinterpret_cast<WriteGuiContext*>(ptr);
-        setX11ClipboardInternal(context);
+        return setX11ClipboardInternal(context);
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
+        return false;
     }
 }
 }

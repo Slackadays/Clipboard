@@ -19,8 +19,9 @@
 #include <functional>
 #include <vector>
 
-#ifdef HAVE_FORK
+#if defined(HAVE_FORK)
 #include <unistd.h>
+#include <signal.h>
 #endif
 
 /**
@@ -57,7 +58,7 @@ public:
     void fork(func_t func) const;
 };
 
-#ifdef HAVE_FORK
+#if defined(HAVE_FORK)
 template <std::invocable func_t>
 void Forker::fork(func_t func) const {
     bool noFork = isEnvTrueish("CLIPBOARD_NO_FORK");
@@ -82,8 +83,10 @@ void Forker::fork(func_t func) const {
         func();
     } catch (const std::exception& e) {
         debugStream << "Error during fork operation: " << e.what() << std::endl;
+        kill(getppid(), SIGUSR2);
     } catch (...) {
         debugStream << "Unknown error during fork operation" << std::endl;
+        kill(getppid(), SIGUSR2);
     }
 
     // Always exit no matter what happens, to prevent the forked daemon
@@ -91,6 +94,8 @@ void Forker::fork(func_t func) const {
     // non-forked original process' work
     std::_Exit(EXIT_SUCCESS);
 }
+
+bool waitForSuccessSignal();
 #else
 template <std::invocable func_t>
 void Forker::fork(func_t func) const {
