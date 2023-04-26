@@ -100,7 +100,7 @@ jobs:
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
-   ubuntu-cross-gcc:
+  ubuntu-cross-gcc:
 
     strategy:
       fail-fast: false
@@ -153,7 +153,7 @@ jobs:
           run: |
             NO_X11=1
             NO_WAYLAND=1
-            
+
             if [[ "${{ matrix.x11 }}" == "1" ]]
             then
               NO_X11=0
