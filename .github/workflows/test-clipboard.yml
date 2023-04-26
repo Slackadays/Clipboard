@@ -109,11 +109,7 @@ jobs:
         x11: [ "1", "0" ]
         wayland: [ "1", "0" ]
         arch: [ "armv7", "aarch64", "s390x", "ppc64le" ]
-        distro: [ "ubuntu20.04", "ubuntu22.04", "ubuntu_rolling" ]
-
-        exclude:
-          - distro: "ubuntu20.04"
-            gcc: 12
+        distro: [ "ubuntu22.04", "ubuntu_rolling", "ubuntu_devel" ]
 
     runs-on: ubuntu-22.04
 
