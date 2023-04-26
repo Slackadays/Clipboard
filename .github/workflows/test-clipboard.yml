@@ -3,7 +3,7 @@ name: Clipboard Tests
 on: [push, pull_request]
 
 jobs:
-  linux-gcc:
+  ubuntu-gcc:
 
     strategy:
       fail-fast: false
@@ -98,6 +98,82 @@ jobs:
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+  ubuntu-cross-gcc:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        gcc: [ 11, 12 ]
+        x11: [ "1", "0" ]
+        wayland: [ "1", "0" ]
+        arch: [ "armv7", "aarch64", "s390x", "ppc64le" ]
+        distro: [ "ubuntu20.04", "ubuntu22.04", "ubuntu_rolling" ]
+
+        exclude:
+          - distro: "ubuntu20.04"
+            gcc: 12
+
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: uraimo/run-on-arch-action@v2
+      - name: Test Clipboard
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+          shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
+          run: |
+            NO_X11=1
+            NO_WAYLAND=1
+            PACKAGES="g++-${{ matrix.gcc }}"
+            
+            if [[ "${{ matrix.x11 }}" == "1" ]]
+            then
+              NO_X11=0
+              PACKAGES="${PACKAGES} libx11-dev"
+            fi
+            
+            if [[ "${{ matrix.wayland }}" == "1" ]]
+            then
+              NO_WAYLAND=0
+              PACKAGES="${PACKAGES} libwayland-dev wayland-protocols"
+            fi
+                      
+            sudo apt-get update
+            sudo apt-get install -y $PACKAGES xvfb sway xclip
+  
+            if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
+            then
+              sudo apt-get install -y squeekboard
+            fi
+
+            cd build
+            cmake .. \
+              "-DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }}" \
+              "-DCMAKE_C_COMPILER=gcc-${{ matrix.gcc }}" \
+              "-DNO_X11=${NO_X11}" \
+              "-DNO_WAYLAND=${NO_WAYLAND}" \
+              "-DCMAKE_BUILD_TYPE=Debug"
+          
+            cmake --build . -j 2
+            sudo cmake --install .
+            export CLIPBOARD_TMPDIR=/tmp
+            export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
+            export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
+            export WLR_BACKENDS=headless
+            export WLR_LIBINPUT_NO_DEVICES=1
+            export WAYLAND_DISPLAY=wayland-1
+            sway &
+            if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
+            then
+              squeekboard & # Wayland needs a keyboard for clipboard access >:(
+            fi
+            stty rows 80 cols 120 # GHA doesn't provide the right amount by default
+            xvfb-run bash ../src/tests/suite.sh
+            find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
   macos-arm64-amd64:
