@@ -651,13 +651,11 @@ $ cb
 ### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Tips And Tricks" height=25px />
 
 Need to paste a funky symbol somewhere a lot? Just copy it to a persistent clipboard.
-
 ```sh
 $ cb cp_theta θ
 ```
 
 Copy a password securely by deleting it once you've pasted it.
-
 ```sh
 $ cb cut "AVeryStrongPassword!"
 $ cb | some-program
@@ -665,14 +663,22 @@ $ cb | some-program
 ```
 
 On a slow system? Cache certain things so you don't have to do them again.
-
 ```sh
 $ neofetch | cb cp_neo
 $ cb | cat
 ```
 
-Want CB to look different? Change up the color scheme.
+Need to share or pore over log files? Just copy them!
+```sh
+$ journalctl | cb
+# For systemd
+$ sudo dmesg | cb
+# For Linux; note that you're not running "sudo cb" here
+$ cb copy logs/latest.log
+# For Minecraft servers
+```
 
+Want CB to look different? Change up the color scheme.
 ```sh
 # This one looks like The Matrix
 $ export CLIPBOARD_THEME=green
@@ -684,7 +690,6 @@ $ cb
 ```
 
 Make your own scripts that can fully automate your workflows.
-
 ```sh
 #!/bin/sh
 # This script does nothing except serve as an example of automating CB.
