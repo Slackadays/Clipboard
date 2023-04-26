@@ -20,7 +20,7 @@ Enjoy support for...
 - your freedom by being 100% free and open source,
 - and tons more!
   
-In short, we're here to help you save loads of time and effort.
+In short, we're here to help you save time and effort.
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
