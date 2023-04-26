@@ -20,8 +20,8 @@
 #include <vector>
 
 #if defined(HAVE_FORK)
-#include <unistd.h>
 #include <signal.h>
+#include <unistd.h>
 #endif
 
 /**

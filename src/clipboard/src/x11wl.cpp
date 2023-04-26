@@ -109,8 +109,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
         if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard)) {
             debugStream << "Setting X11 clipboard failed, trying Wayland" << std::endl;
-            if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard))
-                debugStream << "Setting Wayland clipboard failed" << std::endl;
+            if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard)) debugStream << "Setting Wayland clipboard failed" << std::endl;
         }
 
     } catch (const std::exception& e) {
