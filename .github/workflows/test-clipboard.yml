@@ -120,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: uraimo/run-on-arch-action@v2
-      - name: Test Clipboard
+        name: Test Clipboard
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
