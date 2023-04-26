@@ -80,6 +80,11 @@ apk add clipboard
 yay -S clipboard
 ```
 
+**Gentoo GURU** (Enable the GURU repo first)
+```sh
+emerge -av app-misc/clipboard
+```
+
 **Homebrew**
 ```sh
 brew install clipboard
