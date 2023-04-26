@@ -142,12 +142,12 @@ jobs:
               PACKAGES="${PACKAGES} libwayland-dev wayland-protocols"
             fi
                       
-            sudo apt-get update
-            sudo apt-get install -y $PACKAGES xvfb sway xclip sudo
+            apt-get update
+            apt-get install -y $PACKAGES xvfb sway xclip
   
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
             then
-              sudo apt-get install -y squeekboard
+              apt-get install -y squeekboard
             fi
 
           run: |
@@ -173,7 +173,7 @@ jobs:
               "-DCMAKE_BUILD_TYPE=Debug"
           
             cmake --build . -j 2
-            sudo cmake --install .
+            cmake --install .
             export CLIPBOARD_TMPDIR=/tmp
             export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
             export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
