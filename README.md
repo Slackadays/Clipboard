@@ -2,7 +2,7 @@
 
 <br>
 
-Clipboard (or CB) is one of _the_ most advanced productivity superchargers you could get your hands on.
+Clipboard (or CB) is one of _the_ most advanced productivity superchargers you can get your hands on.
 
 When we started writing CB, we needed something way more powerful than those other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`.
 
