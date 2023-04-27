@@ -79,7 +79,7 @@ std::optional<MimeType> MimeType::find(std::string_view name) {
 }
 
 bool MimeType::supports(const ClipboardContent& content) const {
-    static auto type = inferMIMEType(content.text());
+    static auto type = (content.type() == ClipboardContentType::Text || content.type() == ClipboardContentType::Binary) ? inferMIMEType(content.text()) : std::nullopt;
 
     if (type.has_value() && type.value() == m_name) {
         return true;
