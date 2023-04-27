@@ -2,11 +2,13 @@
 
 <br>
 
-Clipboard (or CB) is one of _the_ most advanced productivity superchargers you can get your hands on.
+You're looking at one of _the_ most advanced productivity superchargers you can get your hands on.
 
-When we started writing CB, we needed something way more powerful than those other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`.
+It all started when we needed something way more powerful than those other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`. 
 
-And, it had to be _simple_ and _quick_ to use by truly anyone out there, even you! In other words,
+And, it had to be _simple, quick, and painless_ to use by truly anyone out there, even you.
+
+Introducing Clipboard, or CB. We made it to save you time and effort. Or in other words,
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
@@ -15,18 +17,18 @@ And, it had to be _simple_ and _quick_ to use by truly anyone out there, even yo
 Enjoy support for...
 
 - copying files and directories in addition to text, 
-- an _infinite_ number of compartmentalized clipboards, 
+- _infinite_ numbers of compartmentalized clipboards, 
 - persistent clipboards that stick around just for you,
 - connecting with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
-- more languages like español, português, and Türkçe,
-- any POSIX/Windows platform with C++20 compat,
+- languages like español, português, and Türkçe,
+- POSIX/Windows platforms with C++20 compat,
 - superb scripting to automate your workflows,
 - customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
 - a unique filesystem-based implementation,
 - your freedom by being 100% free and open source,
-- and tons more!
+- **and tons more!**
 
-All you'll need to get this is in this readme you're reading right now.
+All you need to get all of this is the readme you're reading right now.
 
 <br>
 
