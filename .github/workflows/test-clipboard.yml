@@ -121,6 +121,8 @@ jobs:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
           #shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
+          dockerRunArgs: |
+            --init
           install: |
             NO_X11=1
             NO_WAYLAND=1
@@ -183,7 +185,6 @@ jobs:
             fi
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
             xvfb-run bash ../src/tests/suite.sh
-            echo "Now running gcov"
             find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
