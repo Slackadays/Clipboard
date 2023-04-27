@@ -55,3 +55,5 @@ run_tests() {
 run_tests
 
 echo "🐢 All tests passed!"
+
+exit 0
