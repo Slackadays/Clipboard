@@ -2,9 +2,15 @@
 
 <br>
 
-Clipboard (or CB) is one of _the_ most advanced productivity superchargers you can get.
+Clipboard (or CB) is one of _the_ most advanced productivity superchargers you could get your hands on.
 
-When we started writing CB, we needed something way more powerful than other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`, and something really easy to use by truly anyone. Maybe it'll be you!
+When we started writing CB, we needed something way more powerful than those other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`.
+
+And, it had to be _quick_ and _painless_ to use by truly anyone out there, even you!
+
+<p align="center"> 
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
+</p>
 
 Enjoy support for...
 
@@ -19,12 +25,8 @@ Enjoy support for...
 - a unique filesystem-based implementation,
 - your freedom by being 100% free and open source,
 - and tons more!
-  
-In short, we're here to help you save time and effort.
 
-<p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
-</p>
+All you'll need to get this is in this readme you're reading right now.
 
 <br>
 
