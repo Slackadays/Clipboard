@@ -6,7 +6,7 @@ Clipboard (or CB) is one of _the_ most advanced productivity superchargers you c
 
 When we started writing CB, we needed something way more powerful than those other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`.
 
-And, it had to be _quick_ and _painless_ to use by truly anyone out there, even you!
+And, it had to be _simple_ and _quick_ to use by truly anyone out there, even you!
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
