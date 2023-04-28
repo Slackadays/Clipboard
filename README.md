@@ -2,13 +2,13 @@
 
 <br>
 
-This is your _ridonkuliciously_ powerful "second brain" bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+This is your _ridonkuliciously_ powerful second brain that's bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 Let's rephrase that.
 
-Introducing the Clipboard Project, or CB. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, or `pbcopy`. And, it had to be _simple, quick, and painless_ to use by truly anyone out there, including you. In no time at all, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
+Introducing the Clipboard Project, or CB. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, or `pbcopy`. And, it had to be _simple, quick, and painless_ to use by truly anyone out there, including you. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
 
-Ok, so maybe that last part won't actually happen, but you get the idea:
+Ok, so maybe that last part won't actually happen. But you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
@@ -16,8 +16,8 @@ Ok, so maybe that last part won't actually happen, but you get the idea:
 
 Just let the features speak for themselves.
 
-- Copy text, files, directories, or anything else really,
-- Get _infinite_ numbers of independent clipboards, 
+- Copy text, files, directories, pipes, or anything else really,
+- Get an _infinite_ number of independent clipboards, 
 - Make persistent clipboards that stick around just for you,
 - Connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use languages like español, português, and Türkçe,
