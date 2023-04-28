@@ -2,7 +2,7 @@
 
 <br>
 
-You're feasting your eyes on a _ridonkuliciously_ powerful "second brain" bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+You're feasting your eyes on a _ridonkuliciously_ powerful second brain bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 Let's rephrase that.
 
