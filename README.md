@@ -2,7 +2,7 @@
 
 <br>
 
-You're feasting your eyes on a _ridonkuliciously_ powerful second brain bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+This is your _ridonkuliciously_ powerful "second brain" bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 Let's rephrase that.
 
@@ -16,7 +16,7 @@ Ok, so maybe that last part won't actually happen, but you get the idea:
 
 Just let the features speak for themselves.
 
-- Copy text, files, directories, or anything else,
+- Copy text, files, directories, or anything else really,
 - Get _infinite_ numbers of independent clipboards, 
 - Make persistent clipboards that stick around just for you,
 - Connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
