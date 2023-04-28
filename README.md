@@ -2,33 +2,30 @@
 
 <br>
 
-You're looking at one of _the_ most advanced productivity superchargers you can get your hands on.
+You're feasting your eyes on a _ridonkuliciously_ powerful "second brain" bursting with _oodles_ of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
-It all started when we needed something way more powerful than those other terminal tools like `xclip`, `wl-clipboard`, or `pbcopy`. 
+Let's rephrase that.
 
-And, it had to be _simple, quick, and painless_ to use by truly anyone out there, even you.
+Introducing the Clipboard Project, or CB. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, or `pbcopy`. And, it had to be _simple, quick, and painless_ to use by truly anyone out there, including you. In no time at all, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
 
-Introducing Clipboard, or CB. We made it to save you time and effort. Or in other words,
+Ok, so maybe that last part won't actually happen, but you get the idea:
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
 </p>
 
-Enjoy support for...
+Just let the features speak for themselves.
 
-- copying files and directories in addition to text, 
-- _infinite_ numbers of compartmentalized clipboards, 
-- persistent clipboards that stick around just for you,
-- connecting with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
-- languages like español, português, and Türkçe,
-- POSIX/Windows platforms with C++20 compat,
-- superb scripting to automate your workflows,
-- customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
-- a unique filesystem-based implementation,
-- your freedom by being 100% free and open source,
-- **and tons more!**
+- Copy text, files, directories, or anything else,
+- Get _infinite_ numbers of independent clipboards, 
+- Make persistent clipboards that stick around just for you,
+- Connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
+- Use languages like español, português, and Türkçe,
+- Script _everything_ to automate your workflows,
+- Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your viewing pleasure,
+- And tons more!
 
-All you need to get all of this is the readme you're reading right now.
+Did we also mention that CB is 100% free and open source? That too.
 
 <br>
 
@@ -51,7 +48,7 @@ All you need to get all of this is the readme you're reading right now.
 <br>
 
 <p align="center">
-    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Get started with CB below." height="40px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Let's get started with CB below." height="40px" />
 </p>
 
 <br>
