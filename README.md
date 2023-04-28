@@ -2,7 +2,7 @@
 
 <br>
 
-This is your new, _𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢_ powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of advanced features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+You're looking at your new, _𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢_ powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 Let's rephrase that.
 
@@ -19,6 +19,7 @@ Just let the features speak for themselves.
 - Copy text, files, directories, pipes, or anything else really,
 - Get an _infinite_ number of independent clipboards, 
 - Make persistent clipboards that stick around just for you,
+- Harness the power of regex on whatever you copy,
 - Connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use languages like español, português, and Türkçe,
 - Script _everything_ to automate your workflows,
