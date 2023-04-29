@@ -6,7 +6,7 @@ You're looking at your new, **_𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘�
 
 Let's rephrase that.
 
-Introducing the Clipboard Project, or CB for short. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, and `pbcopy`. I began by writing a few scripts and experimenting with what might be possible. Unfortunately, those scripts simply weren't cutting it. A few revisions and then a complete rewrite later, and suddenly I had created the Clipboard Project!
+Introducing the Clipboard Project, or CB for short. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, and `pbcopy`. I began by writing a few scripts and experimenting with what might be possible. Unfortunately, those little scripts of mine simply weren't cutting it. A few revisions and then a complete rewrite later, and suddenly I had created the Clipboard Project!
 
 Just let the features speak for themselves.
 
