@@ -134,6 +134,13 @@ public:
     auto operator=(const auto& other) { return root = other; }
     auto operator/(const auto& other) { return root / other; }
     std::string string() { return root.string(); }
+    bool holdsData() {
+        if (!fs::exists(data) || fs::is_empty(data)) return false;
+        if (fs::exists(data.raw) && fs::is_empty(data.raw)) return false;
+        return true;
+    }
+    bool holdsRawData() { return fs::exists(data.raw) && !fs::is_empty(data.raw); }
+    bool isLocked() { return fs::exists(metadata.lock); }
 };
 extern Clipboard path;
 

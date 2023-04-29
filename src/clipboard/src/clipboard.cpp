@@ -198,7 +198,7 @@ auto thisPID() {
 }
 
 void getLock() {
-    if (fs::exists(path.metadata.lock)) {
+    if (path.isLocked()) {
         auto pid = std::stoi(fileContents(path.metadata.lock));
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
         if (getpgrp() == getpgid(pid)) return; // if we're in the same process group, we're probably in a self-referencing pipe like cb | cb
@@ -209,7 +209,7 @@ void getLock() {
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
             if (kill(pid, 0) == -1) break;
 #endif
-            if (!fs::exists(path.metadata.lock)) break;
+            if (!path.isLocked()) break;
             std::this_thread::sleep_for(std::chrono::milliseconds(250));
         }
     }
@@ -248,7 +248,7 @@ void clearData(bool force_clear = false) {
     using enum Action;
     if (force_clear || action == Cut || action == Copy) {
         fs::remove(path.metadata.originals);
-        if (action == Clear && fs::is_regular_file(path.data.raw)) {
+        if (action == Clear && path.holdsRawData()) {
             successes.bytes += fs::file_size(path.data.raw);
             fs::remove(path.data.raw);
         }
@@ -262,7 +262,7 @@ void clearData(bool force_clear = false) {
 }
 
 void convertFromGUIClipboard(const std::string& text) {
-    if (fs::is_regular_file(path.data.raw) && fileContents(path.data.raw) == text) return;
+    if (path.holdsRawData() && fileContents(path.data.raw) == text) return;
     clearData(true);
     writeToFile(path.data.raw, text);
 }

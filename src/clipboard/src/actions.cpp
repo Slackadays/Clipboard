@@ -146,13 +146,6 @@ void pipeOut() {
     removeOldFiles();
 }
 
-bool clipboardHoldsData(const Clipboard& clipboard) {
-    if (!fs::exists(clipboard.data)) return false;
-    if (fs::is_empty(clipboard.data)) return false;
-    if (fs::exists(clipboard.data.raw) && fs::is_empty(clipboard.data.raw)) return false;
-    return true;
-}
-
 void clear() {
     if (all_option) {
         if (!userIsARobot()) {
@@ -168,12 +161,12 @@ void clear() {
             int clipboards_cleared = 0;
             if (decision.substr(0, 1) == "y" || decision.substr(0, 1) == "Y") {
                 for (const auto& entry : fs::directory_iterator(global_path.temporary)) {
-                    bool predicate = clipboardHoldsData(Clipboard(entry.path().filename().string()));
+                    bool predicate = Clipboard(entry.path().filename().string()).holdsData();
                     fs::remove_all(entry);
                     if (predicate) clipboards_cleared++;
                 }
                 for (const auto& entry : fs::directory_iterator(global_path.persistent)) {
-                    bool predicate = clipboardHoldsData(Clipboard(entry.path().filename().string()));
+                    bool predicate = Clipboard(entry.path().filename().string()).holdsData();
                     fs::remove_all(entry);
                     if (predicate) clipboards_cleared++;
                 }
@@ -194,7 +187,7 @@ void show() {
 
     stopIndicator();
 
-    if (fs::is_regular_file(path.data.raw)) {
+    if (path.holdsRawData()) {
         std::string content(fileContents(path.data.raw));
         std::erase(content, '\n');
         printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
@@ -243,7 +236,7 @@ void showFilepaths() {
 void edit() {}
 
 void addFiles() {
-    if (fs::is_regular_file(path.data.raw)) {
+    if (path.holdsRawData()) {
         fprintf(stderr,
                 "%s",
                 formatMessage("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
@@ -256,7 +249,7 @@ void addFiles() {
 }
 
 void addData() {
-    if (fs::is_regular_file(path.data.raw)) {
+    if (path.holdsRawData()) {
         std::string content;
         if (io_type == IOType::Pipe)
             content = pipedInContent();
@@ -285,7 +278,7 @@ void removeRegex() {
     else
         std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
 
-    if (fs::is_regular_file(path.data.raw)) {
+    if (path.holdsRawData()) {
         std::string content(fileContents(path.data.raw));
         size_t oldLength = content.size();
 
@@ -446,7 +439,7 @@ void info() {
     fprintf(stderr, formatMessage("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
     fprintf(stderr, formatMessage("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
-    if (fs::exists(path.data.raw)) {
+    if (path.holdsRawData()) {
         fprintf(stderr, formatMessage("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
         fprintf(stderr, formatMessage("[info]• Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
@@ -473,8 +466,8 @@ void info() {
 
     fprintf(stderr, formatMessage("[info]• Cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
-    fprintf(stderr, formatMessage("[info]• Locked? [help]%s[blank]\n").data(), fs::exists(path.metadata.lock) ? "Yes" : "No");
-    if (fs::exists(path.metadata.lock)) {
+    fprintf(stderr, formatMessage("[info]• Locked? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
+    if (path.isLocked()) {
         fprintf(stderr, formatMessage("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
 
