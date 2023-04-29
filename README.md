@@ -11,7 +11,7 @@ Introducing the Clipboard Project, or CB for short. It all started when I needed
 Just let the features speak for themselves.
 
 - Copy text, files, directories, pipes, _anything_,
-- Get an _infinite_ number of independent clipboards
+- Get an _infinite_ number of independent clipboards,
 - Make persistent clipboards that stick around just for you,
 - Jot down custom notes for any clipboard,
 - Harness the power of regex on everything you copy,
