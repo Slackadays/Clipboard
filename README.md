@@ -2,17 +2,11 @@
 
 <br>
 
-You're looking at your new, _𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢_ powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+You're looking at your new, **_𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢_** powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 Let's rephrase that.
 
-Introducing the Clipboard Project, or CB. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, or `pbcopy`. And, it had to be _simple, quick, and painless_ to use by truly anyone out there, including you. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
-
-Ok, so maybe that last part won't actually happen. But you get the idea:
-
-<p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
-</p>
+Introducing the Clipboard Project, or CB for short. It all started when I needed something way more powerful than those other tools like `xclip`, `wl-clipboard`, and `pbcopy`. I began by writing a few scripts and experimenting with what might be possible. A few revisions and then a complete rewrite later, and suddenly I had created the Clipboard Project!
 
 Just let the features speak for themselves.
 
@@ -27,6 +21,10 @@ Just let the features speak for themselves.
 - And tons more!
 
 Did we also mention that CB is 100% free and open source? That too.
+
+<p align="center"> 
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
+</p>
 
 <br>
 
