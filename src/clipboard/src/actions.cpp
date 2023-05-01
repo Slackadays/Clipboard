@@ -337,11 +337,11 @@ void noteText() {
         if (fs::is_regular_file(path.metadata.notes)) {
             std::string content(fileContents(path.metadata.notes));
             if (is_tty.out)
-                fprintf(stdout, formatMessage("[info]• Note for this clipboard: %s\n").data(), content.data());
+                fprintf(stdout, formatMessage("[info]🔷 Note for this clipboard: %s\n").data(), content.data());
             else
                 fprintf(stdout, formatMessage("%s").data(), content.data());
         } else {
-            fprintf(stderr, "%s", formatMessage("[info]• There is no note for this clipboard.[blank]\n").data());
+            fprintf(stderr, "%s", formatMessage("[info]🔷 There is no note for this clipboard.[blank]\n").data());
         }
     } else {
         fprintf(stderr, "%s", formatMessage("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
@@ -423,23 +423,23 @@ void status() {
 }
 
 void info() {
-    fprintf(stderr, formatMessage("[info]• This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
+    fprintf(stderr, formatMessage("[info]🔷 This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
 
     struct stat info;
     stat(path.string().data(), &info);
 
-    fprintf(stderr, formatMessage("[info]• Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
+    fprintf(stderr, formatMessage("[info]🔷 Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
 
 #endif
 
-    fprintf(stderr, formatMessage("[info]• Stored in [help]%s[blank]\n").data(), path.string().data());
-    fprintf(stderr, formatMessage("[info]• Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]🔷 Stored in [help]%s[blank]\n").data(), path.string().data());
+    fprintf(stderr, formatMessage("[info]🔷 Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
     if (path.holdsRawData()) {
-        fprintf(stderr, formatMessage("[info]• Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
-        fprintf(stderr, formatMessage("[info]• Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        fprintf(stderr, formatMessage("[info]🔷 Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]🔷 Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -449,12 +449,12 @@ void info() {
             else
                 files++;
         }
-        fprintf(stderr, formatMessage("[info]• Files: [help]%zu[blank]\n").data(), files);
-        fprintf(stderr, formatMessage("[info]• Directories: [help]%zu[blank]\n").data(), directories);
+        fprintf(stderr, formatMessage("[info]🔷 Files: [help]%zu[blank]\n").data(), files);
+        fprintf(stderr, formatMessage("[info]🔷 Directories: [help]%zu[blank]\n").data(), directories);
     }
 
     if (!available_mimes.empty()) {
-        fprintf(stderr, "%s", formatMessage("[info]• Available types from GUI: [help]").data());
+        fprintf(stderr, "%s", formatMessage("[info]🔷 Available types from GUI: [help]").data());
         for (const auto& mime : available_mimes) {
             fprintf(stderr, "%s", mime.data());
             if (mime != available_mimes.back()) fprintf(stderr, ", ");
@@ -462,17 +462,17 @@ void info() {
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     }
 
-    fprintf(stderr, formatMessage("[info]• Cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]🔷 Content cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
-    fprintf(stderr, formatMessage("[info]• Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]🔷 Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
     if (path.isLocked()) {
-        fprintf(stderr, formatMessage("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
+        fprintf(stderr, formatMessage("[info]🔷 Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
 
     if (fs::exists(path.metadata.notes)) {
-        fprintf(stderr, formatMessage("[info]• Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
+        fprintf(stderr, formatMessage("[info]🔷 Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
     } else {
-        fprintf(stderr, "%s", formatMessage("[info]• There is no note for this clipboard.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[info]🔷 There is no note for this clipboard.[blank]\n").data());
     }
 }
 

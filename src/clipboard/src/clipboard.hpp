@@ -225,6 +225,8 @@ static std::string formatMessage(const std::string_view& str, bool colorful = !n
         replaceThis("✅", "✓");
         replaceThis("❌", "✗");
         replaceThis("🟡", "-");
+        replaceThis("👉", "");
+        replaceThis("🔷", "•");
     }
     return temp;
 }
