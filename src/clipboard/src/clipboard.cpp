@@ -674,6 +674,10 @@ void performAction() {
             load();
         else if (action == Swap)
             swap();
+        else if (action == Import)
+            importClipboards();
+        else if (action == Export)
+            exportClipboards();
     } else if (io_type == Pipe) {
         if (action == Copy || action == Cut)
             pipeIn();

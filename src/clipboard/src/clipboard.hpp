@@ -199,10 +199,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 13> actions;
-extern EnumArray<std::string_view, 13> action_shortcuts;
-extern EnumArray<std::string_view, 13> doing_action;
-extern EnumArray<std::string_view, 13> did_action;
+extern EnumArray<std::string_view, 15> actions;
+extern EnumArray<std::string_view, 15> action_shortcuts;
+extern EnumArray<std::string_view, 15> doing_action;
+extern EnumArray<std::string_view, 15> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
@@ -363,4 +363,6 @@ void info();
 void load();
 void showFilepaths();
 void swap();
+void importClipboards();
+void exportClipboards();
 } // namespace PerformAction

@@ -570,4 +570,8 @@ void swap() {
     if (destination_name == constants.default_clipboard_name) updateGUIClipboard(true);
 }
 
+void importClipboards() {}
+
+void exportClipboards() {}
+
 } // namespace PerformAction
