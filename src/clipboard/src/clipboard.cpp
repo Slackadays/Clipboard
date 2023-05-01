@@ -132,10 +132,6 @@ std::string fileContents(const fs::path& path) {
     return buffer.str();
 }
 
-bool isPersistent(const std::string& clipboard) {
-    return clipboard.find_first_of("_") != std::string::npos;
-}
-
 std::string pipedInContent() {
     std::string content;
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -302,8 +298,9 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 [[nodiscard]] ClipboardContent thisClipboard() {
-    if (fs::exists(path.metadata.originals) && GUIClipboardSupportsCut) {
-        std::ifstream originalFiles {path.metadata.originals};
+    Clipboard default_cb(constants.default_clipboard_name);
+    if (fs::exists(default_cb.metadata.originals) && GUIClipboardSupportsCut) {
+        std::ifstream originalFiles {default_cb.metadata.originals};
         std::vector<fs::path> files;
 
         for (std::string line; !originalFiles.eof();) {
@@ -316,13 +313,12 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     if (!copying.buffer.empty()) return {copying.buffer, copying.mime};
 
-    if (fs::exists(path.data.raw) && !fs::is_empty(path.data.raw))
-        return {fileContents(path.data.raw), std::string(inferMIMEType(fileContents(path.data.raw)).value_or("text/plain"))};
+    if (default_cb.holdsRawData()) return {fileContents(default_cb.data.raw), std::string(inferMIMEType(fileContents(default_cb.data.raw)).value_or("text/plain"))};
 
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;
 
-        paths.assign(fs::directory_iterator(path.data), fs::directory_iterator {});
+        paths.assign(fs::directory_iterator(default_cb.data), fs::directory_iterator {});
 
         return ClipboardContent(ClipboardPaths(std::move(paths)));
     }
@@ -676,6 +672,8 @@ void performAction() {
             status();
         else if (action == Load)
             load();
+        else if (action == Swap)
+            swap();
     } else if (io_type == Pipe) {
         if (action == Copy || action == Cut)
             pipeIn();

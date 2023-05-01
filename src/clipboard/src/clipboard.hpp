@@ -75,7 +75,9 @@ struct Copying {
 };
 extern Copying copying;
 
-bool isPersistent(const std::string& clipboard);
+bool isPersistent(const auto& clipboard) {
+    return clipboard.find_first_of("_") != std::string::npos;
+}
 
 class Clipboard {
     fs::path root;
@@ -183,7 +185,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History };
 
 extern Action action;
 
@@ -360,4 +362,5 @@ void status();
 void info();
 void load();
 void showFilepaths();
+void swap();
 } // namespace PerformAction

@@ -499,7 +499,7 @@ $ eval vlc $(cb sh)
 
 <br>
 
-<details><summary> &ensp; <b>Clear Contents</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Clear Clipboard</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
 
 <br>
 
@@ -549,6 +549,38 @@ $ cb load_foo
 ```
 
 Note: This is useful if you want to load content into GUI clipboard systems, as they only connect to the default clipboard.
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b>Swap Contents</b> &emsp; <code>cb ([--]swap|[-]sw)[(num)|_(id)] [clipboard]</code></summary>
+
+<br>
+
+Start by copying something to two clipboards.
+```sh
+$ cb copy "After breaking up from Aventura, Romeo Santos' music just wasn't up to snuff."
+$ cb copy2 "I'd just like to interject for a moment. What you're referring to as Linux, is in fact, GNU/Linux, or as I've recently taken to calling it, GNU plus Linux."
+```
+
+Swap the contents of two clipboards.
+
+```sh
+$ cb swap 2
+$ cb --swap 2
+$ cb sw 2
+$ cb -sw 2
+# All work great!
+
+$ cb swap2
+$ cb --swap2
+$ cb sw2
+$ cb -sw2
+# Since swapping is commutative, the target can be freely swapped with the destination.
+```
+
+Note: If you don't provide a destination clipboard, then the Swap action will swap the contents into the default clipboard.
 
 </details>
 

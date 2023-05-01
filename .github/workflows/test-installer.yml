@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
+        uses: cross-platform-actions/action@v0.13.0
         with:
           operating_system: freebsd
           architecture: x86-64
@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
+        uses: cross-platform-actions/action@v0.13.0
         with:
           operating_system: openbsd
           architecture: x86-64
@@ -93,7 +93,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@c3f0301d1cfe8e161d617aacecc38e1a9c2c1cb4
+        uses: cross-platform-actions/action@v0.13.0
         with:
           operating_system: openbsd
           architecture: arm64
@@ -110,7 +110,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run a script
-        uses: cross-platform-actions/action@cc6f40829d8f441a0e271d357353f3f3e15d5ccd
+        uses: cross-platform-actions/action@v0.13.0
         with:
           operating_system: netbsd
           architecture: x86_64

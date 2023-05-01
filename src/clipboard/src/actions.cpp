@@ -358,8 +358,6 @@ void notePipe() {
     exit(EXIT_SUCCESS);
 }
 
-void swap() {}
-
 void status() {
     syncWithGUIClipboard(true);
     stopIndicator();
@@ -479,7 +477,7 @@ void info() {
 }
 
 void load() {
-    if (!fs::exists(path.data) || fs::is_empty(path.data)) {
+    if (!path.holdsData()) {
         fprintf(stderr, "%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. [help]Try choosing a different source instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
@@ -516,6 +514,60 @@ void load() {
     fprintf(stderr, formatMessage("[success]✅ Loaded %i clipboards[blank]\n").data(), destinations.size());
 
     if (std::find(destinations.begin(), destinations.end(), constants.default_clipboard_name) != destinations.end()) updateGUIClipboard(true);
+}
+
+void swap() {
+    if (copying.items.size() > 1) {
+        fprintf(stderr,
+                formatMessage("[error]❌ You can only swap one clipboard at a time. [help]Try making sure there's only one other clipboard specified, like [bold]%s swap "
+                              "5[blank][help] or [bold]%s swap3 0[blank][help].[blank]\n")
+                        .data(),
+                clipboard_invocation.data(),
+                clipboard_invocation.data());
+        exit(EXIT_FAILURE);
+    }
+
+    std::string destination_name = copying.items.empty() ? std::string(constants.default_clipboard_name) : copying.items.at(0).string();
+
+    if (destination_name == clipboard_name) {
+        fprintf(stderr,
+                formatMessage("[error]❌ You can't swap a clipboard with itself. [help]Try choosing a different clipboard to swap with, like [bold]%s swap 5[blank][help] or "
+                              "[bold]%s swap3 0[blank][help].[blank]\n")
+                        .data(),
+                clipboard_invocation.data(),
+                clipboard_invocation.data());
+        exit(EXIT_FAILURE);
+    }
+
+    Clipboard destination(destination_name);
+
+    fs::path swapTargetSource(path.data);
+    swapTargetSource.replace_extension("swap");
+
+    fs::path swapTargetDestination(destination.data);
+    swapTargetDestination.replace_extension("swap");
+
+    try {
+        fs::copy(destination.data, swapTargetSource, fs::copy_options::recursive);
+
+        fs::copy(path.data, swapTargetDestination, fs::copy_options::recursive);
+
+        fs::remove_all(path.data);
+
+        fs::remove_all(destination.data);
+
+        fs::rename(swapTargetSource, path.data);
+
+        fs::rename(swapTargetDestination, destination.data);
+    } catch (const fs::filesystem_error& e) {
+        copying.failedItems.emplace_back(destination_name, e.code());
+    }
+
+    stopIndicator();
+
+    fprintf(stderr, formatMessage("[success]✅ Swapped clipboard %s with %s[blank]\n").data(), clipboard_name.data(), destination_name.data());
+
+    if (destination_name == constants.default_clipboard_name) updateGUIClipboard(true);
 }
 
 } // namespace PerformAction
