@@ -185,7 +185,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore };
 
 extern Action action;
 
@@ -199,10 +199,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 15> actions;
-extern EnumArray<std::string_view, 15> action_shortcuts;
-extern EnumArray<std::string_view, 15> doing_action;
-extern EnumArray<std::string_view, 15> did_action;
+extern EnumArray<std::string_view, 16> actions;
+extern EnumArray<std::string_view, 16> action_shortcuts;
+extern EnumArray<std::string_view, 16> doing_action;
+extern EnumArray<std::string_view, 16> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 

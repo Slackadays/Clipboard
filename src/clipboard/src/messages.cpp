@@ -14,11 +14,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 15> actions = {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export"};
+EnumArray<std::string_view, 16> actions =
+        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "ignore"};
 
-EnumArray<std::string_view, 15> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "im", "ex"};
+EnumArray<std::string_view, 16> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "im", "ex", "ig"};
 
-EnumArray<std::string_view, 15> doing_action = {
+EnumArray<std::string_view, 16> doing_action = {
         "Cutting",
         "Copying",
         "Pasting",
@@ -33,10 +34,26 @@ EnumArray<std::string_view, 15> doing_action = {
         "Showing info",
         "Loading",
         "Importing",
-        "Exporting"};
+        "Exporting",
+        "Ignoring"};
 
-EnumArray<std::string_view, 15> did_action =
-        {"Cut", "Copied", "Pasted", "Cleared", "Showed", "Edited", "Added", "Removed", "Noted", "Swapped", "Checked status", "Showed info", "Loaded", "Imported", "Exported"};
+EnumArray<std::string_view, 16> did_action = {
+        "Cut",
+        "Copied",
+        "Pasted",
+        "Cleared",
+        "Showed",
+        "Edited",
+        "Added",
+        "Removed",
+        "Noted",
+        "Swapped",
+        "Checked status",
+        "Showed info",
+        "Loaded",
+        "Imported",
+        "Exported",
+        "Ignored"};
 
 Message help_message = "[info]▏This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]▏How To Use[blank]\n"
@@ -104,7 +121,7 @@ Message item_already_exists_message = "[progress]🟡 The item [bold]%s[blank][p
                                       "replace it? [help]Use [bold]all [blank][help]to replace all existing, or "
                                       "[bold]skip[blank][help] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "[error]❌ Sorry, that wasn't a valid choice. Try again: [blank][help][bold][(y)es/(n)o)] ";
-Message working_message = "\r[progress]🟡 %s... %s %s[blank]";
+Message working_message = "\r[progress]🟡 %s... %s %s    [blank]";
 Message cancelled_message = "[success]✅ Cancelled %s[blank]\n";
 Message byte_success_message = "[success]✅ %s %s[blank]\n";
 Message one_item_success_message = "[success]✅ %s one item[blank]\n";
