@@ -464,7 +464,7 @@ void info() {
 
     fprintf(stderr, formatMessage("[info]• Cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
-    fprintf(stderr, formatMessage("[info]• Locked? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]• Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
     if (path.isLocked()) {
         fprintf(stderr, formatMessage("[info]• Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
