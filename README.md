@@ -2,7 +2,7 @@
 
 <br>
 
-Say hello to your new, _𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢_ powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+Say hello to your new, 𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢 powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
 Let's rephrase that.
 
