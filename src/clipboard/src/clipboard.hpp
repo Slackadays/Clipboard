@@ -326,6 +326,7 @@ extern Message item_already_exists_message;
 extern Message bad_response_message;
 extern Message working_message;
 extern Message cancelled_message;
+extern Message cancelled_with_progress_message;
 extern Message byte_success_message;
 extern Message one_item_success_message;
 extern Message many_files_success_message;

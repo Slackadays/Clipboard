@@ -123,6 +123,7 @@ Message item_already_exists_message = "[progress]🟡 The item [bold]%s[blank][p
 Message bad_response_message = "[error]❌ Sorry, that wasn't a valid choice. Try again: [blank][help][bold][(y)es/(n)o)] ";
 Message working_message = "\r[progress]🟡 %s... %s %s    [blank]";
 Message cancelled_message = "[success]✅ Cancelled %s[blank]\n";
+Message cancelled_with_progress_message = "[success]✅ Cancelled %s (%s in progress)[blank]\n";
 Message byte_success_message = "[success]✅ %s %s[blank]\n";
 Message one_item_success_message = "[success]✅ %s one item[blank]\n";
 Message many_files_success_message = "[success]✅ %s %lu files[blank]\n";

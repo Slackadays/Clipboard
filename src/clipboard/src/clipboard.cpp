@@ -588,7 +588,12 @@ void setupIndicator() {
     fprintf(stderr, "\033[?25h"); // restore the cursor
     fflush(stderr);
     if (progress_state == ProgressState::Cancel) {
-        fprintf(stderr, cancelled_message().data(), actions[action].data());
+        if (io_type == IOType::File)
+            fprintf(stderr, cancelled_with_progress_message().data(), actions[action].data(), percent_done().data());
+        else if (io_type == IOType::Pipe)
+            fprintf(stderr, cancelled_with_progress_message().data(), actions[action].data(), formatBytes(successes.bytes.load(std::memory_order_relaxed)).data());
+        else
+            fprintf(stderr, cancelled_message().data(), actions[action].data());
         fflush(stderr);
         releaseLock();
         _exit(EXIT_FAILURE);
