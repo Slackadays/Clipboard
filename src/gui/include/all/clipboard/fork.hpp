@@ -61,6 +61,8 @@ public:
 #if defined(HAVE_FORK)
 template <std::invocable func_t>
 void Forker::fork(func_t func) const {
+    signal(SIGUSR1, SIG_IGN);
+    signal(SIGUSR2, SIG_IGN);
     bool noFork = isEnvTrueish("CLIPBOARD_NO_FORK");
     if (!noFork && ::fork() != 0) {
         debugStream << "Successfully forked process" << std::endl;

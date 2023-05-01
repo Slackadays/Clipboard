@@ -29,8 +29,6 @@ bool waitForSuccessSignal() {
     sigaddset(&sigset, SIGUSR1);
     sigaddset(&sigset, SIGUSR2);
     sigprocmask(SIG_BLOCK, &sigset, nullptr);
-    signal(SIGUSR1, SIG_IGN);
-    signal(SIGUSR2, SIG_IGN);
     int sig;
     sigwait(&sigset, &sig);
     return sig == SIGUSR1;
