@@ -506,7 +506,10 @@ void setFlags() {
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
     if (flagIsPresent<bool>("--ee")) {
-        printf("%s", formatMessage("[bold][info]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
+        printf("%s", formatMessage("[bold][info]Here's some nice bachata music from Aventura! https://www.youtube.com/watch?v=RxIM2bMBhCo\n[blank]").data());
+        printf("%s", formatMessage("[bold][info]How about some in English? https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
+        printf("%s", formatMessage("[bold][info]Here's one from Romeo, the head of Aventura: https://www.youtube.com/watch?v=yjdHGmRKz08\n[blank]").data());
+        printf("%s", formatMessage("[bold][info]This one isn't bachata but it is from Aventura: https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
