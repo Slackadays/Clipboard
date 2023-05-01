@@ -729,6 +729,10 @@ $ cb
 # Check out the other themes too!
 ```
 
+Here's what some of these themes might look like.
+
+<img src="documentation/readme-assets/CBThemes.png" width=600px />
+
 Make your own scripts that can fully automate your workflows.
 ```sh
 #!/bin/sh
