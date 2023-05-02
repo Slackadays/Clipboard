@@ -3,7 +3,7 @@ set -eu
 
 unsupported() {
     printf "\033[31mSorry, but this installer script doesn't support %s.\n\033[0m" "$1"
-    printf '\033[32m👉 However, you can still install CB using the other methods in the readme!\n\033[0m'
+    printf '\033[32m💡 However, you can still install CB using the other methods in the readme!\n\033[0m'
 }
 
 verify() {
