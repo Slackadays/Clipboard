@@ -27,9 +27,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.2112713"
-     inkscape:cx="247.67366"
-     inkscape:cy="138.69725"
+     inkscape:zoom="1.7129963"
+     inkscape:cx="276.70813"
+     inkscape:cy="47.285566"
      inkscape:window-width="2560"
      inkscape:window-height="1371"
      inkscape:window-x="2560"
@@ -56,25 +56,6 @@
        id="image878"
        x="22.726179"
        y="73.201782" />
-    <g
-       style="opacity:0.08;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"
-       id="g1385"
-       transform="matrix(3.2091827,4.4611381,-4.4611381,3.2091827,135.8997,35.551353)"
-       inkscape:export-filename="/home/jackson/Clipboard/documentation/readme-assets/g1385.png"
-       inkscape:export-xdpi="327.42157"
-       inkscape:export-ydpi="327.42157">
-      <path
-         d="m 16,4 h 2 a 2,2 0 0 1 2,2 v 14 a 2,2 0 0 1 -2,2 H 6 A 2,2 0 0 1 4,20 V 6 A 2,2 0 0 1 6,4 h 2"
-         id="path1373" />
-      <rect
-         x="8"
-         y="2"
-         width="8.000104"
-         height="4"
-         rx="1"
-         ry="1"
-         id="rect1375" />
-    </g>
     <text
        xml:space="preserve"
        style="font-size:18.9837px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.474592"
@@ -88,16 +69,16 @@
          y="113.72396">Clipboard</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:6.28374px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.157094"
-       x="45.068703"
-       y="92.322777"
+       style="font-size:8.01245px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.200312"
+       x="44.845032"
+       y="92.402542"
        id="text25843"
        transform="matrix(1.0154829,-0.10729958,0.10535556,0.97362092,0,0)"><tspan
          sodipodi:role="line"
          id="tspan25841"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.28374px;font-family:'Permanent Marker';-inkscape-font-specification:'Permanent Marker, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.157094"
-         x="45.068703"
-         y="92.322777">The</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.01245px;font-family:'Permanent Marker';-inkscape-font-specification:'Permanent Marker, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.200312"
+         x="44.845032"
+         y="92.402542">The</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:15.1907px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.379772"
