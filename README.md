@@ -4,7 +4,7 @@
 
 Say hello to your new, 𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢 smart second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
-That's underselling it.
+Let's rephrase that.
 
 Introducing the world's most advanced clipboard manager available for your terminal. Remember _anything, anytime, anywhere_ at the mere press of a button. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
 
