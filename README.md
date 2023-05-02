@@ -120,10 +120,15 @@ Get the latest release instead of the latest commit by adding `--branch 0.6.0` r
 
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`, or the library install location by adding `-DCMAKE_INSTALL_LIBDIR=/custom/dir`.
 ```bash
+# First, let's download the code and go a nice place to build everything.
 $ git clone https://github.com/Slackadays/Clipboard 
 $ cd Clipboard/build
+
+# Now let's set up CMake and build CB.
 $ cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
-$ cmake --build .
+$ cmake --build . -j 12
+
+# Finally, let's install it onto our system.
 $ cmake --install .
 ```
 
