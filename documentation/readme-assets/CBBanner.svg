@@ -28,8 +28,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.7129963"
-     inkscape:cx="267.36777"
-     inkscape:cy="109.74922"
+     inkscape:cx="231.75765"
+     inkscape:cy="76.474187"
      inkscape:window-width="2560"
      inkscape:window-height="1371"
      inkscape:window-x="2560"
@@ -42,11 +42,6 @@
      fit-margin-bottom="0" />
   <defs
      id="defs2">
-    <pattern
-       inkscape:collect="always"
-       xlink:href="#pattern3516"
-       id="pattern4789"
-       patternTransform="translate(576.0177,-315.4566)" />
     <pattern
        inkscape:collect="always"
        xlink:href="#pattern1299"
@@ -107,14 +102,6 @@
        id="image878"
        x="22.726179"
        y="73.201782" />
-    <rect
-       style="stroke:none;fill:url(#pattern3516)"
-       transform="matrix(0.26458333,0,0,0.26458333,22.726179,73.201782)"
-       width="14.087532"
-       height="17.208971"
-       x="534.89041"
-       y="-211.80256"
-       id="rect3519" />
     <text
        xml:space="preserve"
        style="font-size:18.9837px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.474592"
@@ -149,15 +136,5 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.1907px;font-family:'Permanent Marker';-inkscape-font-specification:'Permanent Marker, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.379772"
          x="153.73433"
          y="123.67178">Project</tspan></text>
-    <rect
-       style="opacity:0.706083;mix-blend-mode:normal;fill:url(#pattern4789);fill-opacity:1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers;stroke:none;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       id="rect3543"
-       width="183.4317"
-       height="176.81934"
-       x="64.830231"
-       y="-86.95153"
-       rx="2.3457456"
-       ry="2.7955046"
-       transform="rotate(41.531444)" />
   </g>
 </svg>
