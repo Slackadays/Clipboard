@@ -636,7 +636,7 @@ $ cb -nt
 
 <br>
 
-<details><summary> &ensp; <b>Show Detailed Info</b> &emsp; <code>cb ([--]info|[-]in)[(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Show Detailed Info</b> &emsp; <code>cb ([--]info|[-]in)[(num)|_(id)]</code> or <code>cb ([--]info|[-]in)[(num)|_(id)] | (something)</code></summary>
 
 <br>
 
@@ -646,7 +646,13 @@ $ cb info
 $ cb --info
 $ cb in
 $ cb -in
-# Both are the same!
+# All are the same!
+```
+
+Output these helpful details in JSON format.
+```sh
+$ cb info | cat
+$ cb info | jq
 ```
 
 </details>
