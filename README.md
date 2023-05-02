@@ -184,7 +184,7 @@ $ cb
 
 Add a number to the end of your action to choose which clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
 
-<details><summary> &ensp; <b>Copy</b> &emsp; <code>cb ([--]copy|[-]cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]copy|[-]cp)][(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code></summary>
 
 <br>
 
@@ -193,7 +193,7 @@ Copy a file.
 $ cb copy FooFile
 $ cb --copy FooFile
 $ cb cp FooFile 
-$ cb -cp FooFile
+$ cb --cp FooFile
 # These are the same!
 ```
 
@@ -242,7 +242,7 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 <br>
 
-<details><summary> &ensp; <b>Cut</b> &emsp; <code>cb ([--]cut|[-]ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [([--]cut|[-]ct)][(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Cut</b> &emsp; <code>cb [--](cut|ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](cut|ct)][(num)|_(id)]</code></summary>
 
 <br>
 
@@ -251,7 +251,7 @@ Cut a file.
 $ cb cut FooFile
 $ cb --cut FooFile
 $ cb ct FooFile 
-$ cb -ct FooFile
+$ cb --ct FooFile
 # These are the same!
 ```
 
@@ -299,7 +299,7 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 <br>
 
-<details><summary> &ensp; <b>Paste</b> &emsp; <code>cb ([--]paste|[-]p)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [([--]paste|[-]p][(num)|_(id)] | (something)</code> or <code>cb [([--]paste|[-]p)][(num)|_(id)] > (some file)</code></summary>
+<details><summary> &ensp; <b>Paste</b> &emsp; <code>cb [--](paste|p)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [[--](paste|p][(num)|_(id)] | (something)</code> or <code>cb [[--](paste|p)][(num)|_(id)] > (some file)</code></summary>
 
 <br>
 
@@ -313,7 +313,7 @@ Paste in the current working directory.
 $ cb paste
 $ cb --paste
 $ cb p
-$ cb -p
+$ cb --p
 # These are the same!
 ```
 Note: If you paste after cutting, then CB will delete the original files that you cut.
@@ -372,7 +372,7 @@ Note: If you paste after cutting, then CB will delete the raw data afterwards, e
 
 <br>
 
-<details><summary> &ensp; <b>Add Contents</b> &emsp; <code>cb ([--]add|[-]ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [([--]add|[-]ad)][(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Add Contents</b> &emsp; <code>cb [--](add|ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [[--](add|ad)][(num)|_(id)]</code></summary>
 
 <br>
 
@@ -386,7 +386,7 @@ Add a file.
 $ cb add SomeOtherFile
 $ cb --add SomeOtherFile
 $ cb ad SomeOtherFile 
-$ cb -ad SomeOtherFile
+$ cb --ad SomeOtherFile
 # CB now holds FooFile and SomeOtherFile
 ```
 
@@ -416,7 +416,7 @@ $ echo " What's yours?" | cb add
 
 <br>
 
-<details><summary> &ensp; <b>Remove Contents</b> &emsp; <code>cb ([--]remove|[-]rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [([--]remove|[-]rm)][(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Remove Contents</b> &emsp; <code>cb [--](remove|rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [[--](remove|rm)][(num)|_(id)]</code></summary>
 
 <br>
 
@@ -430,7 +430,7 @@ Remove everything starting with "B"
 $ cb remove "B.*"
 $ cb --remove "B.*"
 $ cb rm "B.*"
-$ cb -rm "B.*"
+$ cb --rm "B.*"
 # CB will match this against "BarDir" and "BazDir" and remove them
 ```
 
@@ -461,7 +461,7 @@ $ echo "music" | cb remove
 
 <br>
 
-<details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes]</code> or <code>cb ([--]show|[-]sh)[(num)|_(id)] [regex] [regexes] | (something)</code></summary>
+<details><summary> &ensp; <b>Show Contents</b> &emsp; <code>cb [--](show|sh)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [--](show|sh)[(num)|_(id)] [regex] [regexes] | (something)</code></summary>
 
 <br>
 
@@ -475,7 +475,7 @@ List all the items in the clipboard.
 $ cb show
 $ cb --show
 $ cb sh 
-$ cb -sh
+$ cb --sh
 # These all work great!
 ```
 
@@ -506,7 +506,7 @@ $ eval vlc $(cb sh)
 
 <br>
 
-<details><summary> &ensp; <b>Clear Clipboard</b> &emsp; <code>cb ([--]clear|[-]clr)[(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Clear Clipboard</b> &emsp; <code>cb [--](clear|clr)[(num)|_(id)]</code></summary>
 
 <br>
 
@@ -520,7 +520,7 @@ Clear the clipboard of all data.
 $ cb clear
 $ cb --clear
 $ cb clr 
-$ cb -clr
+$ cb --clr
 # These all work great!
 ```
 
@@ -528,7 +528,7 @@ $ cb -clr
 
 <br>
 
-<details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb ([--]load|[-]ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
+<details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb [--](load|ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
 
 <br>
 
@@ -543,7 +543,7 @@ Load the contents of the clipboard into other clipboards.
 $ cb load 1 2 3 _foo
 $ cb --load 1 2 3 _foo
 $ cb ld 1 2 3 _foo
-$ cb -ld 1 2 3 _foo
+$ cb --ld 1 2 3 _foo
 # All work great!
 ```
 
@@ -577,13 +577,13 @@ Swap the contents of two clipboards.
 $ cb swap 2
 $ cb --swap 2
 $ cb sw 2
-$ cb -sw 2
+$ cb --sw 2
 # All work great!
 
 $ cb swap2
 $ cb --swap2
 $ cb sw2
-$ cb -sw2
+$ cb --sw2
 # Since swapping is commutative, the target can be freely swapped with the destination.
 ```
 
@@ -593,7 +593,7 @@ Note: If you don't provide a destination clipboard, then the Swap action will sw
 
 <br>
 
-<details><summary> &ensp; <b>Export Clipboards</b> &emsp; <code>cb ([--]export|[-]ex) [clipboard] [clipboards]</code></summary>
+<details><summary> &ensp; <b>Export Clipboards</b> &emsp; <code>cb [--](export|ex) [clipboard] [clipboards]</code></summary>
 
 <br>
 
@@ -607,7 +607,7 @@ Export all clipboards to a folder.
 $ cb export
 $ cb --export
 $ cb ex
-$ cb -ex
+$ cb --ex
 # These all work great!
 ```
 
@@ -622,7 +622,7 @@ $ cb export 1 2 3
 
 <br>
 
-<details><summary> &ensp; <b>Set Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [([--]note|[-]nt)][(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Set Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [[--](note|nt)][(num)|_(id)]</code></summary>
 
 <br>
 
@@ -631,7 +631,7 @@ Add a personal note to a clipboard.
 $ cb note "For my Aventura music collection"
 $ cb --note "For my Aventura music collection"
 $ cb nt "For my Aventura music collection"
-$ cb -nt "For my Aventura music collection"
+$ cb --nt "For my Aventura music collection"
 # All work great!
 ```
 
@@ -649,7 +649,7 @@ $ cb note ""
 
 <br>
 
-<details><summary> &ensp; <b>Show Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)]</code></summary>
+<details><summary> &ensp; <b>Show Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)]</code></summary>
 
 <br>
 
@@ -663,14 +663,14 @@ Show the note you added.
 $ cb note
 $ cb --note
 $ cb nt
-$ cb -nt
+$ cb --nt
 ```
 
 </details>
 
 <br>
 
-<details><summary> &ensp; <b>Show Detailed Info</b> &emsp; <code>cb ([--]info|[-]in)[(num)|_(id)]</code> or <code>cb ([--]info|[-]in)[(num)|_(id)] | (something)</code></summary>
+<details><summary> &ensp; <b>Show Detailed Info</b> &emsp; <code>cb [--](info|in)[(num)|_(id)]</code> or <code>cb [--](info|in)[(num)|_(id)] | (something)</code></summary>
 
 <br>
 
@@ -679,7 +679,7 @@ Show helpful details for a clipboard.
 $ cb info
 $ cb --info
 $ cb in
-$ cb -in
+$ cb --in
 # All are the same!
 ```
 
@@ -709,7 +709,7 @@ $ cb -h
 
 <br>
 
-<details><summary> &ensp; <b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|[-]st]</code></summary>
+<details><summary> &ensp; <b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|st]</code></summary>
 
 <br>
 
@@ -718,7 +718,7 @@ Check the status of all clipboards that have content.
 $ cb status
 $ cb --status
 $ cb st
-$ cb -st
+$ cb --st
 $ cb 
 # These all work great!
 ```

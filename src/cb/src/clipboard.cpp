@@ -433,7 +433,7 @@ Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
         for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History}) {
-            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
+            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "--")) {
                 return entry;
             }
         }
