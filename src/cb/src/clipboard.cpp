@@ -185,37 +185,6 @@ bool isAClearingAction() {
     return action == Copy || action == Cut || action == Clear;
 }
 
-auto thisPID() {
-#if defined(_WIN32) || defined(_WIN64)
-    return GetCurrentProcessId();
-#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-    return getpid();
-#endif
-}
-
-void getLock() {
-    if (path.isLocked()) {
-        auto pid = std::stoi(fileContents(path.metadata.lock));
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-        if (getpgrp() == getpgid(pid)) return; // if we're in the same process group, we're probably in a self-referencing pipe like cb | cb
-#endif
-        while (true) {
-#if defined(_WIN32) || defined(_WIN64)
-            if (WaitForSingleObject(OpenProcess(SYNCHRONIZE, FALSE, pid), 0) == WAIT_OBJECT_0) break;
-#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-            if (kill(pid, 0) == -1) break;
-#endif
-            if (!path.isLocked()) break;
-            std::this_thread::sleep_for(std::chrono::milliseconds(250));
-        }
-    }
-    writeToFile(path.metadata.lock, std::to_string(thisPID()));
-}
-
-void releaseLock() {
-    fs::remove(path.metadata.lock);
-}
-
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
     using enum CopyPolicy;
 
@@ -328,7 +297,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
 void setupHandlers() {
     atexit([] {
-        releaseLock();
+        path.releaseLock();
         stopIndicator(true);
 #if defined(_WIN64) || defined(_WIN32)
         SetConsoleOutputCP(old_code_page);
@@ -340,7 +309,7 @@ void setupHandlers() {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
             // message, directly to standard error. Note: There is no standard C++ interface for this, so this requires
             // an OS call.
-            releaseLock();
+            path.releaseLock();
             _exit(EXIT_FAILURE);
         } else {
             indicator.join();
@@ -463,7 +432,7 @@ template <typename T>
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load}) {
+        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "-")) {
                 return entry;
             }
@@ -596,7 +565,7 @@ void setupIndicator() {
         else
             fprintf(stderr, cancelled_message().data(), actions[action].data());
         fflush(stderr);
-        releaseLock();
+        path.releaseLock();
         _exit(EXIT_FAILURE);
     }
     fflush(stderr);
@@ -806,7 +775,7 @@ int main(int argc, char* argv[]) {
 
         deduplicate(copying.items);
 
-        if (action != Action::Info) getLock();
+        if (action != Action::Info) path.getLock();
 
         checkItemSize(totalItemSize());
 

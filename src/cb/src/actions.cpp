@@ -634,7 +634,38 @@ void importClipboards() {}
 
 void exportClipboards() {
     std::vector<std::string> destinations;
-    if (!copying.items.empty()) std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(destinations), [](const auto& item) { return item.string(); });
+    if (!copying.items.empty()) {
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(destinations), [](const auto& item) { return item.string(); });
+    } else {
+        for (const auto& entry : fs::directory_iterator(global_path.temporary))
+            destinations.emplace_back(entry.path().filename().string());
+        for (const auto& entry : fs::directory_iterator(global_path.persistent))
+            destinations.emplace_back(entry.path().filename().string());
+    }
+
+    fs::path exportDirectory(fs::current_path() / "Exported_Clipboards");
+    if (fs::exists(exportDirectory)) fs::remove_all(exportDirectory);
+    fs::create_directory(exportDirectory);
+
+    auto exportClipboard = [&](const std::string& name) {
+        Clipboard clipboard(name);
+        clipboard.getLock();
+        if (clipboard.isUnused()) return;
+        fs::copy(clipboard, exportDirectory / name, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::remove(exportDirectory / name / constants.metadata_directory / constants.lock_name);
+        clipboard.releaseLock();
+        successes.clipboards++;
+    };
+
+    for (const auto& name : destinations)
+        exportClipboard(name);
+
+    if (destinations.empty() || successes.clipboards == 0) {
+        stopIndicator();
+        printf("%s", no_clipboard_contents_message().data());
+        printf(clipboard_action_prompt().data(), clipboard_invocation.data(), clipboard_invocation.data());
+        exit(EXIT_FAILURE);
+    }
 }
 
 } // namespace PerformAction

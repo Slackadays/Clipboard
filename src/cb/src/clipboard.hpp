@@ -79,6 +79,18 @@ bool isPersistent(const auto& clipboard) {
     return clipboard.find_first_of("_") != std::string::npos;
 }
 
+static auto thisPID() {
+#if defined(_WIN32) || defined(_WIN64)
+    return GetCurrentProcessId();
+#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    return getpid();
+#endif
+}
+
+std::string fileContents(const fs::path& path);
+
+size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
+
 class Clipboard {
     fs::path root;
 
@@ -142,7 +154,32 @@ public:
         return true;
     }
     bool holdsRawData() { return fs::exists(data.raw) && !fs::is_empty(data.raw); }
+    bool isUnused() {
+        if (holdsData()) return false;
+        if (fs::exists(metadata.notes) && !fs::is_empty(metadata.notes)) return false;
+        if (fs::exists(metadata.originals) && !fs::is_empty(metadata.originals)) return false;
+        return true;
+    }
     bool isLocked() { return fs::exists(metadata.lock); }
+    void getLock() {
+        if (isLocked()) {
+            auto pid = std::stoi(fileContents(metadata.lock));
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+            if (getpgrp() == getpgid(pid)) return; // if we're in the same process group, we're probably in a self-referencing pipe like cb | cb
+#endif
+            while (true) {
+#if defined(_WIN32) || defined(_WIN64)
+                if (WaitForSingleObject(OpenProcess(SYNCHRONIZE, FALSE, pid), 0) == WAIT_OBJECT_0) break;
+#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+                if (kill(pid, 0) == -1) break;
+#endif
+                if (!isLocked()) break;
+                std::this_thread::sleep_for(std::chrono::milliseconds(250));
+            }
+        }
+        writeToFile(metadata.lock, std::to_string(thisPID()));
+    }
+    void releaseLock() { fs::remove(metadata.lock); }
 };
 extern Clipboard path;
 
@@ -264,7 +301,6 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
-void releaseLock();
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
@@ -272,7 +308,6 @@ void setupHandlers();
 void setLocale();
 void showHelpMessage(int& argc, char* argv[]);
 void setupItems(int& argc, char* argv[]);
-size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
 void setClipboardName(int& argc, char* argv[]);
 void setupVariables(int& argc, char* argv[]);
 void createTempDirectory();
@@ -293,7 +328,6 @@ TerminalSize thisTerminalSize();
 void clearData(bool force_clear);
 void copyFiles();
 void removeOldFiles();
-std::string fileContents(const fs::path& path);
 bool userIsARobot();
 void pasteFiles();
 void clearClipboard();
