@@ -28,8 +28,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.7129963"
-     inkscape:cx="276.70813"
-     inkscape:cy="47.285566"
+     inkscape:cx="267.36777"
+     inkscape:cy="109.74922"
      inkscape:window-width="2560"
      inkscape:window-height="1371"
      inkscape:window-x="2560"
@@ -41,7 +41,58 @@
      fit-margin-right="0"
      fit-margin-bottom="0" />
   <defs
-     id="defs2" />
+     id="defs2">
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern3516"
+       id="pattern4789"
+       patternTransform="translate(576.0177,-315.4566)" />
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#pattern1299"
+       id="pattern2286"
+       patternTransform="matrix(0.07560533,0,0,0.07560533,9.1535433e-6,-1.5986405e-6)" />
+    <pattern
+       patternUnits="userSpaceOnUse"
+       width="186.3299"
+       height="227.61589"
+       patternTransform="translate(355.62761,7.2849558)"
+       id="pattern1299">
+      <g
+         style="opacity:0.06;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"
+         id="g1385"
+         transform="matrix(10.34009,-0.01487187,0.01487187,10.34009,-31.109471,-10.11699)"
+         inkscape:export-filename="/home/jackson/Clipboard/documentation/readme-assets/g1385.png"
+         inkscape:export-xdpi="327.42157"
+         inkscape:export-ydpi="327.42157">
+        <path
+           d="m 16,4 h 2 a 2,2 0 0 1 2,2 v 14 a 2,2 0 0 1 -2,2 H 6 A 2,2 0 0 1 4,20 V 6 A 2,2 0 0 1 6,4 h 2"
+           id="path1373" />
+        <rect
+           x="8"
+           y="2"
+           width="8.000104"
+           height="4"
+           rx="1"
+           ry="1"
+           id="rect1375" />
+      </g>
+    </pattern>
+    <pattern
+       patternUnits="userSpaceOnUse"
+       width="14.087532"
+       height="17.208971"
+       patternTransform="translate(534.89041,-211.80256)"
+       id="pattern3516">
+      <rect
+         style="fill:url(#pattern2286);stroke:none;stroke-width:0.0756053"
+         width="14.087532"
+         height="17.208971"
+         x="0"
+         y="0"
+         id="rect1304" />
+    </pattern>
+  </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
@@ -56,6 +107,14 @@
        id="image878"
        x="22.726179"
        y="73.201782" />
+    <rect
+       style="stroke:none;fill:url(#pattern3516)"
+       transform="matrix(0.26458333,0,0,0.26458333,22.726179,73.201782)"
+       width="14.087532"
+       height="17.208971"
+       x="534.89041"
+       y="-211.80256"
+       id="rect3519" />
     <text
        xml:space="preserve"
        style="font-size:18.9837px;line-height:0.81;font-family:sans-serif;text-align:center;text-anchor:middle;stroke-width:0.474592"
@@ -90,5 +149,15 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.1907px;font-family:'Permanent Marker';-inkscape-font-specification:'Permanent Marker, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.379772"
          x="153.73433"
          y="123.67178">Project</tspan></text>
+    <rect
+       style="opacity:0.706083;mix-blend-mode:normal;fill:url(#pattern4789);fill-opacity:1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers;stroke:none;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3543"
+       width="183.4317"
+       height="176.81934"
+       x="64.830231"
+       y="-86.95153"
+       rx="2.3457456"
+       ry="2.7955046"
+       transform="rotate(41.531444)" />
   </g>
 </svg>
