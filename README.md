@@ -593,6 +593,35 @@ Note: If you don't provide a destination clipboard, then the Swap action will sw
 
 <br>
 
+<details><summary> &ensp; <b>Export Clipboards</b> &emsp; <code>cb ([--]export|[-]ex) [clipboard] [clipboards]</code></summary>
+
+<br>
+
+Start by copying something.
+```sh
+$ cb copy "Aventura's music is some of the most erotic you'll find anywhere."
+```
+
+Export all clipboards to a folder.
+```sh
+$ cb export
+$ cb --export
+$ cb ex
+$ cb -ex
+# These all work great!
+```
+
+Note: Currently, CB exports to a folder called `Exported_Clipboards`.
+
+Choose what clipboards to export.
+```sh
+$ cb export 1 2 3
+```
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b>Set Note</b> &emsp; <code>cb ([--]note|[-]nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [([--]note|[-]nt)][(num)|_(id)]</code></summary>
 
 <br>
