@@ -2,13 +2,17 @@
 
 <br>
 
-Say hello to your new, 𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢 powerful second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
+Say hello to your new, 𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢 smart second brain that's bursting with 𝕠𝕠𝕕𝕝𝕖𝕤 of awesome features and absolutely gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
-Let's rephrase that.
+That's underselling it.
 
-Introducing the Clipboard Project, or CB for short. 
+Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always at your disposal. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
 
-It all started when I needed something way more powerful than those other tools that simply weren't built for humans. I began writing a few scripts and experimenting with what might be possible. Unfortunately, those little scripts of mine simply weren't cutting it. A few revisions and a complete rewrite later, and suddenly I had created the Clipboard Project!
+Ok, so maybe that last part won't actually happen. But you get the idea:
+
+<p align="center"> 
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
+</p>
 
 Just let the features speak for themselves.
 
@@ -24,10 +28,6 @@ Just let the features speak for themselves.
 - And tons more!
 
 Did we also mention that CB is 100% free and open source? That too.
-
-<p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
-</p>
 
 <br>
 
