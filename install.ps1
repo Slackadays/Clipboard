@@ -3,9 +3,7 @@ Expand-Archive clipboard-windows-amd64.zip -DestinationPath .\clipboard-windows-
 
 New-Item -ItemType Directory -Force -Path "C:\Program Files\Clipboard"
 
-Copy-Item .\clipboard-windows-amd64\bin\clipboard.exe -Force -Destination "C:\Program Files\Clipboard\clipboard.exe"
-
-New-Item -ItemType SymbolicLink -Force -Path "C:\Program Files\Clipboard\cb.exe" -Value "C:\Program Files\Clipboard\clipboard.exe"
+Copy-Item .\clipboard-windows-amd64\bin\cb.exe -Force -Destination "C:\Program Files\Clipboard\cb.exe"
 
 $Old = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name path).path
 $New = "$Old;C:\Program Files\Clipboard"

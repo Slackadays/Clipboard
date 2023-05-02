@@ -18,11 +18,11 @@
 #include <optional>
 #include <type_traits>
 
-constexpr auto objectX11 = "libclipboardx11.so";
+constexpr auto objectX11 = "libcbx11.so";
 constexpr auto symbolGetX11Clipboard = "getX11Clipboard";
 constexpr auto symbolSetX11Clipboard = "setX11Clipboard";
 
-constexpr auto objectWayland = "libclipboardwayland.so";
+constexpr auto objectWayland = "libcbwayland.so";
 constexpr auto symbolGetWaylandClipboard = "getWaylandClipboard";
 constexpr auto symbolSetWaylandClipboard = "setWaylandClipboard";
 

@@ -772,8 +772,6 @@ void showSuccesses() {
 
 int main(int argc, char* argv[]) {
     try {
-        if (!strcmp(argv[0], "clipboard")) std::cerr << "Warning! \"clipboard\" is now deprecated. Please use \"cb\" instead" << std::endl;
-
         setupHandlers();
 
         setupVariables(argc, argv);

@@ -69,16 +69,15 @@ then
         curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
-        sudo mv bin/clipboard /usr/local/bin/clipboard
-        chmod +x /usr/local/bin/clipboard
-        sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
-        if [ -f "lib/libclipboardx11.so" ]
+        sudo mv bin/cb /usr/local/bin/cb
+        chmod +x /usr/local/bin/cb
+        if [ -f "lib/libcbx11.so" ]
         then
-            sudo mv lib/libclipboardx11.so /usr/local/lib/libclipboardx11.so
+            sudo mv lib/libcbx11.so /usr/local/lib/libcbx11.so
         fi
-        if [ -f "lib/libclipboardwayland.so" ]
+        if [ -f "lib/libcbwayland.so" ]
         then
-            sudo mv lib/libclipboardwayland.so /usr/local/lib/libclipboardwayland.so
+            sudo mv lib/libcbwayland.so /usr/local/lib/libcbwayland.so
         fi
     fi
 elif [ "$(uname)" = "Darwin" ]
@@ -86,9 +85,8 @@ then
     curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64-amd64.zip -o clipboard-macos.zip
     unzip clipboard-macos.zip
     rm clipboard-macos.zip
-    sudo mv bin/clipboard /usr/local/bin/clipboard
-    chmod +x /usr/local/bin/clipboard
-    sudo ln -sf /usr/local/bin/clipboard /usr/local/bin/cb
+    sudo mv bin/cb /usr/local/bin/cb
+    chmod +x /usr/local/bin/cb
 elif [ "$(uname)" = "FreeBSD" ]
 then
     unsupported "FreeBSD"

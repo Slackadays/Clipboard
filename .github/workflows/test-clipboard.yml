@@ -225,7 +225,7 @@ jobs:
           echo $HOME
           export TMPDIR=/c/Users/runneradmin/AppData/Local/Temp
           cmake --install .
-          #installs to C:/Program Files (x86)/Clipboard/bin/clipboard.exe
+          #installs to C:/Program Files (x86)/Clipboard/bin/cb.exe
           #add to path
           export PATH=$PATH:/c/Program\ Files\ \(x86\)/Clipboard/bin
           export CLIPBOARD_TMPDIR=/c/Users/runneradmin/AppData/Local/Temp

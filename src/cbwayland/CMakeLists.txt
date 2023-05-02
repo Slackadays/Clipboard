@@ -32,11 +32,11 @@ add_custom_command(
   "${XDG_SHELL_PROTOCOL}"
   "${GENERATED_XDG_SHELL_CODE}"
 )
-add_custom_target(clipboardwayland_generatedheaders
+add_custom_target(cbwayland_generatedheaders
   DEPENDS "${GENERATED_XDG_SHELL_HEADER}"
 )
 
-add_library(clipboardwayland MODULE
+add_library(cbwayland MODULE
   src/fd.cpp
   src/wayland.cpp
 
@@ -58,17 +58,17 @@ add_library(clipboardwayland MODULE
 
   "${GENERATED_XDG_SHELL_CODE}"
 )
-add_dependencies(clipboardwayland clipboardwayland_generatedheaders)
+add_dependencies(cbwayland cbwayland_generatedheaders)
 
-enable_lto(clipboardwayland)
+enable_lto(cbwayland)
 
-target_link_libraries(clipboardwayland
+target_link_libraries(cbwayland
   ${WAYLAND_CLIENT_LIBRARIES}
   gui
 )
-target_include_directories(clipboardwayland PRIVATE
+target_include_directories(cbwayland PRIVATE
   ${WAYLAND_CLIENT_INCLUDE_DIRS}
   ${GENERATED_INCLUDE_DIR}
 )
 
-install(TARGETS clipboardwayland LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS cbwayland LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
