@@ -55,40 +55,40 @@ EnumArray<std::string_view, 16> did_action = {
         "Exported",
         "Ignored"};
 
-Message help_message = "[info]▏This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
-                       "[info][bold]▏How To Use[blank]\n"
-                       "[progress]▏cb cut (item) [items][blank] [help](This cuts an item or items.)[blank]\n"
-                       "[progress]▏cb copy (item) [items][blank] [help](This copies an item or items.)[blank]\n"
-                       "[progress]▏cb paste[blank] [help](This pastes a clipboard.)[blank]\n"
-                       "[progress]▏cb show[blank] [help](This shows what's in a clipboard.)[blank]\n"
-                       "[progress]▏cb clear[blank] [help](This clears a clipboard's contents.)[blank]\n"
-                       "[info]▏You can also choose which clipboard you want to use by adding a number to the end, or "
+Message help_message = "[info]│This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
+                       "[info][bold]│How To Use[blank]\n"
+                       "[progress]│cb cut (item) [items][blank] [help](This cuts an item or items.)[blank]\n"
+                       "[progress]│cb copy (item) [items][blank] [help](This copies an item or items.)[blank]\n"
+                       "[progress]│cb paste[blank] [help](This pastes a clipboard.)[blank]\n"
+                       "[progress]│cb show[blank] [help](This shows what's in a clipboard.)[blank]\n"
+                       "[progress]│cb clear[blank] [help](This clears a clipboard's contents.)[blank]\n"
+                       "[info]│You can also choose which clipboard you want to use by adding a number to the end, or "
                        "[bold]_[blank][info] to use a persistent clipboard.[blank]\n"
-                       "[info][bold]▏Examples[blank]\n"
-                       "[progress]▏cb ct Nuclear_Launch_Codes.txt contactsfolder[blank] [help](This cuts the following items into the "
+                       "[info][bold]│Examples[blank]\n"
+                       "[progress]│cb ct Nuclear_Launch_Codes.txt contactsfolder[blank] [help](This cuts the following items into the "
                        "default clipboard, 0.)[blank]\n"
-                       "[progress]▏clipboard cp1 dogfood.conf[blank] [help](This copies the following items into clipboard 1.)[blank]\n"
-                       "[progress]▏cb p1[blank] [help](This pastes clipboard 1.)[blank]\n"
-                       "[progress]▏cb sh4[blank] [help](This shows the contents of clipboard 4.)[blank]\n"
-                       "[progress]▏cb clr[blank] [help](This clears the contents of the default clipboard.)[blank]\n"
-                       "[info][bold]▏Configuration[blank]\n"
-                       "[progress]▏CI: [help]Set to make CB overwrite existing items without a user prompt when pasting.[blank]\n"
-                       "[progress]▏FORCE_COLOR: [help]Set to make CB always show color regardless of what you set NO_COLOR "
+                       "[progress]│clipboard cp1 dogfood.conf[blank] [help](This copies the following items into clipboard 1.)[blank]\n"
+                       "[progress]│cb p1[blank] [help](This pastes clipboard 1.)[blank]\n"
+                       "[progress]│cb sh4[blank] [help](This shows the contents of clipboard 4.)[blank]\n"
+                       "[progress]│cb clr[blank] [help](This clears the contents of the default clipboard.)[blank]\n"
+                       "[info][bold]│Configuration[blank]\n"
+                       "[progress]│CI: [help]Set to make CB overwrite existing items without a user prompt when pasting.[blank]\n"
+                       "[progress]│FORCE_COLOR: [help]Set to make CB always show color regardless of what you set NO_COLOR "
                        "to.[blank]\n"
-                       "[progress]▏TMPDIR: [help]Set to the directory that CB (and other programs) will use to hold the items "
+                       "[progress]│TMPDIR: [help]Set to the directory that CB (and other programs) will use to hold the items "
                        "you cut or copy into temporary clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_TMPDIR: [help]Set to the directory that only CB will use to hold the items you cut "
+                       "[progress]│CLIPBOARD_TMPDIR: [help]Set to the directory that only CB will use to hold the items you cut "
                        "or copy into temporary clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_PERSISTDIR: [help]Set to the directory that only CB will use to hold the items you "
+                       "[progress]│CLIPBOARD_PERSISTDIR: [help]Set to the directory that only CB will use to hold the items you "
                        "cut or copy into persistent clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_ALWAYS_PERSIST: [help]Set to make CB always use persistent clipboards.[blank]\n"
-                       "[progress]▏CLIPBOARD_NOGUI: [help]Set to disable GUI clipboard integration.[blank]\n"
-                       "[progress]▏NO_COLOR: [help]Set to make CB not show color.[blank]\n"
-                       "[info]▏You can show this help screen anytime with [bold]cb -h[blank][info], [bold]cb "
+                       "[progress]│CLIPBOARD_ALWAYS_PERSIST: [help]Set to make CB always use persistent clipboards.[blank]\n"
+                       "[progress]│CLIPBOARD_NOGUI: [help]Set to disable GUI clipboard integration.[blank]\n"
+                       "[progress]│NO_COLOR: [help]Set to make CB not show color.[blank]\n"
+                       "[info]│You can show this help screen anytime with [bold]cb -h[blank][info], [bold]cb "
                        "--help[blank][info], or[bold] cb help[blank][info].\n"
-                       "[info]▏You can also get more help in our Discord server at [bold]https://discord.gg/J6asnc3pEG[blank]\n"
-                       "[info]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
-                       "[info]▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+                       "[info]│You can also get more help in our Discord server at [bold]https://discord.gg/J6asnc3pEG[blank]\n"
+                       "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                       "[info]│This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                        "redistribute it under certain conditions.[blank]\n";
 Message check_clipboard_status_message = "[info]🔷 There are items in these clipboards:\n";
 Message clipboard_item_one_contents_message = "[info]🔷 Here is the [bold]%i[blank][info] item in clipboard [bold]%s[blank][info]: [blank]\n";
@@ -110,10 +110,10 @@ Message redirection_no_items_message = "[error]❌ You can't specify items when 
 Message paste_success_message = "[success]✅ Pasted successfully[blank]\n";
 Message clipboard_failed_one_message = "[error]❌ CB couldn't %s this item:[blank]\n";
 Message clipboard_failed_many_message = "[error]❌ CB couldn't %s these items:[blank]\n";
-Message and_more_fails_message = "[error]▏ ...and [bold]%i[blank][error] more.[blank]\n";
-Message and_more_items_message = "[info]▏ ...and [bold]%i[blank][info] more.[blank]\n";
+Message and_more_fails_message = "[error]│ ...and [bold]%i[blank][error] more.[blank]\n";
+Message and_more_items_message = "[info]│ ...and [bold]%i[blank][info] more.[blank]\n";
 Message fix_problem_message = "[help]👉 See if you have the needed permissions, or\n"
-                              "▏ try double-checking the spelling of the files or what directory you're in.[blank]\n";
+                              "│ try double-checking the spelling of the files or what directory you're in.[blank]\n";
 Message not_enough_storage_message = "[error]❌ There won't be enough storage available to %s everything (%gMB to "
                                      "paste, %gMB available). 👉 [blank][help] Try double-checking what items you've "
                                      "selected or delete some files to free up space.[blank]\n";
@@ -132,7 +132,7 @@ Message one_file_one_directory_success_message = "[success]✅ %s one file and o
 Message one_file_many_directories_success_message = "[success]✅ %s one file and %lu directories[blank]\n";
 Message many_files_one_directory_success_message = "[success]✅ %s %lu files and one directory[blank]\n";
 Message many_files_many_directories_success_message = "[success]✅ %s %lu files and %lu directories[blank]\n";
-Message internal_error_message = "[error]❌ Internal error: %s\n▏ This is probably a bug, or you might be lacking "
+Message internal_error_message = "[error]❌ Internal error: %s\n│ This is probably a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 
 void setLanguageES() {
@@ -156,20 +156,20 @@ void setLanguageES() {
     did_action[Action::Copy] = "Copió";
     did_action[Action::Paste] = "Pegó";
 
-    help_message = "[info]▏Esto es Clipboard Project %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
+    help_message = "[info]│Esto es Clipboard Project %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
                    "terminal.[blank]\n"
-                   "[info][bold]▏Cómo usar[blank]\n"
-                   "[progress]▏cb cortar (cosa) [cosas][blank]\n"
-                   "[progress]▏cb copiar (cosa) [cosas][blank]\n"
-                   "[progress]▏cb pegar[blank]\n"
-                   "[info][bold]▏Ejemplos[blank]\n"
-                   "[progress]▏cb copiar cosas.conf[blank]\n"
-                   "[progress]▏cb cortar MisDocumentos.txt nuevacarpeta[blank]\n"
-                   "[progress]▏cb pegar[blank]\n"
-                   "[info]▏Muestra este mensaje de ayudar en cualquier tiempo que quieras con [bold]cb "
+                   "[info][bold]│Cómo usar[blank]\n"
+                   "[progress]│cb cortar (cosa) [cosas][blank]\n"
+                   "[progress]│cb copiar (cosa) [cosas][blank]\n"
+                   "[progress]│cb pegar[blank]\n"
+                   "[info][bold]│Ejemplos[blank]\n"
+                   "[progress]│cb copiar cosas.conf[blank]\n"
+                   "[progress]│cb cortar MisDocumentos.txt nuevacarpeta[blank]\n"
+                   "[progress]│cb pegar[blank]\n"
+                   "[info]│Muestra este mensaje de ayudar en cualquier tiempo que quieras con [bold]cb "
                    "-h[blank][info], [bold]cb --help[blank][info] o[bold] cb help[blank][info].\n"
-                   "[info]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
-                   "[info]▏This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
+                   "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[info]│This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
                    "to redistribute it under certain conditions.[blank]\n";
     no_valid_action_message = "[error]❌ No especificaste ninguna acción válida o se te olvidó. 👉 [help]Inténta usar o añadir [bold]cortar, "
                               "copiar o pegar[blank][help] en su lugar, como [bold]%s copiar.[blank]\n";
@@ -187,10 +187,10 @@ void setLanguageES() {
                                    "cosas que siguen [bold]%s [acción].\n";
     paste_success_message = "[success]✅ Pegó con éxito[blank]\n";
     clipboard_failed_many_message = "[error]❌ CB no pudo %s estas cosas.[blank]\n";
-    and_more_fails_message = "[error]▏ ...y [bold]%i[blank][error] más.[blank]\n";
-    and_more_items_message = "[info]▏ ...y [bold]%i[blank][info] más.[blank]\n";
+    and_more_fails_message = "[error]│ ...y [bold]%i[blank][error] más.[blank]\n";
+    and_more_items_message = "[info]│ ...y [bold]%i[blank][info] más.[blank]\n";
     fix_problem_message = "[help]👉 Verífica si tengas los permisos necesarios, o\n"
-                          "▏ vuelve a revisar el deletro de los archivos o la carpeta en que estás.[blank]\n";
+                          "│ vuelve a revisar el deletro de los archivos o la carpeta en que estás.[blank]\n";
     not_enough_storage_message = "[error]❌ No habrá espacio suficiente para %s todas tus cosas (%gMB a pegar, %gMB "
                                  "disponible). 👉 [blank][help] Vuelve a revisar las cosas que especificaste o saca "
                                  "algunas cosas para hacer más espacio.[blank]\n";
@@ -213,20 +213,20 @@ void setLanguagePT() {
     did_action[Action::Copy] = "Copiou";
     did_action[Action::Paste] = "Colou";
 
-    help_message = "[info]▏Este é Clipboard Project %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
+    help_message = "[info]│Este é Clipboard Project %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
                    "comando.[blank]\n"
-                   "[info][bold]▏Como utilizar[blank]\n"
-                   "[progress]▏cb recortar (item) [itens][blank]\n"
-                   "[progress]▏cb copiar (item) [itens][blank]\n"
-                   "[progress]▏cb colar[blank]\n"
-                   "[info][bold]▏Exemplos[blank]\n"
-                   "[progress]▏cb copiar ração.conf[blank]\n"
-                   "[progress]▏cb recortar Códigos_de_Lançamento_de_Mísseis.txt pastadecontatos[blank]\n"
-                   "[progress]▏cb colar[blank]\n"
-                   "[info]▏Você pode rever esta tela de instruções à qualquer momento com [bold]cb "
+                   "[info][bold]│Como utilizar[blank]\n"
+                   "[progress]│cb recortar (item) [itens][blank]\n"
+                   "[progress]│cb copiar (item) [itens][blank]\n"
+                   "[progress]│cb colar[blank]\n"
+                   "[info][bold]│Exemplos[blank]\n"
+                   "[progress]│cb copiar ração.conf[blank]\n"
+                   "[progress]│cb recortar Códigos_de_Lançamento_de_Mísseis.txt pastadecontatos[blank]\n"
+                   "[progress]│cb colar[blank]\n"
+                   "[info]│Você pode rever esta tela de instruções à qualquer momento com [bold]cb "
                    "-h[blank][info], [bold]cb --help[blank][info] ou[bold] cb help[blank][info].\n"
-                   "[info]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
-                   "[info]▏Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
+                   "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[info]│Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
                    "bem-vindo a redistribuí-lo sob certas condições.[blank]\n";
     no_valid_action_message = "[error]❌ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. 👉 [help]Tente utilizar "
                               "[bold]recortar, copiar ou colar[blank][help], como em [bold]%s copiar.[blank]\n";
@@ -241,14 +241,14 @@ void setLanguagePT() {
                                    "que vêm após [bold]%s [action].\n";
     paste_success_message = "[success]✅ Colado com sucesso[blank]\n";
     clipboard_failed_many_message = "[error]❌ CB não pôde %s esses itens.[blank]\n";
-    and_more_fails_message = "[error]▏ ...e mais [bold]%i[blank][error].[blank]\n";
-    and_more_items_message = "[info]▏ ...e mais [bold]%i[blank][info].[blank]\n";
+    and_more_fails_message = "[error]│ ...e mais [bold]%i[blank][error].[blank]\n";
+    and_more_items_message = "[info]│ ...e mais [bold]%i[blank][info].[blank]\n";
     fix_problem_message = "[help]👉 Veja se você possui as permissões necessárias, ou\n"
-                          "▏ verifique a ortografia do arquivo ou diretório que voce está.[blank]\n";
+                          "│ verifique a ortografia do arquivo ou diretório que voce está.[blank]\n";
     many_files_success_message = "[success]✅ %s %lu arquivos[blank]\n";
     many_directories_success_message = "[success]✅ %s %lu diretórios[blank]\n";
     many_files_many_directories_success_message = "[success]✅ %s %lu arquivos e %lu diretórios[blank]\n";
-    internal_error_message = "[error]❌ Erro interno: %s\n▏ Isso é provavelmente um bug.[blank]\n";
+    internal_error_message = "[error]❌ Erro interno: %s\n│ Isso é provavelmente um bug.[blank]\n";
 }
 
 void setLanguageTR() {
@@ -272,29 +272,29 @@ void setLanguageTR() {
     did_action[Action::Copy] = "Kopyalandı";
     did_action[Action::Paste] = "Yapıştırıldı";
 
-    help_message = "[info]▏Clipboard Project %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
-                   "[info][bold]▏Nasıl kullanılır[blank]\n"
-                   "[progress]▏cb kes (öğe) [öğeler][blank] [help](Bu öğe(leri) keser.)[blank]\n"
-                   "[progress]▏cb kopyala (öğe) [öğeler][blank] [help](Bu öğe(leri) kopyalar.)[blank]\n"
-                   "[progress]▏cb yapistir[blank] [help](Bu panodakileri yapıştırır.)[blank]\n"
-                   "[progress]▏cb goster[blank] [help](Bu panoda olan öğeleri gösterir.)[blank]\n"
-                   "[progress]▏cb temizle[blank] [help](Bu pano içerğini temizler.)[blank]\n"
-                   "[info]▏    Ben ise \"pano\" ismini kullanmanızı öneririm :)[blank]\n"
-                   "[info]▏Ayrıca kommutun sonuna bir sayı ekleyerek 10 farklı panodan birisini seçebilirsiniz.[blank]\n"
-                   "[info][bold]▏Örnekler[blank]\n"
-                   "[progress]▏pano ks Nükleer_Fırlatma_Kodları.txt kişilerklasörü[blank] [help](Bu verilen öğeleri öntanımlı "
+    help_message = "[info]│Clipboard Project %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
+                   "[info][bold]│Nasıl kullanılır[blank]\n"
+                   "[progress]│cb kes (öğe) [öğeler][blank] [help](Bu öğe(leri) keser.)[blank]\n"
+                   "[progress]│cb kopyala (öğe) [öğeler][blank] [help](Bu öğe(leri) kopyalar.)[blank]\n"
+                   "[progress]│cb yapistir[blank] [help](Bu panodakileri yapıştırır.)[blank]\n"
+                   "[progress]│cb goster[blank] [help](Bu panoda olan öğeleri gösterir.)[blank]\n"
+                   "[progress]│cb temizle[blank] [help](Bu pano içerğini temizler.)[blank]\n"
+                   "[info]│    Ben ise \"pano\" ismini kullanmanızı öneririm :)[blank]\n"
+                   "[info]│Ayrıca kommutun sonuna bir sayı ekleyerek 10 farklı panodan birisini seçebilirsiniz.[blank]\n"
+                   "[info][bold]│Örnekler[blank]\n"
+                   "[progress]│pano ks Nükleer_Fırlatma_Kodları.txt kişilerklasörü[blank] [help](Bu verilen öğeleri öntanımlı "
                    "0. panoya keser)[blank]\n"
-                   "[progress]▏pano kp1 mama.conf[blank] [help](Bu verilen öğeleri 1. panoya kopyalar.)[blank]\n"
-                   "[progress]▏pano y1[blank] [help](Bu 1. panodakileri yapıştırır)[blank]\n"
-                   "[progress]▏pano go4[blank] [help](Bu 4. pano içeriğini gösterir, 4.)[blank]\n"
-                   "[progress]▏pano tmz[blank] [help](Bu öntanımlı panonun içeriğini temizler.)[blank]\n"
-                   "[info]▏Bu yardım ekranını herhangi bir zaman şu komutlardan birisiyle görebilirsiniz:[blank]\n"
-                   "[info]▏    [bold]cb -h[blank][info], [bold]cb --help[blank][info], ya da[bold] cb "
+                   "[progress]│pano kp1 mama.conf[blank] [help](Bu verilen öğeleri 1. panoya kopyalar.)[blank]\n"
+                   "[progress]│pano y1[blank] [help](Bu 1. panodakileri yapıştırır)[blank]\n"
+                   "[progress]│pano go4[blank] [help](Bu 4. pano içeriğini gösterir, 4.)[blank]\n"
+                   "[progress]│pano tmz[blank] [help](Bu öntanımlı panonun içeriğini temizler.)[blank]\n"
+                   "[info]│Bu yardım ekranını herhangi bir zaman şu komutlardan birisiyle görebilirsiniz:[blank]\n"
+                   "[info]│    [bold]cb -h[blank][info], [bold]cb --help[blank][info], ya da[bold] cb "
                    "help[blank][info].\n"
-                   "[info]▏Discord sunucumuzdan daha fazla yardım alabilirsiniz: [bold]https://discord.gg/J6asnc3pEG[blank]\n"
-                   "[info]▏Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
-                   "[info]▏                                 GPLv3 altında lisanslanmıştır.[blank]\n"
-                   "[info]▏Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
+                   "[info]│Discord sunucumuzdan daha fazla yardım alabilirsiniz: [bold]https://discord.gg/J6asnc3pEG[blank]\n"
+                   "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[info]│                                 GPLv3 altında lisanslanmıştır.[blank]\n"
+                   "[info]│Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
                    "koşullar altında yeniden dağıtabilirsiniz.[blank]\n";
     check_clipboard_status_message = "[info]🔷 Pano içeriği şunlardır:\n";
     clipboard_item_many_contents_message = "[info]🔷 [bold]%s[blank][info] panoda bulunan: [blank]\n";
@@ -313,15 +313,15 @@ void setLanguageTR() {
                                    "[action][blank][help]'dan sonra  gelen öğeleri siliniz.\n";
     paste_success_message = "[success]✅ Yapıştırma başarıyla tamamlandı[blank]\n";
     clipboard_failed_many_message = "[error]❌ %s(ma/me) işlemi şu öğeler için başarısız oldu:[blank]\n";
-    and_more_fails_message = "[error]▏ ...ve [bold]%i[blank][error] fazla.[blank]\n";
-    and_more_items_message = "[info]▏ ...ve [bold]%i[blank][info] fazla.[blank]\n";
+    and_more_fails_message = "[error]│ ...ve [bold]%i[blank][error] fazla.[blank]\n";
+    and_more_items_message = "[info]│ ...ve [bold]%i[blank][info] fazla.[blank]\n";
     fix_problem_message = "[help]👉 Erişime ihtiyacınız varsa şuna bakın, veya\n"
-                          "▏ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.[blank]\n";
+                          "│ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.[blank]\n";
     not_enough_storage_message = "[error]❌ Bütün öğelerinizi %s kadar yeterli bir alanınız yok (%gMB "
                                  "yapıştırılacak, %gMB boş). 👉 [blank][help] Hangi öğeleri seçtiğinizi ikinci kez kontrol "
                                  "etmeyi deneyin veya yer açmak için bazı dosyaları silin.[blank]\n";
     many_files_success_message = "[success]✅ %s %lu dosya[blank]\n";
     many_directories_success_message = "[success]✅ %s %lu dizin[blank]\n";
     many_files_many_directories_success_message = "[success]✅ %s %lu dosya ve %lu dizin[blank]\n";
-    internal_error_message = "[error]❌ İçsel hata: %s\n▏ Bu yüksek ihtimal bir hata veya bu sistemde erişim sorunu yaşıyorsunuz.[blank]\n";
+    internal_error_message = "[error]❌ İçsel hata: %s\n│ Bu yüksek ihtimal bir hata veya bu sistemde erişim sorunu yaşıyorsunuz.[blank]\n";
 }

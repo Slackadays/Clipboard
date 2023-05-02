@@ -203,7 +203,7 @@ void show() {
     for (const auto& entry : fs::directory_iterator(path.data)) {
         if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
             continue;
-        printf(formatMessage("[info]▏ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
+        printf(formatMessage("[info]│ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
     }
 }
 
@@ -387,7 +387,7 @@ void status() {
             int widthRemaining = available.columns
                                  - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
                                     + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
-            printf(formatMessage("[bold][info]▏ %s%s: [blank]").data(),
+            printf(formatMessage("[bold][info]│ %s%s: [blank]").data(),
                    clipboards_with_contents.at(clipboard).first.filename().string().data(),
                    clipboards_with_contents.at(clipboard).second ? " (p)" : "");
 
@@ -423,23 +423,23 @@ void status() {
 }
 
 void info() {
-    fprintf(stderr, formatMessage("[info]🔷 This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
+    fprintf(stderr, formatMessage("[info]│ This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
 
     struct stat info;
     stat(path.string().data(), &info);
 
-    fprintf(stderr, formatMessage("[info]🔷 Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
+    fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
 
 #endif
 
-    fprintf(stderr, formatMessage("[info]🔷 Stored in [help]%s[blank]\n").data(), path.string().data());
-    fprintf(stderr, formatMessage("[info]🔷 Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
+    fprintf(stderr, formatMessage("[info]│ Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
     if (path.holdsRawData()) {
-        fprintf(stderr, formatMessage("[info]🔷 Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
-        fprintf(stderr, formatMessage("[info]🔷 Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        fprintf(stderr, formatMessage("[info]│ Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]│ Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -449,12 +449,12 @@ void info() {
             else
                 files++;
         }
-        fprintf(stderr, formatMessage("[info]🔷 Files: [help]%zu[blank]\n").data(), files);
-        fprintf(stderr, formatMessage("[info]🔷 Directories: [help]%zu[blank]\n").data(), directories);
+        fprintf(stderr, formatMessage("[info]│ Files: [help]%zu[blank]\n").data(), files);
+        fprintf(stderr, formatMessage("[info]│ Directories: [help]%zu[blank]\n").data(), directories);
     }
 
     if (!available_mimes.empty()) {
-        fprintf(stderr, "%s", formatMessage("[info]🔷 Available types from GUI: [help]").data());
+        fprintf(stderr, "%s", formatMessage("[info]│ Available types from GUI: [help]").data());
         for (const auto& mime : available_mimes) {
             fprintf(stderr, "%s", mime.data());
             if (mime != available_mimes.back()) fprintf(stderr, ", ");
@@ -462,18 +462,78 @@ void info() {
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     }
 
-    fprintf(stderr, formatMessage("[info]🔷 Content cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]│ Content cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
-    fprintf(stderr, formatMessage("[info]🔷 Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]│ Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
     if (path.isLocked()) {
-        fprintf(stderr, formatMessage("[info]🔷 Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
+        fprintf(stderr, formatMessage("[info]│ Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
 
     if (fs::exists(path.metadata.notes)) {
-        fprintf(stderr, formatMessage("[info]🔷 Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
+        fprintf(stderr, formatMessage("[info]│ Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
     } else {
-        fprintf(stderr, "%s", formatMessage("[info]🔷 There is no note for this clipboard.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[info]│ There is no note for this clipboard.[blank]\n").data());
     }
+}
+
+void infoJSON() {
+    printf("{\n");
+
+    printf("    \"name\": \"%s\",\n", clipboard_name.data());
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+
+    struct stat info;
+    stat(path.string().data(), &info);
+    std::string time(std::ctime(&info.st_ctime));
+    std::erase(time, '\n');
+
+    printf("    \"lastChanged\": \"%s\",\n", time.data());
+
+#endif
+
+    printf("    \"path\": \"%s\",\n", path.string().data());
+    printf("    \"isPersistent\": %s,\n", path.is_persistent ? "true" : "false");
+
+    if (path.holdsRawData()) {
+        printf("    \"bytes\": \"%s\",\n", std::to_string(fs::file_size(path.data.raw)).data());
+        printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+    } else {
+        size_t files = 0;
+        size_t directories = 0;
+        for (const auto& entry : fs::directory_iterator(path.data)) {
+            if (fs::is_directory(entry.path()))
+                directories++;
+            else
+                files++;
+        }
+        printf("    \"files\": \"%zu\",\n", files);
+        printf("    \"directories\": \"%zu\",\n", directories);
+    }
+
+    if (!available_mimes.empty()) {
+        printf("    \"availableTypes\": [");
+        for (const auto& mime : available_mimes) {
+            printf("\"%s\"", mime.data());
+            if (mime != available_mimes.back()) printf(", ");
+        }
+        printf("],\n");
+    }
+
+    printf("    \"contentCut\": %s,\n", fs::exists(path.metadata.originals) ? "true" : "false");
+
+    printf("    \"locked\": %s,\n", path.isLocked() ? "true" : "false");
+    if (path.isLocked()) {
+        printf("    \"lockedBy\": \"%s\",\n", fileContents(path.metadata.lock).data());
+    }
+
+    if (fs::exists(path.metadata.notes)) {
+        printf("    \"note\": \"%s\"\n", fileContents(path.metadata.notes).data());
+    } else {
+        printf("    \"note\": \"\"\n");
+    }
+
+    printf("}\n");
 }
 
 void load() {

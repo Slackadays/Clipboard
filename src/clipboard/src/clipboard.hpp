@@ -368,4 +368,5 @@ void showFilepaths();
 void swap();
 void importClipboards();
 void exportClipboards();
+void infoJSON();
 } // namespace PerformAction
