@@ -23,6 +23,12 @@
 #include <thread>
 #include <vector>
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <io.h>
+#include <shlobj.h>
+#include <windows.h>
+#endif
+
 #include <clipboard/fork.hpp>
 #include <clipboard/gui.hpp>
 
