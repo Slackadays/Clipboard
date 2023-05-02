@@ -561,7 +561,7 @@ Note: This is useful if you want to load content into GUI clipboard systems, as 
 
 <br>
 
-<details><summary> &ensp; <b>Swap Contents</b> &emsp; <code>cb ([--]swap|[-]sw)[(num)|_(id)] [clipboard]</code></summary>
+<details><summary> &ensp; <b>Swap Contents</b> &emsp; <code>cb [--](swap|sw)[(num)|_(id)] [clipboard]</code></summary>
 
 <br>
 
