@@ -564,14 +564,14 @@ void load() {
             }
 
             fs::copy(path.data, destination.data, fs::copy_options::recursive);
+
+            successes.clipboards++;
         } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(destination_number, e.code());
         }
     }
 
     stopIndicator();
-
-    fprintf(stderr, formatMessage("[success]✅ Loaded %i clipboards[blank]\n").data(), destinations.size());
 
     if (std::find(destinations.begin(), destinations.end(), constants.default_clipboard_name) != destinations.end()) updateGUIClipboard(true);
 }
@@ -632,6 +632,9 @@ void swap() {
 
 void importClipboards() {}
 
-void exportClipboards() {}
+void exportClipboards() {
+    std::vector<std::string> destinations;
+    if (!copying.items.empty()) std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(destinations), [](const auto& item) { return item.string(); });
+}
 
 } // namespace PerformAction

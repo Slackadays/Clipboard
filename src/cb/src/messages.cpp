@@ -132,6 +132,8 @@ Message one_file_one_directory_success_message = "[success]✅ %s one file and o
 Message one_file_many_directories_success_message = "[success]✅ %s one file and %lu directories[blank]\n";
 Message many_files_one_directory_success_message = "[success]✅ %s %lu files and one directory[blank]\n";
 Message many_files_many_directories_success_message = "[success]✅ %s %lu files and %lu directories[blank]\n";
+Message one_clipboard_success_message = "[success]✅ %s one clipboard[blank]\n";
+Message many_clipboards_success_message = "[success]✅ %s %lu clipboards[blank]\n";
 Message internal_error_message = "[error]❌ Internal error: %s\n│ This is probably a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 

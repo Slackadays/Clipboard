@@ -175,6 +175,7 @@ struct Successes {
     std::atomic<unsigned long> files;
     std::atomic<unsigned long> directories;
     std::atomic<unsigned long long> bytes;
+    std::atomic<unsigned long> clipboards;
 };
 extern Successes successes;
 
@@ -337,6 +338,8 @@ extern Message one_file_one_directory_success_message;
 extern Message one_file_many_directories_success_message;
 extern Message many_files_one_directory_success_message;
 extern Message many_files_many_directories_success_message;
+extern Message one_clipboard_success_message;
+extern Message many_clipboards_success_message;
 extern Message internal_error_message;
 
 extern ClipboardContent getGUIClipboard(const std::string& requested_mime);

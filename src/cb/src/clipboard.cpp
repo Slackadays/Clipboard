@@ -754,6 +754,10 @@ void showSuccesses() {
         fprintf(stderr, byte_success_message().data(), did_action[action].data(), formatBytes(successes.bytes.load()).data());
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
         fprintf(stderr, one_item_success_message().data(), did_action[action].data());
+    } else if (successes.clipboards == 1) {
+        fprintf(stderr, one_clipboard_success_message().data(), did_action[action].data(), successes.clipboards.load());
+    } else if (successes.clipboards > 1) {
+        fprintf(stderr, many_clipboards_success_message().data(), did_action[action].data(), successes.clipboards.load());
     } else {
         if ((successes.files > 1) && (successes.directories == 0))
             fprintf(stderr, many_files_success_message().data(), did_action[action].data(), successes.files.load());
