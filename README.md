@@ -13,12 +13,10 @@ Ok, so maybe that last part won't actually happen. But you get the idea:
 Just let the features speak for themselves.
 
 - Copy text, files, directories, pipes, _anything_,
-- Get an _infinite_ number of independent clipboards,
-- Make persistent clipboards that stick around just for you,
-- Jot down custom notes for any clipboard,
+- Get an _infinite_ number of temporary or persistent clipboards,
 - Harness the power of regex on everything you copy,
-- Connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
-- Use languages like español, português, and Türkçe,
+- Seamlessly connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
+- Use your favorite languages like español, português, or Türkçe,
 - Script _everything_ to automate your workflows,
 - Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your viewing pleasure,
 - And tons more!
