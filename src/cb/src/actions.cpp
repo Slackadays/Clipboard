@@ -423,22 +423,48 @@ void status() {
 }
 
 void info() {
-    fprintf(stderr, formatMessage("[info]│ This clipboard's name is [help]%s[blank]\n").data(), clipboard_name.data());
+    auto available(thisTerminalSize());
+    available.columns -= 4;                                                                  // for box corners
+    available.columns -= (clipboard_name_message.rawLength() - 2) + clipboard_name.length(); // compensate for %s and clipboard name
+    bool addExtraBar = available.columns % 2 != 0;
+    available.columns /= 2;
+    fprintf(stderr, "%s", formatMessage("[info]┍").data());
+    for (int i = 0; i < available.columns; i++)
+        fprintf(stderr, "━");
+    fprintf(stderr, "┫");
+    fprintf(stderr, clipboard_name_message().data(), clipboard_name.data());
+    fprintf(stderr, "%s", formatMessage("[info]┣").data());
+    for (int i = 0; i < available.columns; i++)
+        fprintf(stderr, "%s", formatMessage("[info]━").data());
+    if (addExtraBar) fprintf(stderr, "━");
+    fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
+
+    auto total_cols = thisTerminalSize().columns;
+
+    auto displayEndbar = [&]() {
+        fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
+    };
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
 
     struct stat info;
     stat(path.string().data(), &info);
+    std::string time(std::ctime(&info.st_ctime));
+    std::erase(time, '\n');
 
-    fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]").data(), std::ctime(&info.st_ctime));
+    displayEndbar();
+    fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), time.data());
 
 #endif
-
+    displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
+    displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
 
     if (path.holdsRawData()) {
+        displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+        displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
@@ -449,11 +475,14 @@ void info() {
             else
                 files++;
         }
+        displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Files: [help]%zu[blank]\n").data(), files);
+        displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Directories: [help]%zu[blank]\n").data(), directories);
     }
 
     if (!available_mimes.empty()) {
+        displayEndbar();
         fprintf(stderr, "%s", formatMessage("[info]│ Available types from GUI: [help]").data());
         for (const auto& mime : available_mimes) {
             fprintf(stderr, "%s", mime.data());
@@ -461,19 +490,28 @@ void info() {
         }
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     }
-
+    displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Content cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
+    displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
+
     if (path.isLocked()) {
+        displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
     }
 
-    if (fs::exists(path.metadata.notes)) {
+    displayEndbar();
+    if (fs::exists(path.metadata.notes))
         fprintf(stderr, formatMessage("[info]│ Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
-    } else {
+    else
         fprintf(stderr, "%s", formatMessage("[info]│ There is no note for this clipboard.[blank]\n").data());
-    }
+
+    fprintf(stderr, "%s", formatMessage("[info]┕").data());
+    auto avail_cols = thisTerminalSize().columns;
+    for (int i = 0; i < avail_cols - 2; i++)
+        fprintf(stderr, "━");
+    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }
 
 void infoJSON() {
