@@ -129,10 +129,13 @@ public:
     } metadata;
 
     Clipboard() = default;
-    Clipboard(const auto& clipboard_name) {
+    Clipboard(const auto& clipboard_name, const fs::path& clipboard_path = "") {
         is_persistent = isPersistent(clipboard_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
 
-        root = (is_persistent ? global_path.persistent : global_path.temporary) / clipboard_name;
+        if (clipboard_path != "")
+            root = clipboard_path / clipboard_name;
+        else
+            root = (is_persistent ? global_path.persistent : global_path.temporary) / clipboard_name;
 
         data = root / constants.data_directory;
 

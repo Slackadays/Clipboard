@@ -587,6 +587,36 @@ Note: If you don't provide a destination clipboard, then the Swap action will sw
 
 <br>
 
+<details><summary> &ensp; <b>Import Clipboards</b> &emsp; <code>cb [--](import|imp) [source folder]</code></summary>
+
+<br>
+
+Start by exporting a clipboard.
+```sh
+$ cb copy "The reason Aventura was so popular was because the music was so well-written as well as the luscious guitar chorus effect."
+$ cb export
+```
+
+Import all clipboards from a folder.
+```sh
+$ cb import
+$ cb --import
+$ cb imp
+$ cb --imp
+# These all work great!
+```
+
+Note: Currently, CB imports from a folder called `Exported_Clipboards`.
+
+Choose what folder to import from.
+```sh
+$ cb import MySavedClipboards
+```
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b>Export Clipboards</b> &emsp; <code>cb [--](export|ex) [clipboard] [clipboards]</code></summary>
 
 <br>

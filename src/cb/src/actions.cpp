@@ -668,13 +668,67 @@ void swap() {
     if (destination_name == constants.default_clipboard_name) updateGUIClipboard(true);
 }
 
-void importClipboards() {}
+void importClipboards() {
+    fs::path importDirectory;
+    if (copying.items.empty())
+        importDirectory = fs::current_path() / "Exported_Clipboards";
+    else
+        importDirectory = copying.items.at(0);
+
+    if (!fs::exists(importDirectory)) {
+        stopIndicator();
+        fprintf(stderr, "%s", formatMessage("[error]❌ The directory you're trying to import from doesn't exist. 💡 [help]Try choosing a different one instead.[blank]\n").data());
+        exit(EXIT_FAILURE);
+    }
+
+    if (!fs::is_directory(importDirectory)) {
+        stopIndicator();
+        fprintf(stderr, "%s", formatMessage("[error]❌ The directory you're trying to import from isn't a directory. 💡 [help]Try choosing a different one instead.[blank]\n").data()
+        );
+        exit(EXIT_FAILURE);
+    }
+
+    for (const auto& entry : fs::directory_iterator(importDirectory)) {
+        if (!fs::is_directory(entry.path()))
+            copying.failedItems.emplace_back(entry.path().filename().string(), std::make_error_code(std::errc::not_a_directory));
+        else {
+            try {
+                auto target = (isPersistent(entry.path().filename().string()) || getenv("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary)
+                              / entry.path().filename();
+                if (fs::exists(target)) {
+                    using enum CopyPolicy;
+                    switch (copying.policy) {
+                    case SkipAll:
+                        continue;
+                    case ReplaceAll:
+                        fs::remove_all(target);
+                        break;
+                    default:
+                        stopIndicator();
+                        copying.policy = userDecision(entry.path().filename().string());
+                        startIndicator();
+                        if (copying.policy == ReplaceOnce || copying.policy == ReplaceAll) {
+                            fs::copy(entry.path(), target, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+                            successes.clipboards++;
+                        }
+                        break;
+                    }
+                } else {
+                    fs::copy(entry.path(), target, fs::copy_options::recursive);
+                    successes.clipboards++;
+                }
+            } catch (const fs::filesystem_error& e) {
+                copying.failedItems.emplace_back(entry.path().filename().string(), e.code());
+            }
+        }
+    }
+}
 
 void exportClipboards() {
     std::vector<std::string> destinations;
-    if (!copying.items.empty()) {
+    if (!copying.items.empty())
         std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(destinations), [](const auto& item) { return item.string(); });
-    } else {
+    else {
         for (const auto& entry : fs::directory_iterator(global_path.temporary))
             destinations.emplace_back(entry.path().filename().string());
         for (const auto& entry : fs::directory_iterator(global_path.persistent))
@@ -682,17 +736,28 @@ void exportClipboards() {
     }
 
     fs::path exportDirectory(fs::current_path() / "Exported_Clipboards");
-    if (fs::exists(exportDirectory)) fs::remove_all(exportDirectory);
-    fs::create_directory(exportDirectory);
+
+    try {
+        if (fs::exists(exportDirectory)) fs::remove_all(exportDirectory);
+        fs::create_directory(exportDirectory);
+    } catch (const fs::filesystem_error& e) {
+        stopIndicator();
+        fprintf(stderr, "%s", formatMessage("[error]❌ CB couldn't create the export directory. 💡 [help]Try checking if you have the right permissions or not.[blank]\n").data());
+        exit(EXIT_FAILURE);
+    }
 
     auto exportClipboard = [&](const std::string& name) {
-        Clipboard clipboard(name);
-        clipboard.getLock();
-        if (clipboard.isUnused()) return;
-        fs::copy(clipboard, exportDirectory / name, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        fs::remove(exportDirectory / name / constants.metadata_directory / constants.lock_name);
-        clipboard.releaseLock();
-        successes.clipboards++;
+        try {
+            Clipboard clipboard(name);
+            clipboard.getLock();
+            if (clipboard.isUnused()) return;
+            fs::copy(clipboard, exportDirectory / name, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+            fs::remove(exportDirectory / name / constants.metadata_directory / constants.lock_name);
+            clipboard.releaseLock();
+            successes.clipboards++;
+        } catch (const fs::filesystem_error& e) {
+            copying.failedItems.emplace_back(name, e.code());
+        }
     };
 
     for (const auto& name : destinations)
