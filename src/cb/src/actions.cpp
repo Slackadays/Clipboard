@@ -14,6 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 #include <algorithm>
+#include <fstream>
 #include <regex>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -771,6 +772,61 @@ void exportClipboards() {
     }
 }
 
-void ignoreRegex() {}
+void ignoreRegex() {
+    std::vector<std::string> regexes;
+    if (io_type == IOType::Pipe)
+        regexes.emplace_back(pipedInContent());
+    else
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return item.string(); });
+
+    if (regexes.empty()) {
+        if (fs::exists(path.metadata.ignore) && !fs::is_empty(path.metadata.ignore)) {
+            std::vector<std::string> ignorePatterns;
+            std::string line;
+            std::ifstream file(path.metadata.ignore);
+            while (std::getline(file, line)) {
+                ignorePatterns.push_back(line);
+            }
+
+            if (is_tty.out) {
+                fprintf(stdout, "%s", formatMessage("[info]🔷 Ignore patterns for this clipboard: [help]").data());
+                for (const auto& pattern : ignorePatterns) {
+                    fprintf(stdout, "%s", pattern.data());
+                    if (pattern != ignorePatterns.back()) fprintf(stdout, ", ");
+                }
+                fprintf(stdout, "%s", formatMessage("[blank]\n").data());
+            } else {
+                for (const auto& pattern : ignorePatterns) {
+                    printf("%s", pattern.data());
+                    if (pattern != ignorePatterns.back()) printf(", ");
+                }
+            }
+        } else {
+            fprintf(stderr, "%s", formatMessage("[info]🔷 There are no ignore patterns for this clipboard.[blank]\n").data());
+        }
+        return;
+    }
+
+    if (copying.items.at(0).string() == "") {
+        fs::remove(path.metadata.ignore);
+        if (output_silent) return;
+        stopIndicator();
+        fprintf(stderr, "%s", formatMessage("[success]✅ Removed ignore patterns\n").data());
+        return;
+    }
+
+    std::string writeToFileContent;
+    for (const auto& pattern : regexes)
+        writeToFileContent += pattern + "\n";
+
+    writeToFile(path.metadata.ignore, writeToFileContent);
+
+    fprintf(stderr, "%s", formatMessage("[success]✅ Saved ignore patterns [bold]").data());
+    for (const auto& pattern : regexes) {
+        fprintf(stderr, "%s", pattern.data());
+        if (pattern != regexes.back()) fprintf(stderr, ", ");
+    }
+    fprintf(stderr, "%s", formatMessage("[blank]\n").data());
+}
 
 } // namespace PerformAction

@@ -14,12 +14,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 16> actions =
+EnumArray<std::string_view, 17> actions =
         {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "history", "ignore"};
 
-EnumArray<std::string_view, 16> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig"};
+EnumArray<std::string_view, 17> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig"};
 
-EnumArray<std::string_view, 16> doing_action = {
+EnumArray<std::string_view, 17> doing_action = {
         "Cutting",
         "Copying",
         "Pasting",
@@ -38,7 +38,7 @@ EnumArray<std::string_view, 16> doing_action = {
         "Getting history",
         "Ignoring"};
 
-EnumArray<std::string_view, 16> did_action = {
+EnumArray<std::string_view, 17> did_action = {
         "Cut",
         "Copied",
         "Pasted",

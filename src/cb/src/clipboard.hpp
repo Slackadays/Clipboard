@@ -65,6 +65,8 @@ struct Constants {
     std::string_view lock_name = "lock";
     std::string_view data_directory = "data";
     std::string_view metadata_directory = "metadata";
+    std::string_view import_export_directory = "Exported_Clipboards";
+    std::string_view ignore_regex_name = "ignore";
 };
 constexpr Constants constants;
 
@@ -122,6 +124,7 @@ public:
         fs::path notes;
         fs::path originals;
         fs::path lock;
+        fs::path ignore;
         operator fs::path() { return root; }
         operator fs::path() const { return root; }
         auto operator=(const auto& other) { return root = other; }
@@ -148,6 +151,8 @@ public:
         metadata.originals = metadata / constants.original_files_name;
 
         metadata.lock = metadata / constants.lock_name;
+
+        metadata.ignore = metadata / constants.ignore_regex_name;
 
         fs::create_directories(data);
         fs::create_directories(metadata);
@@ -246,10 +251,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 16> actions;
-extern EnumArray<std::string_view, 16> action_shortcuts;
-extern EnumArray<std::string_view, 16> doing_action;
-extern EnumArray<std::string_view, 16> did_action;
+extern EnumArray<std::string_view, 17> actions;
+extern EnumArray<std::string_view, 17> action_shortcuts;
+extern EnumArray<std::string_view, 17> doing_action;
+extern EnumArray<std::string_view, 17> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
