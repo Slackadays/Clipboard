@@ -23,7 +23,7 @@ Just let the features speak for themselves.
 - Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your viewing pleasure,
 - And tons more!
 
-Oh, and did we also mention that CB is 100% free and open source? That too.
+Oh, and did we also mention that CB is 100% free and open source? Yes, that too!
 
 <br>
 
