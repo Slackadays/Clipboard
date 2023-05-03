@@ -15,9 +15,9 @@
 #include "clipboard.hpp"
 
 EnumArray<std::string_view, 16> actions =
-        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "ignore"};
+        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "history", "ignore"};
 
-EnumArray<std::string_view, 16> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "ig"};
+EnumArray<std::string_view, 16> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig"};
 
 EnumArray<std::string_view, 16> doing_action = {
         "Cutting",
@@ -35,6 +35,7 @@ EnumArray<std::string_view, 16> doing_action = {
         "Loading",
         "Importing",
         "Exporting",
+        "Getting history",
         "Ignoring"};
 
 EnumArray<std::string_view, 16> did_action = {
@@ -53,6 +54,7 @@ EnumArray<std::string_view, 16> did_action = {
         "Loaded",
         "Imported",
         "Exported",
+        "Got history",
         "Ignored"};
 
 Message help_message = "[info]│This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"

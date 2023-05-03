@@ -416,4 +416,5 @@ void swap();
 void importClipboards();
 void exportClipboards();
 void infoJSON();
+void ignoreRegex();
 } // namespace PerformAction

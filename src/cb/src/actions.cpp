@@ -771,4 +771,6 @@ void exportClipboards() {
     }
 }
 
+void ignoreRegex() {}
+
 } // namespace PerformAction
