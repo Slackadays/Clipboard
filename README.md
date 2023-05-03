@@ -176,7 +176,7 @@ $ cb
 
 ### <img src="documentation/readme-assets/Actions.png" alt="Actions" height=25px />
 
-Add a number to the end of your action to choose which clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
+Add a number to the end of your action to choose which temporary clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
 
 <details><summary> &ensp; <b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code></summary>
 
