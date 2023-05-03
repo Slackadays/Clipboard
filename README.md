@@ -2,7 +2,7 @@
 
 <br>
 
-**Introducing one of the most powerful productivity tools ever made.** Remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
+**Introducing one of the most powerful productivity tools ever.** Remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
 
 Ok, so maybe that last part won't actually happen. But you get the idea:
 
