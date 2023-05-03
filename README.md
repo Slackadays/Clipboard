@@ -17,8 +17,8 @@ Just let the features speak for themselves.
 - Harness the power of regex on everything you copy,
 - Seamlessly connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use your favorite languages like español, português, or Türkçe,
-- Script _everything_ to automate your workflows,
-- Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your viewing pleasure,
+- Easily script _anything_ to automate your workflows,
+- Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
 - And tons more!
 
 Oh, and did we also mention that CB is 100% free and open source? Yes, that too!
