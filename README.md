@@ -178,6 +178,9 @@ $ cb
 
 Add a number to the end of your action to choose which temporary clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
 
+<table>
+<td>
+
 <details><summary> &ensp; <b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code></summary>
 
 <br>
@@ -520,6 +523,9 @@ $ cb --clr
 
 </details>
 
+</td>
+<td>
+
 <br>
 
 <details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb [--](load|ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
@@ -748,6 +754,9 @@ $ cb
 ```
 
 </details>
+
+</td>
+</table>
 
 <br>
 <br>
