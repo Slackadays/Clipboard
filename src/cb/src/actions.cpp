@@ -781,12 +781,7 @@ void ignoreRegex() {
 
     if (regexes.empty()) {
         if (fs::exists(path.metadata.ignore) && !fs::is_empty(path.metadata.ignore)) {
-            std::vector<std::string> ignorePatterns;
-            std::string line;
-            std::ifstream file(path.metadata.ignore);
-            while (std::getline(file, line)) {
-                ignorePatterns.push_back(line);
-            }
+            std::vector<std::string> ignorePatterns(fileLines(path.metadata.ignore));
 
             if (is_tty.out) {
                 fprintf(stdout, "%s", formatMessage("[info]🔷 Ignore patterns for this clipboard: [help]").data());

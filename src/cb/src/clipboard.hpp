@@ -96,6 +96,7 @@ static auto thisPID() {
 }
 
 std::string fileContents(const fs::path& path);
+std::vector<std::string> fileLines(const fs::path& path);
 
 size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
 

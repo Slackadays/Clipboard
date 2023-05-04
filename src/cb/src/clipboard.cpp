@@ -132,6 +132,16 @@ std::string fileContents(const fs::path& path) {
     return buffer.str();
 }
 
+std::vector<std::string> fileLines(const fs::path& path) {
+    std::vector<std::string> lines;
+    std::ifstream input_file(path, std::ios::binary);
+    for (std::string line; !input_file.eof();) {
+        std::getline(input_file, line);
+        if (!line.empty()) lines.emplace_back(line);
+    }
+    return lines;
+}
+
 std::string pipedInContent() {
     std::string content;
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -171,13 +181,24 @@ void deduplicate(auto& items) {
     items.erase(std::unique(items.begin(), items.end()), items.end());
 }
 
+void ignoreItemsPreemptively(auto& items) {
+    if (!fs::exists(path.metadata.ignore) || fs::is_empty(path.metadata.ignore) || copying.items.empty() || io_type != IOType::File) return;
+    std::vector<std::regex> regexes;
+    for (const auto& line : fileLines(path.metadata.ignore))
+        regexes.emplace_back(line);
+    for (const auto& regex : regexes)
+        for (const auto& item : items)
+            if (std::regex_match(item.string(), regex)) items.erase(std::find(items.begin(), items.end(), item));
+}
+
 bool userIsARobot() {
     return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
 }
 
 bool isAWriteAction() {
     using enum Action;
-    return action != Paste && action != Show && action != Note && action != Status && action != Info;
+    return action == Cut || action == Copy || action == Add || action == Clear || action == Remove || action == Swap || action == Load || action == Import || action == History
+           || action == Edit;
 }
 
 bool isAClearingAction() {
@@ -269,13 +290,10 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 [[nodiscard]] ClipboardContent thisClipboard() {
     Clipboard default_cb(constants.default_clipboard_name);
     if (fs::exists(default_cb.metadata.originals) && GUIClipboardSupportsCut) {
-        std::ifstream originalFiles {default_cb.metadata.originals};
         std::vector<fs::path> files;
 
-        for (std::string line; !originalFiles.eof();) {
-            std::getline(originalFiles, line);
-            if (!line.empty()) files.emplace_back(line);
-        }
+        for (const auto& line : fileLines(default_cb.metadata.originals))
+            files.emplace_back(line);
 
         return {std::move(files), ClipboardPathsAction::Cut};
     }
@@ -453,16 +471,14 @@ IOType getIOType() {
     if (action == Cut || action == Copy || action == Add) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in) return Pipe;
-    } else if (action == Paste || action == Show || action == Clear || action == Edit) {
+    } else if (action == Paste || action == Show || action == Clear || action == Edit || action == Status || action == Info) {
         if (!is_tty.out) return Pipe;
-    } else if (action == Remove) {
-        if (copying.items.size() == 1) return Text;
-        if (!is_tty.in) return Pipe;
-    } else if (action == Note || action == Ignore) {
-        if (!is_tty.in && copying.items.empty()) return Pipe;
         return Text;
-    } else if (action == Info) {
-        if (!is_tty.out) return Pipe;
+    } else if (action == Remove) {
+        if (!is_tty.in) return Pipe;
+        return Text;
+    } else if (action == Note || action == Ignore || action == Swap || action == Load || action == Import || action == Export || action == History) {
+        if (!is_tty.in && copying.items.empty()) return Pipe;
         return Text;
     }
     return File;
@@ -512,7 +528,7 @@ void setFilepaths() {
 
 void checkForNoItems() {
     using enum Action;
-    if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type == IOType::File && copying.items.size() < 1) {
+    if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type != IOType::Pipe && copying.items.size() < 1) {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
@@ -634,28 +650,8 @@ void performAction() {
     if (io_type == File) {
         if (action == Copy || action == Cut)
             copy();
-        else if (action == Paste)
-            paste();
-        else if (action == Clear)
-            clear();
-        else if (action == Show)
-            show();
-        else if (action == Edit)
-            edit();
         else if (action == Add)
             addFiles();
-        else if (action == Remove)
-            removeRegex();
-        else if (action == Status)
-            status();
-        else if (action == Load)
-            load();
-        else if (action == Swap)
-            swap();
-        else if (action == Import)
-            importClipboards();
-        else if (action == Export)
-            exportClipboards();
     } else if (io_type == Pipe) {
         if (action == Copy || action == Cut)
             pipeIn();
@@ -663,14 +659,14 @@ void performAction() {
             pipeOut();
         else if (action == Add)
             addData();
-        else if (action == Remove)
-            removeRegex();
         else if (action == Note)
             notePipe();
         else if (action == Show)
             showFilepaths();
         else if (action == Info)
             infoJSON();
+        else if (action == Remove)
+            removeRegex();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
@@ -684,6 +680,24 @@ void performAction() {
             info();
         else if (action == Ignore)
             ignoreRegex();
+        else if (action == Import)
+            importClipboards();
+        else if (action == Export)
+            exportClipboards();
+        else if (action == Status)
+            status();
+        else if (action == Load)
+            load();
+        else if (action == Swap)
+            swap();
+        else if (action == Edit)
+            edit();
+        else if (action == Paste)
+            paste();
+        else if (action == Clear)
+            clear();
+        else if (action == Show)
+            show();
     }
 }
 
@@ -771,11 +785,13 @@ int main(int argc, char* argv[]) {
 
         verifyAction();
 
-        checkForNoItems();
-
         startIndicator();
 
         deduplicate(copying.items);
+
+        ignoreItemsPreemptively(copying.items);
+
+        checkForNoItems();
 
         if (action != Action::Info) path.getLock();
 
