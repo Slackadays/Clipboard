@@ -4,9 +4,9 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="Introducing one of the most powerful productivity tools ever." />
 
-Remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
+The Clipboard Project (or CB) is an advanced yet so-easy-to-use clipboard manager that's filled with tons of <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/>.
 
-Ok, so maybe that last part won't actually happen. But you get the idea:
+You'll be able to remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side.
 
 <p align="center"> 
     <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
@@ -16,14 +16,14 @@ Just let the features speak for themselves.
 
 - Copy text, files, directories, pipes, _anything_,
 - Get an _infinite_ number of temporary or persistent clipboards,
-- Harness the power of regex on everything you copy,
+- Harness the power of **full-fat regex** on everything you copy,
 - Seamlessly connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use your favorite languages like español, português, or Türkçe,
-- Easily script _anything_ to automate your workflows,
-- Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
+- Easily script _anything_ to automate your workflows in a cinch,
+- Customize that <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
 - And tons more!
 
-Oh, and did we also mention that CB is 100% free and open source? Yes, that too!
+Oh, and did we also mention that it's 100 percent free and open source? Yes, that too!
 
 <br>
 
@@ -46,7 +46,7 @@ Oh, and did we also mention that CB is 100% free and open source? Yes, that too!
 <br>
 
 <p align="center">
-    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Let's get started with CB below." height="100px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Ready to turbocharge your productivity? Then let's get started with CB." height="100px" />
 </p>
 
 <br>
@@ -178,7 +178,7 @@ $ cb
 
 ### <img src="documentation/readme-assets/TheBasics.png" alt="The Basics" height=25px />
 
-Add a number to the end of your action to choose which temporary clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
+Add a number to the end of your action to choose which temporary clipboard you want to use (the default is 0). Or, add `_` to use a persistent clipboard instead.
 
 <details><summary> &ensp; <b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code></summary>
 
