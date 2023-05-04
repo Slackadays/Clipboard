@@ -21,10 +21,6 @@ Just let the features speak for themselves.
 
 Oh, and did we also mention that it's 100 percent free and open source? Yes, that too!
 
-<p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
-</p>
-
 <br>
 
 ![CB Demo Video](documentation/readme-assets/ClipboardDemo.gif)
@@ -1177,6 +1173,11 @@ Say thank you to all our beautiful contributors who have helped make the Clipboa
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
     
 <br>
+
+<p align="center"> 
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
+</p>
+
 <br>
 
 <p align="right"><sub><code>cb copy haters && cb > /dev/null</code></sub></p>
