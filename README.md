@@ -44,7 +44,7 @@ Oh, and did we also mention that CB is 100% free and open source? Yes, that too!
 <br>
 
 <p align="center">
-    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Let's get started with CB below." height="40px" />
+    <img src="documentation/readme-assets/GetStartedBelow.png" alt="Let's get started with CB below." height="100px" />
 </p>
 
 <br>
