@@ -8,10 +8,6 @@ The Clipboard Project (or CB) is an advanced yet so-easy-to-use clipboard manage
 
 You'll be able to remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side.
 
-<p align="center"> 
-    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
-</p>
-
 Just let the features speak for themselves.
 
 - Copy text, files, directories, pipes, _anything_,
@@ -24,6 +20,10 @@ Just let the features speak for themselves.
 - And tons more!
 
 Oh, and did we also mention that it's 100 percent free and open source? Yes, that too!
+
+<p align="center"> 
+    <img src="documentation/readme-assets/ClipboardMakesYourLifeEasy.png" alt="CB makes your life easy." />
+</p>
 
 <br>
 
