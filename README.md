@@ -2,7 +2,7 @@
 
 <br>
 
-**Introducing one of the most powerful productivity tools ever.** Remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
+**Introducing one of the most powerful clipboard managers ever.** Remember _anything, anytime, anywhere_ at the mere press of a button. Imagine having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. 
 
 Ok, so maybe that last part won't actually happen. But you get the idea:
 
@@ -174,12 +174,9 @@ $ cb
 
 <br>
 
-### <img src="documentation/readme-assets/Actions.png" alt="Actions" height=25px />
+### <img src="documentation/readme-assets/TheBasics.png" alt="The Basics" height=25px />
 
 Add a number to the end of your action to choose which temporary clipboard you want to use (the default is 0), or also add `_` to use a persistent clipboard. 
-
-<table>
-<td>
 
 <details><summary> &ensp; <b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code></summary>
 
@@ -523,10 +520,9 @@ $ cb --clr
 
 </details>
 
-</td>
-<td>
-
 <br>
+
+### <img src="documentation/readme-assets/MoveThingsAround.png" alt="Move Things Around" height=25px />
 
 <details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb [--](load|ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
 
@@ -652,6 +648,8 @@ $ cb export 1 2 3
 
 <br>
 
+### <img src="documentation/readme-assets/SeeEverything.png" alt="See Everything" height=25px />
+
 <details><summary> &ensp; <b>Set Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [[--](note|nt)][(num)|_(id)]</code></summary>
 
 <br>
@@ -754,9 +752,6 @@ $ cb
 ```
 
 </details>
-
-</td>
-</table>
 
 <br>
 <br>
