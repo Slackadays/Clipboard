@@ -604,6 +604,8 @@ void load() {
 
             fs::copy(path.data, destination.data, fs::copy_options::recursive);
 
+            destination.applyIgnoreRegexes();
+
             successes.clipboards++;
         } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(destination_number, e.code());
@@ -802,12 +804,12 @@ void ignoreRegex() {
         return;
     }
 
-    if (copying.items.at(0).string() == "") {
+    if (regexes.size() == 1 && (regexes.at(0) == "" || regexes.at(0) == "\n")) {
         fs::remove(path.metadata.ignore);
         if (output_silent) return;
         stopIndicator();
         fprintf(stderr, "%s", formatMessage("[success]✅ Removed ignore patterns\n").data());
-        return;
+        exit(EXIT_SUCCESS);
     }
 
     std::string writeToFileContent;
@@ -816,12 +818,14 @@ void ignoreRegex() {
 
     writeToFile(path.metadata.ignore, writeToFileContent);
 
+    stopIndicator();
     fprintf(stderr, "%s", formatMessage("[success]✅ Saved ignore patterns [bold]").data());
     for (const auto& pattern : regexes) {
         fprintf(stderr, "%s", pattern.data());
         if (pattern != regexes.back()) fprintf(stderr, ", ");
     }
     fprintf(stderr, "%s", formatMessage("[blank]\n").data());
+    exit(EXIT_SUCCESS);
 }
 
 } // namespace PerformAction

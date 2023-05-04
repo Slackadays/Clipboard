@@ -182,10 +182,8 @@ void deduplicate(auto& items) {
 }
 
 void ignoreItemsPreemptively(auto& items) {
-    if (!fs::exists(path.metadata.ignore) || fs::is_empty(path.metadata.ignore) || copying.items.empty() || io_type != IOType::File) return;
-    std::vector<std::regex> regexes;
-    for (const auto& line : fileLines(path.metadata.ignore))
-        regexes.emplace_back(line);
+    if (!path.holdsIgnoreRegexes() || copying.items.empty() || action == Action::Ignore || io_type == IOType::Pipe) return;
+    auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
         for (const auto& item : items)
             if (std::regex_match(item.string(), regex)) items.erase(std::find(items.begin(), items.end(), item));
@@ -250,13 +248,22 @@ void clearData(bool force_clear = false) {
 void convertFromGUIClipboard(const std::string& text) {
     if (path.holdsRawData() && fileContents(path.data.raw) == text) return;
     clearData(true);
+    auto regexes = path.ignoreRegexes();
+    for (const auto& regex : regexes)
+        if (std::regex_match(text, regex)) return;
     writeToFile(path.data.raw, text);
 }
 
 void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
+    auto regexes = path.ignoreRegexes();
+    auto culledPaths = clipboard.paths();
+    for (const auto& regex : regexes)
+        for (auto&& path : culledPaths)
+            if (std::regex_match(path.filename().string(), regex)) culledPaths.erase(std::find(culledPaths.begin(), culledPaths.end(), path));
+
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
-    auto allOutsideFilepath = std::all_of(clipboard.paths().begin(), clipboard.paths().end(), [](auto& path) {
+    auto allOutsideFilepath = std::all_of(culledPaths.begin(), culledPaths.end(), [](auto& path) {
         auto relative = fs::relative(path, ::path.data);
         auto firstElement = *(relative.begin());
         return firstElement == fs::path("..");
@@ -264,7 +271,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     if (allOutsideFilepath) clearData(true);
 
-    for (auto&& path : clipboard.paths()) {
+    for (auto&& path : culledPaths) {
         if (!fs::exists(path)) continue;
 
         auto target = ::path.data / path.filename();
@@ -282,7 +289,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     if (clipboard.action() == ClipboardPathsAction::Cut) {
         std::ofstream originalFiles {path.metadata.originals};
-        for (auto&& path : clipboard.paths())
+        for (auto&& path : culledPaths)
             originalFiles << path.string() << std::endl;
     }
 }
@@ -667,6 +674,8 @@ void performAction() {
             infoJSON();
         else if (action == Remove)
             removeRegex();
+        else if (action == Ignore)
+            ignoreRegex();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
@@ -800,6 +809,8 @@ int main(int argc, char* argv[]) {
         clearData();
 
         performAction();
+
+        if (isAWriteAction()) path.applyIgnoreRegexes();
 
         copying.mime = getMIMEType();
 

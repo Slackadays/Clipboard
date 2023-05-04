@@ -169,6 +169,25 @@ public:
         return true;
     }
     bool holdsRawData() { return fs::exists(data.raw) && !fs::is_empty(data.raw); }
+    bool holdsIgnoreRegexes() { return fs::exists(metadata.ignore) && !fs::is_empty(metadata.ignore); }
+    std::vector<std::regex> ignoreRegexes() {
+        std::vector<std::regex> regexes;
+        if (!holdsIgnoreRegexes()) return regexes;
+        for (const auto& line : fileLines(metadata.ignore))
+            regexes.emplace_back(line);
+        return regexes;
+    }
+    void applyIgnoreRegexes() {
+        if (!holdsIgnoreRegexes()) return;
+        auto regexes = ignoreRegexes();
+        if (holdsRawData())
+            for (const auto& regex : regexes)
+                writeToFile(data.raw, std::regex_replace(fileContents(data.raw), regex, ""));
+        else
+            for (const auto& regex : regexes)
+                for (const auto& entry : fs::directory_iterator(data))
+                    if (std::regex_match(entry.path().filename().string(), regex)) fs::remove_all(entry.path());
+    }
     bool isUnused() {
         if (holdsData()) return false;
         if (fs::exists(metadata.notes) && !fs::is_empty(metadata.notes)) return false;

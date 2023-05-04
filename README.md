@@ -696,6 +696,55 @@ $ cb --nt
 
 <br>
 
+<details><summary> &ensp; <b>Set Ignore Rules</b> &emsp; <code>cb [--](ignore|ig)[(num)|_(id)] (regex) [regexes]</code> or <code>(regex) | cb [[--](ignore|ig)][(num)|_(id)]</code></summary>
+
+<br>
+
+Set some kinds of content to always ignore.
+```sh
+$ cb ignore "XX[A-Za-z0-9/+=]{38}"
+$ cb --ignore "XX[A-Za-z0-9/+=]{38}"
+$ cb ig "XX[A-Za-z0-9/+=]{38}"
+$ cb --ig "XX[A-Za-z0-9/+=]{38}"
+# All work great!
+# "XX[A-Za-z0-9/+=]{38}" is the regex for an AWS secret.
+```
+
+Set an ignore regex rule by piping it in.
+```sh
+$ echo "[abc]{10}" | cb ignore
+```
+
+Remove all ignore regex rules from a clipboard.
+```sh
+$ cb ignore ""
+```
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b>Show Ignore Rules</b> &emsp; <code>cb [--](ignore|ig)[(num)|_(id)]</code></summary>
+
+<br>
+
+Start by adding some ignore regex rules to a clipboard.
+```sh
+$ cb ignore "Foo" "Bar" "Baz"
+```
+
+Show the rules you just added.
+```sh
+$ cb ignore
+$ cb --ignore
+$ cb ig
+$ cb --ig
+```
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b>Show Detailed Info</b> &emsp; <code>cb [--](info|in)[(num)|_(id)]</code> or <code>cb [--](info|in)[(num)|_(id)] | (something)</code></summary>
 
 <br>
