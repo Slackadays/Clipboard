@@ -508,6 +508,18 @@ void info() {
     else
         fprintf(stderr, "%s", formatMessage("[info]│ There is no note for this clipboard.[blank]\n").data());
 
+    displayEndbar();
+    if (path.holdsIgnoreRegexes()) {
+        fprintf(stderr, "%s", formatMessage("[info]│ Ignore regexes: [help]").data());
+        auto regexes = fileLines(path.metadata.ignore);
+        for (const auto& regex : regexes) {
+            fprintf(stderr, "%s", regex.data());
+            if (regex != regexes.back()) fprintf(stderr, ", ");
+        }
+        fprintf(stderr, "%s", formatMessage("[blank]\n").data());
+    } else
+        fprintf(stderr, "%s", formatMessage("[info]│ There are no ignore regexes for this clipboard.[blank]\n").data());
+
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
     auto avail_cols = thisTerminalSize().columns;
     for (int i = 0; i < avail_cols - 2; i++)
