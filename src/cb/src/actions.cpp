@@ -375,62 +375,72 @@ void status() {
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
         printf(clipboard_action_prompt().data(), clipboard_invocation.data(), clipboard_invocation.data());
-    } else {
-        TerminalSize available(thisTerminalSize());
+        return;
+    }
+    auto longestClipboardLength = (*std::max_element(
+                                           clipboards_with_contents.begin(),
+                                           clipboards_with_contents.end(),
+                                           [](const auto& a, const auto& b) { return a.first.filename().string().length() < b.first.filename().string().length(); }
+                                   ))
+                                          .first.filename()
+                                          .string()
+                                          .length();
+    TerminalSize available(thisTerminalSize());
 
-        fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
-        fprintf(stderr, "%s", check_clipboard_status_message().data());
-        fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-        int columns = thisTerminalSize().columns - (check_clipboard_status_message.rawLength() + 7);
-        for (int i = 0; i < columns; i++)
-            fprintf(stderr, "━");
-        fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+    fprintf(stderr, "%s", check_clipboard_status_message().data());
+    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    int columns = thisTerminalSize().columns - (check_clipboard_status_message.rawLength() + 7);
+    for (int i = 0; i < columns; i++)
+        fprintf(stderr, "━");
+    fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
-        auto displayEndbar = [] {
-            static auto total_cols = thisTerminalSize().columns;
-            fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
-        };
+    auto displayEndbar = [] {
+        static auto total_cols = thisTerminalSize().columns;
+        fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
+    };
 
-        for (size_t clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
+    for (size_t clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
 
-            int widthRemaining = available.columns
-                                 - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 5
-                                    + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
-            displayEndbar();
-            printf(formatMessage("[bold][info]│ %s%s: [blank]").data(),
-                   clipboards_with_contents.at(clipboard).first.filename().string().data(),
-                   clipboards_with_contents.at(clipboard).second ? " (p)" : "");
+        int widthRemaining = available.columns - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 5 + longestClipboardLength);
+        displayEndbar();
+        printf(formatMessage("[bold][info]│ %*s%s│ [blank]").data(),
+               longestClipboardLength - clipboards_with_contents.at(clipboard).first.filename().string().length(),
+               "",
+               clipboards_with_contents.at(clipboard).first.filename().string().data());
 
-            if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
-                std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
-                std::erase(content, '\n');
-                printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
-                continue;
-            }
-
-            for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / constants.data_directory)) {
-                int entryWidth = entry.path().filename().string().length();
-
-                if (widthRemaining <= 0) break;
-
-                if (!first) {
-                    if (entryWidth <= widthRemaining - 2) {
-                        printf("%s", formatMessage("[help], [blank]").data());
-                        widthRemaining -= 2;
-                    }
-                }
-
-                if (entryWidth <= widthRemaining) {
-                    printf(formatMessage("[help]%s[blank]").data(), entry.path().filename().string().data());
-                    widthRemaining -= entryWidth;
-                    first = false;
-                }
-            }
-            printf("\n");
+        if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
+            std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
+            std::erase(content, '\n');
+            printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+            continue;
         }
+
+        for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / constants.data_directory)) {
+            int entryWidth = entry.path().filename().string().length();
+
+            if (widthRemaining <= 0) break;
+
+            if (!first) {
+                if (entryWidth <= widthRemaining - 2) {
+                    printf("%s", formatMessage("[help], [blank]").data());
+                    widthRemaining -= 2;
+                }
+            }
+
+            if (entryWidth <= widthRemaining) {
+                printf(formatMessage("[help]%s[blank]").data(), entry.path().filename().string().data());
+                widthRemaining -= entryWidth;
+                first = false;
+            }
+        }
+        printf("\n");
     }
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
-    auto cols = thisTerminalSize().columns;
+    for (int i = 0; i < longestClipboardLength + 1; i++)
+        fprintf(stderr, "━");
+    fprintf(stderr, "┷");
+    auto cols = thisTerminalSize().columns - (longestClipboardLength + 2);
     for (int i = 0; i < cols - 2; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
