@@ -75,7 +75,7 @@ Message help_message = "[info]│This is the Clipboard Project %s (commit %s), t
                        "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                        "[info]│This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                        "redistribute it under certain conditions.[blank]\n";
-Message check_clipboard_status_message = "[info]🔷 There are items in these clipboards:\n";
+Message check_clipboard_status_message = "[info]There are items in these clipboards:";
 Message clipboard_item_one_contents_message = "[info]🔷 Here is the [bold]%i[blank][info] item in clipboard [bold]%s[blank][info]: [blank]\n";
 Message clipboard_item_many_contents_message = "[info]🔷 Here are the items in clipboard [bold]%s[blank][info]: [blank]\n";
 Message clipboard_text_contents_message = "[info]🔷 Here are the first [bold]%i[blank][info] bytes in clipboard [bold]%s[blank][info]: [blank]";
@@ -119,7 +119,7 @@ Message many_files_one_directory_success_message = "[success]✅ %s %lu files an
 Message many_files_many_directories_success_message = "[success]✅ %s %lu files and %lu directories[blank]\n";
 Message one_clipboard_success_message = "[success]✅ %s one clipboard[blank]\n";
 Message many_clipboards_success_message = "[success]✅ %s %lu clipboards[blank]\n";
-Message clipboard_name_message = "[info] Info for clipboard [bold][help]%s [blank]";
+Message clipboard_name_message = "[info]Info for clipboard [bold][help]%s[blank]";
 Message internal_error_message = "[error]❌ Internal error: %s\n│ This is probably a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 
@@ -284,7 +284,7 @@ void setLanguageTR() {
                    "[info]│                                 GPLv3 altında lisanslanmıştır.[blank]\n"
                    "[info]│Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
                    "koşullar altında yeniden dağıtabilirsiniz.[blank]\n";
-    check_clipboard_status_message = "[info]🔷 Pano içeriği şunlardır:\n";
+    check_clipboard_status_message = "[info]Pano içeriği şunlardır:";
     clipboard_item_many_contents_message = "[info]🔷 [bold]%s[blank][info] panoda bulunan: [blank]\n";
     no_clipboard_contents_message = "[info]🔷 Panoda hiçbir şey yok.[blank]\n";
     clipboard_action_prompt = "[help]Başlamak için sonuna [bold]kes, kopyala, [blank][help]veya[bold] yapistir[blank][help] ekleyin, "

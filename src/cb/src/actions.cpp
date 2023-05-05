@@ -378,16 +378,28 @@ void status() {
     } else {
         TerminalSize available(thisTerminalSize());
 
-        available.rows -= check_clipboard_status_message.rawLength() / available.columns;
+        available.rows -= 2; // account for header and footer
         if (clipboards_with_contents.size() > available.rows) available.rows -= and_more_items_message.rawLength() / available.columns;
 
-        printf("%s", check_clipboard_status_message().data());
+        fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+        fprintf(stderr, "%s", check_clipboard_status_message().data());
+        fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+        int columns = thisTerminalSize().columns - (check_clipboard_status_message.rawLength() + 7);
+        for (int i = 0; i < columns; i++)
+            fprintf(stderr, "━");
+        fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
+
+        auto displayEndbar = [] {
+            static auto total_cols = thisTerminalSize().columns;
+            fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
+        };
 
         for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), available.rows); clipboard++) {
 
             int widthRemaining = available.columns
-                                 - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 4
+                                 - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 5
                                     + std::string_view(clipboards_with_contents.at(clipboard).second ? " (p)" : "").length());
+            displayEndbar();
             printf(formatMessage("[bold][info]│ %s%s: [blank]").data(),
                    clipboards_with_contents.at(clipboard).first.filename().string().data(),
                    clipboards_with_contents.at(clipboard).second ? " (p)" : "");
@@ -421,28 +433,24 @@ void status() {
         }
         if (clipboards_with_contents.size() > available.rows) printf(and_more_items_message().data(), clipboards_with_contents.size() - available.rows);
     }
+    fprintf(stderr, "%s", formatMessage("[info]┕").data());
+    auto cols = thisTerminalSize().columns;
+    for (int i = 0; i < cols - 2; i++)
+        fprintf(stderr, "━");
+    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }
 
 void info() {
-    auto available(thisTerminalSize());
-    available.columns -= 4;                                                                  // for box corners
-    available.columns -= (clipboard_name_message.rawLength() - 2) + clipboard_name.length(); // compensate for %s and clipboard name
-    bool addExtraBar = available.columns % 2 != 0;
-    available.columns /= 2;
-    fprintf(stderr, "%s", formatMessage("[info]┍").data());
-    for (int i = 0; i < available.columns; i++)
-        fprintf(stderr, "━");
-    fprintf(stderr, "┫");
+    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, clipboard_name_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatMessage("[info]┣").data());
-    for (int i = 0; i < available.columns; i++)
-        fprintf(stderr, "%s", formatMessage("[info]━").data());
-    if (addExtraBar) fprintf(stderr, "━");
+    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    int columns = thisTerminalSize().columns - ((clipboard_name_message.rawLength() - 2) + clipboard_name.length() + 7);
+    for (int i = 0; i < columns; i++)
+        fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
-    auto total_cols = thisTerminalSize().columns;
-
-    auto displayEndbar = [&]() {
+    auto displayEndbar = [] {
+        static auto total_cols = thisTerminalSize().columns;
         fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
     };
 
@@ -521,8 +529,8 @@ void info() {
         fprintf(stderr, "%s", formatMessage("[info]│ There are no ignore regexes for this clipboard.[blank]\n").data());
 
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
-    auto avail_cols = thisTerminalSize().columns;
-    for (int i = 0; i < avail_cols - 2; i++)
+    auto cols = thisTerminalSize().columns;
+    for (int i = 0; i < cols - 2; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }
