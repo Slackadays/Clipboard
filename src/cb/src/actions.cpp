@@ -66,6 +66,7 @@ void copyText() {
     writeToFile(path.data.raw, copying.buffer);
 
     if (!output_silent) {
+        stopIndicator();
         printf(formatMessage("[success]✅ %s text \"[bold]%s[blank][success]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
     }
 
