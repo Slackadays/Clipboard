@@ -702,12 +702,12 @@ $ cb --nt
 
 Set some kinds of content to always ignore.
 ```sh
-$ cb ignore "XX[A-Za-z0-9/+=]{38}"
-$ cb --ignore "XX[A-Za-z0-9/+=]{38}"
-$ cb ig "XX[A-Za-z0-9/+=]{38}"
-$ cb --ig "XX[A-Za-z0-9/+=]{38}"
+$ cb ignore "(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])"
+$ cb --ignore "(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])"
+$ cb ig "(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])"
+$ cb --ig "(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])"
 # All work great!
-# "XX[A-Za-z0-9/+=]{38}" is the regex for an AWS secret.
+# "(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=])" is the regex for an AWS SK secret.
 ```
 
 Set an ignore regex rule by piping it in.
