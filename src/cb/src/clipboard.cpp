@@ -536,6 +536,7 @@ void setFilepaths() {
 void checkForNoItems() {
     using enum Action;
     if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type != IOType::Pipe && copying.items.size() < 1) {
+        stopIndicator();
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
         exit(EXIT_FAILURE);
     }

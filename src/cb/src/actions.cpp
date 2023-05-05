@@ -448,6 +448,7 @@ void status() {
 }
 
 void info() {
+    stopIndicator();
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, clipboard_name_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());

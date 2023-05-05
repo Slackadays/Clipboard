@@ -58,13 +58,13 @@ Set MarginFill "#3D34EB"
 Set WindowBar "ColorfulRight"
 Set WindowBarSize 80
 Set BorderRadius 15
-Set PlaybackSpeed .5
+Set PlaybackSpeed .4
 Set TypingSpeed .1
 
 Require echo
 
 Set Shell "bash"
-Set FontSize 38
+Set FontSize 40
 Set Width 2400
 Set Height 1600
 
