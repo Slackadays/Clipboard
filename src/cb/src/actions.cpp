@@ -583,9 +583,21 @@ void infoJSON() {
     }
 
     if (fs::exists(path.metadata.notes)) {
-        printf("    \"note\": \"%s\"\n", fileContents(path.metadata.notes).data());
+        printf("    \"note\": \"%s\"\n", std::regex_replace(fileContents(path.metadata.notes), std::regex("\""), "\\\"").data());
     } else {
         printf("    \"note\": \"\"\n");
+    }
+
+    if (path.holdsIgnoreRegexes()) {
+        printf("    \"ignoreRegexes\": [");
+        auto regexes = fileLines(path.metadata.ignore);
+        for (const auto& regex : regexes) {
+            printf("\"%s\"", std::regex_replace(regex, std::regex("\""), "\\\"").data());
+            if (regex != regexes.back()) printf(", ");
+        }
+        printf("]\n");
+    } else {
+        printf("    \"ignoreRegexes\": []\n");
     }
 
     printf("}\n");
