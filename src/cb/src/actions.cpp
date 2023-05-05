@@ -812,6 +812,22 @@ void ignoreRegex() {
         exit(EXIT_SUCCESS);
     }
 
+    for (const auto& pattern : regexes) {
+        try {
+            volatile auto test = std::regex(pattern); // volatile makes sure this otherwise unused variable isn't optimized out
+        } catch (const std::regex_error& e) {
+            stopIndicator();
+            fprintf(stderr,
+                    formatMessage(
+                            "[error]❌ The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s 💡 [help]Try using a different one instead.[blank]\n"
+                    )
+                            .data(),
+                    pattern.data(),
+                    e.what());
+            exit(EXIT_FAILURE);
+        }
+    }
+
     std::string writeToFileContent;
     for (const auto& pattern : regexes)
         writeToFileContent += pattern + "\n";

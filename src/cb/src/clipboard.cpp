@@ -676,6 +676,8 @@ void performAction() {
             removeRegex();
         else if (action == Ignore)
             ignoreRegex();
+        else if (action == Status)
+            status();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
