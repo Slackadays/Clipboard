@@ -378,9 +378,6 @@ void status() {
     } else {
         TerminalSize available(thisTerminalSize());
 
-        available.rows -= 2; // account for header and footer
-        if (clipboards_with_contents.size() > available.rows) available.rows -= and_more_items_message.rawLength() / available.columns;
-
         fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
         fprintf(stderr, "%s", check_clipboard_status_message().data());
         fprintf(stderr, "%s", formatMessage("[info] ┣").data());
@@ -394,7 +391,7 @@ void status() {
             fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
         };
 
-        for (size_t clipboard = 0; clipboard < std::min(clipboards_with_contents.size(), available.rows); clipboard++) {
+        for (size_t clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
 
             int widthRemaining = available.columns
                                  - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 5
@@ -431,7 +428,6 @@ void status() {
             }
             printf("\n");
         }
-        if (clipboards_with_contents.size() > available.rows) printf(and_more_items_message().data(), clipboards_with_contents.size() - available.rows);
     }
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
     auto cols = thisTerminalSize().columns;
