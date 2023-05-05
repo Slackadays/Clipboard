@@ -861,6 +861,7 @@ void ignoreRegex() {
         if (pattern != regexes.back()) fprintf(stderr, ", ");
     }
     fprintf(stderr, "%s", formatMessage("[blank]\n").data());
+    path.applyIgnoreRegexes();
     exit(EXIT_SUCCESS);
 }
 
