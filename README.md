@@ -4,7 +4,7 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="Introducing one of the most powerful productivity tools ever." />
 
-The Clipboard Project (or CB) is an advanced yet so-easy-to-use clipboard manager that's filled with tons of <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> and other fun things.
+The Clipboard Project (or CB) is an advanced yet so-easy-to-use clipboard manager that's filled with tons of <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> and other fun features.
 
 You'll be able to remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side.
 
