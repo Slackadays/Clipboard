@@ -569,13 +569,15 @@ void setupIndicator() {
         auto display_progress = [&](const auto& formattedNum) {
             output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(i).data());
             fflush(stderr);
-            cv.wait_for(lock, std::chrono::milliseconds(25), [&] { return progress_state != ProgressState::Active; });
+            cv.wait_for(lock, std::chrono::milliseconds(20), [&] { return progress_state != ProgressState::Active; });
         };
 
         if (io_type == IOType::File)
             display_progress(percent_done().data());
         else if (io_type == IOType::Pipe)
             display_progress(formatBytes(successes.bytes.load(std::memory_order_relaxed)).data());
+        else
+            display_progress("");
     }
     fprintf(stderr, "\r%*s\r", output_length, "");
     fprintf(stderr, "\033[?25h"); // restore the cursor

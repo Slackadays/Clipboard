@@ -742,7 +742,8 @@ void importClipboards() {
                     case SkipAll:
                         continue;
                     case ReplaceAll:
-                        fs::remove_all(target);
+                        fs::copy(entry.path(), target, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+                        successes.clipboards++;
                         break;
                     default:
                         stopIndicator();
