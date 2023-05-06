@@ -84,7 +84,7 @@ void paste() {
         auto target = fs::current_path() / entry.path().filename();
         auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
             if (!(fs::exists(target) && fs::equivalent(entry, target))) {
-                fs::copy(entry, target, use_regular_copy || fs::is_directory(entry) ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
+                fs::copy(entry, target, use_regular_copy || entry.is_directory() ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
             }
             incrementSuccessesForItem(entry);
         };
@@ -508,12 +508,8 @@ void info() {
     } else {
         size_t files = 0;
         size_t directories = 0;
-        for (const auto& entry : fs::directory_iterator(path.data)) {
-            if (fs::is_directory(entry.path()))
-                directories++;
-            else
-                files++;
-        }
+        for (const auto& entry : fs::directory_iterator(path.data))
+            entry.is_directory() ? directories++ : files++;
         displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Files: [help]%zu[blank]\n").data(), files);
         displayEndbar();
@@ -591,10 +587,7 @@ void infoJSON() {
         size_t files = 0;
         size_t directories = 0;
         for (const auto& entry : fs::directory_iterator(path.data)) {
-            if (fs::is_directory(entry.path()))
-                directories++;
-            else
-                files++;
+            entry.is_directory() ? directories++ : files++;
         }
         printf("    \"files\": \"%zu\",\n", files);
         printf("    \"directories\": \"%zu\",\n", directories);
@@ -754,7 +747,7 @@ void importClipboards() {
     }
 
     for (const auto& entry : fs::directory_iterator(importDirectory)) {
-        if (!fs::is_directory(entry.path()))
+        if (!entry.is_directory())
             copying.failedItems.emplace_back(entry.path().filename().string(), std::make_error_code(std::errc::not_a_directory));
         else {
             try {
