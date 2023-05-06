@@ -493,7 +493,7 @@ void info() {
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
-    printf("    \"lastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
+    fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
