@@ -789,7 +789,7 @@ $ cb -h
 
 <br>
 
-<details><summary> &ensp; <b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|st]</code></summary>
+<details><summary> &ensp; <b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|st]</code> or <code>cb [--](status|st) | (something)</code></summary>
 
 <br>
 
@@ -801,6 +801,11 @@ $ cb st
 $ cb --st
 $ cb 
 # These all work great!
+```
+
+Get the status of all clipboards in JSON format.
+```sh
+$ cb status | cat
 ```
 
 </details>
