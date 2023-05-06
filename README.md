@@ -90,6 +90,11 @@ brew install clipboard
 nix-env -iA nixpkgs.clipboard-jh
 ```
 
+**Pacstall**
+```sh
+pacstall -I clipboard-bin
+```
+
 **Scoop**
 ```powershell
 scoop install clipboard
