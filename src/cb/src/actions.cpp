@@ -19,6 +19,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <fcntl.h>
+#include <format>
 #include <io.h>
 #endif
 
@@ -485,15 +486,14 @@ void info() {
     };
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
-
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), time.data());
-
+#elif defined(__WIN32__) || defined(__WIN64__)
+    printf("    \"lastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
 #endif
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
@@ -567,14 +567,13 @@ void infoJSON() {
     printf("    \"name\": \"%s\",\n", clipboard_name.data());
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
-
     printf("    \"lastChanged\": \"%s\",\n", time.data());
-
+#elif defined(__WIN32__) || defined(__WIN64__)
+    printf("    \"lastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
 #endif
 
     printf("    \"path\": \"%s\",\n", path.string().data());
@@ -602,15 +601,12 @@ void infoJSON() {
     printf("    \"contentCut\": %s,\n", fs::exists(path.metadata.originals) ? "true" : "false");
 
     printf("    \"locked\": %s,\n", path.isLocked() ? "true" : "false");
-    if (path.isLocked()) {
-        printf("    \"lockedBy\": \"%s\",\n", fileContents(path.metadata.lock).data());
-    }
+    if (path.isLocked()) printf("    \"lockedBy\": \"%s\",\n", fileContents(path.metadata.lock).data());
 
-    if (fs::exists(path.metadata.notes)) {
+    if (fs::exists(path.metadata.notes))
         printf("    \"note\": \"%s\"\n", std::regex_replace(fileContents(path.metadata.notes), std::regex("\""), "\\\"").data());
-    } else {
+    else
         printf("    \"note\": \"\"\n");
-    }
 
     if (path.holdsIgnoreRegexes()) {
         printf("    \"ignoreRegexes\": [");
@@ -648,9 +644,8 @@ void load() {
     for (const auto& destination_number : destinations) {
         Clipboard destination(destination_number);
         try {
-            for (const auto& entry : fs::directory_iterator(destination.data)) {
+            for (const auto& entry : fs::directory_iterator(destination.data))
                 fs::remove_all(entry.path());
-            }
 
             fs::copy(path.data, destination.data, fs::copy_options::recursive);
 
@@ -700,15 +695,12 @@ void swap() {
 
     try {
         fs::copy(destination.data, swapTargetSource, fs::copy_options::recursive);
-
         fs::copy(path.data, swapTargetDestination, fs::copy_options::recursive);
 
         fs::remove_all(path.data);
-
         fs::remove_all(destination.data);
 
         fs::rename(swapTargetSource, path.data);
-
         fs::rename(swapTargetDestination, destination.data);
     } catch (const fs::filesystem_error& e) {
         copying.failedItems.emplace_back(destination_name, e.code());
