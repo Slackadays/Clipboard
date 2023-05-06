@@ -586,19 +586,16 @@ void infoJSON() {
     } else {
         size_t files = 0;
         size_t directories = 0;
-        for (const auto& entry : fs::directory_iterator(path.data)) {
+        for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
-        }
         printf("    \"files\": \"%zu\",\n", files);
         printf("    \"directories\": \"%zu\",\n", directories);
     }
 
     if (!available_mimes.empty()) {
         printf("    \"availableTypes\": [");
-        for (const auto& mime : available_mimes) {
-            printf("\"%s\"", mime.data());
-            if (mime != available_mimes.back()) printf(", ");
-        }
+        for (const auto& mime : available_mimes)
+            printf("\"%s\"%s", mime.data(), mime != available_mimes.back() ? ", " : "");
         printf("],\n");
     }
 
@@ -618,10 +615,8 @@ void infoJSON() {
     if (path.holdsIgnoreRegexes()) {
         printf("    \"ignoreRegexes\": [");
         auto regexes = fileLines(path.metadata.ignore);
-        for (const auto& regex : regexes) {
-            printf("\"%s\"", std::regex_replace(regex, std::regex("\""), "\\\"").data());
-            if (regex != regexes.back()) printf(", ");
-        }
+        for (const auto& regex : regexes)
+            printf("\"%s\"%s", std::regex_replace(regex, std::regex("\""), "\\\"").data(), regex != regexes.back() ? ", " : "");
         printf("]\n");
     } else {
         printf("    \"ignoreRegexes\": []\n");
@@ -842,17 +837,13 @@ void ignoreRegex() {
             std::vector<std::string> ignorePatterns(fileLines(path.metadata.ignore));
 
             if (is_tty.out) {
-                fprintf(stdout, "%s", formatMessage("[info]🔷 Ignore patterns for this clipboard: [help]").data());
-                for (const auto& pattern : ignorePatterns) {
-                    fprintf(stdout, "%s", pattern.data());
-                    if (pattern != ignorePatterns.back()) fprintf(stdout, ", ");
-                }
-                fprintf(stdout, "%s", formatMessage("[blank]\n").data());
+                fprintf(stderr, "%s", formatMessage("[info]🔷 Ignore patterns for this clipboard: [help]").data());
+                for (const auto& pattern : ignorePatterns)
+                    fprintf(stderr, "%s%s", pattern.data(), pattern != ignorePatterns.back() ? ", " : "");
+                fprintf(stderr, "%s", formatMessage("[blank]\n").data());
             } else {
-                for (const auto& pattern : ignorePatterns) {
-                    printf("%s", pattern.data());
-                    if (pattern != ignorePatterns.back()) printf(", ");
-                }
+                for (const auto& pattern : ignorePatterns)
+                    printf("%s%s", pattern.data(), pattern != ignorePatterns.back() ? ", " : "");
             }
         } else {
             fprintf(stderr, "%s", formatMessage("[info]🔷 There are no ignore patterns for this clipboard.[blank]\n").data());

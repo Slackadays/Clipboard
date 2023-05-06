@@ -372,10 +372,8 @@ void setLocale() {
 void setClipboardName() {
     if (arguments.empty()) return;
     std::string temp = arguments.at(0);
-    if (temp.find_first_of("_0123456789") != std::string::npos)
-        clipboard_name = temp.substr(temp.find_first_of("_0123456789"));
-    else
-        return;
+    if (temp.find_first_of("_0123456789") == std::string::npos) return;
+    clipboard_name = temp.substr(temp.find_first_of("_0123456789"));
     arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).length() - clipboard_name.length());
 }
 

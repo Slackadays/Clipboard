@@ -305,10 +305,7 @@ static std::string formatMessage(const std::string_view& str, bool colorful = !n
 }
 
 void incrementSuccessesForItem(const auto& item) {
-    if (fs::is_directory(item))
-        successes.directories++;
-    else
-        successes.files++;
+    fs::is_directory(item) ? successes.directories++ : successes.files++;
 }
 
 class Message {
