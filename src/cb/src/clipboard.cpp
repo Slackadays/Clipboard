@@ -680,7 +680,7 @@ void performAction() {
         else if (action == Ignore)
             ignoreRegex();
         else if (action == Status)
-            status();
+            statusJSON();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();

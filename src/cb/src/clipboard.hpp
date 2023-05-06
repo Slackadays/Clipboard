@@ -102,6 +102,7 @@ size_t writeToFile(const fs::path& path, const std::string& content, bool append
 
 class Clipboard {
     fs::path root;
+    std::string this_name;
 
 public:
     bool is_persistent = false;
@@ -133,13 +134,12 @@ public:
     } metadata;
 
     Clipboard() = default;
-    Clipboard(const auto& clipboard_name, const fs::path& clipboard_path = "") {
-        is_persistent = isPersistent(clipboard_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
+    Clipboard(const auto& clipboard_name) {
+        this_name = clipboard_name;
 
-        if (clipboard_path != "")
-            root = clipboard_path / clipboard_name;
-        else
-            root = (is_persistent ? global_path.persistent : global_path.temporary) / clipboard_name;
+        is_persistent = isPersistent(this_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
+
+        root = (is_persistent ? global_path.persistent : global_path.temporary) / this_name;
 
         data = root / constants.data_directory;
 
@@ -214,6 +214,7 @@ public:
         writeToFile(metadata.lock, std::to_string(thisPID()));
     }
     void releaseLock() { fs::remove(metadata.lock); }
+    std::string name() { return this_name; }
 };
 extern Clipboard path;
 
@@ -442,4 +443,5 @@ void importClipboards();
 void exportClipboards();
 void infoJSON();
 void ignoreRegex();
+void statusJSON();
 } // namespace PerformAction

@@ -360,32 +360,28 @@ void notePipe() {
     exit(EXIT_SUCCESS);
 }
 
+std::vector<std::pair<std::string, bool>> clipboardsWithContent() {
+    std::vector<std::pair<std::string, bool>> clipboards;
+    for (const auto& entry : fs::directory_iterator(global_path.temporary))
+        if (Clipboard(entry.path().filename().string()).holdsData()) clipboards.emplace_back(entry.path().filename().string(), false);
+    for (const auto& entry : fs::directory_iterator(global_path.persistent))
+        if (Clipboard(entry.path().filename().string()).holdsData()) clipboards.emplace_back(entry.path().filename().string(), true);
+    std::sort(clipboards.begin(), clipboards.end());
+    return clipboards;
+}
+
 void status() {
     syncWithGUIClipboard(true);
     stopIndicator();
-    std::vector<std::pair<fs::path, bool>> clipboards_with_contents;
-    auto iterateClipboards = [&](const fs::path& path, bool persistent) { // use zip ranges here when gcc 13 comes out
-        for (const auto& entry : fs::directory_iterator(path))
-            if (fs::exists(entry.path() / constants.data_directory) && !fs::is_empty(entry.path() / constants.data_directory))
-                clipboards_with_contents.push_back({entry.path(), persistent});
-    };
-    iterateClipboards(global_path.temporary, false);
-    iterateClipboards(global_path.persistent, true);
-    std::sort(clipboards_with_contents.begin(), clipboards_with_contents.end());
-
+    auto clipboards_with_contents = clipboardsWithContent();
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
         printf(clipboard_action_prompt().data(), clipboard_invocation.data(), clipboard_invocation.data());
         return;
     }
-    auto longestClipboardLength = (*std::max_element(
-                                           clipboards_with_contents.begin(),
-                                           clipboards_with_contents.end(),
-                                           [](const auto& a, const auto& b) { return a.first.filename().string().length() < b.first.filename().string().length(); }
-                                   ))
-                                          .first.filename()
-                                          .string()
-                                          .length();
+    auto longestClipboardLength =
+            (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.first.length() < b.first.length(); })
+            ).first.length();
     TerminalSize available(thisTerminalSize());
 
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
@@ -401,23 +397,21 @@ void status() {
         fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
     };
 
-    for (size_t clipboard = 0; clipboard < clipboards_with_contents.size(); clipboard++) {
+    for (const auto& cb : clipboards_with_contents) {
+        Clipboard clipboard(cb.first);
 
-        int widthRemaining = available.columns - (clipboards_with_contents.at(clipboard).first.filename().string().length() + 5 + longestClipboardLength);
+        int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
         displayEndbar();
-        printf(formatMessage("[bold][info]│ %*s%s│ [blank]").data(),
-               longestClipboardLength - clipboards_with_contents.at(clipboard).first.filename().string().length(),
-               "",
-               clipboards_with_contents.at(clipboard).first.filename().string().data());
+        printf(formatMessage("[bold][info]│ %*s%s│ [blank]").data(), longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
-        if (fs::is_regular_file(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name)) {
-            std::string content(fileContents(clipboards_with_contents.at(clipboard).first / constants.data_directory / constants.data_file_name));
+        if (clipboard.holdsRawData()) {
+            std::string content(fileContents(clipboard.data.raw));
             std::erase(content, '\n');
             printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
             continue;
         }
 
-        for (bool first = true; const auto& entry : fs::directory_iterator(clipboards_with_contents.at(clipboard).first / constants.data_directory)) {
+        for (bool first = true; const auto& entry : fs::directory_iterator(clipboard.data)) {
             int entryWidth = entry.path().filename().string().length();
 
             if (widthRemaining <= 0) break;
@@ -445,6 +439,34 @@ void status() {
     for (int i = 0; i < cols - 2; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+}
+
+void statusJSON() {
+    printf("{\n");
+
+    auto clipboards_with_contents = clipboardsWithContent();
+
+    for (const auto& cb : clipboards_with_contents) {
+        Clipboard clipboard(cb.first);
+
+        printf("    \"%s\": ", clipboard.name().data());
+
+        if (clipboard.holdsRawData()) {
+            std::string content(fileContents(clipboard.data.raw));
+            content = std::regex_replace(content, std::regex("\""), "\\\"");
+            printf("\"%s\"", content.data());
+        } else {
+            printf("[");
+            for (bool first = true; const auto& entry : fs::directory_iterator(clipboard.data)) {
+                if (!first) printf(", ");
+                printf("\"%s\"", entry.path().filename().string().data());
+                first = false;
+            }
+            printf("]");
+        }
+        if (cb != clipboards_with_contents.back()) printf(",\n");
+    }
+    printf("\n}\n");
 }
 
 void info() {
