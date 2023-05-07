@@ -1,3 +1,8 @@
+if (Test-Path $env:USERPROFILE\scoop) {
+    scoop install clipboard
+    exit
+}
+
 Invoke-WebRequest https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-windows-amd64.zip -OutFile clipboard-windows-amd64.zip
 Expand-Archive clipboard-windows-amd64.zip -DestinationPath .\clipboard-windows-amd64
 

@@ -38,6 +38,40 @@ compile() {
     fi
 }
 
+if command -v apk > /dev/null 2>&1
+then
+    sudo apk add clipboard
+    verify
+elif command -v yay > /dev/null 2>&1
+then
+    sudo yay -S clipboard
+    verify
+elif command -v emerge > /dev/null 2>&1
+then
+    sudo emerge -av app-misc/clipboard
+    verify
+elif command -v brew > /dev/null 2>&1
+then
+    brew install clipboard
+    verify
+elif command -v nix-env > /dev/null 2>&1
+then
+    nix-env -iA nixpkgs.clipboard-jh
+    verify
+elif command -v pacstall > /dev/null 2>&1
+then
+    pacstall -I clipboard-bin
+    verify
+elif command -v scoop > /dev/null 2>&1
+then
+    scoop install clipboard
+    verify
+elif command -v xbps-install > /dev/null 2>&1
+then
+    sudo xbps-install -S clipboard
+    verify
+fi
+
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir"
 
