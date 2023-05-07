@@ -4,7 +4,7 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="Introducing one of the most powerful productivity tools ever." />
 
-The Clipboard Project (or CB) is an advanced yet oh-so-easy-to-use clipboard manager that's filled with tons of <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> and other fun things.
+The Clipboard Project (or CB) is an advanced yet oh-so-easy-to-use clipboard manager that's filled with tons of <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> and other fabulous things.
 
 You'll be able to remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, **𝚛𝚒𝚍𝚘𝚗𝚔𝚞𝚕𝚒𝚌𝚒𝚘𝚞𝚜𝚕𝚢** smart second brain always by your side.
 
@@ -12,8 +12,8 @@ Just let the features speak for themselves.
 
 - Copy text, files, directories, pipes, _anything_,
 - Get an _infinite_ number of temporary or persistent clipboards,
-- Harness the power of **full-fat regex** on everything you copy,
-- Seamlessly connect with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
+- Harness the power of **ᖴᑌᒪᒪ-ᖴᗩT** regex on everything you copy,
+- Seamlessly integrate with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use your favorite languages like español, português, or Türkçe,
 - Easily script _anything_ to automate your workflows in a cinch,
 - Customize that <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
