@@ -827,7 +827,8 @@ int main(int argc, char* argv[]) {
 
         showSuccesses();
     } catch (const std::exception& e) {
-        if (stopIndicator()) fprintf(stderr, internal_error_message().data(), e.what());
+        stopIndicator();
+        fprintf(stderr, internal_error_message().data(), e.what());
         exit(EXIT_FAILURE);
     }
     if (copying.failedItems.empty())
