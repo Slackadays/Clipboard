@@ -14,7 +14,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 #include <algorithm>
-#include <cstring>
 #include <fstream>
 #include <regex>
 
@@ -391,7 +390,6 @@ void status() {
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
     int columns = thisTerminalSize().columns - (check_clipboard_status_message.rawLength() + 7);
     std::string bar;
-    bar.reserve(columns * strlen("━"));
     for (int i = 0; i < columns; i++)
         bar += "━";
     fprintf(stderr, "%s", bar.data());
@@ -438,13 +436,11 @@ void status() {
     }
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
     std::string bar2;
-    bar2.reserve((longestClipboardLength + 1) * strlen("━"));
     for (int i = 0; i < longestClipboardLength + 1; i++)
         bar2 += "━";
     fprintf(stderr, "%s┷", bar2.data());
     auto cols = thisTerminalSize().columns - (longestClipboardLength + 2);
     std::string bar3;
-    bar3.reserve((cols - 2) * strlen("━"));
     for (int i = 0; i < cols - 2; i++)
         bar3 += "━";
     fprintf(stderr, "%s", bar3.data());
