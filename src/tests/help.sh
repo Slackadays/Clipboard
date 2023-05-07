@@ -5,14 +5,14 @@ start_test "Show help message"
 
 output="$(cb help)"
 
-content_is_shown "$output" "CB"
+content_is_shown "$output" "cb"
 
 output="$(cb -h)"
 
-content_is_shown "$output" "CB"
+content_is_shown "$output" "cb"
 
 output="$(cb --help)"
 
-content_is_shown "$output" "CB"
+content_is_shown "$output" "cb"
 
 cb --ee
