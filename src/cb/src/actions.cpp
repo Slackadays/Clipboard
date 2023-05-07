@@ -442,8 +442,11 @@ void status() {
         bar2 += "━";
     fprintf(stderr, "%s┷", bar2.data());
     auto cols = thisTerminalSize().columns - (longestClipboardLength + 2);
+    std::string bar3;
+    bar3.reserve((cols - 2) * strlen("━"));
     for (int i = 0; i < cols - 2; i++)
-        fprintf(stderr, "━");
+        bar3 += "━";
+    fprintf(stderr, "%s", bar3.data());
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }
 
