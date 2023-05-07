@@ -12,7 +12,7 @@ Just let the features speak for themselves.
 
 - Copy text, files, directories, pipes, _anything_,
 - Get an _infinite_ number of temporary or persistent clipboards,
-- Harness the power of **ᖴᑌᒪᒪ-ᖴᗩT** regex on everything you copy,
+- Harness the power of ᖴᑌᒪᒪ-ᖴᗩT regex on everything you copy,
 - Seamlessly integrate with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use your favorite languages like español, português, or Türkçe,
 - Easily script _anything_ to automate your workflows in a cinch,
