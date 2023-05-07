@@ -389,8 +389,11 @@ void status() {
     fprintf(stderr, "%s", check_clipboard_status_message().data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
     int columns = thisTerminalSize().columns - (check_clipboard_status_message.rawLength() + 7);
+    std::string bar;
+    bar.reserve(columns * strlen("━"));
     for (int i = 0; i < columns; i++)
-        fprintf(stderr, "━");
+        bar += "━";
+    fprintf(stderr, "%s", bar.data());
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
     auto displayEndbar = [] {
@@ -433,9 +436,11 @@ void status() {
         printf("\n");
     }
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
+    std::string bar2;
+    bar2.reserve((longestClipboardLength + 1) * strlen("━"));
     for (int i = 0; i < longestClipboardLength + 1; i++)
-        fprintf(stderr, "━");
-    fprintf(stderr, "┷");
+        bar2 += "━";
+    fprintf(stderr, "%s┷", bar2.data());
     auto cols = thisTerminalSize().columns - (longestClipboardLength + 2);
     for (int i = 0; i < cols - 2; i++)
         fprintf(stderr, "━");

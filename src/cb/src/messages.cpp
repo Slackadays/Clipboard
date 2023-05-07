@@ -120,7 +120,7 @@ Message many_files_many_directories_success_message = "[success]✅ %s %lu files
 Message one_clipboard_success_message = "[success]✅ %s one clipboard[blank]\n";
 Message many_clipboards_success_message = "[success]✅ %s %lu clipboards[blank]\n";
 Message clipboard_name_message = "[info]Info for clipboard [bold][help]%s[blank]";
-Message internal_error_message = "[error]❌ Internal error: %s\n│ This is probably a bug, or you might be lacking "
+Message internal_error_message = "[error]❌ Internal error: %s\n│ This might be a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 
 void setLanguageES() {

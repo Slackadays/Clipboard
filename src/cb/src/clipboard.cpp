@@ -785,11 +785,7 @@ int main(int argc, char* argv[]) {
 
         setFilepaths();
 
-        (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
-
         action = getAction();
-
-        syncWithGUIClipboard();
 
         copying.items.assign(arguments.begin(), arguments.end());
 
@@ -798,6 +794,10 @@ int main(int argc, char* argv[]) {
         verifyAction();
 
         startIndicator();
+
+        (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
+
+        syncWithGUIClipboard();
 
         deduplicate(copying.items);
 
