@@ -6,7 +6,7 @@
 
 The Clipboard Project (or CB for short) is the advanced, yet <i>oh-so-easy-to-use</i> clipboard manager for anyone.
 
-You'll be able to remember _anything, anytime, anywhere_ at the mere press of a button, like having a new, ridonkuliciously smart second brain always by your side.
+You'll be able to remember _anything, anytime, anywhere_ at the mere press of a button. It's like having a new, ridonkuliciously smart second brain always by your side.
 
 Just let the features speak for themselves.
 
