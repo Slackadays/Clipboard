@@ -1,51 +1,72 @@
 +++
-title = "Clipboard"
+title = "The Clipboard Project - Homepage"
 sort_by = "weight"
 +++
 
-# What is the Clipboard Project?
+# Introducing your new second brain
 
-Clipboard (or CB) is a _ridonkuliciously_ easy-to-use and powerful data remembrance tool bursting with _oodles_ of advanced features and absolutely gorgeous eye candy.
+The Clipboard Project (or just CB for short) is the advanced, yet <i>oh-so-easy-to-use</i> clipboard manager for anyone.
 
-That's underselling it.
+We've made it to save you precious time and effort so that you won't have to spend so much at the computer.
 
-Introducing **_<ins>your</ins>_** one-way golden ticket to saving time and effort **anytime and anywhere**. Have a telepath with an infallible memory always at your disposal. Feel the sheer power flowing through your commanding body as you cut, copy, paste, add, remove, load, and make note of **anything** that dares lay in your terminal at the mere press of a button. In no time, you'll be reclined back on a warm sunny beach in the Caribbean sipping a silky and succulent papaya smoothie with the love of your life snuggling by your side all while you watch bottlenose dolphins leaping from the bright shimmering waves of the soft blue water in the distance. Ok, so maybe that last part won't actually happen, but you get the idea: Clipboard makes your life easy.
+# Easy to use
 
-That's more like it.
+Anyone can use CB - no matter who you are or what you're working on, from web developers to your Average Joe and even to your grandma!
 
-# Quick Start
+Nothing dares lay more than a few button presses away.
 
-Visit the [official Clipboard Project GitHub page](https://github.com/Slackadays/Clipboard) to install the latest version of CB.
+# Packed with features
 
-Once you've installed it, that's all you have to do. Try some of these examples below!
+We've packed, crammed, and <i>jammed</i> CB full of useful features to increase your productivity in the most effective way possible.
+
+You can make infinitely different clipboards as you wish, manipulate them with full-fat regex, instantly script them all, and way more.
+
+# Tastefully stylish
+
+Ever wondered if you could get diabetes from too much eye candy?
+
+Well, that's a question we're still figuring out how to solve. But in the meantime, know that CB is filled with just enough eye candy to be gorgeous - and not put you into a sugar coma.
+
+# Fast and lightweight
+
+When you install CB, it won't take up gigabytes of your precious storage space storing useless junk, unlike some other apps out there.
+
+And, dare we say it, it's also <i>blazingly fast</i> thanks to our use of the latest and greatest code compiling technologies.
+
+# Open and secure
+
+You can feast your eyes on <i>everything</i> that makes up and defines the Clipboard Project, right now, all for zero cost.
+
+There's nothing that invades your privacy here!
+
+# Ready to turbocharge your productivity?
+
+Download the latest version from the [official Clipboard Project GitHub page](https://github.com/Slackadays/Clipboard/blob/main/README.md#-1), and then you'll be off to the races!
+
+Here's what to try next.
+
+Let's start by copying a file called "Foobar."
 
 ```sh
-$ cb copy NuclearLaunchCodes.pdf
-$ cb note "Keep this a secret"
-$ echo "Keep this a secret OR ELSE" | cb note
-$ cb paste
-
-$ cb cut69 MyDirectory
-$ cb add69 SomeFile
-$ cb remove69 SomeFile
-$ cb paste69
-
-$ cb cp_420 foo.bar NotAVirus.bar.mp3.exe
-$ cb remove_420 "*.mp3\.exe"
-$ cb note_420 "Some kosher content here"
-$ cb sh_420
-
-$ cb note
-$ cb clr
-$ cb note_420
-$ cb
+$ cb copy Foobar
 ```
 
-Of course, this is only a handful of examples. Check out [the readme on GitHub](https://github.com/Slackadays/Clipboard) again for detailed instructions and some great tips and tricks.
+Not bad, right!
+
+Let's kick it up a notch.
+
+```sh
+$ CLIPBOARD_THEME=green CLIPBOARD_NOEMOJI=1 cb -fc -nc -np cp_500 *.txt *.png
+```
+
+Ok, so maybe we kicked it up too many notches. But it gets the point across - although CB is super easy to use, you can do a whole lot, and me mean <i>a whole lot</i>, with it.
+
+
+We've only scratched the surface of what's possible. Check out [the complete page on GitHub](https://github.com/Slackadays/Clipboard) for detailed help and some great tips and tricks.
 
 # Get Help
 
-Feeling stumped? We're here to help. Check out [the Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask your burning questions in [Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our Discord group](https://discord.gg/J6asnc3pEG).
+Feeling stumped? We're here to help! Check out [the Wiki](https://github.com/Slackadays/Clipboard/wiki) for even more information, ask all your burning questions in [Clipboard Discussions](https://github.com/Slackadays/Clipboard/discussions), or join [our awesome Discord group](https://discord.gg/J6asnc3pEG).
 
 # Thank You!
 

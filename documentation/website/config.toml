@@ -1,7 +1,7 @@
 # The URL the site will be built for
 base_url = "https://getclipboard.app"
 
-title = "The Clipboard Project"
+title = "The Clipboard Project - Homepage"
 
 theme = "juice"
 
@@ -20,11 +20,11 @@ render_emoji = true
 
 [extra]
 # Put all your custom variables here
-juice_logo_name = "Clipboard"
+juice_logo_name = "The Clipboard Project"
 juice_logo_path = "cb_small.png"
 juice_extra_menu = [
-    { title = "GitHub", link = "https://github.com/Slackadays/Clipboard" },
+    { title = "Star us on GitHub", link = "https://github.com/Slackadays/Clipboard" },
     { title = "Discord", link = "https://discord.gg/jc7bcEeR" },
-    { title = "Merch", link = "https://open-source-zone.creator-spring.com" },
+    { title = "Docs", link = "https://github.com/Slackadays/Clipboard/wiki" }
 ]
 repository_url = "https://github.com/Slackadays/Clipboard"

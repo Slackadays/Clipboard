@@ -2,21 +2,34 @@
 {% block favicon %}
 <link rel="icon" type="image/png" href="/cb_small.png">
 {% endblock favicon %}
+{% block head %}
+<meta property="og:title" content="The Clipboard Project - Homepage" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://getclipboard.app" />
+<meta property="og:description" content="Your new second brain that remembers anything, anytime, anywhere." />
+<meta property="twitter:card" content="summary_large_image" />
+<meta
+    property="og:image"
+    content="https://getclipboard.app/CBBannerGitHub.jpg"
+/>
+<meta name="keywords" content="clipboard manager, clipboard, cb, maccy, copyq, xclip, xsel, terminal, command line">
+<meta name="author" content="The Clipboard Project">
+{% endblock head %}
 {% block hero %}
 <section class="text-center">
     <h1 class="heading-text" style="font-size: 30px">
-        Your external brain that remembers anything, anytime, anywhere!
+        Your new second brain that remembers anything, anytime, anywhere.
     </h1>
     <h3 class="title-text">
-        One of those little luxuries you'd never believe<br> you went without after giving a try.
+        Turn your productivity up, <i>way</i> up, in style.
     </h3>
     <div>
         <a href="https://github.com/Slackadays/Clipboard">
-            <img class="button" src="{{ get_url(path="get_it_on_github.png") }}" width="275px" alt="Get It On GitHub" />
+            <img class="button" src="{{ get_url(path="get_it_on_github.png") }}" width="300px" alt="Get It On GitHub" />
         </a>
     </div>
 </section>
-<img class="hero-image" style="width: 50%" src="{{ get_url(path="demo.png") }}">
+<img class="hero-image" style="width: 45%" src="{{ get_url(path="ClipboardDemo.gif") }}">
 
 <div class="explore-more text" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
     Explore More ⇩
@@ -24,7 +37,7 @@
 <style>
     @font-face {
         font-family: 'Lobster Two';
-        src: url('LobsterTwo-BoldItalic.ttf');
+        src: url('LobsterTwo-Bold.ttf');
         font-weight: normal;
         font-style: normal;
     }
@@ -35,6 +48,14 @@
 
     .hero section {
         padding: 0 5rem;
+    }
+
+    .content h1 {
+        margin-top: 2.75em;
+    }
+
+    div.explore-more {
+        font-size: 1.5em;
     }
 
     @media screen and (max-width: 768px) {
