@@ -19,7 +19,7 @@ Just let the features speak for themselves!
 - Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
 - And tons more!
 
-Best of all, it's also one hundred percent free and open source.
+Best of all, we're also one hundred percent free and open source.
 
 <br>
 
