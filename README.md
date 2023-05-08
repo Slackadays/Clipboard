@@ -8,7 +8,7 @@ The Clipboard Project (or CB for short) is the advanced yet <i>oh-so-easy-to-use
 
 You'll be able to remember anything, anytime, anywhere at the mere press of a button. It's like having a new, ridonkuliciously smart second brain always by your side.
 
-Just let the features speak for themselves.
+Just let the features speak for themselves!
 
 - Copy text, files, directories, pipes, _anything_,
 - Get an _infinite_ number of temporary or persistent clipboards,
