@@ -3,23 +3,19 @@ title = "The Clipboard Project - Homepage"
 sort_by = "weight"
 +++
 
-# Introducing your new second brain
+# Say hello to your new second brain.
 
 The Clipboard Project (or just CB for short) is the advanced, yet <i>oh-so-easy-to-use</i> clipboard manager for anyone.
 
-We've made it to save you precious time and effort so that you won't have to spend so much at the computer.
+We made it to save you precious time and effort so that you can spend less time at the computer.
 
 # Easy to use
 
-Anyone can use CB - no matter who you are or what you're working on, from web developers to your Average Joe and even to your grandma!
-
-Nothing dares lay more than a few button presses away.
+Anyone can use CB - no matter who you are or what you're working on, from web developers to your Average Joe and even to your grandma! Nothing dares lay more than a few button presses away.
 
 # Packed with features
 
-We've packed, crammed, and <i>jammed</i> CB full of useful features to increase your productivity in the most effective way possible.
-
-You can make infinitely different clipboards as you wish, manipulate them with full-fat regex, instantly script them all, and way more.
+We've packed, crammed, and <i>jammed</i> CB full of useful features to increase your productivity in the most effective way possible. You can make infinitely different clipboards as you wish, manipulate them with full-fat regex, instantly script them all, and way more.
 
 # Tastefully stylish
 
@@ -29,15 +25,11 @@ Well, that's a question we're still figuring out how to solve. But in the meanti
 
 # Fast and lightweight
 
-When you install CB, it won't take up gigabytes of your precious storage space storing useless junk, unlike some other apps out there.
-
-And, dare we say it, it's also <i>blazingly fast</i> thanks to our use of the latest and greatest code compiling technologies.
+When you install CB, it won't take up gigabytes of your precious storage space storing useless junk, unlike some other apps out there. And, dare we say it, it's also <i>blazingly fast</i> thanks to our use of the latest and greatest code compiling technologies.
 
 # Open and secure
 
-You can feast your eyes on <i>everything</i> that makes up and defines the Clipboard Project, right now, all for zero cost.
-
-There's nothing that invades your privacy here!
+You can feast your eyes on <i>everything</i> that makes up and defines the Clipboard Project, right now, all for zero cost. There's nothing that invades your privacy here!
 
 # Ready to turbocharge your productivity?
 
