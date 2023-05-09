@@ -4,11 +4,11 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="Introducing one of the most powerful productivity tools ever." />
 
-The Clipboard Project (CB for short) is the highly advanced yet <i>oh-so-easy-to-use</i> clipboard manager for everyone.
+The Clipboard Project (CB for short) is the full-featured yet <i>oh-so-easy-to-use</i> clipboard manager for everyone.
 
 It's super duper fast and lightweight, packed with functionality, and tastefully stylish. You'll be able to remember anything, anytime, anywhere at the literal press of a button.
 
-I originally made the Clipboard Project to address some severe deficiencies in other, similar tools. But now, it's the world's first (and currently only) complete, honest-to-goodness clipboard manager for the terminal.
+I originally made the Clipboard Project to address some severe deficiencies in other similar tools. But now, it's the world's first (and currently only) complete, honest-to-goodness clipboard manager for the terminal.
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
