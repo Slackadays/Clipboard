@@ -17,9 +17,8 @@ Just let the features speak for themselves!
 - Use your favorite languages like español, português, or Türkçe,
 - Easily script _anything_ to automate your workflows in a cinch,
 - Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
+- Taste the freedom of one percent open source code,
 - And tons more!
-
-Best of all, we're also one hundred percent free and open source.
 
 <br>
 
