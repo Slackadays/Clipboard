@@ -25,6 +25,9 @@ pass_test() {
 
 start_test() {
   export testname="$1"
+  cols=$(tput cols)
+  i=0
+  while [ $i -lt "$cols" ]; do printf "━"; i=$((i+1)); done
   printf "🏁 Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$testname" "$0"
   setup_dir "${0%.sh}"
   trap pass_test 0
@@ -72,41 +75,47 @@ content_is_shown() {
 }
 
 item_is_in_cb() {
-  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$1"/data/"$2" ]
+  clipboard="$1"
+  item="$2"
+  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item" ]
   then
-    verify_contents "$CLIPBOARD_TMPDIR"/Clipboard/"$1"/data/"$2"
+    verify_contents "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item"
     return 0
-  elif [ -d "$CLIPBOARD_TMPDIR"/Clipboard/"$1"/data/"$2" ]
+  elif [ -d "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item" ]
   then
     return 0
   else
-    fail "😕 The file $2 doesn't exist in clipboard $1"
+    fail "😕 The item $item doesn't exist in clipboard $clipboard"
   fi
 }
 
 item_is_here() {
-    if [ -f "$1" ]
-    then
-        verify_contents "$1"
-        return 0
-    else
-        fail "😕 The file $1 doesn't exist here"
-    fi
+  item="$1"
+  if [ -f "$item" ]
+  then
+      verify_contents "$item"
+      return 0
+  else
+      fail "😕 The item $item doesn't exist here"
+  fi
 }
 
 item_is_not_here() {
-    if [ -f "$1" ]
-    then
-        fail "😕 The file $1 exists here"
-    else
-        return 0
-    fi
+  item="$1"
+  if [ -f "$item" ]
+  then
+      fail "😕 The item $item exists here"
+  else
+      return 0
+  fi
 }
 
 item_is_not_in_cb() {
-  if [ -f "$CLIPBOARD_TMPDIR/Clipboard/$1/data/$2" ]
+  clipboard="$1"
+  item="$2"
+  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item" ]
   then
-    fail "😕 The file $2 exists in clipboard $1"
+    fail "😕 The item $item exists in clipboard $clipboard"
   else
     return 0
   fi

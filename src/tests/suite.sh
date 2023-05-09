@@ -50,6 +50,7 @@ run_tests() {
     sh themes.sh
     sh languages.sh
     sh x11.sh
+    sh wayland.sh
 }
 
 run_tests

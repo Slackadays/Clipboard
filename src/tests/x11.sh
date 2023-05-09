@@ -23,6 +23,12 @@ then
     exit 0
 fi
 
+if ! xclip -o -selection clipboard >/dev/null 2>&1;
+then
+    echo "⏭️ Skipping X11 tests due to xclip failing"
+    exit 0
+fi
+
 make_files
 
 cb copy "Some text"
@@ -33,6 +39,12 @@ unset CLIPBOARD_FORCETTY
 
 cb copy < ../TurnYourClipboardUp.png
 
-sleep 5
+sleep 6
 
 assert_equals "$(cat ../TurnYourClipboardUp.png)" "$(until xclip -o -selection clipboard; do sleep 1; done)"
+
+cb copy < ../"Exosphere 2.0.mp3"
+
+sleep 6
+
+assert_equals "$(cat ../"Exosphere 2.0.mp3")" "$(until xclip -o -selection clipboard; do sleep 1; done)"
