@@ -89,7 +89,7 @@ jobs:
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
           export WLR_BACKENDS=headless
           export WLR_LIBINPUT_NO_DEVICES=1
-          export WAYLAND_DISPLAY=wayland-1
+          export WAYLAND_DISPLAY=wayland-0
           export LIBGL_ALWAYS_SOFTWARE=1
           sway &
           if [[ "${{ matrix.os.version }}" == "22.04" ]]
@@ -178,7 +178,7 @@ jobs:
             export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
             export WLR_BACKENDS=headless
             export WLR_LIBINPUT_NO_DEVICES=1
-            export WAYLAND_DISPLAY=wayland-1
+            export WAYLAND_DISPLAY=wayland-0
             export LIBGL_ALWAYS_SOFTWARE=1
             sway &
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
