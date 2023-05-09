@@ -32,10 +32,10 @@ using getClipboard_t = void* (*)(void*);
 using setClipboard_t = bool (*)(void*);
 
 static void x11wlClipboardFailure(const char* object) {
-    if (bool required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
+    if (auto required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && !strcmp(required, "1")) {
         indicator.detach();
         exit(EXIT_FAILURE);
-    } else if (bool required = getenv("CLIPBOARD_REQUIREWAYLAND"); object == objectWayland && required) {
+    } else if (auto required = getenv("CLIPBOARD_REQUIREWAYLAND"); object == objectWayland && !strcmp(required, "1")) {
         indicator.detach();
         exit(EXIT_FAILURE);
     }
