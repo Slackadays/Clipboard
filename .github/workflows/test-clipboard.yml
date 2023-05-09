@@ -94,7 +94,7 @@ jobs:
             squeekboard & # Wayland needs a keyboard for clipboard access >:(
           fi
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
-          xvfb-run wayland-run bash ../src/tests/suite.sh
+          wayland-run xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -180,7 +180,7 @@ jobs:
               squeekboard & # Wayland needs a keyboard for clipboard access >:(
             fi
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
-            xvfb-run wayland-run bash ../src/tests/suite.sh
+            wayland-run xvfb-run bash ../src/tests/suite.sh
             find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
