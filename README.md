@@ -10,8 +10,8 @@ It's super fast and lightweight, packed with functionality, and tastefully styli
 
 Just let the features speak for themselves!
 
-- Copy text, files, directories, pipes, _anything_,
-- Get an _infinite_ number of temporary or persistent clipboards,
+- Copy and paste text, files, directories, pipes, _anything_,
+- Make an _infinite_ number of temporary or persistent clipboards,
 - Harness the power of real full-fat regex on everything you copy,
 - Seamlessly integrate with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Use your favorite languages like español, português, or Türkçe,
