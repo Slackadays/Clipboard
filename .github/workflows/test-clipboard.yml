@@ -182,7 +182,7 @@ jobs:
             export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
             export WLR_BACKENDS=headless
             export WLR_LIBINPUT_NO_DEVICES=1
-            export WAYLAND_DISPLAY=wayland-1
+            export WAYLAND_DISPLAY=wayland-0
             weston &
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
             then
