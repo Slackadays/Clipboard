@@ -18,7 +18,7 @@
 #include <optional>
 #include <type_traits>
 
-constexpr auto objectX11 = "libcbx111.so";
+constexpr auto objectX11 = "libcbx11.so";
 constexpr auto symbolGetX11Clipboard = "getX11Clipboard";
 constexpr auto symbolSetX11Clipboard = "setX11Clipboard";
 
@@ -107,11 +107,10 @@ ClipboardContent getGUIClipboard(const std::string& requested_mime) {
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
-        //if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard)) {
-            std::cerr << "blah blah" << std::endl;
+        if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard)) {
             debugStream << "Setting X11 clipboard failed, trying Wayland" << std::endl;
             if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard)) debugStream << "Setting Wayland clipboard failed" << std::endl;
-        //}
+        }
 
     } catch (const std::exception& e) {
         debugStream << "Error setting clipboard data: " << e.what() << std::endl;
