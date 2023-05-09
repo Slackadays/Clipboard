@@ -23,12 +23,6 @@ then
     exit 0
 fi
 
-if ! xclip -o -selection clipboard >/dev/null 2>&1;
-then
-    echo "⏭️ Skipping X11 tests due to xclip failing"
-    exit 0
-fi
-
 make_files
 
 cb copy "Some text"

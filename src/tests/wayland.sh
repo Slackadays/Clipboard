@@ -23,12 +23,6 @@ then
     exit 0
 fi
 
-if ! wl-copy "Foobar" >/dev/null 2>&1;
-then
-    echo "⏭️ Skipping Wayland tests due to wl-clipboard failing"
-    exit 0
-fi
-
 make_files
 
 cb copy "Some text"
