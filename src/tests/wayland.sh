@@ -23,9 +23,9 @@ then
     exit 0
 fi
 
-if ! wl-copy -o >/dev/null 2>&1;
+if ! wl-paste >/dev/null 2>&1;
 then
-    echo "⏭️ Skipping Wayland tests due to wl-copy failing"
+    echo "⏭️ Skipping Wayland tests due to wl-paste failing"
     exit 0
 fi
 
