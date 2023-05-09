@@ -90,6 +90,7 @@ jobs:
           export WLR_BACKENDS=headless
           export WLR_LIBINPUT_NO_DEVICES=1
           export WAYLAND_DISPLAY=wayland-0
+          export XDG_RUNTIME_DIR=/tmp
           sudo -- seatd &
           weston -B headless-backend.so &
           if [[ "${{ matrix.os.version }}" == "22.04" ]]
@@ -184,6 +185,7 @@ jobs:
             export WLR_BACKENDS=headless
             export WLR_LIBINPUT_NO_DEVICES=1
             export WAYLAND_DISPLAY=wayland-0
+            export XDG_RUNTIME_DIR=/tmp
             sudo -- seatd &
             weston -B headless-backend.so &
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
