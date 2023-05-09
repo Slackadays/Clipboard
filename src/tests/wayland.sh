@@ -5,9 +5,9 @@ export CLIPBOARD_FORCETTY=1
 set +u
 
 # Test if we have wl-copy installed
-if ! command -v wl-paste >/dev/null 2>&1;
+if ! command -v wl-copy >/dev/null 2>&1;
 then
-    echo "⏭️ Skipping Wayland tests due to missing wl-paste"
+    echo "⏭️ Skipping Wayland tests due to missing wl-copy"
     exit 0
 fi
 
@@ -23,11 +23,11 @@ then
     exit 0
 fi
 
-#if ! wl-paste >/dev/null 2>&1;
-#then
-#    echo "⏭️ Skipping Wayland tests due to wl-paste failing"
-#    exit 0
-#fi
+if ! wl-copy -o >/dev/null 2>&1;
+then
+    echo "⏭️ Skipping Wayland tests due to wl-copy failing"
+    exit 0
+fi
 
 make_files
 

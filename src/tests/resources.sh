@@ -25,7 +25,7 @@ pass_test() {
 
 start_test() {
   export testname="$1"
-  cols=$(tput cols 2>/dev/null || echo 80)
+  cols=$(tput cols)
   i=0
   while [ $i -lt "$cols" ]; do printf "━"; i=$((i+1)); done
   printf "🏁 Starting \033[1m%s\033[0m (file \033[1m%s\033[0m)\n" "$testname" "$0"

@@ -66,7 +66,7 @@ jobs:
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
-          sudo apt-get install -y $PACKAGES xvfb xclip wl-clipboard mutter
+          sudo apt-get install -y $PACKAGES xvfb sway xclip
 
           if [[ "${{ matrix.os.version }}" == "22.04" ]]
           then
@@ -87,14 +87,16 @@ jobs:
           export CLIPBOARD_TMPDIR=/tmp
           export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
           export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
-          pip3 install --user git+https://gitlab.gnome.org/creiter/wayland-run
-          export PATH="$PATH:~/.local/bin"
+          export WLR_BACKENDS=headless
+          export WLR_LIBINPUT_NO_DEVICES=1
+          export WAYLAND_DISPLAY=wayland-1
+          sway &
           if [[ "${{ matrix.os.version }}" == "22.04" ]]
           then
             squeekboard & # Wayland needs a keyboard for clipboard access >:(
           fi
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
-          wayland-run xvfb-run bash ../src/tests/suite.sh
+          xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -139,7 +141,7 @@ jobs:
             fi
                       
             apt-get update
-            apt-get install -y $PACKAGES xvfb mutter xclip cmake wl-clipboard
+            apt-get install -y $PACKAGES xvfb sway xclip cmake
   
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
             then
@@ -173,14 +175,16 @@ jobs:
             export CLIPBOARD_TMPDIR=/tmp
             export CLIPBOARD_REQUIREX11=${{ matrix.x11 }}
             export CLIPBOARD_REQUIREWAYLAND=${{ matrix.wayland }}
-            pip3 install --user git+https://gitlab.gnome.org/creiter/wayland-run
-            export PATH="$PATH:~/.local/bin"
+            export WLR_BACKENDS=headless
+            export WLR_LIBINPUT_NO_DEVICES=1
+            export WAYLAND_DISPLAY=wayland-1
+            sway &
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
             then
               squeekboard & # Wayland needs a keyboard for clipboard access >:(
             fi
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
-            wayland-run xvfb-run bash ../src/tests/suite.sh
+            xvfb-run bash ../src/tests/suite.sh
             find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
