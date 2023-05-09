@@ -14,6 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 #include <clipboard/logging.hpp>
+#include <cstring>
 #include <dlfcn.h>
 #include <optional>
 #include <type_traits>
