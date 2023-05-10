@@ -108,8 +108,9 @@ ClipboardContent getGUIClipboard(const std::string& requested_mime) {
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
-        if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard)) {
-            debugStream << "Setting X11 clipboard failed, trying Wayland" << std::endl;
+        auto force_wayland = getenv("CLIPBOARD_REQUIREWAYLAND");
+        if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard) || (force_wayland && !strcmp(force_wayland, "1"))) {
+            debugStream << "Trying Wayland clipboard now" << std::endl;
             if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard)) debugStream << "Setting Wayland clipboard failed" << std::endl;
         }
 

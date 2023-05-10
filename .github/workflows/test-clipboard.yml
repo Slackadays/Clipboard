@@ -53,7 +53,7 @@ jobs:
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
           sudo apt-get upgrade -y
-          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard libgles-dev libglapi-mesa libglx-mesa0 libosmesa6-dev libllvm12
+          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard
 
           cd build
           cmake .. \
@@ -159,7 +159,7 @@ jobs:
             useradd -m -s /bin/bash user
             chown -R user:user /home/user
             echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-            sudo -u user -H bash -c "sway -d &"
+            sudo -u user -E sway -d &
             squeekboard & # Wayland needs a keyboard for clipboard access >:(
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
             xvfb-run bash ../src/tests/suite.sh
