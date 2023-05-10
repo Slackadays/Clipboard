@@ -114,7 +114,7 @@ You can also get the latest revision of the Clipboard Project [from GitHub Actio
 ### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px />
 You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatibility, you'll also need libx11 and/or libwayland plus Wayland Protocols.
 
-Get the latest release instead of the latest commit by adding `--branch 0.7.0` right after `git clone...`.
+Get the latest release instead of the latest commit by adding `--branch 0.7.1` right after `git clone...`.
 
 Change the system installation prefix by adding `-DCMAKE_INSTALL_PREFIX=/custom/prefix` to `cmake ..`, or the library install location by adding `-DCMAKE_INSTALL_LIBDIR=/custom/dir`.
 ```bash
