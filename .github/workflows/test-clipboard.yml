@@ -74,7 +74,7 @@ jobs:
           export WAYLAND_DISPLAY=wayland-0
           export LIBGL_ALWAYS_SOFTWARE=1
           export XDG_RUNTIME_DIR=/tmp
-          sway &
+          sway -d &
           squeekboard & # Wayland needs a keyboard for clipboard access >:(
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
@@ -122,7 +122,7 @@ jobs:
                       
             apt-get update
             apt-get upgrade -y
-            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard
+            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo
 
           run: |
             NO_X11=1
@@ -156,7 +156,10 @@ jobs:
             export WAYLAND_DISPLAY=wayland-0
             export LIBGL_ALWAYS_SOFTWARE=1
             export XDG_RUNTIME_DIR=/tmp
-            sway &
+            useradd -m -s /bin/bash user
+            chown -R user:user /home/user
+            echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+            sudo -u user -H bash -c "sway -d &"
             squeekboard & # Wayland needs a keyboard for clipboard access >:(
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
             xvfb-run bash ../src/tests/suite.sh
