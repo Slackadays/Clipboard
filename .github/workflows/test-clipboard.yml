@@ -77,6 +77,7 @@ jobs:
           export WLR_LIBINPUT_NO_DEVICES=1
           export WAYLAND_DISPLAY=wayland-0
           export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_RUNTIME_DIR=/tmp
           sway &
           if [[ "${{ matrix.os.version }}" == "22.04" ]]
           then
@@ -166,6 +167,7 @@ jobs:
             export WLR_LIBINPUT_NO_DEVICES=1
             export WAYLAND_DISPLAY=wayland-0
             export LIBGL_ALWAYS_SOFTWARE=1
+            export XDG_RUNTIME_DIR=/tmp
             sway &
             if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
             then
