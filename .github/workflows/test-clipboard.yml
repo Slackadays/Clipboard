@@ -9,9 +9,6 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - version: 20.04
-            no_lto: "1"
-
           - version: 22.04
             no_lto: "0"
 
@@ -25,17 +22,6 @@ jobs:
 
           - os: amd64
             gcc: x86_64-linux-gnu
-
-        exclude:
-          - os:
-              version: 20.04
-            gcc: 12
-
-          - os:
-              version: 20.04
-            gcc: 11
-            arch:
-              os: i386
 
     runs-on: ubuntu-${{ matrix.os.version }}
 
