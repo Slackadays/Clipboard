@@ -52,12 +52,8 @@ jobs:
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
-          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard
-
-          if [[ "${{ matrix.os.version }}" == "22.04" ]]
-          then
-            sudo apt-get install -y squeekboard
-          fi
+          sudo apt-get upgrade -y
+          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard
 
           cd build
           cmake .. \
@@ -79,10 +75,7 @@ jobs:
           export LIBGL_ALWAYS_SOFTWARE=1
           export XDG_RUNTIME_DIR=/tmp
           sway &
-          if [[ "${{ matrix.os.version }}" == "22.04" ]]
-          then
-            squeekboard & # Wayland needs a keyboard for clipboard access >:(
-          fi
+          squeekboard & # Wayland needs a keyboard for clipboard access >:(
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
@@ -108,7 +101,6 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
-          #shell: 'script -q -e -c "bash --noprofile --norc -eo pipefail {0}"'
           dockerRunArgs: |
             --init
           install: |
@@ -129,12 +121,8 @@ jobs:
             fi
                       
             apt-get update
-            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard
-  
-            if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
-            then
-              apt-get install -y squeekboard
-            fi
+            apt-get upgrade -y
+            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard
 
           run: |
             NO_X11=1
@@ -169,10 +157,7 @@ jobs:
             export LIBGL_ALWAYS_SOFTWARE=1
             export XDG_RUNTIME_DIR=/tmp
             sway &
-            if [[ "${{ matrix.distro }}" == "ubuntu22.04" ]]
-            then
-              squeekboard & # Wayland needs a keyboard for clipboard access >:(
-            fi
+            squeekboard & # Wayland needs a keyboard for clipboard access >:(
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
             xvfb-run bash ../src/tests/suite.sh
             find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
