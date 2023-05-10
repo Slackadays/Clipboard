@@ -71,7 +71,10 @@ public:
  * A stream buffer that reads and writes from a pair of file descriptors.
  */
 class FdBuffer : public std::streambuf {
-    static constexpr std::size_t bufferSize = 1024;
+    static constexpr std::size_t bufferSize = 16384;
+    // 16384 is the magic number
+    // any lower and you get incomplete clipboard transfers
+    // higher, also incomplete clipboard transfers
 
     int m_readFd;
     int m_writeFd;
