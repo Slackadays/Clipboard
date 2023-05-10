@@ -122,7 +122,7 @@ jobs:
                       
             apt-get update
             apt-get upgrade -y
-            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo libgles-dev libglapi-mesa libglx-mesa0 libosmesa6-dev libllvm12
+            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo pkg-config cmake-data
 
           run: |
             NO_X11=1
