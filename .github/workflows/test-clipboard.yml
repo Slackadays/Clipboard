@@ -53,7 +53,7 @@ jobs:
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
           sudo apt-get upgrade -y
-          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard libgles-dev libglapi-mesa libglx-mesa0 libosmesa6-dev
+          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard libgles-dev libglapi-mesa libglx-mesa0 libosmesa6-dev libllvm12
 
           cd build
           cmake .. \
@@ -122,7 +122,7 @@ jobs:
                       
             apt-get update
             apt-get upgrade -y
-            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo libgles-dev libglapi-mesa libglx-mesa0 libosmesa6-dev
+            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo libgles-dev libglapi-mesa libglx-mesa0 libosmesa6-dev libllvm12
 
           run: |
             NO_X11=1
