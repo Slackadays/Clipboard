@@ -41,13 +41,13 @@ jobs:
           if [[ "${{ matrix.x11 }}" == "1" ]]
           then
             NO_X11=0
-            PACKAGES="${PACKAGES} libx11-dev:${{ matrix.arch.os }}"
+            PACKAGES="${PACKAGES} libx11-dev libx11-dev:${{ matrix.arch.os }}"
           fi
           
           if [[ "${{ matrix.wayland }}" == "1" ]]
           then
             NO_WAYLAND=0
-            PACKAGES="${PACKAGES} libwayland-dev:${{ matrix.arch.os }} wayland-protocols:${{ matrix.arch.os }}"
+            PACKAGES="${PACKAGES} libwayland-dev libwayland-dev:${{ matrix.arch.os }} wayland-protocols wayland-protocols:${{ matrix.arch.os }}"
           fi
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
