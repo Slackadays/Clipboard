@@ -75,7 +75,8 @@ jobs:
           export LIBGL_ALWAYS_SOFTWARE=1
           export XDG_RUNTIME_DIR=/tmp
           sway -d &
-          squeekboard & # Wayland needs a keyboard for clipboard access >:(
+          sleep 5
+          squeekboard &
           stty rows 80 cols 120 # GHA doesn't provide the right amount by default
           xvfb-run bash ../src/tests/suite.sh
           find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
@@ -160,8 +161,8 @@ jobs:
             chown -R user:user /home/user
             echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
             sudo -u user -E sway -d &
-            sleep 4
-            # Wayland needs a keyboard for clipboard access >:(
+            sleep 5
+            squeekboard &
             stty rows 80 cols 120 # GHA doesn't provide the right amount by default
             xvfb-run bash ../src/tests/suite.sh
             find . -name '*.gcda' | xargs gcov-${{ matrix.gcc }}
