@@ -35,4 +35,4 @@ jobs:
       - name: psscriptanalyzer
         run: |
           Install-Module -Name PSScriptAnalyzer -Force
-          Invoke-ScriptAnalyzer -Path install.ps1
+          Invoke-ScriptAnalyzer -Path src\install.ps1
