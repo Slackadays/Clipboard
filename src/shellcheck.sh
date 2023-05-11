@@ -1,3 +1,3 @@
 #!/bin/sh
 
-shellcheck -e SC1091 ./*.sh src/tests/*.sh
+shellcheck -e SC1091 src/tests/*.sh src/*.sh
