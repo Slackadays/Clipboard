@@ -241,22 +241,31 @@ void convertFromGUIClipboard(const std::string& text) {
 
 void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     auto regexes = path.ignoreRegexes();
-    auto culledPaths = clipboard.paths();
+    auto paths = clipboard.paths();
     for (const auto& regex : regexes)
-        for (auto&& path : culledPaths)
-            if (std::regex_match(path.filename().string(), regex)) culledPaths.erase(std::find(culledPaths.begin(), culledPaths.end(), path));
+        for (auto&& path : paths)
+            if (std::regex_match(path.filename().string(), regex)) paths.erase(std::find(paths.begin(), paths.end(), path));
 
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
-    auto allOutsideFilepath = std::all_of(culledPaths.begin(), culledPaths.end(), [](auto& path) {
-        auto relative = fs::relative(path, ::path.data);
-        auto firstElement = *(relative.begin());
-        return firstElement == fs::path("..");
+    auto filesHaveChanged = std::all_of(paths.begin(), paths.end(), [](auto& path) {
+        auto filename = path.filename().empty() ? path.parent_path().filename() : path.filename();
+
+        // check if the filename of the provided path does not exist in the temp directory
+        if (!fs::exists(::path.data / filename)) return true;
+
+        // check if the file sizes are different if it's not a directory
+        if (!fs::is_directory(path) && fs::file_size(path) != fs::file_size(::path.data / filename)) return true;
+
+        // check if the file contents are different if it's not a directory
+        if (!fs::is_directory(path) && fileContents(path) != fileContents(::path.data / filename)) return true;
+
+        return false;
     });
 
-    if (allOutsideFilepath) path.makeNewEntry();
+    if (filesHaveChanged) path.makeNewEntry();
 
-    for (auto&& path : culledPaths) {
+    for (auto&& path : paths) {
         if (!fs::exists(path)) continue;
 
         auto target = ::path.data / path.filename();
@@ -274,7 +283,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     if (clipboard.action() == ClipboardPathsAction::Cut) {
         std::ofstream originalFiles {path.metadata.originals};
-        for (auto&& path : culledPaths)
+        for (auto&& path : paths)
             originalFiles << path.string() << std::endl;
     }
 }
