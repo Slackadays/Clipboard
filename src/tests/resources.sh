@@ -76,7 +76,7 @@ content_is_shown() {
 
 get_current_entry_name() {
   # Get the highest numbered entry folder, where 10 is the entry name in /tmp/Clipboard/0/data/10
-  echo "$(ls "$CLIPBOARD_TMPDIR"/Clipboard/0/data/ | sort -n | tail -n 1)"
+  ls "$CLIPBOARD_TMPDIR"/Clipboard/0/data/ | sort -n | tail -n 1
 }
 
 item_is_in_cb() {
