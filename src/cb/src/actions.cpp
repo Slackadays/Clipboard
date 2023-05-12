@@ -244,6 +244,7 @@ void edit() {}
 
 void addFiles() {
     if (path.holdsRawData()) {
+        stopIndicator();
         fprintf(stderr,
                 "%s",
                 formatMessage("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
@@ -264,6 +265,7 @@ void addData() {
             content = copying.items.at(0).string();
         successes.bytes += writeToFile(path.data.raw, content, true);
     } else if (!fs::is_empty(path.data)) {
+        stopIndicator();
         fprintf(stderr,
                 "%s",
                 formatMessage("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
@@ -296,6 +298,7 @@ void removeRegex() {
         if (oldLength != content.size()) {
             writeToFile(path.data.raw, content);
         } else {
+            stopIndicator();
             fprintf(stderr,
                     "%s",
                     formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
@@ -317,6 +320,7 @@ void removeRegex() {
             }
         }
         if (successes.directories == 0 && successes.files == 0) {
+            stopIndicator();
             fprintf(stderr,
                     "%s",
                     formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
@@ -351,6 +355,7 @@ void noteText() {
             fprintf(stderr, "%s", formatMessage("[info]🔷 There is no note for this clipboard.[blank]\n").data());
         }
     } else {
+        stopIndicator();
         fprintf(stderr, "%s", formatMessage("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
@@ -634,6 +639,7 @@ void infoJSON() {
 
 void load() {
     if (!path.holdsData()) {
+        stopIndicator();
         fprintf(stderr, "%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. [help]Try choosing a different source instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
@@ -675,6 +681,7 @@ void load() {
 
 void swap() {
     if (copying.items.size() > 1) {
+        stopIndicator();
         fprintf(stderr,
                 formatMessage("[error]❌ You can only swap one clipboard at a time. [help]Try making sure there's only one other clipboard specified, like [bold]%s swap "
                               "5[blank][help] or [bold]%s swap3 0[blank][help].[blank]\n")
@@ -687,6 +694,7 @@ void swap() {
     std::string destination_name = copying.items.empty() ? std::string(constants.default_clipboard_name) : copying.items.at(0).string();
 
     if (destination_name == clipboard_name) {
+        stopIndicator();
         fprintf(stderr,
                 formatMessage("[error]❌ You can't swap a clipboard with itself. [help]Try choosing a different clipboard to swap with, like [bold]%s swap 5[blank][help] or "
                               "[bold]%s swap3 0[blank][help].[blank]\n")

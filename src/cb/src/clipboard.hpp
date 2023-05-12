@@ -291,11 +291,13 @@ extern bool all_option;
 extern std::string preferred_mime;
 extern std::vector<std::string> available_mimes;
 
-enum class ProgressState : int { Done, Active, Cancel };
+enum class ClipboardState : int { Setup, Action };
+enum class IndicatorState : int { Done, Active, Cancel };
 
 extern std::condition_variable cv;
 extern std::mutex m;
-extern std::atomic<ProgressState> progress_state;
+extern std::atomic<ClipboardState> clipboard_state;
+extern std::atomic<IndicatorState> progress_state;
 static std::thread indicator;
 
 struct Successes {
