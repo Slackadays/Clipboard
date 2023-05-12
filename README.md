@@ -50,9 +50,13 @@ I originally made the Clipboard Project to address some severe deficiencies in o
 
 <br>
 
+<br>
+
 <p align="center">
     <img src="documentation/readme-assets/GetStartedBelow.png" alt="Ready to turbocharge your productivity? Then let's get started with CB." height="100px" />
 </p>
+
+<br>
 
 <br>
 
@@ -144,9 +148,13 @@ Remove everything listed in `install_manifest.txt`. If you're not using Windows,
 
 <br>
 
+<br>
+
 <p align="center">
     <img src="documentation/readme-assets/HowToUsePrompt.png" alt="Now let's start saving time and effort." height="40px" />
 </p>
+
+<br>
 
 <br>
 
@@ -820,7 +828,6 @@ $ cb status | cat
 </details>
 
 <br>
-<br>
 
 ### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Tips And Tricks" height=25px />
 
@@ -881,11 +888,15 @@ cb note "Latest files from website ABCXYZ"
 ```
 
 <br>
+    
+<br>
 
 <p align="center">
     <img src="documentation/readme-assets/CustomizeClipboard.png" alt="Let's make CB our own." height="40px" />
 </p>
 
+<br>
+    
 <br>
 
 ### ![Simple Configuration](documentation/readme-assets/CBSimpleConfiguration.png)
@@ -1221,6 +1232,7 @@ $ cb cp "In the 1990s, though, several innovative musicians reinvigorated bachat
  
 <br>
 <br>
+<br>
 
 ### ![Need Help?](documentation/readme-assets/NeedHelp.png)
 
@@ -1233,6 +1245,7 @@ We're here for you! Check out [the Clipboard Project Wiki](https://github.com/Sl
     <a href="https://twitter.com/GetClipboard"><img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?logo=twitter&style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter"></a>
 </p>
 
+<br>
 <br>
 
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
