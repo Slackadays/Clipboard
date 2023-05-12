@@ -436,24 +436,30 @@ void status() {
             }
 
             if (entryWidth <= widthRemaining) {
-                printf(formatMessage("[help]%s[blank]").data(), entry.path().filename().string().data());
+                std::string stylizedEntry;
+                if (entry.is_directory())
+                    stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
+                else
+                    stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
+                printf(formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
                 widthRemaining -= entryWidth;
                 first = false;
             }
         }
         printf("\n");
     }
-    fprintf(stderr, "%s", formatMessage("[info]┕").data());
-    std::string bar2;
-    for (int i = 0; i < longestClipboardLength + 1; i++)
+    fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
+    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
+    auto cols = thisTerminalSize().columns - (status_legend_message.rawLength() + 7);
+    std::string bar2 = " ┣";
+    for (int i = 0; i < cols; i++)
         bar2 += "━";
-    fprintf(stderr, "%s┷", bar2.data());
-    auto cols = thisTerminalSize().columns - (longestClipboardLength + 2);
-    std::string bar3;
-    for (int i = 0; i < cols - 2; i++)
-        bar3 += "━";
-    fprintf(stderr, "%s", bar3.data());
+    fprintf(stderr, "%s", (status_legend_message() + bar2).data());
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+}
+
+std::string escape(const std::string& input) {
+    return std::regex_replace(input, std::regex("\""), "\\\"");
 }
 
 void statusJSON() {
@@ -467,16 +473,19 @@ void statusJSON() {
 
         if (clipboard.holdsRawData()) {
             std::string content(fileContents(clipboard.data.raw));
-            content = std::regex_replace(content, std::regex("\""), "\\\"");
-            printf("\"%s\"", content.data());
+            printf("\"%s\"", escape(content).data());
         } else {
             printf("[");
             for (bool first = true; const auto& entry : fs::directory_iterator(clipboard.data)) {
                 if (!first) printf(", ");
-                printf("\"%s\"", entry.path().filename().string().data());
+                printf("\n");
+                printf("        {\n");
+                printf("            \"name\": \"%s\",\n", entry.path().filename().string().data());
+                printf("            \"isDirectory\": %s\n", entry.is_directory() ? "true" : "false");
+                printf("        }");
                 first = false;
             }
-            printf("]");
+            printf("\n    ]");
         }
         if (clipboard.name() != clipboards_with_contents.back().name()) printf(",\n");
     }
@@ -661,10 +670,20 @@ void load() {
     for (const auto& destination_number : destinations) {
         Clipboard destination(destination_number);
         try {
-            for (const auto& entry : fs::directory_iterator(destination.data))
-                fs::remove_all(entry.path());
-
-            fs::copy(path.data, destination.data, fs::copy_options::recursive);
+            for (const auto& entry : fs::directory_iterator(path.data)) {
+                auto target = destination.data / entry.path().filename();
+                auto loadItem = [&](bool use_regular_copy = copying.use_safe_copy) {
+                    if (entry.is_directory())
+                        fs::copy(entry.path(), target, copying.opts);
+                    else
+                        fs::copy(entry.path(), target, use_regular_copy ? copying.opts : (copying.opts | fs::copy_options::create_hard_links));
+                };
+                try {
+                    loadItem();
+                } catch (const fs::filesystem_error& e) {
+                    if (!copying.use_safe_copy && e.code() == std::errc::cross_device_link) loadItem(true);
+                }
+            }
 
             destination.applyIgnoreRegexes();
 
