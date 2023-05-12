@@ -1,4 +1,8 @@
+<br>
+
 ### ![The Clipboard Project](documentation/readme-assets/CBBanner.png)
+
+<br>
 
 <br>
 
@@ -9,6 +13,8 @@ The Clipboard Project (CB for short) is the full-featured yet <i>oh-so-easy-to-u
 It's super duper fast and lightweight, packed with functionality, and tastefully stylish. You'll be able to remember anything, anytime, anywhere at the literal press of a button, like having a second brain.
 
 I originally made the Clipboard Project to address some severe deficiencies in other similar tools. But now, it's the world's first (and currently only) complete, honest-to-goodness clipboard manager for the terminal.
+
+<br>
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
@@ -21,6 +27,8 @@ I originally made the Clipboard Project to address some severe deficiencies in o
 - Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
 - Taste the freedom of one hundred percent open source code,
 - And tons more!
+
+<br>
 
 <br>
 
