@@ -1,10 +1,6 @@
 <br>
 
-<br>
-
 ### ![The Clipboard Project](documentation/readme-assets/CBBanner.png)
-
-<br>
 
 <br>
 
@@ -31,8 +27,6 @@ I originally made the Clipboard Project to address some severe deficiencies in o
 - Customize the <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> to your complete viewing pleasure,
 - Taste the freedom of one hundred percent open source code,
 - And tons more!
-
-<br>
 
 <br>
 
