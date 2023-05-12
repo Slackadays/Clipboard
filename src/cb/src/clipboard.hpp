@@ -17,7 +17,9 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <deque>
 #include <filesystem>
+#include <functional>
 #include <mutex>
 #include <regex>
 #include <string_view>
@@ -113,7 +115,7 @@ class Clipboard {
     fs::path root;
     std::string this_name;
     std::string this_entry;
-    std::vector<unsigned long> entryIndex;
+    std::deque<unsigned long> entryIndex;
 
 public:
     bool is_persistent = false;
@@ -146,8 +148,7 @@ public:
 
     auto generatedEntryIndex() {
         // auto then = std::chrono::system_clock::now();
-        std::vector<unsigned long> pathNames;
-        pathNames.reserve(250000);
+        std::deque<unsigned long> pathNames;
         fs::path entriesDir = root / constants.data_directory;
         fs::create_directories(entriesDir);
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
@@ -166,7 +167,7 @@ public:
             } catch (...) {}
 #endif
         if (pathNames.empty()) pathNames.emplace_back(0);
-        std::sort(pathNames.begin(), pathNames.end());
+        std::sort(pathNames.begin(), pathNames.end(), std::greater<>());
         // auto now = std::chrono::system_clock::now();
         // std::cout << "Took " << std::chrono::duration_cast<std::chrono::microseconds>(now - then).count() << "us to index " << pathNames.size() << " entries" << std::endl;
         return pathNames;
@@ -183,7 +184,7 @@ public:
 
         entryIndex = generatedEntryIndex();
 
-        data = root / constants.data_directory / std::to_string(entryIndex.at((entryIndex.size() - 1) - std::stoul(this_entry)));
+        data = root / constants.data_directory / std::to_string(entryIndex.at(std::stoul(this_entry)));
         data.raw = data / constants.data_file_name;
 
         metadata = root / constants.metadata_directory;
@@ -255,9 +256,9 @@ public:
     std::string entry() { return this_entry; }
     size_t totalEntries() { return entryIndex.size(); }
     void makeNewEntry() {
-        entryIndex.emplace_back(entryIndex.back() + 1);
+        entryIndex.emplace_front(entryIndex.front() + 1);
 
-        data = root / constants.data_directory / std::to_string(entryIndex.at((entryIndex.size() - 1) - std::stoul(this_entry)));
+        data = root / constants.data_directory / std::to_string(entryIndex.at(std::stoul(this_entry)));
         data.raw = data / constants.data_file_name;
 
         fs::create_directories(data);
@@ -265,8 +266,8 @@ public:
     void trimHistoryEntries() {
         if (entryIndex.size() <= maximumHistorySize || maximumHistorySize == 0) return;
         while (entryIndex.size() > maximumHistorySize) {
-            fs::remove_all(root / constants.data_directory / std::to_string(entryIndex.front()));
-            entryIndex.erase(entryIndex.begin());
+            fs::remove_all(root / constants.data_directory / std::to_string(entryIndex.back()));
+            entryIndex.pop_back();
         }
     }
 };
