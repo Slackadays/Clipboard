@@ -17,7 +17,6 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
-#include <execution>
 #include <filesystem>
 #include <mutex>
 #include <regex>
@@ -167,7 +166,7 @@ public:
             } catch (...) {}
 #endif
         if (pathNames.empty()) pathNames.emplace_back(0);
-        std::sort(std::execution::par_unseq, pathNames.begin(), pathNames.end());
+        std::sort(pathNames.begin(), pathNames.end());
         // auto now = std::chrono::system_clock::now();
         // std::cout << "Took " << std::chrono::duration_cast<std::chrono::microseconds>(now - then).count() << "us to index " << pathNames.size() << " entries" << std::endl;
         return pathNames;
