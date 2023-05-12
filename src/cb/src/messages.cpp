@@ -14,12 +14,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 17> actions =
-        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "history", "ignore"};
+EnumArray<std::string_view, 18> actions =
+        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "history", "ignore", "search"};
 
-EnumArray<std::string_view, 17> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig"};
+EnumArray<std::string_view, 18> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig", "sr"};
 
-EnumArray<std::string_view, 17> doing_action = {
+EnumArray<std::string_view, 18> doing_action = {
         "Cutting",
         "Copying",
         "Pasting",
@@ -36,9 +36,10 @@ EnumArray<std::string_view, 17> doing_action = {
         "Importing",
         "Exporting",
         "Getting history",
-        "Ignoring"};
+        "Ignoring",
+        "Searching"};
 
-EnumArray<std::string_view, 17> did_action = {
+EnumArray<std::string_view, 18> did_action = {
         "Cut",
         "Copied",
         "Pasted",
@@ -55,7 +56,8 @@ EnumArray<std::string_view, 17> did_action = {
         "Imported",
         "Exported",
         "Got history",
-        "Ignored"};
+        "Ignored",
+        "Searched"};
 
 Message help_message = "[info]│This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]│Examples[blank]\n"

@@ -15,7 +15,9 @@
 #pragma once
 #include <array>
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
+#include <execution>
 #include <filesystem>
 #include <mutex>
 #include <regex>
@@ -27,6 +29,11 @@
 #include <io.h>
 #include <shlobj.h>
 #include <windows.h>
+#endif
+
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#include <cstring>
+#include <dirent.h>
 #endif
 
 #include <clipboard/fork.hpp>
@@ -44,6 +51,8 @@ namespace fs = std::filesystem;
 
 extern Forker forker;
 
+extern unsigned long maximumHistorySize;
+
 struct GlobalFilepaths {
     fs::path temporary;
     fs::path persistent;
@@ -57,6 +66,7 @@ struct Constants {
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
     std::string_view data_file_name = "rawdata.clipboard";
     std::string_view default_clipboard_name = "0";
+    std::string_view default_clipboard_entry = "0";
     std::string_view temporary_directory_name = "Clipboard";
     std::string_view persistent_directory_name = ".clipboard";
     std::string_view original_files_name = "originals";
@@ -103,6 +113,8 @@ size_t writeToFile(const fs::path& path, const std::string& content, bool append
 class Clipboard {
     fs::path root;
     std::string this_name;
+    std::string this_entry;
+    std::vector<unsigned long> entryIndex;
 
 public:
     bool is_persistent = false;
@@ -133,26 +145,52 @@ public:
         auto operator/(const auto& other) { return root / other; }
     } metadata;
 
+    auto generatedEntryIndex() {
+        // auto then = std::chrono::system_clock::now();
+        std::vector<unsigned long> pathNames;
+        pathNames.reserve(250000);
+        fs::path entriesDir = root / constants.data_directory;
+        fs::create_directories(entriesDir);
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+        auto dirptr = opendir(entriesDir.string().data());
+        char* endptr = nullptr;
+        errno = 0;
+        for (auto* dir = readdir(dirptr); dir != nullptr; dir = readdir(dirptr), errno = 0)
+            if (auto num = strtoul(dir->d_name, &endptr, 10); errno == 0 && endptr != dir->d_name) [[likely]]
+                pathNames.emplace_back(num);
+            else [[unlikely]]
+                continue;
+#else
+        for (const auto& entry : fs::directory_iterator(entriesDir))
+            try {
+                pathNames.emplace_back(std::stoul(entry.path().filename().string()));
+            } catch (...) {}
+#endif
+        if (pathNames.empty()) pathNames.emplace_back(0);
+        std::sort(std::execution::par_unseq, pathNames.begin(), pathNames.end());
+        // auto now = std::chrono::system_clock::now();
+        // std::cout << "Took " << std::chrono::duration_cast<std::chrono::microseconds>(now - then).count() << "us to index " << pathNames.size() << " entries" << std::endl;
+        return pathNames;
+    }
+
     Clipboard() = default;
-    Clipboard(const auto& clipboard_name) {
+    Clipboard(const auto& clipboard_name, const std::string_view& clipboard_entry = constants.default_clipboard_entry) {
         this_name = clipboard_name;
+        this_entry = clipboard_entry;
 
         is_persistent = isPersistent(this_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
 
         root = (is_persistent ? global_path.persistent : global_path.temporary) / this_name;
 
-        data = root / constants.data_directory;
+        entryIndex = generatedEntryIndex();
 
-        metadata = root / constants.metadata_directory;
-
+        data = root / constants.data_directory / std::to_string(entryIndex.at((entryIndex.size() - 1) - std::stoul(this_entry)));
         data.raw = data / constants.data_file_name;
 
+        metadata = root / constants.metadata_directory;
         metadata.notes = metadata / constants.notes_name;
-
         metadata.originals = metadata / constants.original_files_name;
-
         metadata.lock = metadata / constants.lock_name;
-
         metadata.ignore = metadata / constants.ignore_regex_name;
 
         fs::create_directories(data);
@@ -168,7 +206,7 @@ public:
         if (fs::exists(data.raw) && fs::is_empty(data.raw)) return false;
         return true;
     }
-    bool holdsRawData() { return fs::exists(data.raw) && !fs::is_empty(data.raw); }
+    bool holdsRawData() const { return fs::exists(data.raw) && !fs::is_empty(data.raw); }
     bool holdsIgnoreRegexes() { return fs::exists(metadata.ignore) && !fs::is_empty(metadata.ignore); }
     std::vector<std::regex> ignoreRegexes() {
         std::vector<std::regex> regexes;
@@ -214,7 +252,24 @@ public:
         writeToFile(metadata.lock, std::to_string(thisPID()));
     }
     void releaseLock() { fs::remove(metadata.lock); }
-    std::string name() { return this_name; }
+    std::string name() const { return this_name; }
+    std::string entry() { return this_entry; }
+    size_t totalEntries() { return entryIndex.size(); }
+    void makeNewEntry() {
+        entryIndex.emplace_back(entryIndex.back() + 1);
+
+        data = root / constants.data_directory / std::to_string(entryIndex.at((entryIndex.size() - 1) - std::stoul(this_entry)));
+        data.raw = data / constants.data_file_name;
+
+        fs::create_directories(data);
+    }
+    void trimHistoryEntries() {
+        if (entryIndex.size() <= maximumHistorySize || maximumHistorySize == 0) return;
+        while (entryIndex.size() > maximumHistorySize) {
+            fs::remove_all(root / constants.data_directory / std::to_string(entryIndex.front()));
+            entryIndex.erase(entryIndex.begin());
+        }
+    }
 };
 extern Clipboard path;
 
@@ -258,7 +313,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search };
 
 extern Action action;
 
@@ -272,10 +327,10 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 17> actions;
-extern EnumArray<std::string_view, 17> action_shortcuts;
-extern EnumArray<std::string_view, 17> doing_action;
-extern EnumArray<std::string_view, 17> did_action;
+extern EnumArray<std::string_view, 18> actions;
+extern EnumArray<std::string_view, 18> action_shortcuts;
+extern EnumArray<std::string_view, 18> doing_action;
+extern EnumArray<std::string_view, 18> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 

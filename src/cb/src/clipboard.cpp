@@ -64,6 +64,7 @@ bool confirmation_silent = false;
 bool no_color = false;
 bool no_emoji = false;
 bool all_option = false;
+unsigned long maximumHistorySize = 0;
 
 std::string preferred_mime;
 std::vector<std::string> available_mimes;
@@ -228,29 +229,12 @@ bool isAClearingAction() {
     }
 }
 
-void clearData(bool force_clear = false) {
-    using enum Action;
-    if (force_clear || action == Cut || action == Copy) {
-        fs::remove(path.metadata.originals);
-        if (action == Clear && path.holdsRawData()) {
-            successes.bytes += fs::file_size(path.data.raw);
-            fs::remove(path.data.raw);
-        }
-        for (const auto& entry : fs::directory_iterator(path.data)) {
-            fs::remove_all(entry.path());
-            if (action == Clear) {
-                incrementSuccessesForItem(entry);
-            }
-        }
-    }
-}
-
 void convertFromGUIClipboard(const std::string& text) {
     if (path.holdsRawData() && fileContents(path.data.raw) == text) return;
-    clearData(true);
     auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
         if (std::regex_match(text, regex)) return;
+    path.makeNewEntry();
     writeToFile(path.data.raw, text);
 }
 
@@ -269,7 +253,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         return firstElement == fs::path("..");
     });
 
-    if (allOutsideFilepath) clearData(true);
+    if (allOutsideFilepath) path.makeNewEntry();
 
     for (auto&& path : culledPaths) {
         if (!fs::exists(path)) continue;
@@ -409,6 +393,10 @@ void setupVariables(int& argc, char* argv[]) {
 
     if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
+    if (auto size = getenv("CLIPBOARD_HISTORY"); size != nullptr) try {
+            maximumHistorySize = std::stoul(size);
+        } catch (...) {};
+
     if (argc == 0) return;
 
     arguments.assign(argv + 1, argv + argc);
@@ -538,7 +526,7 @@ void checkForNoItems() {
         printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
         exit(EXIT_FAILURE);
     }
-    if ((action == Paste || action == Show || (action == Clear && !all_option)) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
+    if (((action == Paste || action == Show || (action == Clear && !all_option))) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
         PerformAction::status();
         exit(EXIT_SUCCESS);
     }
@@ -626,7 +614,7 @@ void checkItemSize(unsigned long long total_item_size) {
     unsigned long long space_available = 0;
     using enum Action;
     if ((action == Cut || action == Copy || action == Add) && io_type == IOType::File)
-        space_available = fs::space(path.data).available;
+        space_available = fs::space(path).available;
     else if (action == Action::Paste && io_type == IOType::File)
         space_available = fs::space(fs::current_path()).available;
     if (total_item_size > space_available) {
@@ -797,6 +785,8 @@ int main(int argc, char* argv[]) {
 
         (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
 
+        if (action != Action::Info) path.getLock();
+
         syncWithGUIClipboard();
 
         deduplicate(copying.items);
@@ -805,11 +795,9 @@ int main(int argc, char* argv[]) {
 
         checkForNoItems();
 
-        if (action != Action::Info) path.getLock();
-
         checkItemSize(totalItemSize());
 
-        clearData();
+        if (isAClearingAction()) path.makeNewEntry();
 
         performAction();
 
@@ -818,6 +806,8 @@ int main(int argc, char* argv[]) {
         copying.mime = getMIMEType();
 
         updateGUIClipboard();
+
+        path.trimHistoryEntries();
 
         stopIndicator();
 

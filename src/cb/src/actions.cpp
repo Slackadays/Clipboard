@@ -178,7 +178,11 @@ void clear() {
             fprintf(stderr, formatMessage("[success]✅ Cleared %d clipboard%s[blank]\n").data(), clipboards_cleared, clipboards_cleared == 1 ? "" : "s");
         }
     } else {
-        clearData(true);
+        fs::remove(path.metadata.originals);
+        fs::remove(path.metadata.notes);
+        fs::remove(path.metadata.ignore);
+        stopIndicator();
+        fprintf(stderr, "%s", formatMessage("[success]✅ Cleared clipboard[blank]\n").data());
     }
 }
 
@@ -361,13 +365,13 @@ void notePipe() {
     exit(EXIT_SUCCESS);
 }
 
-std::vector<std::pair<std::string, bool>> clipboardsWithContent() {
-    std::vector<std::pair<std::string, bool>> clipboards;
+std::vector<Clipboard> clipboardsWithContent() {
+    std::vector<Clipboard> clipboards;
     for (const auto& entry : fs::directory_iterator(global_path.temporary))
-        if (Clipboard(entry.path().filename().string()).holdsData()) clipboards.emplace_back(entry.path().filename().string(), false);
+        if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsData()) clipboards.emplace_back(cb);
     for (const auto& entry : fs::directory_iterator(global_path.persistent))
-        if (Clipboard(entry.path().filename().string()).holdsData()) clipboards.emplace_back(entry.path().filename().string(), true);
-    std::sort(clipboards.begin(), clipboards.end());
+        if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsData()) clipboards.emplace_back(cb);
+    std::sort(clipboards.begin(), clipboards.end(), [](const auto& a, const auto& b) { return a.name() < b.name(); });
     return clipboards;
 }
 
@@ -381,8 +385,9 @@ void status() {
         return;
     }
     auto longestClipboardLength =
-            (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.first.length() < b.first.length(); })
-            ).first.length();
+            (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); }))
+                    .name()
+                    .size();
     TerminalSize available(thisTerminalSize());
 
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
@@ -400,8 +405,7 @@ void status() {
         fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
     };
 
-    for (const auto& cb : clipboards_with_contents) {
-        Clipboard clipboard(cb.first);
+    for (const auto& clipboard : clipboards_with_contents) {
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
         displayEndbar();
@@ -452,8 +456,7 @@ void statusJSON() {
 
     auto clipboards_with_contents = clipboardsWithContent();
 
-    for (const auto& cb : clipboards_with_contents) {
-        Clipboard clipboard(cb.first);
+    for (const auto& clipboard : clipboards_with_contents) {
 
         printf("    \"%s\": ", clipboard.name().data());
 
@@ -470,7 +473,7 @@ void statusJSON() {
             }
             printf("]");
         }
-        if (cb != clipboards_with_contents.back()) printf(",\n");
+        if (clipboard.name() != clipboards_with_contents.back().name()) printf(",\n");
     }
     printf("\n}\n");
 }
@@ -504,6 +507,8 @@ void info() {
     fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
+    displayEndbar();
+    fprintf(stderr, formatMessage("[info]│ Total entries: [help]%zu[blank]\n").data(), path.totalEntries());
 
     if (path.holdsRawData()) {
         displayEndbar();
@@ -583,17 +588,18 @@ void infoJSON() {
 
     printf("    \"path\": \"%s\",\n", path.string().data());
     printf("    \"isPersistent\": %s,\n", path.is_persistent ? "true" : "false");
+    printf("    \"totalEntries\": %zu,\n", path.totalEntries());
 
     if (path.holdsRawData()) {
-        printf("    \"bytes\": \"%s\",\n", std::to_string(fs::file_size(path.data.raw)).data());
+        printf("    \"bytes\": %zu,\n", fs::file_size(path.data.raw));
         printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
-        printf("    \"files\": \"%zu\",\n", files);
-        printf("    \"directories\": \"%zu\",\n", directories);
+        printf("    \"files\": %zu,\n", files);
+        printf("    \"directories\": %zu,\n", directories);
     }
 
     if (!available_mimes.empty()) {

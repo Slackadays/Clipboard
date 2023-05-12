@@ -74,14 +74,20 @@ content_is_shown() {
     fi
 }
 
+get_current_entry_name() {
+  # Get the highest numbered entry folder, where 10 is the entry name in /tmp/Clipboard/0/data/10
+  echo "$(ls "$CLIPBOARD_TMPDIR"/Clipboard/0/data/ | sort -n | tail -n 1)"
+}
+
 item_is_in_cb() {
   clipboard="$1"
   item="$2"
-  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item" ]
+  entry="$(get_current_entry_name)"
+  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$entry"/"$item" ]
   then
-    verify_contents "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item"
+    verify_contents "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$entry"/"$item"
     return 0
-  elif [ -d "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item" ]
+  elif [ -d "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$entry"/"$item" ]
   then
     return 0
   else
@@ -113,7 +119,8 @@ item_is_not_here() {
 item_is_not_in_cb() {
   clipboard="$1"
   item="$2"
-  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$item" ]
+  entry="$(get_current_entry_name)"
+  if [ -f "$CLIPBOARD_TMPDIR"/Clipboard/"$clipboard"/data/"$entry"/"$item" ]
   then
     fail "😕 The item $item exists in clipboard $clipboard"
   else
