@@ -75,6 +75,8 @@ std::string clipboard_invocation;
 
 std::string clipboard_name = "0";
 
+std::string clipboard_entry = "0";
+
 std::string locale;
 
 Action action;
@@ -204,6 +206,11 @@ bool isAWriteAction() {
 bool isAClearingAction() {
     using enum Action;
     return action == Copy || action == Cut || action == Clear;
+}
+
+bool needsANewEntry() {
+    using enum Action;
+    return action == Copy || action == Cut || (action == Clear && !all_option);
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -496,14 +503,16 @@ void setFlags() {
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
     if (flagIsPresent<bool>("--ee")) {
-        printf("%s", formatMessage("[bold][info]Here's some nice bachata music from Aventura! https://www.youtube.com/watch?v=RxIM2bMBhCo\n[blank]").data());
-        printf("%s", formatMessage("[bold][info]How about some in English? https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
-        printf("%s", formatMessage("[bold][info]Here's one from Romeo, the head of Aventura: https://www.youtube.com/watch?v=yjdHGmRKz08\n[blank]").data());
-        printf("%s", formatMessage("[bold][info]This one isn't bachata but it is from Aventura: https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
+        printf("%s", formatMessage("[info]Here's some nice bachata music from Aventura! https://www.youtube.com/watch?v=RxIM2bMBhCo\n[blank]").data());
+        printf("%s", formatMessage("[info]How about some in English? https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
+        printf("%s", formatMessage("[info]Here's one from Romeo, the head of Aventura: https://www.youtube.com/watch?v=yjdHGmRKz08\n[blank]").data());
+        printf("%s", formatMessage("[info]This one isn't bachata but it is from Aventura: https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
     if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") clipboard_name = flag;
+    if (auto flag = flagIsPresent<std::string>("-e"); flag != "") clipboard_entry = flag;
+    if (auto flag = flagIsPresent<std::string>("--entry"); flag != "") clipboard_entry = flag;
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
         exit(EXIT_SUCCESS);
@@ -528,7 +537,7 @@ void setFilepaths() {
     global_path.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : global_path.home))
                              / constants.persistent_directory_name;
 
-    path = Clipboard(clipboard_name);
+    path = Clipboard(clipboard_name, clipboard_entry);
 }
 
 void checkForNoItems() {
@@ -811,7 +820,7 @@ int main(int argc, char* argv[]) {
 
         checkForNoItems();
 
-        if (isAClearingAction()) path.makeNewEntry();
+        if (needsANewEntry()) path.makeNewEntry();
 
         (clipboard_state.exchange(ClipboardState::Action), cv.notify_one());
 

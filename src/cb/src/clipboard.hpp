@@ -109,7 +109,99 @@ static auto thisPID() {
 std::string fileContents(const fs::path& path);
 std::vector<std::string> fileLines(const fs::path& path);
 
+bool stopIndicator(bool change_condition_variable = true);
+
 size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
+
+extern std::vector<std::string> arguments;
+
+extern std::string clipboard_invocation;
+
+extern std::string clipboard_name;
+
+extern std::string clipboard_entry;
+
+extern std::string locale;
+
+extern bool output_silent;
+extern bool progress_silent;
+extern bool confirmation_silent;
+extern bool no_color;
+extern bool no_emoji;
+extern bool all_option;
+
+extern std::string preferred_mime;
+extern std::vector<std::string> available_mimes;
+
+enum class ClipboardState : int { Setup, Action };
+enum class IndicatorState : int { Done, Active, Cancel };
+
+extern std::condition_variable cv;
+extern std::mutex m;
+extern std::atomic<ClipboardState> clipboard_state;
+extern std::atomic<IndicatorState> progress_state;
+static std::thread indicator;
+
+struct Successes {
+    std::atomic<unsigned long> files;
+    std::atomic<unsigned long> directories;
+    std::atomic<unsigned long long> bytes;
+    std::atomic<unsigned long> clipboards;
+};
+extern Successes successes;
+
+struct IsTTY {
+    bool in = true;
+    bool out = true;
+    bool err = true;
+};
+extern IsTTY is_tty;
+
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search };
+
+extern Action action;
+
+enum class IOType : unsigned int { File, Pipe, Text };
+
+extern IOType io_type;
+
+template <typename T, size_t N>
+class EnumArray : public std::array<T, N> {
+public:
+    T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
+};
+
+extern EnumArray<std::string_view, 18> actions;
+extern EnumArray<std::string_view, 18> action_shortcuts;
+extern EnumArray<std::string_view, 18> doing_action;
+extern EnumArray<std::string_view, 18> did_action;
+
+extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
+
+class TerminalSize {
+public:
+    size_t rows;
+    size_t columns;
+    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
+};
+
+static std::string formatMessage(const std::string_view& str, bool colorful = !no_color) {
+    std::string temp(str); // a string to do scratch work on
+    auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
+        for (size_t i = 0; (i = temp.find(str, i)) != std::string::npos; i += with.length())
+            temp.replace(i, str.length(), with);
+    };
+    for (const auto& key : colors) // iterate over all the possible colors to replace
+        replaceThis(key.first, colorful ? key.second : "");
+    if (no_emoji) {
+        replaceThis("✅", "✓");
+        replaceThis("❌", "✗");
+        replaceThis("🟡", "-");
+        replaceThis("💡", "•");
+        replaceThis("🔷", "•");
+    }
+    return temp;
+}
 
 class Clipboard {
     fs::path root;
@@ -184,7 +276,18 @@ public:
 
         entryIndex = generatedEntryIndex();
 
-        data = root / constants.data_directory / std::to_string(entryIndex.at(std::stoul(this_entry)));
+        try {
+            data = root / constants.data_directory / std::to_string(entryIndex.at(std::stoul(this_entry)));
+        } catch (...) {
+            stopIndicator();
+            fprintf(stderr,
+                    formatMessage("[error]❌ The history entry you chose (\"[bold]%s[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]"
+                    )
+                            .data(),
+                    this_entry.data());
+            exit(EXIT_FAILURE);
+        }
+
         data.raw = data / constants.data_file_name;
 
         metadata = root / constants.metadata_directory;
@@ -273,94 +376,6 @@ public:
 };
 extern Clipboard path;
 
-extern std::vector<std::string> arguments;
-
-extern std::string clipboard_invocation;
-
-extern std::string clipboard_name;
-
-extern std::string locale;
-
-extern bool output_silent;
-extern bool progress_silent;
-extern bool confirmation_silent;
-extern bool no_color;
-extern bool no_emoji;
-extern bool all_option;
-
-extern std::string preferred_mime;
-extern std::vector<std::string> available_mimes;
-
-enum class ClipboardState : int { Setup, Action };
-enum class IndicatorState : int { Done, Active, Cancel };
-
-extern std::condition_variable cv;
-extern std::mutex m;
-extern std::atomic<ClipboardState> clipboard_state;
-extern std::atomic<IndicatorState> progress_state;
-static std::thread indicator;
-
-struct Successes {
-    std::atomic<unsigned long> files;
-    std::atomic<unsigned long> directories;
-    std::atomic<unsigned long long> bytes;
-    std::atomic<unsigned long> clipboards;
-};
-extern Successes successes;
-
-struct IsTTY {
-    bool in = true;
-    bool out = true;
-    bool err = true;
-};
-extern IsTTY is_tty;
-
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search };
-
-extern Action action;
-
-enum class IOType : unsigned int { File, Pipe, Text };
-
-extern IOType io_type;
-
-template <typename T, size_t N>
-class EnumArray : public std::array<T, N> {
-public:
-    T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
-};
-
-extern EnumArray<std::string_view, 18> actions;
-extern EnumArray<std::string_view, 18> action_shortcuts;
-extern EnumArray<std::string_view, 18> doing_action;
-extern EnumArray<std::string_view, 18> did_action;
-
-extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
-
-class TerminalSize {
-public:
-    size_t rows;
-    size_t columns;
-    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
-};
-
-static std::string formatMessage(const std::string_view& str, bool colorful = !no_color) {
-    std::string temp(str); // a string to do scratch work on
-    auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
-        for (size_t i = 0; (i = temp.find(str, i)) != std::string::npos; i += with.length())
-            temp.replace(i, str.length(), with);
-    };
-    for (const auto& key : colors) // iterate over all the possible colors to replace
-        replaceThis(key.first, colorful ? key.second : "");
-    if (no_emoji) {
-        replaceThis("✅", "✓");
-        replaceThis("❌", "✗");
-        replaceThis("🟡", "-");
-        replaceThis("💡", "•");
-        replaceThis("🔷", "•");
-    }
-    return temp;
-}
-
 void incrementSuccessesForItem(const auto& item) {
     fs::is_directory(item) ? successes.directories++ : successes.files++;
 }
@@ -406,12 +421,10 @@ void syncWithGUIClipboard(const ClipboardPaths& clipboard);
 void showClipboardContents();
 void setupAction(int& argc, char* argv[]);
 void checkForNoItems();
-bool stopIndicator(bool change_condition_variable);
 void startIndicator();
 void setupIndicator();
 void deduplicateItems();
 unsigned long long totalItemSize();
-bool stopIndicator(bool change_condition_variable = true);
 void checkItemSize();
 TerminalSize thisTerminalSize();
 void clearData(bool force_clear);
