@@ -526,12 +526,17 @@ void info() {
 
     if (path.holdsRawData()) {
         displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Bytes: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]│ Total size: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
         displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
+        size_t total_bytes = 0;
         size_t files = 0;
         size_t directories = 0;
+        for (const auto& entry : fs::recursive_directory_iterator(path.data))
+            total_bytes += entry.is_regular_file() ? fs::file_size(entry) : 16;
+        displayEndbar();
+        fprintf(stderr, formatMessage("[info]│ Total size: [help]%s[blank]\n").data(), formatBytes(total_bytes).data());
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
         displayEndbar();
@@ -608,10 +613,14 @@ void infoJSON() {
         printf("    \"bytes\": %zu,\n", fs::file_size(path.data.raw));
         printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
+        size_t total_bytes = 0;
         size_t files = 0;
         size_t directories = 0;
+        for (const auto& entry : fs::recursive_directory_iterator(path.data))
+            total_bytes += entry.is_regular_file() ? fs::file_size(entry) : 16;
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
+        printf("    \"bytes\": %zu,\n", total_bytes);
         printf("    \"files\": %zu,\n", files);
         printf("    \"directories\": %zu,\n", directories);
     }
@@ -921,5 +930,9 @@ void ignoreRegex() {
     path.applyIgnoreRegexes();
     exit(EXIT_SUCCESS);
 }
+
+void history() {}
+
+void search() {}
 
 } // namespace PerformAction

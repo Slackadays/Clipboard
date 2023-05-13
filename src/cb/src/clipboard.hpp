@@ -498,4 +498,6 @@ void exportClipboards();
 void infoJSON();
 void ignoreRegex();
 void statusJSON();
+void history();
+void search();
 } // namespace PerformAction

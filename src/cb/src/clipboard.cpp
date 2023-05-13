@@ -475,13 +475,13 @@ IOType getIOType() {
     if (action == Cut || action == Copy || action == Add) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in) return Pipe;
-    } else if (action == Paste || action == Show || action == Clear || action == Edit || action == Status || action == Info) {
+    } else if (action == Paste || action == Show || action == Clear || action == Edit || action == Status || action == Info || action == History) {
         if (!is_tty.out) return Pipe;
         return Text;
     } else if (action == Remove) {
         if (!is_tty.in) return Pipe;
         return Text;
-    } else if (action == Note || action == Ignore || action == Swap || action == Load || action == Import || action == Export || action == History) {
+    } else if (action == Note || action == Ignore || action == Swap || action == Load || action == Import || action == Export || action == Search) {
         if (!is_tty.in && copying.items.empty()) return Pipe;
         return Text;
     }
@@ -716,6 +716,10 @@ void performAction() {
             clear();
         else if (action == Show)
             show();
+        else if (action == History)
+            history();
+        else if (action == Search)
+            search();
     }
 }
 
