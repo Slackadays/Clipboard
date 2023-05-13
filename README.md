@@ -848,8 +848,13 @@ On a slow system? Cache certain things so you don't have to do them again.
 $ neofetch | cb cp_neo
 $ cb | cat
 ```
+    
+Yank anything sitting in your terminal without ever touching the mouse.
+```sh
+$ env | yank -d = -- cb
+```
 
-Need to share or pore over log files? Just copy them!
+Need to share or pore over log files? Copy them in one step!
 ```sh
 $ journalctl | cb
 # For systemd
