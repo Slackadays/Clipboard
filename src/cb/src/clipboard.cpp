@@ -210,7 +210,7 @@ bool isAClearingAction() {
 
 bool needsANewEntry() {
     using enum Action;
-    return action == Copy || action == Cut || (action == Clear && !all_option);
+    return (action == Copy || action == Cut || (action == Clear && !all_option)) && clipboard_entry == constants.default_clipboard_entry;
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -422,7 +422,8 @@ void setupVariables(int& argc, char* argv[]) {
 }
 
 void syncWithGUIClipboard(bool force) {
-    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI")) || (force && !getenv("CLIPBOARD_NOGUI"))) {
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && !getenv("CLIPBOARD_NOGUI"))
+        || (force && !getenv("CLIPBOARD_NOGUI"))) {
         using enum ClipboardContentType;
         auto content = getGUIClipboard(preferred_mime);
         if (content.type() == Text) {
