@@ -1,8 +1,25 @@
 add_executable(cb
   src/clipboard.cpp
-  src/actions.cpp
   src/messages.cpp
   src/themes.cpp
+  src/actions/add.cpp
+  src/actions/clear.cpp
+  src/actions/copy.cpp
+  src/actions/edit.cpp
+  src/actions/export.cpp
+  src/actions/history.cpp
+  src/actions/ignore.cpp
+  src/actions/import.cpp
+  src/actions/info.cpp
+  src/actions/load.cpp
+  src/actions/note.cpp
+  src/actions/paste.cpp
+  src/actions/pipeinout.cpp
+  src/actions/remove.cpp
+  src/actions/search.cpp
+  src/actions/show.cpp
+  src/actions/status.cpp
+  src/actions/swap.cpp
 )
 
 enable_lto(cb)

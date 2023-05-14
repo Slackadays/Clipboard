@@ -203,6 +203,10 @@ static std::string formatMessage(const std::string_view& str, bool colorful = !n
     return temp;
 }
 
+static std::string escape(const std::string& input) {
+    return std::regex_replace(input, std::regex("\""), "\\\"");
+}
+
 class Clipboard {
     fs::path root;
     std::string this_name;
