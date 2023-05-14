@@ -910,6 +910,11 @@ Yank anything sitting in your terminal without ever touching the mouse.
 ```sh
 $ env | yank -d = -- cb
 ```
+    
+Choose a text clipboard entry to instantly copy to the main clipboard using dmenu.
+```sh
+cb st | jq -r '.[]' | dmenu | cb
+```
 
 Need to share or pore over log files? Copy them in one step!
 ```sh
