@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="218.44765mm"
+   width="395.24258mm"
    height="12.5389mm"
-   viewBox="0 0 218.44765 12.5389"
+   viewBox="0 0 395.24259 12.5389"
    version="1.1"
    id="svg6474"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
@@ -26,12 +26,12 @@
      inkscape:pagecheckerboard="1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.7350589"
-     inkscape:cx="526.4951"
-     inkscape:cy="14.985082"
-     inkscape:window-width="2560"
-     inkscape:window-height="1371"
-     inkscape:window-x="2560"
+     inkscape:zoom="0.7881646"
+     inkscape:cx="581.73128"
+     inkscape:cy="21.569099"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
@@ -45,7 +45,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-34.832583,-122.67219)">
+     transform="translate(-34.855161,-122.67219)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Lobster Two';-inkscape-font-specification:'Lobster Two, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:#0d1117;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
@@ -59,6 +59,8 @@
          id="tspan7943"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Lobster Two';-inkscape-font-specification:'Lobster Two, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke:#0d1117;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
          x="35.254383"
-         y="131.76387">Introducing one of the most powerful time savers ever.</tspan></text>
+         y="131.76387">Introducing the fully-featured yet <tspan
+   style="font-style:italic"
+   id="tspan3725">oh-so-easy-to-use</tspan> clipboard manager for everyone.</tspan></text>
   </g>
 </svg>
