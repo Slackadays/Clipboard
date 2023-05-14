@@ -933,11 +933,12 @@ void ignoreRegex() {
 
 void history() {
     stopIndicator();
+    auto available = thisTerminalSize();
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     Message clipboard_history_message = "[info]Entry history for clipboard [bold][help]%s[blank]";
     fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    int columns = thisTerminalSize().columns - ((clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7);
+    int columns = available.columns - ((clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7);
     for (int i = 0; i < columns; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
@@ -947,33 +948,30 @@ void history() {
         fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
     };
 
-    auto dates = []() {
-        std::vector<std::string> dates;
-        for (const auto& entry : path.entryIndex) {
-            path.setEntry(entry);
-            std::string agoMessage;
+    std::vector<std::string> dates;
+    for (const auto& entry : path.entryIndex) {
+        path.setEntry(entry);
+        std::string agoMessage;
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-            struct stat info;
-            stat(fs::path(path.data).string().data(), &info);
-            auto timeSince = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(info.st_ctime);
+        struct stat info;
+        stat(fs::path(path.data).string().data(), &info);
+        auto timeSince = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(info.st_ctime);
 #else
-            auto timeSince = std::chrono::system_clock::now() - decltype(fs::last_write_time(path.data))::clock::to_time_t(fs::last_write_time(path.data));
+        auto timeSince = std::chrono::system_clock::now() - decltype(fs::last_write_time(path.data))::clock::to_time_t(fs::last_write_time(path.data));
 #endif
-            // format time like 1y 2d 3h 4m 5s
-            auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
-            auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
-            auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - days);
-            auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - days - hours);
-            auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - days - hours - minutes);
-            if (years.count() > 0) agoMessage += std::to_string(years.count()) + "y ";
-            if (days.count() > 0) agoMessage += std::to_string(days.count()) + "d ";
-            if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";
-            if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
-            agoMessage += std::to_string(seconds.count()) + "s";
-            dates.emplace_back(agoMessage);
-        }
-        return dates;
-    }();
+        // format time like 1y 2d 3h 4m 5s
+        auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
+        auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
+        auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - days);
+        auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - days - hours);
+        auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - days - hours - minutes);
+        if (years.count() > 0) agoMessage += std::to_string(years.count()) + "y ";
+        if (days.count() > 0) agoMessage += std::to_string(days.count()) + "d ";
+        if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";
+        if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
+        agoMessage += std::to_string(seconds.count()) + "s";
+        dates.emplace_back(agoMessage);
+    }
 
     auto numberLength = [](const unsigned long& number) {
         if (number < 10) return 1;
@@ -991,8 +989,6 @@ void history() {
     auto longestDateLength = (*std::max_element(dates.begin(), dates.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })).size();
 
     auto longestEntryLength = numberLength(*std::max_element(path.entryIndex.begin(), path.entryIndex.end(), [](const auto& a, const auto& b) { return a < b; }));
-
-    auto available = thisTerminalSize();
 
     for (const auto& entry : path.entryIndex) {
         path.setEntry(entry);
@@ -1042,7 +1038,7 @@ void history() {
 
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
-    auto cols = thisTerminalSize().columns - (status_legend_message.rawLength() + 7);
+    auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";
