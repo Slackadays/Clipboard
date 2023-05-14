@@ -306,7 +306,7 @@ public:
     auto operator/(const auto& other) { return root / other; }
     std::string string() { return root.string(); }
     bool holdsData() {
-        if (!fs::exists(data) || fs::is_empty(data)) return false;
+        if (fs::is_empty(data)) return false; // we know that the data folder exists because it's made on construction
         if (fs::exists(data.raw) && fs::is_empty(data.raw)) return false;
         return true;
     }

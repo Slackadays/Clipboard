@@ -975,20 +975,33 @@ void history() {
         return dates;
     }();
 
+    auto numberLength = [](const unsigned long& number) {
+        if (number < 10) return 1;
+        if (number < 100) return 2;
+        if (number < 1000) return 3;
+        if (number < 10000) return 4;
+        if (number < 100000) return 5;
+        if (number < 1000000) return 6;
+        if (number < 10000000) return 7;
+        if (number < 100000000) return 8;
+        if (number < 1000000000) return 9;
+        return 10; // because 4 billion is the max for unsigned long, we know we'll have 10 or fewer digits
+    };
+
     auto longestDateLength = (*std::max_element(dates.begin(), dates.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })).size();
 
-    auto longestEntryLength = std::to_string(*std::max_element(path.entryIndex.begin(), path.entryIndex.end(), [](const auto& a, const auto& b) { return a < b; })).size();
+    auto longestEntryLength = numberLength(*std::max_element(path.entryIndex.begin(), path.entryIndex.end(), [](const auto& a, const auto& b) { return a < b; }));
 
     auto available = thisTerminalSize();
 
     for (const auto& entry : path.entryIndex) {
         path.setEntry(entry);
-        int widthRemaining = available.columns - (std::to_string(entry).size() + longestEntryLength + longestDateLength + 7);
+        int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
         displayEndbar();
         fprintf(stderr,
                 formatMessage("[info]│ [bold]%*s%lu[blank][info]│ [bold]%*s[blank][info]│ ").data(),
-                longestEntryLength - std::to_string(entry).size(),
+                longestEntryLength - numberLength(entry),
                 "",
                 entry,
                 longestDateLength,
