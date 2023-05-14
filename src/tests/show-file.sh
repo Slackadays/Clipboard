@@ -7,7 +7,7 @@ make_files
 
 cb copy testfile testdir
 
-output="$(cb show)"
+output="$(cb show 2>&1)"
 
 content_is_shown "$output" testfile
 

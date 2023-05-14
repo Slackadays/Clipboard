@@ -15,7 +15,7 @@ then
     exit 0
 fi
 
-content="$(cb)"
+content="$(cb 2>&1)"
 
 content_is_shown "$content" "testfile"
 
@@ -23,7 +23,7 @@ content_is_shown "$content" "testdir"
 
 content_is_shown "$content" "0"
 
-content="$(cb status)"
+content="$(cb status 2>&1)"
 
 content_is_shown "$content" "testfile"
 

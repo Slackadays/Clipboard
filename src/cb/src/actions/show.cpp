@@ -27,20 +27,20 @@ void show() {
     if (path.holdsRawData()) {
         std::string content(fileContents(path.data.raw));
         std::erase(content, '\n');
-        printf(clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
-        printf(formatMessage("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
+        fprintf(stderr, clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
+        fprintf(stderr, formatMessage("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
         if (content.size() > 250) {
-            printf(and_more_items_message().data(), content.size() - 250);
+            fprintf(stderr, and_more_items_message().data(), content.size() - 250);
         }
         return;
     }
 
-    printf(clipboard_item_many_contents_message().data(), clipboard_name.data());
+    fprintf(stderr, clipboard_item_many_contents_message().data(), clipboard_name.data());
 
     for (const auto& entry : fs::directory_iterator(path.data)) {
         if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
             continue;
-        printf(formatMessage("[info]│ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
+        fprintf(stderr, formatMessage("[info]│ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
     }
 }
 
@@ -64,7 +64,7 @@ void showFilepaths() {
         );
 
     for (const auto& entry : paths) {
-        printf("\"%s\"", entry.string().data());
+        fprintf(stderr, "\"%s\"", entry.string().data());
         incrementSuccessesForItem(entry);
         if (entry != paths.back()) printf(" ");
     }
