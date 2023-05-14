@@ -398,28 +398,27 @@ void status() {
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, "%s", check_clipboard_status_message().data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    int columns = thisTerminalSize().columns - (check_clipboard_status_message.rawLength() + 7);
+    int columns = available.columns - (check_clipboard_status_message.rawLength() + 7);
     std::string bar;
     for (int i = 0; i < columns; i++)
         bar += "━";
     fprintf(stderr, "%s", bar.data());
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
-    auto displayEndbar = [] {
-        static auto total_cols = thisTerminalSize().columns;
-        fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
-    };
-
     for (const auto& clipboard : clipboards_with_contents) {
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
-        displayEndbar();
-        printf(formatMessage("[bold][info]│ %*s%s│ [blank]").data(), longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
+        fprintf(stderr,
+                formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ [blank]").data(),
+                available.columns,
+                longestClipboardLength - clipboard.name().length(),
+                "",
+                clipboard.name().data());
 
         if (clipboard.holdsRawData()) {
             std::string content(fileContents(clipboard.data.raw));
             std::erase(content, '\n');
-            printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+            fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
             continue;
         }
 
@@ -430,7 +429,7 @@ void status() {
 
             if (!first) {
                 if (entryWidth <= widthRemaining - 2) {
-                    printf("%s", formatMessage("[help], [blank]").data());
+                    fprintf(stderr, "%s", formatMessage("[help], [blank]").data());
                     widthRemaining -= 2;
                 }
             }
@@ -441,16 +440,16 @@ void status() {
                     stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
                 else
                     stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
-                printf(formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
+                fprintf(stderr, formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
                 widthRemaining -= entryWidth;
                 first = false;
             }
         }
-        printf("\n");
+        fprintf(stderr, "\n");
     }
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
-    auto cols = thisTerminalSize().columns - (status_legend_message.rawLength() + 7);
+    auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";
@@ -943,11 +942,6 @@ void history() {
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
-    auto displayEndbar = [] {
-        static auto total_cols = thisTerminalSize().columns;
-        fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
-    };
-
     std::vector<std::string> dates;
     for (const auto& entry : path.entryIndex) {
         path.setEntry(entry);
@@ -994,9 +988,9 @@ void history() {
         path.setEntry(entry);
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
-        displayEndbar();
         fprintf(stderr,
-                formatMessage("[info]│ [bold]%*s%lu[blank][info]│ [bold]%*s[blank][info]│ ").data(),
+                formatMessage("\n[info]\033[%ldG│\r│ [bold]%*s%lu[blank][info]│ [bold]%*s[blank][info]│ ").data(),
+                available.columns,
                 longestEntryLength - numberLength(entry),
                 "",
                 entry,
@@ -1006,18 +1000,19 @@ void history() {
         if (path.holdsRawData()) {
             std::string content(fileContents(path.data.raw));
             std::erase(content, '\n');
-            printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+            fprintf(stderr, formatMessage("[help]%s[blank]").data(), content.substr(0, widthRemaining).data());
             continue;
         }
 
         for (bool first = true; const auto& entry : fs::directory_iterator(path.data)) {
-            int entryWidth = entry.path().filename().string().length();
+            auto filename = entry.path().filename().string();
+            int entryWidth = filename.length();
 
             if (widthRemaining <= 0) break;
 
             if (!first) {
                 if (entryWidth <= widthRemaining - 2) {
-                    printf("%s", formatMessage("[help], [blank]").data());
+                    fprintf(stderr, "%s", formatMessage("[help], [blank]").data());
                     widthRemaining -= 2;
                 }
             }
@@ -1025,18 +1020,17 @@ void history() {
             if (entryWidth <= widthRemaining) {
                 std::string stylizedEntry;
                 if (entry.is_directory())
-                    stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
+                    stylizedEntry = "\033[4m" + filename + "\033[24m";
                 else
-                    stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
-                printf(formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
+                    stylizedEntry = "\033[1m" + filename + "\033[22m";
+                fprintf(stderr, formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
                 widthRemaining -= entryWidth;
                 first = false;
             }
         }
-        printf("\n");
     }
 
-    fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
+    fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
     auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
