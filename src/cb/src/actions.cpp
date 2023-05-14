@@ -940,10 +940,10 @@ void history() {
     int columns = available.columns - ((clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7);
     for (int i = 0; i < columns; i++)
         fprintf(stderr, "━");
-    fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("┑[blank]").data());
 
     std::vector<std::string> dates;
-    for (const auto& entry : path.entryIndex) {
+    for (auto entry = 0; entry < path.entryIndex.size(); entry++) {
         path.setEntry(entry);
         std::string agoMessage;
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
@@ -984,7 +984,7 @@ void history() {
 
     auto longestEntryLength = numberLength(*std::max_element(path.entryIndex.begin(), path.entryIndex.end(), [](const auto& a, const auto& b) { return a < b; }));
 
-    for (const auto& entry : path.entryIndex) {
+    for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
@@ -995,7 +995,7 @@ void history() {
                 "",
                 entry,
                 longestDateLength,
-                dates.at(dates.size() - entry - 1).data());
+                dates.at(entry).data());
 
         if (path.holdsRawData()) {
             std::string content(fileContents(path.data.raw));
