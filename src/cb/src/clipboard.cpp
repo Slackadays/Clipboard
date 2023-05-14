@@ -199,8 +199,7 @@ bool userIsARobot() {
 
 bool isAWriteAction() {
     using enum Action;
-    return action == Cut || action == Copy || action == Add || action == Clear || action == Remove || action == Swap || action == Load || action == Import || action == History
-           || action == Edit;
+    return action == Cut || action == Copy || action == Add || action == Clear || action == Remove || action == Swap || action == Load || action == Import || action == Edit;
 }
 
 bool isAClearingAction() {
@@ -698,6 +697,8 @@ void performAction() {
             ignoreRegex();
         else if (action == Status)
             statusJSON();
+        else if (action == History)
+            historyJSON();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();

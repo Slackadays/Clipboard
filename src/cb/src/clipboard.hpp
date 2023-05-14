@@ -518,5 +518,6 @@ void infoJSON();
 void ignoreRegex();
 void statusJSON();
 void history();
+void historyJSON();
 void search();
 } // namespace PerformAction

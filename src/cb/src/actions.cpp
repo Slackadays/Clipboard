@@ -1040,6 +1040,33 @@ void history() {
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }
 
+void historyJSON() {
+    printf("{\n");
+    for (unsigned long entry = 0; entry < path.entryIndex.size(); entry++) {
+        path.setEntry(entry);
+        printf("    \"%lu\": {\n", entry);
+        printf("        \"date\": %zu,\n", fs::last_write_time(path.data).time_since_epoch().count());
+        printf("        \"content\": ");
+        if (path.holdsRawData()) {
+            printf("\"%s\"", escape(fileContents(path.data.raw)).data());
+        } else if (path.holdsData()) {
+            printf("[\n");
+            std::vector<fs::path> itemsInPath(fs::directory_iterator(path.data), fs::directory_iterator());
+            for (const auto& entry : itemsInPath) {
+                printf("            {\n");
+                printf("                \"name\": \"%s\",\n", entry.filename().string().data());
+                printf("                \"isDirectory\": %s\n", fs::is_directory(entry) ? "true" : "false");
+                printf("            }%s\n", entry == itemsInPath.back() ? "" : ",");
+            }
+            printf("\n        ]");
+        } else {
+            printf("null");
+        }
+        printf("\n    }%s\n", entry == path.entryIndex.size() - 1 ? "" : ",");
+    }
+    printf("}\n");
+}
+
 void search() {}
 
 } // namespace PerformAction
