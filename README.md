@@ -16,9 +16,9 @@ I originally made the Clipboard Project to address some severe deficiencies in o
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
-- Compat with text, files, directories, pipes, _anything_,
-- A nearly _infinite_ number of temporary or persistent clipboards,<sup>limited only by your system!</sup>
-- Real full-fat unadulterated regex manipulation for everything you copy,
+- Works with text, files, directories, pipes, _anything_,
+- A nearly _infinite_ number of temporary or persistent clipboards <sup>limited only by your system!</sup>
+- Real, full-fat regex manipulation for everything you copy,
 - Seamless integration with your [desktop clipboard system](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, or Türkçe,
 - JSON support for _supremely_ slick scripting,
