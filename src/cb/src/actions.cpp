@@ -393,7 +393,7 @@ void status() {
             (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); }))
                     .name()
                     .size();
-    TerminalSize available(thisTerminalSize());
+    auto available = thisTerminalSize();
 
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, "%s", check_clipboard_status_message().data());
@@ -931,7 +931,111 @@ void ignoreRegex() {
     exit(EXIT_SUCCESS);
 }
 
-void history() {}
+void history() {
+    stopIndicator();
+    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+    Message clipboard_history_message = "[info]Entry history for clipboard [bold][help]%s[blank]";
+    fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
+    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    int columns = thisTerminalSize().columns - ((clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7);
+    for (int i = 0; i < columns; i++)
+        fprintf(stderr, "━");
+    fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
+
+    auto displayEndbar = [] {
+        static auto total_cols = thisTerminalSize().columns;
+        fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
+    };
+
+    auto dates = []() {
+        std::vector<std::string> dates;
+        for (const auto& entry : path.entryIndex) {
+            path.setEntry(entry);
+            std::string agoMessage;
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+            struct stat info;
+            stat(fs::path(path.data).string().data(), &info);
+            auto timeSince = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(info.st_ctime);
+#else
+            auto timeSince = std::chrono::system_clock::now() - decltype(fs::last_write_time(path.data))::clock::to_time_t(fs::last_write_time(path.data));
+#endif
+            // format time like 1y 2d 3h 4m 5s
+            auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
+            auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
+            auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - days);
+            auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - days - hours);
+            auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - days - hours - minutes);
+            if (years.count() > 0) agoMessage += std::to_string(years.count()) + "y ";
+            if (days.count() > 0) agoMessage += std::to_string(days.count()) + "d ";
+            if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";
+            if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
+            agoMessage += std::to_string(seconds.count()) + "s";
+            dates.emplace_back(agoMessage);
+        }
+        return dates;
+    }();
+
+    auto longestDateLength = (*std::max_element(dates.begin(), dates.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })).size();
+
+    auto longestEntryLength = std::to_string(*std::max_element(path.entryIndex.begin(), path.entryIndex.end(), [](const auto& a, const auto& b) { return a < b; })).size();
+
+    auto available = thisTerminalSize();
+
+    for (const auto& entry : path.entryIndex) {
+        path.setEntry(entry);
+        int widthRemaining = available.columns - (std::to_string(entry).size() + longestEntryLength + longestDateLength + 7);
+
+        displayEndbar();
+        fprintf(stderr,
+                formatMessage("[info]│ [bold]%*s%lu[blank][info]│ [bold]%*s[blank][info]│ ").data(),
+                longestEntryLength - std::to_string(entry).size(),
+                "",
+                entry,
+                longestDateLength,
+                dates.at(dates.size() - entry - 1).data());
+
+        if (path.holdsRawData()) {
+            std::string content(fileContents(path.data.raw));
+            std::erase(content, '\n');
+            printf(formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+            continue;
+        }
+
+        for (bool first = true; const auto& entry : fs::directory_iterator(path.data)) {
+            int entryWidth = entry.path().filename().string().length();
+
+            if (widthRemaining <= 0) break;
+
+            if (!first) {
+                if (entryWidth <= widthRemaining - 2) {
+                    printf("%s", formatMessage("[help], [blank]").data());
+                    widthRemaining -= 2;
+                }
+            }
+
+            if (entryWidth <= widthRemaining) {
+                std::string stylizedEntry;
+                if (entry.is_directory())
+                    stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
+                else
+                    stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
+                printf(formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
+                widthRemaining -= entryWidth;
+                first = false;
+            }
+        }
+        printf("\n");
+    }
+
+    fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
+    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
+    auto cols = thisTerminalSize().columns - (status_legend_message.rawLength() + 7);
+    std::string bar2 = " ┣";
+    for (int i = 0; i < cols; i++)
+        bar2 += "━";
+    fprintf(stderr, "%s", (status_legend_message() + bar2).data());
+    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+}
 
 void search() {}
 

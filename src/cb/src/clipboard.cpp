@@ -75,7 +75,7 @@ std::string clipboard_invocation;
 
 std::string clipboard_name = "0";
 
-std::string clipboard_entry = "0";
+unsigned long clipboard_entry = 0;
 
 std::string locale;
 
@@ -257,7 +257,6 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     // This avoids the situation where we delete the very files we're trying to copy
     auto filesHaveChanged = std::all_of(paths.begin(), paths.end(), [](auto& path) {
         auto filename = path.filename().empty() ? path.parent_path().filename() : path.filename();
-
         // check if the filename of the provided path does not exist in the temp directory
         if (!fs::exists(::path.data / filename)) return true;
 
@@ -270,7 +269,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         return false;
     });
 
-    if (filesHaveChanged) path.makeNewEntry();
+    if (filesHaveChanged && !paths.empty()) path.makeNewEntry();
 
     for (auto&& path : paths) {
         if (!fs::exists(path)) continue;
@@ -512,8 +511,12 @@ void setFlags() {
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
     if (auto flag = flagIsPresent<std::string>("--clipboard"); flag != "") clipboard_name = flag;
-    if (auto flag = flagIsPresent<std::string>("-e"); flag != "") clipboard_entry = flag;
-    if (auto flag = flagIsPresent<std::string>("--entry"); flag != "") clipboard_entry = flag;
+    if (auto flag = flagIsPresent<std::string>("-e"); flag != "") try {
+            clipboard_entry = std::stoul(flag);
+        } catch (...) {}
+    if (auto flag = flagIsPresent<std::string>("--entry"); flag != "") try {
+            clipboard_entry = std::stoul(flag);
+        } catch (...) {}
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
         exit(EXIT_SUCCESS);

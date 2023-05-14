@@ -67,7 +67,7 @@ struct Constants {
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
     std::string_view data_file_name = "rawdata.clipboard";
     std::string_view default_clipboard_name = "0";
-    std::string_view default_clipboard_entry = "0";
+    unsigned long default_clipboard_entry = 0;
     std::string_view temporary_directory_name = "Clipboard";
     std::string_view persistent_directory_name = ".clipboard";
     std::string_view original_files_name = "originals";
@@ -119,7 +119,7 @@ extern std::string clipboard_invocation;
 
 extern std::string clipboard_name;
 
-extern std::string clipboard_entry;
+extern unsigned long clipboard_entry;
 
 extern std::string locale;
 
@@ -206,10 +206,10 @@ static std::string formatMessage(const std::string_view& str, bool colorful = !n
 class Clipboard {
     fs::path root;
     std::string this_name;
-    std::string this_entry;
-    std::deque<unsigned long> entryIndex;
+    unsigned long this_entry;
 
 public:
+    std::deque<unsigned long> entryIndex;
     bool is_persistent = false;
 
     class DataDirectory {
@@ -266,7 +266,7 @@ public:
     }
 
     Clipboard() = default;
-    Clipboard(const auto& clipboard_name, const std::string_view& clipboard_entry = constants.default_clipboard_entry) {
+    Clipboard(const auto& clipboard_name, const unsigned long& clipboard_entry = constants.default_clipboard_entry) {
         this_name = clipboard_name;
         this_entry = clipboard_entry;
 
@@ -277,14 +277,15 @@ public:
         entryIndex = generatedEntryIndex();
 
         try {
-            data = root / constants.data_directory / std::to_string(entryIndex.at(std::stoul(this_entry)));
+            data = root / constants.data_directory / std::to_string(entryIndex.at(this_entry));
         } catch (...) {
             stopIndicator();
             fprintf(stderr,
-                    formatMessage("[error]❌ The history entry you chose (\"[bold]%s[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]"
+                    formatMessage(
+                            "[error]❌ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]"
                     )
                             .data(),
-                    this_entry.data());
+                    this_entry);
             exit(EXIT_FAILURE);
         }
 
@@ -356,15 +357,20 @@ public:
     }
     void releaseLock() { fs::remove(metadata.lock); }
     std::string name() const { return this_name; }
-    std::string entry() { return this_entry; }
+    unsigned long entry() { return this_entry; }
     size_t totalEntries() { return entryIndex.size(); }
     void makeNewEntry() {
         entryIndex.emplace_front(entryIndex.front() + 1);
 
-        data = root / constants.data_directory / std::to_string(entryIndex.at(std::stoul(this_entry)));
+        data = root / constants.data_directory / std::to_string(entryIndex.at(this_entry));
         data.raw = data / constants.data_file_name;
 
         fs::create_directories(data);
+    }
+    void setEntry(const unsigned long& entry) {
+        this_entry = entry;
+        data = root / constants.data_directory / std::to_string(entryIndex.at(this_entry));
+        data.raw = data / constants.data_file_name;
     }
     void trimHistoryEntries() {
         if (entryIndex.size() <= maximumHistorySize || maximumHistorySize == 0) return;
