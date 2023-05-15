@@ -120,7 +120,7 @@ void statusJSON() {
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
                 printf("        \"dataType\": \"%s\",\n", type.value().data());
-                printf("        \"dataSize\": %ld\n", content.length());
+                printf("        \"dataSize\": %zu\n", content.length());
                 printf("    }");
             } else {
                 printf("\"%s\"", JSONescape(content).data());

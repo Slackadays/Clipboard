@@ -39,7 +39,7 @@ void info() {
 
     auto displayEndbar = [] {
         static auto total_cols = thisTerminalSize().columns;
-        fprintf(stderr, "\033[%ldG%s\r", total_cols, formatMessage("[info]│[blank]").data());
+        fprintf(stderr, "\033[%zdG%s\r", total_cols, formatMessage("[info]│[blank]").data());
     };
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)

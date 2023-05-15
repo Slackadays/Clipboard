@@ -356,16 +356,16 @@ public:
     auto operator=(const auto& other) { return root = other; }
     auto operator/(const auto& other) { return root / other; }
     std::string string() { return root.string(); }
-    bool holdsData() {
-        if (fs::is_empty(data)) return false; // we know that the data folder exists because it's made on construction
-        if (fs::exists(data.raw) && fs::is_empty(data.raw)) return false;
-        return true;
-    }
     bool holdsRawData() const {
         std::error_code ec;
         bool empty = fs::is_empty(data.raw, ec);
         if (ec) return false; // errors out if the file doesn't exist, return false to save on a syscall
         return !empty;
+    }
+    bool holdsData() {
+        if (fs::is_empty(data)) return false; // we know that the data folder exists because it's made on construction
+        if (!holdsRawData()) return false;
+        return true;
     }
     bool holdsIgnoreRegexes() { return fs::exists(metadata.ignore) && !fs::is_empty(metadata.ignore); }
     std::vector<std::regex> ignoreRegexes() {

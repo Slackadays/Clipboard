@@ -165,7 +165,7 @@ void historyJSON() {
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
                 printf("            \"dataType\": \"%s\",\n", type.value().data());
-                printf("            \"dataSize\": %ld\n", content.length());
+                printf("            \"dataSize\": %zd\n", content.length());
                 printf("        }");
             } else {
                 printf("\"%s\"", JSONescape(content).data());

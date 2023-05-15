@@ -14,6 +14,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <fcntl.h>
+#include <format>
+#include <io.h>
+#endif
+
 namespace PerformAction {
 
 void pipeIn() {
