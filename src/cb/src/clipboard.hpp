@@ -361,7 +361,12 @@ public:
         if (fs::exists(data.raw) && fs::is_empty(data.raw)) return false;
         return true;
     }
-    bool holdsRawData() const { return fs::exists(data.raw) && !fs::is_empty(data.raw); }
+    bool holdsRawData() const {
+        std::error_code ec;
+        bool empty = fs::is_empty(data.raw, ec);
+        if (ec) return false; // errors out if the file doesn't exist, return false to save on a syscall
+        return !empty;
+    }
     bool holdsIgnoreRegexes() { return fs::exists(metadata.ignore) && !fs::is_empty(metadata.ignore); }
     std::vector<std::regex> ignoreRegexes() {
         std::vector<std::regex> regexes;

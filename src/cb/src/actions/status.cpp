@@ -64,7 +64,7 @@ void status() {
         if (clipboard.holdsRawData()) {
             std::string content(fileContents(clipboard.data.raw));
             if (auto type = inferMIMEType(content); type.has_value())
-                content = "\033[22m[\033[0m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[1m]\033[22m";
+                content = "\033[1m[\033[22m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[1m]\033[22m";
             else
                 std::erase(content, '\n');
             fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());

@@ -40,16 +40,18 @@ void history() {
     fprintf(stderr, "%s", formatMessage("┑[blank]").data());
 
     std::vector<std::string> dates;
+    dates.reserve(path.entryIndex.size());
+
+    size_t longestDateLength = 0;
+
     for (auto entry = 0; entry < path.entryIndex.size(); entry++) {
         path.setEntry(entry);
         std::string agoMessage;
+        agoMessage.reserve(20);
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
         struct stat info;
         stat(fs::path(path.data).string().data(), &info);
         auto timeSince = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(info.st_ctime);
-#else
-        auto timeSince = std::chrono::system_clock::now() - decltype(fs::last_write_time(path.data))::clock::to_time_t(fs::last_write_time(path.data));
-#endif
         // format time like 1y 2d 3h 4m 5s
         auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
         auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
@@ -62,6 +64,12 @@ void history() {
         if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
         agoMessage += std::to_string(seconds.count()) + "s";
         dates.emplace_back(agoMessage);
+
+        if (agoMessage.length() > longestDateLength) longestDateLength = agoMessage.length();
+#else
+        dates.push_back("n/a");
+        longestDateLength = 3;
+#endif
     }
 
     auto numberLength = [](const unsigned long& number) {
@@ -77,22 +85,24 @@ void history() {
         return 10; // because 4 billion is the max for unsigned long, we know we'll have 10 or fewer digits
     };
 
-    auto longestDateLength = (*std::max_element(dates.begin(), dates.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })).size();
+    auto longestEntryLength = numberLength(path.entryIndex.front()); // we know that the longest is first because the highest folder number is entry 0, or the first
 
-    auto longestEntryLength = numberLength(*std::max_element(path.entryIndex.begin(), path.entryIndex.end(), [](const auto& a, const auto& b) { return a < b; }));
+    std::string batchedMessage;
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
+
+        if (batchedMessage.size() > 50000) {
+            fprintf(stderr, "%s", batchedMessage.data());
+            batchedMessage.clear();
+        }
+
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
-        fprintf(stderr,
-                formatMessage("\n[info]\033[%ldG│\r│ [bold]%*s%lu[blank][info]│ [bold]%*s[blank][info]│ ").data(),
-                available.columns,
-                longestEntryLength - numberLength(entry),
-                "",
-                entry,
-                longestDateLength,
-                dates.at(entry).data());
+        batchedMessage += formatMessage(
+                "\n[info]\033[" + std::to_string(available.columns) + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry)
+                + "[blank][info]│ [bold]" + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[blank][info]│ "
+        );
 
         if (path.holdsRawData()) {
             std::string content(fileContents(path.data.raw));
@@ -100,7 +110,7 @@ void history() {
                 content = "\033[1m[\033[22m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[1m]\033[22m";
             else
                 std::erase(content, '\n');
-            fprintf(stderr, formatMessage("[help]%s[blank]").data(), content.substr(0, widthRemaining).data());
+            batchedMessage += formatMessage("[help]" + content.substr(0, widthRemaining) + "[blank]");
             continue;
         }
 
@@ -113,7 +123,7 @@ void history() {
 
             if (!first) {
                 if (entryWidth <= widthRemaining - 2) {
-                    fprintf(stderr, "%s", formatMessage("[help], [blank]").data());
+                    batchedMessage += formatMessage("[help], [blank]");
                     widthRemaining -= 2;
                 }
             }
@@ -124,12 +134,14 @@ void history() {
                     stylizedEntry = "\033[4m" + filename + "\033[24m";
                 else
                     stylizedEntry = "\033[1m" + filename + "\033[22m";
-                fprintf(stderr, formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
+                batchedMessage += formatMessage("[help]" + stylizedEntry + "[blank]");
                 widthRemaining -= entryWidth;
                 first = false;
             }
         }
     }
+
+    fprintf(stderr, "%s", batchedMessage.data());
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[1m[\033[22mData\033[1m]\033[22m";
