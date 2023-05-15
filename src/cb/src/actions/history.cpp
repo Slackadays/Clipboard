@@ -107,7 +107,7 @@ void history() {
         if (path.holdsRawData()) {
             std::string content(fileContents(path.data.raw));
             if (auto type = inferMIMEType(content); type.has_value())
-                content = "\033[1m[\033[22m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[1m]\033[22m";
+                content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
             else
                 std::erase(content, '\n');
             batchedMessage += formatMessage("[help]" + content.substr(0, widthRemaining) + "[blank]");
@@ -144,7 +144,7 @@ void history() {
     fprintf(stderr, "%s", batchedMessage.data());
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
-    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[1m[\033[22mData\033[1m]\033[22m";
+    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
     auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
