@@ -10,7 +10,7 @@
 
 The Clipboard Project <sup>(CB for short)</sup> is a fast and featherlight, feature packed, and user friendly power tool that saves you tons of time and effort in style. You'll be able to remember anything, anytime, anywhere at the literal press of a button, like having a second brain.
 
-I originally made the Clipboard Project to address some severe deficiencies in other similar tools. But now, it's the world's first (and currently only) complete, honest-to-goodness clipboard manager for the terminal.
+I originally made this to address some severe deficiencies in other similar tools. But now, CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for the terminal.
 
 <br>
 
