@@ -21,7 +21,7 @@ void addFiles() {
         stopIndicator();
         fprintf(stderr,
                 "%s",
-                formatMessage("[error]❌ You can't add items to text. [blank][help]Try copying text first, or add "
+                formatMessage("[error]❌ You can't add items to text. [blank]💡 [help]Try copying text first, or add "
                               "text instead.[blank]\n")
                         .data());
         exit(EXIT_FAILURE);
@@ -42,7 +42,7 @@ void addData() {
         stopIndicator();
         fprintf(stderr,
                 "%s",
-                formatMessage("[error]❌ You can't add text to items. [blank][help]Try copying text first, or add a "
+                formatMessage("[error]❌ You can't add text to items. [blank]💡 [help]Try copying text first, or add a "
                               "file instead.[blank]\n")
                         .data());
         exit(EXIT_FAILURE);

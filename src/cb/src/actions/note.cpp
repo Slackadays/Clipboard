@@ -41,7 +41,7 @@ void noteText() {
         }
     } else {
         stopIndicator();
-        fprintf(stderr, "%s", formatMessage("[error]❌ You can't add multiple items to a note. [blank][help]Try providing a single piece of text instead.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[error]❌ You can't add multiple items to a note. 💡 [blank][help]Try providing a single piece of text instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
 }

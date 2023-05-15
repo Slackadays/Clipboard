@@ -37,7 +37,7 @@ void removeRegex() {
             stopIndicator();
             fprintf(stderr,
                     "%s",
-                    formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                    formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. 💡 [blank][help]Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
                             .data());
             exit(EXIT_FAILURE);

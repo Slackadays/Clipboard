@@ -19,7 +19,7 @@ namespace PerformAction {
 void load() {
     if (!path.holdsData()) {
         stopIndicator();
-        fprintf(stderr, "%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. [help]Try choosing a different source instead.[blank]\n").data());
+        fprintf(stderr, "%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. 💡 [help]Try choosing a different source instead.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
 
@@ -33,7 +33,7 @@ void load() {
         stopIndicator();
         fprintf(stderr,
                 "%s",
-                formatMessage("[error]❌ You can't load a clipboard into itself. [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data());
+                formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data());
         exit(EXIT_FAILURE);
     }
 

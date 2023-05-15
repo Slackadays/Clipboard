@@ -63,7 +63,10 @@ void status() {
 
         if (clipboard.holdsRawData()) {
             std::string content(fileContents(clipboard.data.raw));
-            std::erase(content, '\n');
+            if (auto type = inferMIMEType(content); type.has_value())
+                content = "[" + std::string(type.value()) + ", " + formatBytes(content.length()) + "]";
+            else
+                std::erase(content, '\n');
             fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
             continue;
         }
@@ -94,7 +97,7 @@ void status() {
         fprintf(stderr, "\n");
     }
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
-    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
+    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, [Data]";
     auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
@@ -114,7 +117,14 @@ void statusJSON() {
 
         if (clipboard.holdsRawData()) {
             std::string content(fileContents(clipboard.data.raw));
-            printf("\"%s\"", escape(content).data());
+            if (auto type = inferMIMEType(content); type.has_value()) {
+                printf("{\n");
+                printf("        \"dataType\": \"%s\",\n", type.value().data());
+                printf("        \"dataSize\": %ld\n", content.length());
+                printf("    }");
+            } else {
+                printf("\"%s\"", JSONescape(content).data());
+            }
         } else {
             printf("[");
             for (bool first = true; const auto& entry : fs::directory_iterator(clipboard.data)) {

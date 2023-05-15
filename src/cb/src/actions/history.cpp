@@ -96,13 +96,17 @@ void history() {
 
         if (path.holdsRawData()) {
             std::string content(fileContents(path.data.raw));
-            std::erase(content, '\n');
+            if (auto type = inferMIMEType(content); type.has_value())
+                content = "[" + std::string(type.value()) + ", " + formatBytes(content.length()) + "]";
+            else
+                std::erase(content, '\n');
             fprintf(stderr, formatMessage("[help]%s[blank]").data(), content.substr(0, widthRemaining).data());
             continue;
         }
 
         for (bool first = true; const auto& entry : fs::directory_iterator(path.data)) {
             auto filename = entry.path().filename().string();
+            if (filename == constants.data_file_name && fs::is_empty(entry.path())) continue;
             int entryWidth = filename.length();
 
             if (widthRemaining <= 0) break;
@@ -128,7 +132,7 @@ void history() {
     }
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
-    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m";
+    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, [Data]";
     auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
@@ -145,7 +149,15 @@ void historyJSON() {
         printf("        \"date\": %zu,\n", fs::last_write_time(path.data).time_since_epoch().count());
         printf("        \"content\": ");
         if (path.holdsRawData()) {
-            printf("\"%s\"", escape(fileContents(path.data.raw)).data());
+            std::string content(fileContents(path.data.raw));
+            if (auto type = inferMIMEType(content); type.has_value()) {
+                printf("{\n");
+                printf("        \"dataType\": \"%s\",\n", type.value().data());
+                printf("        \"dataSize\": %ld\n", content.length());
+                printf("    }");
+            } else {
+                printf("\"%s\"", JSONescape(content).data());
+            }
         } else if (path.holdsData()) {
             printf("[\n");
             std::vector<fs::path> itemsInPath(fs::directory_iterator(path.data), fs::directory_iterator());

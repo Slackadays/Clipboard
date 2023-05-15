@@ -203,8 +203,55 @@ static std::string formatMessage(const std::string_view& str, bool colorful = !n
     return temp;
 }
 
-static std::string escape(const std::string& input) {
-    return std::regex_replace(input, std::regex("\""), "\\\"");
+static std::string JSONescape(const std::string_view& input) {
+    std::string temp(input);
+
+    for (size_t i = 0; i < temp.size(); i++) {
+        switch (temp[i]) {
+        case '"':
+            temp.replace(i, 1, "\\\"");
+            i++;
+            break;
+        case '\\':
+            temp.replace(i, 1, "\\\\");
+            i++;
+            break;
+        case '/':
+            temp.replace(i, 1, "\\/");
+            i++;
+            break;
+        case '\b':
+            temp.replace(i, 1, "\\b");
+            i++;
+            break;
+        case '\f':
+            temp.replace(i, 1, "\\f");
+            i++;
+            break;
+        case '\n':
+            temp.replace(i, 1, "\\n");
+            i++;
+            break;
+        case '\r':
+            temp.replace(i, 1, "\\r");
+            i++;
+            break;
+        case '\t':
+            temp.replace(i, 1, "\\t");
+            i++;
+            break;
+        default:
+            if (temp[i] < 32) {
+                std::stringstream ss;
+                ss << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (int)temp[i];
+                temp.replace(i, 1, ss.str());
+                i += 5;
+            }
+            break;
+        }
+    }
+
+    return temp;
 }
 
 class Clipboard {
