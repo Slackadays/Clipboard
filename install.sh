@@ -7,9 +7,9 @@ unsupported() {
 }
 
 verify() {
-    if command -v cb >/dev/null 2>&1
+    if command -v cb 2>&1
     then
-        if ! cb >/dev/null 2>&1
+        if ! cb 2>&1
         then
             unsupported "this system"
             exit 1
