@@ -85,7 +85,7 @@ void history() {
         return 10; // because 4 billion is the max for unsigned long, we know we'll have 10 or fewer digits
     };
 
-    auto longestEntryLength = numberLength(path.entryIndex.front()); // we know that the longest is first because the highest folder number is entry 0, or the first
+    auto longestEntryLength = numberLength(path.entryIndex.size());
 
     std::string batchedMessage;
 
