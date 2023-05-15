@@ -154,7 +154,7 @@ void historyJSON() {
                 printf("{\n");
                 printf("        \"dataType\": \"%s\",\n", type.value().data());
                 printf("        \"dataSize\": %ld\n", content.length());
-                printf("    }");
+                printf("        }");
             } else {
                 printf("\"%s\"", JSONescape(content).data());
             }

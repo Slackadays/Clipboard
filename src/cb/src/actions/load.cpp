@@ -33,7 +33,8 @@ void load() {
         stopIndicator();
         fprintf(stderr,
                 "%s",
-                formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data());
+                formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n").data()
+        );
         exit(EXIT_FAILURE);
     }
 
