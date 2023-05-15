@@ -97,7 +97,7 @@ void history() {
         if (path.holdsRawData()) {
             std::string content(fileContents(path.data.raw));
             if (auto type = inferMIMEType(content); type.has_value())
-                content = "[" + std::string(type.value()) + ", " + formatBytes(content.length()) + "]";
+                content = "\033[1m[\033[22m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[1m]\033[22m";
             else
                 std::erase(content, '\n');
             fprintf(stderr, formatMessage("[help]%s[blank]").data(), content.substr(0, widthRemaining).data());
@@ -132,7 +132,7 @@ void history() {
     }
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
-    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, [Data]";
+    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[1m[\033[22mData\033[1m]\033[22m";
     auto cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
@@ -152,8 +152,8 @@ void historyJSON() {
             std::string content(fileContents(path.data.raw));
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
-                printf("        \"dataType\": \"%s\",\n", type.value().data());
-                printf("        \"dataSize\": %ld\n", content.length());
+                printf("            \"dataType\": \"%s\",\n", type.value().data());
+                printf("            \"dataSize\": %ld\n", content.length());
                 printf("        }");
             } else {
                 printf("\"%s\"", JSONescape(content).data());
