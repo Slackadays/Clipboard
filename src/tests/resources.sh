@@ -43,7 +43,9 @@ assert_equals() {
     then
         return 0
     else
-        fail "😕 $1 doesn't equal $2"
+        truncated1=$(printf "%s" "$1" | head -c 64)
+        truncated2=$(printf "%s" "$2" | head -c 64)
+        fail "😕 $truncated1 doesn't equal $truncated2"
     fi
 }
 
