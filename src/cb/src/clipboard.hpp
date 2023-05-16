@@ -35,6 +35,7 @@
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <cstring>
 #include <dirent.h>
+#include <sys/stat.h>
 #endif
 
 #include <clipboard/fork.hpp>
@@ -103,6 +104,16 @@ static auto thisPID() {
     return GetCurrentProcessId();
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     return getpid();
+#endif
+}
+
+static size_t directoryOverhead(const fs::path& directory) {
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    struct stat info;
+    if (stat(directory.string().data(), &info) != 0) return 0;
+    return info.st_size;
+#else
+    return 0;
 #endif
 }
 

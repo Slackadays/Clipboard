@@ -622,20 +622,20 @@ void startIndicator() { // If cancelled, leave cancelled
 unsigned long long totalItemSize() {
     unsigned long long total_item_size = 0;
     if ((action == Action::Cut || action == Action::Copy || action == Action::Add) && io_type == IOType::File) {
-        for (const auto& i : copying.items) {
+        for (const auto& item : copying.items) {
             try {
-                if (fs::is_directory(i))
-                    for (const auto& entry : fs::recursive_directory_iterator(i))
-                        total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
+                if (fs::is_directory(item))
+                    for (const auto& entry : fs::recursive_directory_iterator(item))
+                        total_item_size += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
                 else
-                    total_item_size += fs::is_regular_file(i) ? fs::file_size(i) : 16;
+                    total_item_size += fs::is_directory(item) ? directoryOverhead(item) : fs::file_size(item);
             } catch (const fs::filesystem_error& e) {
-                copying.failedItems.emplace_back(i.string(), e.code());
+                copying.failedItems.emplace_back(item.string(), e.code());
             }
         }
     } else if (action == Action::Paste && io_type == IOType::File) {
         for (const auto& entry : fs::recursive_directory_iterator(path.data))
-            total_item_size += entry.is_regular_file() ? entry.file_size() : 16;
+            total_item_size += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
     }
     return total_item_size;
 }
