@@ -374,7 +374,11 @@ public:
         return !empty;
     }
     bool holdsData() {
-        return !fs::is_empty(data); // we know that the data folder exists because it's made on construction
+        if (fs::is_empty(data)) return false;
+        if (holdsRawData()) return true;
+        for (const auto& entry : fs::directory_iterator(data))
+            if (!fs::is_empty(entry)) return true;
+        return false;
     }
     bool holdsIgnoreRegexes() { return fs::exists(metadata.ignore) && !fs::is_empty(metadata.ignore); }
     std::vector<std::regex> ignoreRegexes() {
