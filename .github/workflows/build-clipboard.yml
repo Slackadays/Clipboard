@@ -2,15 +2,15 @@ name: Clipboard Builds
 
 on: [ push, pull_request ]
 jobs:
-  linux_x11_wayland:
+  linux_x11wl:
     strategy:
       fail-fast: false
       matrix:
         gcc: [ 12 ]
         arch:
-          - os: i386
-            gcc: i686-linux-gnu
-            needs_ports: "0"
+          #- os: i386
+          #  gcc: i686-linux-gnu
+          #  needs_ports: "0"
 
           - os: amd64
             gcc: x86_64-linux-gnu
@@ -32,9 +32,9 @@ jobs:
             gcc: powerpc64le-linux-gnu
             needs_ports: "1"
 
-          - os: s390x
-            gcc: s390x-linux-gnu
-            needs_ports: "1"
+          #- os: s390x
+          #  gcc: s390x-linux-gnu
+          #  needs_ports: "1"
 
     runs-on: ubuntu-22.04
 

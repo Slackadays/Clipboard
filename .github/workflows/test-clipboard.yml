@@ -90,7 +90,8 @@ jobs:
         gcc: [ 11, 12 ]
         x11: [ "1", "0" ]
         wayland: [ "1", "0" ]
-        arch: [ "aarch64", "riscv64", "s390x", "ppc64le" ]
+        #arch: [ "armv7", "aarch64", "riscv64", "s390x", "ppc64le" ]
+        arch:  [ "aarch64", "riscv64", "s390x", "ppc64le" ]
         distro: [ "ubuntu22.04" ]
 
     runs-on: ubuntu-22.04
