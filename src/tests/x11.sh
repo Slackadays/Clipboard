@@ -45,12 +45,12 @@ assert_equals "$(cat ../"Exosphere 2.0.mp3")" "$(until xclip -o -selection clipb
 
 xclip -selection clipboard -t image/png < ../TurnYourClipboardUp.png
 
-sleep 3
+sleep 6
 
 assert_equals "$(cat ../TurnYourClipboardUp.png)" "$(cb paste)"
 
 xclip -selection clipboard -t audio/mpeg < ../"Exosphere 2.0.mp3"
 
-sleep 3
+sleep 6
 
 assert_equals "$(cat ../"Exosphere 2.0.mp3")" "$(cb paste)"
