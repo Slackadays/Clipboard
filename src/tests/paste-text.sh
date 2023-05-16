@@ -7,4 +7,4 @@ cb copy "Foobar"
 
 cb paste
 
-item_is_here rawdata.clipboard
+item_exists rawdata.clipboard

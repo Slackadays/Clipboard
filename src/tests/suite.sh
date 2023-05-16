@@ -21,6 +21,9 @@ cd "$BASEDIR" || exit 1
 clear_tempdirs
 
 run_tests() {
+    sh export.sh
+    sh history.sh
+    sh ignore.sh
     sh add-file.sh
     sh add-pipe.sh
     sh add-text.sh

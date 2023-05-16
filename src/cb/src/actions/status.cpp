@@ -36,9 +36,7 @@ void status() {
         return;
     }
     auto longestClipboardLength =
-            (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); }))
-                    .name()
-                    .size();
+            (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); })).name().size();
     auto available = thisTerminalSize();
 
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
@@ -54,12 +52,7 @@ void status() {
     for (const auto& clipboard : clipboards_with_contents) {
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
-        fprintf(stderr,
-                formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ [blank]").data(),
-                available.columns,
-                longestClipboardLength - clipboard.name().length(),
-                "",
-                clipboard.name().data());
+        fprintf(stderr, formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
         if (clipboard.holdsRawData()) {
             std::string content(fileContents(clipboard.data.raw));
@@ -98,7 +91,7 @@ void status() {
     }
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
-    auto cols = available.columns - (status_legend_message.rawLength() + 7);
+    int cols = available.columns - (status_legend_message.rawLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";

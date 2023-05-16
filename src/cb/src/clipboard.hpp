@@ -349,10 +349,7 @@ public:
         } catch (...) {
             stopIndicator();
             fprintf(stderr,
-                    formatMessage(
-                            "[error]❌ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]"
-                    )
-                            .data(),
+                    formatMessage("[error]❌ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]").data(),
                     this_entry);
             exit(EXIT_FAILURE);
         }

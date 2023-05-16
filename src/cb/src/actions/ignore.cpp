@@ -55,9 +55,7 @@ void ignoreRegex() {
             volatile auto test = std::regex(pattern); // volatile makes sure this otherwise unused variable isn't optimized out
         } catch (const std::regex_error& e) {
             error_exit(
-                    formatMessage(
-                            "[error]❌ The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s 💡 [help]Try using a different one instead.[blank]\n"
-                    ),
+                    formatMessage("[error]❌ The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s 💡 [help]Try using a different one instead.[blank]\n"),
                     pattern,
                     std::string(e.what())
             );

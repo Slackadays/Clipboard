@@ -55,7 +55,7 @@ void exportClipboards() {
 
     if (destinations.empty() || successes.clipboards == 0) {
         stopIndicator();
-        printf("%s", no_clipboard_contents_message().data());
+        fprintf(stderr, "%s", no_clipboard_contents_message().data());
         error_exit(clipboard_action_prompt(), clipboard_invocation, clipboard_invocation);
     }
 }

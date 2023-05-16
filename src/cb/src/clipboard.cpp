@@ -532,13 +532,10 @@ void verifyAction() {
 }
 
 void setFilepaths() {
-    global_path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR")
-                             : getenv("TMPDIR")         ? getenv("TMPDIR")
-                                                        : fs::temp_directory_path())
-                            / constants.temporary_directory_name;
+    global_path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR") : getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name;
 
-    global_path.persistent = (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : global_path.home))
-                             / constants.persistent_directory_name;
+    global_path.persistent =
+            (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : global_path.home)) / constants.persistent_directory_name;
 
     path = Clipboard(clipboard_name, clipboard_entry);
 }
@@ -821,6 +818,8 @@ int main(int argc, char* argv[]) {
 
         syncWithGUIClipboard();
 
+        ignoreItemsPreemptively(copying.items);
+
         checkForNoItems();
 
         if (needsANewEntry()) path.makeNewEntry();
@@ -830,8 +829,6 @@ int main(int argc, char* argv[]) {
         (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
 
         deduplicate(copying.items);
-
-        ignoreItemsPreemptively(copying.items);
 
         checkItemSize(totalItemSize());
 

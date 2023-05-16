@@ -30,8 +30,7 @@ void paste() {
             }
             incrementSuccessesForItem(entry);
         };
-        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
-            continue;
+        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) continue;
         try {
             if (fs::exists(target)) {
                 using enum CopyPolicy;

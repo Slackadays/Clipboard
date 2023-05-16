@@ -161,13 +161,7 @@ public:
 
     enum Value : std::size_t { Format8 = 8, Format16 = 16, Format32 = 32 };
 
-    constexpr X11PropertyFormat(Value value)
-            : X11PropertyFormat(
-                    static_cast<std::size_t>(value),
-                    value == Format8    ? sizeof(format8_t)
-                    : value == Format16 ? sizeof(format16_t)
-                                        : sizeof(format32_t)
-            ) {}
+    constexpr X11PropertyFormat(Value value) : X11PropertyFormat(static_cast<std::size_t>(value), value == Format8 ? sizeof(format8_t) : value == Format16 ? sizeof(format16_t) : sizeof(format32_t)) {}
 
     [[nodiscard]] inline std::size_t size() const { return m_size; }
     [[nodiscard]] inline std::size_t value() const { return m_value; }
@@ -632,8 +626,7 @@ constexpr X11PropertyFormat X11PropertyFormat::fromSize() {
 }
 
 template <ranges::contiguous_range range_t, typename char_t>
-X11Property::X11Property(const X11Atom& name, const X11Atom& type, range_t data, bool owned)
-        : X11Property(name, type, X11PropertyFormat::fromSize<sizeof(char_t)>(), data, owned) {}
+X11Property::X11Property(const X11Atom& name, const X11Atom& type, range_t data, bool owned) : X11Property(name, type, X11PropertyFormat::fromSize<sizeof(char_t)>(), data, owned) {}
 
 template <ranges::contiguous_range range_t, typename char_t>
 X11Property::X11Property(const X11Atom& name, const X11Atom& type, const X11PropertyFormat& format, range_t data, bool owned)
@@ -1145,8 +1138,7 @@ void X11SelectionDaemon::handleSelectionRequest(const XSelectionRequestEvent& ev
 }
 
 bool X11SelectionDaemon::handleSelectionRequest(const X11SelectionRequest& request) {
-    debugStream << "Got a selection request from " << request.window().window() << " for target " << request.target().name() << " on property " << request.property().name()
-                << std::endl;
+    debugStream << "Got a selection request from " << request.window().window() << " for target " << request.target().name() << " on property " << request.property().name() << std::endl;
 
     if (request.target() == atomMultiple) {
         return handleMultipleSelectionRequest(request);

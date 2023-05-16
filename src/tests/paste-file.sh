@@ -11,9 +11,9 @@ setup_dir pastehere
 
 cb paste
 
-item_is_here testfile
+item_exists testfile
 
-item_is_here testdir/testfile
+item_exists testdir/testfile
 
 cb clear
 

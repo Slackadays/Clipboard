@@ -125,7 +125,7 @@ void info() {
         fprintf(stderr, "%s", formatMessage("[info]│ There are no ignore regexes for this clipboard.[blank]\n").data());
 
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
-    auto cols = thisTerminalSize().columns;
+    int cols = thisTerminalSize().columns;
     for (int i = 0; i < cols - 2; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());

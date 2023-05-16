@@ -23,8 +23,7 @@ void importClipboards() {
     else
         importDirectory = copying.items.at(0);
 
-    if (!fs::exists(importDirectory))
-        error_exit("%s", formatMessage("[error]❌ The directory you're trying to import from doesn't exist. 💡 [help]Try choosing a different one instead.[blank]\n"));
+    if (!fs::exists(importDirectory)) error_exit("%s", formatMessage("[error]❌ The directory you're trying to import from doesn't exist. 💡 [help]Try choosing a different one instead.[blank]\n"));
 
     if (!fs::is_directory(importDirectory))
         error_exit("%s", formatMessage("[error]❌ The directory you're trying to import from isn't a directory. 💡 [help]Try choosing a different one instead.[blank]\n"));
@@ -34,8 +33,7 @@ void importClipboards() {
             copying.failedItems.emplace_back(entry.path().filename().string(), std::make_error_code(std::errc::not_a_directory));
         else {
             try {
-                auto target = (isPersistent(entry.path().filename().string()) || getenv("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary)
-                              / entry.path().filename();
+                auto target = (isPersistent(entry.path().filename().string()) || getenv("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary) / entry.path().filename();
                 if (fs::exists(target)) {
                     using enum CopyPolicy;
                     switch (copying.policy) {

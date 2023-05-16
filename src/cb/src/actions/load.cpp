@@ -28,10 +28,7 @@ void load() {
         destinations.emplace_back(constants.default_clipboard_name);
 
     if (std::find(destinations.begin(), destinations.end(), clipboard_name) != destinations.end())
-        error_exit(
-                "%s",
-                formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n")
-        );
+        error_exit("%s", formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n"));
 
     for (const auto& destination_number : destinations) {
         Clipboard destination(destination_number);

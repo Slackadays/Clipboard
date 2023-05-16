@@ -34,7 +34,9 @@ void history() {
     Message clipboard_history_message = "[info]Entry history for clipboard [bold][help]%s[blank]";
     fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    int columns = available.columns - ((clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7);
+    auto usedSpace = (clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7;
+    if (usedSpace > available.columns) available.columns = usedSpace;
+    int columns = available.columns - usedSpace;
     for (int i = 0; i < columns; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┑[blank]").data());
@@ -100,8 +102,8 @@ void history() {
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
         batchedMessage += formatMessage(
-                "\n[info]\033[" + std::to_string(available.columns) + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry)
-                + "[blank][info]│ [bold]" + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[blank][info]│ "
+                "\n[info]\033[" + std::to_string(available.columns) + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[blank][info]│ [bold]"
+                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[blank][info]│ "
         );
 
         if (path.holdsRawData()) {
@@ -145,7 +147,9 @@ void history() {
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
-    auto cols = available.columns - (status_legend_message.rawLength() + 7);
+    usedSpace = status_legend_message.rawLength() + 7;
+    if (usedSpace > available.columns) available.columns = usedSpace;
+    auto cols = available.columns - usedSpace;
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";

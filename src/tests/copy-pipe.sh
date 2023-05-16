@@ -10,7 +10,7 @@ export CLIPBOARD_FORCETTY=1
 
 cb paste
 
-item_is_here rawdata.clipboard
+item_exists rawdata.clipboard
 
 unset CLIPBOARD_FORCETTY
 

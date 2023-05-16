@@ -38,8 +38,7 @@ void show() {
     fprintf(stderr, clipboard_item_many_contents_message().data(), clipboard_name.data());
 
     for (const auto& entry : fs::directory_iterator(path.data)) {
-        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); }))
-            continue;
+        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) continue;
         fprintf(stderr, formatMessage("[info]│ [bold][help]%s[blank]\n").data(), entry.path().filename().string().data());
     }
 }
@@ -56,9 +55,7 @@ void showFilepaths() {
                 std::remove_if(
                         paths.begin(),
                         paths.end(),
-                        [&](const auto& entry) {
-                            return !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.filename().string(), regex); });
-                        }
+                        [&](const auto& entry) { return !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.filename().string(), regex); }); }
                 ),
                 paths.end()
         );
