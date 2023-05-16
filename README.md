@@ -8,7 +8,7 @@
 
 <br>
 
-The Clipboard Project <sup>(CB for short)</sup> is a fast and featherlight, feature packed, and user friendly power tool that saves you tons of time and effort in style. You'll be able to remember anything, anytime, anywhere at the literal press of a button, like having a second brain.
+The Clipboard Project <sup>(CB for short)</sup> is a fast and featherlight, feature packed, and user friendly power tool that saves you tons of time and effort _in style_. You'll be able to remember anything, anytime, anywhere at the literal press of a button, like having a second brain.
 
 I originally made this to address some severe deficiencies in other similar tools. But now, CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for the terminal.
 
@@ -17,12 +17,12 @@ I originally made this to address some severe deficiencies in other similar tool
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
 - Works with text, files, directories, pipes, _anything_,
-- A nearly _infinite_ number of temporary or persistent clipboards <sup>limited only by your system!</sup>
+- A nearly infinite number of temporary or persistent clipboards <sup>limited only by your system!</sup>
 - Real, full-fat regex manipulation for everything you copy,
 - Seamless integration with your [existing desktop clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, or Türkçe,
 - JSON support for _supremely_ slick scripting,
-- Customizable <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your complete viewing pleasure,
+- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your complete viewing pleasure,
 - Documentation you'll actually want to read (all in this readme),
 - And tons more!
 
