@@ -883,13 +883,6 @@ std::vector<char> X11Window::getClipboardData(const X11Atom& target) {
 
     debugStream << "Got an INCR result" << std::endl;
 
-    // The value of INCR should be a lower bound on the size of the full data
-    try {
-        result.reserve(*firstResult.begin()); // this sometimes gives a huge amount of memory
-    } catch (const std::exception& e) {
-        debugStream << "Failed to reserve " << *firstResult.begin() << " bytes: " << e.what() << std::endl;
-    }
-
     while (true) {
         waitForEvent(PropertyNotify, [&](const XEvent& event) { return event.xproperty.atom == firstResult.name().value() && event.xproperty.state == PropertyNewValue; });
         auto prop = getProperty(firstResult.name(), true);
