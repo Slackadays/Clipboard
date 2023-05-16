@@ -33,7 +33,7 @@ void exportClipboards() {
         if (fs::exists(exportDirectory)) fs::remove_all(exportDirectory);
         fs::create_directory(exportDirectory);
     } catch (const fs::filesystem_error& e) {
-        error("%s", formatMessage("[error]❌ CB couldn't create the export directory. 💡 [help]Try checking if you have the right permissions or not.[blank]\n"));
+        error_exit("%s", formatMessage("[error]❌ CB couldn't create the export directory. 💡 [help]Try checking if you have the right permissions or not.[blank]\n"));
     }
 
     auto exportClipboard = [&](const std::string& name) {
@@ -56,7 +56,7 @@ void exportClipboards() {
     if (destinations.empty() || successes.clipboards == 0) {
         stopIndicator();
         printf("%s", no_clipboard_contents_message().data());
-        error(clipboard_action_prompt(), clipboard_invocation, clipboard_invocation);
+        error_exit(clipboard_action_prompt(), clipboard_invocation, clipboard_invocation);
     }
 }
 

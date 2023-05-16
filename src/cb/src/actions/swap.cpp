@@ -17,21 +17,23 @@
 namespace PerformAction {
 
 void swap() {
-    if (copying.items.size() > 1) {
-        error(formatMessage("[error]❌ You can only swap one clipboard at a time. [help]Try making sure there's only one other clipboard specified, like [bold]%s swap "
-                            "5[blank][help] or [bold]%s swap3 0[blank][help].[blank]\n"),
-              clipboard_invocation,
-              clipboard_invocation);
-    }
+    if (copying.items.size() > 1)
+        error_exit(
+                formatMessage("[error]❌ You can only swap one clipboard at a time. [help]Try making sure there's only one other clipboard specified, like [bold]%s swap "
+                              "5[blank][help] or [bold]%s swap3 0[blank][help].[blank]\n"),
+                clipboard_invocation,
+                clipboard_invocation
+        );
 
     std::string destination_name = copying.items.empty() ? std::string(constants.default_clipboard_name) : copying.items.at(0).string();
 
-    if (destination_name == clipboard_name) {
-        error(formatMessage("[error]❌ You can't swap a clipboard with itself. [help]Try choosing a different clipboard to swap with, like [bold]%s swap 5[blank][help] or "
-                            "[bold]%s swap3 0[blank][help].[blank]\n"),
-              clipboard_invocation,
-              clipboard_invocation);
-    }
+    if (destination_name == clipboard_name)
+        error_exit(
+                formatMessage("[error]❌ You can't swap a clipboard with itself. [help]Try choosing a different clipboard to swap with, like [bold]%s swap 5[blank][help] or "
+                              "[bold]%s swap3 0[blank][help].[blank]\n"),
+                clipboard_invocation,
+                clipboard_invocation
+        );
 
     Clipboard destination(destination_name);
 

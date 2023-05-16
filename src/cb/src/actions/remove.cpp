@@ -31,13 +31,14 @@ void removeRegex() {
             content = std::regex_replace(content, pattern, "");
         successes.bytes += oldLength - content.size();
 
-        if (oldLength != content.size()) {
+        if (oldLength != content.size())
             writeToFile(path.data.raw, content);
-        } else {
-            error("%s",
-                  formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. 💡 [blank][help]Try using a different pattern instead or check what's "
-                                "stored.[blank]\n"));
-        }
+        else
+            error_exit(
+                    "%s",
+                    formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. 💡 [blank][help]Try using a different pattern instead or check what's "
+                                  "stored.[blank]\n")
+            );
     } else {
         for (const auto& entry : fs::directory_iterator(path.data)) {
             for (const auto& pattern : regexes) {
@@ -51,11 +52,12 @@ void removeRegex() {
                 }
             }
         }
-        if (successes.directories == 0 && successes.files == 0) {
-            error("%s",
-                  formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
-                                "stored.[blank]\n"));
-        }
+        if (successes.directories == 0 && successes.files == 0)
+            error_exit(
+                    "%s",
+                    formatMessage("[error]❌ CB couldn't match your pattern(s) against anything. [blank][help]Try using a different pattern instead or check what's "
+                                  "stored.[blank]\n")
+            );
     }
 }
 

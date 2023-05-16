@@ -24,10 +24,10 @@ void importClipboards() {
         importDirectory = copying.items.at(0);
 
     if (!fs::exists(importDirectory))
-        error("%s", formatMessage("[error]❌ The directory you're trying to import from doesn't exist. 💡 [help]Try choosing a different one instead.[blank]\n"));
+        error_exit("%s", formatMessage("[error]❌ The directory you're trying to import from doesn't exist. 💡 [help]Try choosing a different one instead.[blank]\n"));
 
     if (!fs::is_directory(importDirectory))
-        error("%s", formatMessage("[error]❌ The directory you're trying to import from isn't a directory. 💡 [help]Try choosing a different one instead.[blank]\n"));
+        error_exit("%s", formatMessage("[error]❌ The directory you're trying to import from isn't a directory. 💡 [help]Try choosing a different one instead.[blank]\n"));
 
     for (const auto& entry : fs::directory_iterator(importDirectory)) {
         if (!entry.is_directory())

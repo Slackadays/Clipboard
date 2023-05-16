@@ -18,7 +18,7 @@ namespace PerformAction {
 
 void load() {
     if (!path.holdsData()) {
-        error("%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. 💡 [help]Try choosing a different source instead.[blank]\n"));
+        error_exit("%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. 💡 [help]Try choosing a different source instead.[blank]\n"));
     }
 
     std::vector<std::string> destinations;
@@ -27,9 +27,11 @@ void load() {
     else
         destinations.emplace_back(constants.default_clipboard_name);
 
-    if (std::find(destinations.begin(), destinations.end(), clipboard_name) != destinations.end()) {
-        error("%s", formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n"));
-    }
+    if (std::find(destinations.begin(), destinations.end(), clipboard_name) != destinations.end())
+        error_exit(
+                "%s",
+                formatMessage("[error]❌ You can't load a clipboard into itself. 💡 [help]Try choosing a different source instead, or choose different destinations.[blank]\n")
+        );
 
     for (const auto& destination_number : destinations) {
         Clipboard destination(destination_number);

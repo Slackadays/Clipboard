@@ -17,11 +17,12 @@
 namespace PerformAction {
 
 void addFiles() {
-    if (path.holdsRawData()) {
-        error("%s",
-              formatMessage("[error]❌ You can't add items to text. [blank]💡 [help]Try copying text first, or add "
-                            "text instead.[blank]\n"));
-    }
+    if (path.holdsRawData())
+        error_exit(
+                "%s",
+                formatMessage("[error]❌ You can't add items to text. [blank]💡 [help]Try copying text first, or add "
+                              "text instead.[blank]\n")
+        );
     for (const auto& f : copying.items)
         copyItem(f);
 }
@@ -35,9 +36,11 @@ void addData() {
             content = copying.items.at(0).string();
         successes.bytes += writeToFile(path.data.raw, content, true);
     } else if (!fs::is_empty(path.data)) {
-        error("%s",
-              formatMessage("[error]❌ You can't add text to items. [blank]💡 [help]Try copying text first, or add a "
-                            "file instead.[blank]\n"));
+        error_exit(
+                "%s",
+                formatMessage("[error]❌ You can't add text to items. [blank]💡 [help]Try copying text first, or add a "
+                              "file instead.[blank]\n")
+        );
     } else {
         if (io_type == IOType::Pipe)
             pipeIn();
