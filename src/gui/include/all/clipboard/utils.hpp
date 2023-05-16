@@ -117,7 +117,7 @@ auto pollUntilReturn(func_t func) -> typename std::invoke_result_t<func_t>::valu
     using namespace std::literals;
     using optional_t = typename std::invoke_result_t<func_t>;
 
-    constexpr auto maxEventPollTime = 5s;
+    constexpr auto maxEventPollTime = 10s;
     constexpr auto startEventPollBackoff = 1ms;
     constexpr auto eventPollBackoffMultiplier = 2;
     constexpr auto maxEventPollBackoffTime = 500ms;
