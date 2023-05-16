@@ -546,9 +546,7 @@ void setFilepaths() {
 void checkForNoItems() {
     using enum Action;
     if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type != IOType::Pipe && copying.items.size() < 1) {
-        stopIndicator();
-        printf(choose_action_items_message().data(), actions[action].data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
-        exit(EXIT_FAILURE);
+        error(choose_action_items_message(), actions[action], actions[action], clipboard_invocation, actions[action]);
     }
     if (((action == Paste || action == Show || (action == Clear && !all_option))) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
         PerformAction::status();

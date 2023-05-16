@@ -122,6 +122,12 @@ std::vector<std::string> fileLines(const fs::path& path);
 
 bool stopIndicator(bool change_condition_variable = true);
 
+void error(const std::string& message, const auto&... args) {
+    stopIndicator();
+    fprintf(stderr, message.data(), args.data()...);
+    exit(EXIT_FAILURE);
+}
+
 size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
 
 extern std::vector<std::string> arguments;
