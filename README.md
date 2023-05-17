@@ -43,16 +43,16 @@ I originally made this to address some huge annoyances in other similar tools li
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2&logo=codecov&labelColor=rgb(55,55,55)">
     </a>
     <br>
-    <a href="https://github.com/Slackadays/Clipboard/stargazers">
-        <img src="https://img.shields.io/github/stars/slackadays/clipboard?logo=github&style=for-the-badge&labelColor=rgb(55,55,55)">
-    </a>
-    <a href="https://twitter.com/GetClipboard">
-        <img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?logo=twitter&style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter">
-    </a>
     <a href="https://aur.archlinux.org/packages/clipboard">
         <img src="https://img.shields.io/aur/maintainer/clipboard?label=AUR%20MAINTAINER&logo=archlinux&style=for-the-badge&labelColor=rgb(55,55,55)">
     </a>
-    <img src="https://img.shields.io/github/license/slackadays/clipboard?label=OPEN%20SOURCE&style=for-the-badge&labelColor=rgb(55,55,55)&logo=openaccess">
+    <a href="https://twitter.com/GetClipboard">
+        <img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter">
+    </a>
+    <a href="https://github.com/Slackadays/Clipboard/contributors">
+        <img src="https://img.shields.io/github/contributors-anon/slackadays/clipboard?style=for-the-badge&labelColor=rgb(55,55,55)&logo=github">
+    </a>
+    <img src="https://img.shields.io/github/license/slackadays/clipboard?label=OPEN%20SOURCE&style=for-the-badge&labelColor=rgb(55,55,55)">
 </p>
 
 <br>
