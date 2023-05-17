@@ -10,7 +10,7 @@
 
 The Clipboard Project <sub>(CB for short)</sub> is a really fast and lightweight, feature packed, and user friendly tool that saves you tons of time and effort in _style_. You'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
 
-I originally made this to address some huge annoyances in other similar tools like a frustrating user experience, strangely limited features and platform specific compatibility. But now, CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for everybody who can press buttons on a keyboard.
+I originally made this to address some huge annoyances in other similar tools like a frustrating user experience, strangely limited features and only working on one platform. But now, CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard.
 
 <br>
 
@@ -18,10 +18,8 @@ I originally made this to address some huge annoyances in other similar tools li
 
 - Works with text, files, directories, pipes, your goat, _anything_,
 - A nearly infinite number of temporary or persistent clipboards <sub>(limited only by your system!)</sub>
-- Real, whole, full-fat regex manipulation for everything you copy,
-- Seamless integration with your [existing desktop clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
+- Seamless integration with your [existing clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
-- JSON output for scripting so slick you'll need a slip hazard sign,
 - Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
 - Documentation you'll actually want to read <sub>(all in this readme)</sub>
 - And tons more!
@@ -888,9 +886,20 @@ $ cb status | cat
 
 ### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Tips And Tricks" height=25px />
 
-Need to paste a funky symbol somewhere a lot? Just copy it to a persistent clipboard.
+Need to paste a funky symbol somewhere a lot? Copy it to a persistent clipboard.
 ```sh
 $ cb cp_theta θ
+$ cb -c amog cp ඞ
+```
+
+Paste whatever's in the clipboard straight into your favorite text editor.
+```sh
+# Vim
+:r !cb
+# Nano
+[Ctrl-T] cb
+# VSCode
+cb | code -
 ```
 
 Copy a password securely by deleting it once you've pasted it.
