@@ -4,26 +4,26 @@
 
 <br>
 
-<img src="documentation/readme-assets/ProductivityTools.png" alt="The fully-featured yet oh-so-easy-to-use clipboard manager for everyone." />
-
 <br>
 
-The Clipboard Project <sup>(CB for short)</sup> is a fast and featherlight, feature packed, and user friendly power tool that saves you tons of time and effort _in style_. You'll be able to remember anything, anytime, anywhere at the literal press of a button, like having a second brain.
+<img src="documentation/readme-assets/ProductivityTools.png" alt="The fully-featured yet oh-so-easy-to-use clipboard manager for everyone." />
 
-I originally made this to address some severe deficiencies in other similar tools like a horrendous user experience, weirdly limited features and single platform compatibility. But now, CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for anywhere in the terminal.
+The Clipboard Project <sub>(CB for short)</sub> is a really fast and lightweight, feature packed, and user friendly tool that saves you tons of time and effort in _style_. You'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
+
+I originally made this to address some huge annoyances in other similar tools like a frustrating user experience, strangely limited features and platform specific compatibility. But now, CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for everybody who can type words in a terminal.
 
 <br>
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
-- Works with text, files, directories, pipes, _anything_,
-- A nearly infinite number of temporary or persistent clipboards <sup>limited only by your system!</sup>
-- Real, full-fat regex manipulation for everything you copy,
+- Works with text, files, directories, pipes, your goat, _anything_,
+- A nearly infinite number of temporary or persistent clipboards <sub>(limited only by your system!)</sub>
+- Real, whole, full-fat regex manipulation for everything you copy,
 - Seamless integration with your [existing desktop clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
-- Support for your favorite languages like español, português, or Türkçe,
-- JSON support for _supremely_ slick scripting,
-- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your complete viewing pleasure,
-- Documentation you'll actually want to read (all in this readme),
+- Support for your favorite languages like español, português, and Türkçe,
+- JSON output for scripting so slick you'll need a slip hazard sign,
+- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
+- Documentation you'll actually want to read <sub>(all in this readme)</sub>
 - And tons more!
 
 <br>
