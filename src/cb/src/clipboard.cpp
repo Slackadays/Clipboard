@@ -46,6 +46,7 @@
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#include <fcntl.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #endif
@@ -132,9 +133,21 @@ TerminalSize thisTerminalSize() {
 }
 
 std::string fileContents(const fs::path& path) {
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    int fd = open(path.string().data(), O_RDONLY);
+    if (fd == -1) return "";
+    std::string contents;
+    std::array<char, 65536> buffer;
+    ssize_t bytes_read;
+    while ((bytes_read = read(fd, buffer.data(), buffer.size())) > 0)
+        contents.append(buffer.data(), bytes_read);
+    close(fd);
+    return contents;
+#else
     std::stringstream buffer;
     buffer << std::ifstream(path, std::ios::binary).rdbuf();
     return buffer.str();
+#endif
 }
 
 std::vector<std::string> fileLines(const fs::path& path) {
