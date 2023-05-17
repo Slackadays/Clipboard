@@ -46,14 +46,16 @@ void history() {
 
     size_t longestDateLength = 0;
 
+    auto now = std::chrono::system_clock::now();
+
     for (auto entry = 0; entry < path.entryIndex.size(); entry++) {
-        path.setEntry(entry);
+        auto entryPath = path.entryPathFor(entry);
         std::string agoMessage;
-        agoMessage.reserve(20);
+        agoMessage.reserve(16);
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
         struct stat info;
-        stat(fs::path(path.data).string().data(), &info);
-        auto timeSince = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(info.st_ctime);
+        stat(entryPath.string().data(), &info);
+        auto timeSince = now - std::chrono::system_clock::from_time_t(info.st_ctime);
         // format time like 1y 2d 3h 4m 5s
         auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
         auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
@@ -87,7 +89,7 @@ void history() {
         return 10; // because 4 billion is the max for unsigned long, we know we'll have 10 or fewer digits
     };
 
-    auto longestEntryLength = numberLength(path.entryIndex.size());
+    auto longestEntryLength = numberLength(path.entryIndex.size() - 1);
 
     std::string batchedMessage;
 
