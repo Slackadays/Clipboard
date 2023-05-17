@@ -55,7 +55,7 @@ void history() {
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
         struct stat info;
         stat(entryPath.string().data(), &info);
-        auto timeSince = now - std::chrono::system_clock::from_time_t(info.st_ctime);
+        auto timeSince = now - std::chrono::system_clock::from_time_t(info.st_mtime);
         // format time like 1y 2d 3h 4m 5s
         auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
         auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);

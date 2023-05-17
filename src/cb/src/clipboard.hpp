@@ -53,7 +53,7 @@ namespace fs = std::filesystem;
 
 extern Forker forker;
 
-extern unsigned long maximumHistorySize;
+extern std::string maximumHistorySize;
 
 struct GlobalFilepaths {
     fs::path temporary;
@@ -446,11 +446,78 @@ public:
     }
     fs::path entryPathFor(const unsigned long& entry) { return root / constants.data_directory / std::to_string(entryIndex.at(entry)); }
     void trimHistoryEntries() {
-        if (entryIndex.size() <= maximumHistorySize || maximumHistorySize == 0) return;
-        while (entryIndex.size() > maximumHistorySize) {
-            fs::remove_all(root / constants.data_directory / std::to_string(entryIndex.back()));
-            entryIndex.pop_back();
-        }
+        unsigned long maximumBytes = 0;
+        unsigned long maximumMinutes = 0;
+        unsigned long maximumEntries = 0;
+        try {
+            std::string lastTwoChars(maximumHistorySize.end() - 2, maximumHistorySize.end());
+            std::transform(lastTwoChars.begin(), lastTwoChars.end(), lastTwoChars.begin(), ::tolower);
+            if (lastTwoChars == "tb")
+                maximumBytes = std::stoul(maximumHistorySize) * 1024 * 1024 * 1024 * 1024;
+            else if (lastTwoChars == "gb")
+                maximumBytes = std::stoul(maximumHistorySize) * 1024 * 1024 * 1024;
+            else if (lastTwoChars == "mb")
+                maximumBytes = std::stoul(maximumHistorySize) * 1024 * 1024;
+            else if (lastTwoChars == "kb")
+                maximumBytes = std::stoul(maximumHistorySize) * 1024;
+            else if (lastTwoChars.at(1) == 'b')
+                maximumBytes = std::stoul(maximumHistorySize);
+            else if (lastTwoChars.at(1) == 'y')
+                maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24 * 365;
+            else if (lastTwoChars.at(1) == 'm')
+                maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24 * 30;
+            else if (lastTwoChars.at(1) == 'w')
+                maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24 * 7;
+            else if (lastTwoChars.at(1) == 'd')
+                maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24;
+            else if (lastTwoChars.at(1) == 'h')
+                maximumMinutes = std::stoul(maximumHistorySize) * 60;
+            else
+                maximumEntries = std::stoul(maximumHistorySize);
+
+            maximumMinutes = 1;
+
+            if (maximumBytes > 0) {
+                size_t startingClipboardSize = 0;
+                for (const auto& entry : fs::recursive_directory_iterator(root))
+                    startingClipboardSize += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
+
+                while (startingClipboardSize > maximumBytes) {
+                    auto oldestPath = entryPathFor(entryIndex.size() - 1);
+                    size_t oldestEntrySize = directoryOverhead(oldestPath);
+                    for (const auto& entry : fs::recursive_directory_iterator(oldestPath))
+                        oldestEntrySize += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
+
+                    fs::remove_all(oldestPath);
+                    entryIndex.pop_back();
+                    startingClipboardSize -= oldestEntrySize;
+                }
+            }
+
+            if (maximumMinutes > 0) {
+                auto now = std::chrono::system_clock::now();
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+                struct stat info;
+                auto lastModified = [&](const fs::path path) {
+                    if (stat(path.string().data(), &info) != 0) return now;
+                    return std::chrono::system_clock::from_time_t(info.st_mtime);
+                };
+
+                while (lastModified(entryPathFor(entryIndex.size() - 1)) < now - std::chrono::minutes(maximumMinutes)) {
+                    fs::remove_all(entryPathFor(entryIndex.size() - 1));
+                    entryIndex.pop_back();
+                }
+#endif
+            }
+
+            if (maximumEntries > 0) {
+                if (entryIndex.size() <= maximumEntries || maximumEntries == 0) return;
+                while (entryIndex.size() > maximumEntries) {
+                    fs::remove_all(root / constants.data_directory / std::to_string(entryIndex.back()));
+                    entryIndex.pop_back();
+                }
+            }
+        } catch (...) {}
     }
 };
 extern Clipboard path;

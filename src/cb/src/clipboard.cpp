@@ -64,7 +64,8 @@ bool confirmation_silent = false;
 bool no_color = false;
 bool no_emoji = false;
 bool all_option = false;
-unsigned long maximumHistorySize = 0;
+
+std::string maximumHistorySize;
 
 std::string preferred_mime;
 std::vector<std::string> available_mimes;
@@ -268,7 +269,12 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         return false;
     });
 
-    if (filesHaveChanged && !paths.empty()) path.makeNewEntry();
+    auto eligibleForCopying = std::all_of(paths.begin(), paths.end(), [](auto& path) {
+        if (!fs::exists(path)) return false;
+        return true;
+    });
+
+    if (filesHaveChanged && eligibleForCopying && !paths.empty()) path.makeNewEntry();
 
     for (auto&& path : paths) {
         if (!fs::exists(path)) continue;
@@ -408,9 +414,7 @@ void setupVariables(int& argc, char* argv[]) {
 
     if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
 
-    if (auto size = getenv("CLIPBOARD_HISTORY"); size != nullptr) try {
-            maximumHistorySize = std::stoul(size);
-        } catch (...) {};
+    if (auto size = getenv("CLIPBOARD_HISTORY"); size != nullptr) maximumHistorySize = size;
 
     if (argc == 0) return;
 
