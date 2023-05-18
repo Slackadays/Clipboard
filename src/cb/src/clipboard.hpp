@@ -475,8 +475,6 @@ public:
             else
                 maximumEntries = std::stoul(maximumHistorySize);
 
-            maximumMinutes = 1;
-
             if (maximumBytes > 0) {
                 size_t startingClipboardSize = 0;
                 for (const auto& entry : fs::recursive_directory_iterator(root))

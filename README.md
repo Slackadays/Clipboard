@@ -1068,6 +1068,19 @@ $ fzf | cb -np
 ```
 
 </details>
+
+<br>
+
+<details><summary> &ensp; <b><code>--bachata</code></b> &emsp; Add this for something special! </summary>
+
+<br>
+
+Make your life less boring.
+```sh
+$ cb --bachata
+```
+
+</details>
     
 <br>
 <br>

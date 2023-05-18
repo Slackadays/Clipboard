@@ -15,4 +15,4 @@ output="$(cb --help)"
 
 content_is_shown "$output" "cb"
 
-cb --ee
+cb --bachata
