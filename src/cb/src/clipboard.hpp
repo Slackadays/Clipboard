@@ -446,6 +446,7 @@ public:
     }
     fs::path entryPathFor(const unsigned long& entry) { return root / constants.data_directory / std::to_string(entryIndex.at(entry)); }
     void trimHistoryEntries() {
+        if (maximumHistorySize.empty()) return;
         unsigned long maximumBytes = 0;
         unsigned long maximumMinutes = 0;
         unsigned long maximumEntries = 0;
