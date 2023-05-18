@@ -857,8 +857,6 @@ int main(int argc, char* argv[]) {
 
         updateGUIClipboard();
 
-        path.trimHistoryEntries();
-
         stopIndicator();
 
         deduplicate(copying.failedItems);
@@ -866,6 +864,8 @@ int main(int argc, char* argv[]) {
         showFailures();
 
         showSuccesses();
+
+        path.trimHistoryEntries();
     } catch (const std::exception& e) {
         stopIndicator();
         fprintf(stderr, internal_error_message().data(), e.what());
