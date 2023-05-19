@@ -27,7 +27,33 @@
 
 namespace PerformAction {
 
+void moveHistory() {
+    size_t successful_entries = 0;
+    std::vector<fs::path> absoluteEntryPaths;
+    for (const auto& entry : copying.items) {
+        try {
+            unsigned long entryNum = std::stoul(entry.string());
+            absoluteEntryPaths.emplace_back(path.entryPathFor(entryNum));
+        } catch (fs::filesystem_error& e) {
+            copying.failedItems.emplace_back(entry.string(), e.code());
+            continue;
+        } catch (...) {}
+    }
+    for (const auto& entry : absoluteEntryPaths) {
+        path.makeNewEntry();
+        fs::rename(entry, path.data);
+        successful_entries++;
+    }
+    stopIndicator();
+    fprintf(stderr, formatMessage("[success]✅ Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
+    if (clipboard_name == constants.default_clipboard_name) updateGUIClipboard(true);
+}
+
 void history() {
+    if (!copying.items.empty()) {
+        moveHistory();
+        return;
+    }
     stopIndicator();
     auto available = thisTerminalSize();
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());

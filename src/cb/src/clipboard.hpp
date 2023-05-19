@@ -444,7 +444,17 @@ public:
         data = root / constants.data_directory / std::to_string(entryIndex.at(this_entry));
         data.raw = data / constants.data_file_name;
     }
-    fs::path entryPathFor(const unsigned long& entry) { return root / constants.data_directory / std::to_string(entryIndex.at(entry)); }
+    fs::path entryPathFor(const unsigned long& entry) {
+        try {
+            return root / constants.data_directory / std::to_string(entryIndex.at(entry));
+        } catch (...) {
+            stopIndicator();
+            fprintf(stderr,
+                    formatMessage("[error]❌ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]").data(),
+                    entry);
+            exit(EXIT_FAILURE);
+        }
+    }
     void trimHistoryEntries() {
         if (maximumHistorySize.empty()) return;
         unsigned long maximumBytes = 0;
@@ -557,7 +567,6 @@ void setupHandlers();
 void setLocale();
 void showHelpMessage(int& argc, char* argv[]);
 void setupItems(int& argc, char* argv[]);
-void setClipboardName(int& argc, char* argv[]);
 void setupVariables(int& argc, char* argv[]);
 void createTempDirectory();
 void syncWithGUIClipboard(bool force = false);
