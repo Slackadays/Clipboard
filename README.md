@@ -19,7 +19,7 @@ I originally made this to address some huge annoyances in other similar tools li
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
 - Works with text, files, directories, pipes, your goat, _anything_,
-- Almost infinite numbers of clipboards with unlimited capacity each,
+- Infinite numbers of clipboards with unlimited capacity each,
 - Seamless integration with your [existing clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
 - Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
