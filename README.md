@@ -10,15 +10,15 @@
 
 The Clipboard Project <sub>(CB for short)</sub> is a fast and lightweight, feature packed, and user friendly tool that saves you time and effort in _style_.
 
-You'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
+With it, you'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
 
-I originally made this to address some huge annoyances in other similar tools like a frustrating user experience, strangely limited features and only working on one platform. But now? CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard.
+I originally made this to fix some huge annoyances in other tools like a frustrating user experience, strangely limited features and only working on one platform. But now? CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard.
 
 <br>
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
-- Works with text, files, directories, pipes, your goat, _anything_,
+- Works with text, files, directories, binary data, your goat, _anything_,
 - Infinite numbers of clipboards with unlimited capacity each,
 - Seamless integration with your [existing clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
