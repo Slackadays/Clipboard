@@ -59,11 +59,8 @@ void info() {
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Total entries: [help]%zu[blank]\n").data(), path.totalEntries());
 
-    size_t total_clipboard_bytes = 0;
-    for (const auto& entry : fs::recursive_directory_iterator(path))
-        total_clipboard_bytes += entry.is_regular_file() ? fs::file_size(entry) : directoryOverhead(entry);
     displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Total clipboard size: [help]%s[blank]\n").data(), formatBytes(total_clipboard_bytes).data());
+    fprintf(stderr, formatMessage("[info]│ Total clipboard size: [help]%s[blank]\n").data(), formatBytes(totalDirectorySize(path)).data());
 
     if (path.holdsRawData()) {
         displayEndbar();
@@ -71,13 +68,10 @@ void info() {
         displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
-        size_t total_bytes = 0;
         size_t files = 0;
         size_t directories = 0;
-        for (const auto& entry : fs::recursive_directory_iterator(path.data))
-            total_bytes += entry.is_directory() ? directoryOverhead(entry) : fs::file_size(entry);
         displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Content size: [help]%s[blank]\n").data(), formatBytes(total_bytes).data());
+        fprintf(stderr, formatMessage("[info]│ Content size: [help]%s[blank]\n").data(), formatBytes(totalDirectorySize(path.data)).data());
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
         displayEndbar();
@@ -149,24 +143,17 @@ void infoJSON() {
     printf("    \"path\": \"%s\",\n", path.string().data());
     printf("    \"isPersistent\": %s,\n", path.is_persistent ? "true" : "false");
     printf("    \"totalEntries\": %zu,\n", path.totalEntries());
-
-    size_t total_clipboard_bytes = 0;
-    for (const auto& entry : fs::recursive_directory_iterator(path))
-        total_clipboard_bytes += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
-    printf("    \"totalBytes\": %zu,\n", total_clipboard_bytes);
+    printf("    \"totalBytes\": %zu,\n", totalDirectorySize(path));
 
     if (path.holdsRawData()) {
         printf("    \"contentBytes\": %zu,\n", fs::file_size(path.data.raw));
         printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
-        size_t total_bytes = 0;
         size_t files = 0;
         size_t directories = 0;
-        for (const auto& entry : fs::recursive_directory_iterator(path.data))
-            total_bytes += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
-        printf("    \"bytes\": %zu,\n", total_bytes);
+        printf("    \"bytes\": %zu,\n", totalDirectorySize(path.data));
         printf("    \"files\": %zu,\n", files);
         printf("    \"directories\": %zu,\n", directories);
     }

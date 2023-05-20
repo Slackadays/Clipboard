@@ -117,6 +117,13 @@ static size_t directoryOverhead(const fs::path& directory) {
 #endif
 }
 
+static size_t totalDirectorySize(const fs::path& directory) {
+    size_t size = directoryOverhead(directory);
+    for (const auto& entry : fs::recursive_directory_iterator(directory))
+        size += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
+    return size;
+}
+
 std::string fileContents(const fs::path& path);
 std::vector<std::string> fileLines(const fs::path& path);
 
@@ -487,16 +494,11 @@ public:
                 maximumEntries = std::stoul(maximumHistorySize);
 
             if (maximumBytes > 0) {
-                size_t startingClipboardSize = 0;
-                for (const auto& entry : fs::recursive_directory_iterator(root))
-                    startingClipboardSize += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
+                size_t startingClipboardSize = totalDirectorySize(root);
 
                 while (startingClipboardSize > maximumBytes) {
                     auto oldestPath = entryPathFor(entryIndex.size() - 1);
-                    size_t oldestEntrySize = directoryOverhead(oldestPath);
-                    for (const auto& entry : fs::recursive_directory_iterator(oldestPath))
-                        oldestEntrySize += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
-
+                    size_t oldestEntrySize = totalDirectorySize(oldestPath);
                     fs::remove_all(oldestPath);
                     entryIndex.pop_back();
                     startingClipboardSize -= oldestEntrySize;

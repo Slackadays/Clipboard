@@ -643,18 +643,15 @@ unsigned long long totalItemSize() {
         for (const auto& item : copying.items) {
             try {
                 if (fs::is_directory(item))
-                    for (const auto& entry : fs::recursive_directory_iterator(item))
-                        total_item_size += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
+                    total_item_size += totalDirectorySize(item);
                 else
                     total_item_size += fs::is_directory(item) ? directoryOverhead(item) : fs::file_size(item);
             } catch (const fs::filesystem_error& e) {
                 copying.failedItems.emplace_back(item.string(), e.code());
             }
         }
-    } else if (action == Action::Paste && io_type == IOType::File) {
-        for (const auto& entry : fs::recursive_directory_iterator(path.data))
-            total_item_size += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
-    }
+    } else if (action == Action::Paste && io_type == IOType::File)
+        total_item_size += totalDirectorySize(path.data);
     return total_item_size;
 }
 
