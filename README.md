@@ -45,8 +45,8 @@ I originally made this to fix some huge annoyances in other tools like a frustra
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2&logo=codecov&labelColor=rgb(55,55,55)">
     </a>
     <br>
-    <a href="https://aur.archlinux.org/packages/clipboard">
-        <img src="https://img.shields.io/aur/maintainer/clipboard?label=AUR%20MAINTAINER&logo=archlinux&style=for-the-badge&labelColor=rgb(55,55,55)">
+    <a href="https://github.com/Slackadays/Clipboard/releases">
+        <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)">
     </a>
     <a href="https://twitter.com/GetClipboard">
         <img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter">
