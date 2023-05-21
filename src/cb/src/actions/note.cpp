@@ -32,7 +32,7 @@ void noteText() {
     } else if (copying.items.empty()) {
         if (fs::is_regular_file(path.metadata.notes)) {
             std::string content(fileContents(path.metadata.notes));
-            if (is_tty.err)
+            if (is_tty.out)
                 fprintf(stderr, formatMessage("[info]🔷 Note for this clipboard: %s\n").data(), content.data());
             else
                 printf(formatMessage("%s").data(), content.data());
