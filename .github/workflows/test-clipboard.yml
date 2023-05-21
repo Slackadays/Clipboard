@@ -41,7 +41,7 @@ jobs:
           if [[ "${{ matrix.x11 }}" == "1" ]]
           then
             NO_X11=0
-            PACKAGES="${PACKAGES} libx11-dev libx11-dev:${{ matrix.arch.os }}"
+            PACKAGES="${PACKAGES} libx11-dev libx11-dev:${{ matrix.arch.os }} libgcc-s1:${{ matrix.arch.os }}"
           fi
           
           if [[ "${{ matrix.wayland }}" == "1" ]]
