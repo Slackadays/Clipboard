@@ -421,6 +421,8 @@ public:
             auto pid = std::stoi(fileContents(metadata.lock));
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
             if (getpgrp() == getpgid(pid)) return; // if we're in the same process group, we're probably in a self-referencing pipe like cb | cb
+#elif defined(_WIN32) || defined(_WIN64)
+            if (GetCurrentProcessId() == pid) return;
 #endif
             while (true) {
 #if defined(_WIN32) || defined(_WIN64)

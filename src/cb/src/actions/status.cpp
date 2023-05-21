@@ -49,7 +49,8 @@ void status() {
     fprintf(stderr, "%s", bar.data());
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
-    for (const auto& clipboard : clipboards_with_contents) {
+    for (auto& clipboard : clipboards_with_contents) {
+        clipboard.getLock();
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
         fprintf(stderr, formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
@@ -87,6 +88,7 @@ void status() {
                 first = false;
             }
         }
+        clipboard.releaseLock();
         fprintf(stderr, "\n");
     }
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
