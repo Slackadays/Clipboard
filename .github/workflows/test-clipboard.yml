@@ -47,7 +47,7 @@ jobs:
           if [[ "${{ matrix.wayland }}" == "1" ]]
           then
             NO_WAYLAND=0
-            PACKAGES="${PACKAGES} libwayland-dev libwayland-dev:${{ matrix.arch.os }} wayland-protocols wayland-protocols:${{ matrix.arch.os }}"
+            PACKAGES="${PACKAGES} libwayland-dev libwayland-dev:${{ matrix.arch.os }} libgcc-s1:${{ matrix.arch.os }} wayland-protocols wayland-protocols:${{ matrix.arch.os }}"
           fi
                     
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
