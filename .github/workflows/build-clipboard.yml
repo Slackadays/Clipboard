@@ -100,8 +100,8 @@ jobs:
 
           cp ../app.getclipboard.Clipboard.* .
           cp ../documentation/readme-assets/CB.png app.getclipboard.Clipboard.png
-          cp output/cb .
-          cp output/libcb* .
+          cp output/bin/* .
+          cp output/lib/* .
 
           flatpak-builder --repo=repo --force-clean build-dir app.getclipboard.Clipboard.yml
           flatpak build-bundle repo clipboard-flatpak-amd64.flatpak app.getclipboard.Clipboard
