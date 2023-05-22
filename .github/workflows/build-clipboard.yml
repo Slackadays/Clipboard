@@ -103,6 +103,7 @@ jobs:
           cp output/bin/* .
           cp output/lib/* .
 
+          flatpak install --system --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
           flatpak-builder --repo=repo --force-clean build-dir app.getclipboard.Clipboard.yml
           flatpak build-bundle repo clipboard-flatpak-amd64.flatpak app.getclipboard.Clipboard
       - uses: actions/upload-artifact@v3
