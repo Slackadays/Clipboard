@@ -103,6 +103,7 @@ jobs:
           cp output/bin/* .
           cp output/lib/* .
 
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install --system --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
           flatpak-builder --repo=repo --force-clean build-dir app.getclipboard.Clipboard.yml
           flatpak build-bundle repo clipboard-flatpak-amd64.flatpak app.getclipboard.Clipboard
