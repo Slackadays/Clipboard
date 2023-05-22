@@ -555,10 +555,13 @@ void verifyAction() {
 }
 
 void setFilepaths() {
-    global_path.temporary = (getenv("CLIPBOARD_TMPDIR") ? getenv("CLIPBOARD_TMPDIR") : getenv("TMPDIR") ? getenv("TMPDIR") : fs::temp_directory_path()) / constants.temporary_directory_name;
+    global_path.temporary = (getenv("CLIPBOARD_TMPDIR")  ? getenv("CLIPBOARD_TMPDIR")
+                             : getenv("XDG_RUNTIME_DIR") ? getenv("XDG_RUNTIME_DIR")
+                                                         : fs::temp_directory_path())
+                            / constants.temporary_directory_name;
 
     global_path.persistent =
-            (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : global_path.home)) / constants.persistent_directory_name;
+            (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_STATE_HOME") ? getenv("XDG_STATE_HOME") : global_path.home)) / constants.persistent_directory_name;
 
     path = Clipboard(clipboard_name, clipboard_entry);
 }

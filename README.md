@@ -1148,6 +1148,8 @@ $ cb copy *
 # Powershell
 ```
 
+Note: By default, CB uses the C++ filesystem library function `fs::temp_directory_path()` to generate the temporary directory, prioritizing `CLIPBOARD_TMPDIR` and then `XDG_RUNTIME_DIR` respectively first if CB can get a value from them.
+
 </details>
 
 <br>
@@ -1169,6 +1171,8 @@ $ cb copy *
 > $Env:CLIPBOARD_PERSISTDIR = /home/jackson/SomeDirectory
 # Powershell
 ```
+
+Note: By default, CB uses the user's home directory to generate the persistent directory, prioritizing `CLIPBOARD_PERSISTDIR` and then `XDG_STATE_HOME` first respectively if CB can get a value from them.
 
 </details>
 

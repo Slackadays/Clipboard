@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 .cache/
+.flatpak-builder/
 
 src/tests/test_*
 

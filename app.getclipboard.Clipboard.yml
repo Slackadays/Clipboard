@@ -1,0 +1,30 @@
+app-id: app.getclipboard.Clipboard
+runtime: org.freedesktop.Platform
+runtime-version: '22.08'
+sdk: org.freedesktop.Sdk
+command: cb
+modules:
+  - name: cb
+    buildsystem: simple
+    build-commands:
+      - install -D cb /app/bin/cb
+      - install -D libcbx11.so /app/lib/libcbx11.so
+      - install -D libcbwayland.so /app/lib/libcbwayland.so
+      - install -D app.getclipboard.Clipboard.metainfo.xml /app/share/metainfo/app.getclipboard.Clipboard.metainfo.xml
+      - install -D app.getclipboard.Clipboard.png /app/share/icons/hicolor/512x512/apps/app.getclipboard.Clipboard.png
+    sources:
+      - type: file
+        path: cb
+      - type: file
+        path: libcbx11.so
+      - type: file
+        path: libcbwayland.so
+      - type: file
+        path: app.getclipboard.Clipboard.metainfo.xml
+      - type: file
+        path: app.getclipboard.Clipboard.png
+finish-args:
+  - --socket=x11
+  - --socket=wayland
+  - --filesystem=host
+  - --filesystem=xdg-run/Clipboard

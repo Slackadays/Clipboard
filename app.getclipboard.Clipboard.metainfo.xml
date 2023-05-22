@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>app.getclipboard.Clipboard</id>
+  
+  <name>Clipboard</name>
+  <summary>Cut, copy, and paste anything in your terminal</summary>
+  
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  
+  <description>
+    <p>
+      The Clipboard Project (CB for short) is an advanced clipboard manager that&apos;s made for the terminal. Copy and paste anything, anytime, anywhere with unlimited storage, clipboards, and history. You can also script CB to seamlessly work with your other favorite tools, and integrate with your existing system clipboards as well.
+    </p>
+  </description>
+  
+  <icon>app.getclipboard.Clipboard.png</icon>
+  
+  <categories>
+    <category>System</category>
+    <category>FileTools</category>
+  </categories>
+  
+  <provides>
+    <binary>cb</binary>
+  </provides>
+</component>
