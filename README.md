@@ -10,8 +10,6 @@
 
 The Clipboard Project <sub>(CB for short)</sub> is a fast and lightweight, feature packed, and user friendly tool that saves you time and effort in _style_.
 
-You'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
-
 I originally made this to fix some huge annoyances in other tools like a frustrating user experience, strangely limited features and only working on one platform. 
 
 But now? 
