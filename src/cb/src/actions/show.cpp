@@ -48,7 +48,12 @@ void show() {
 
     for (const auto& entry : fs::directory_iterator(path.data)) {
         if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) continue;
-        fprintf(stderr, formatMessage("\n[info]\033[%zuG│\r│ [bold][help]%s[blank]").data(), available.columns, entry.path().filename().string().data());
+        std::string stylizedEntry;
+        if (entry.is_directory())
+            stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
+        else
+            stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
+        fprintf(stderr, formatMessage("\n[info]\033[%zuG│\r│ [help]%s[blank]").data(), available.columns, stylizedEntry.data());
     }
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
