@@ -10,9 +10,13 @@
 
 The Clipboard Project <sub>(CB for short)</sub> is a fast and lightweight, feature packed, and user friendly tool that saves you time and effort in _style_.
 
-With it, you'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
+You'll be able to remember anything, anytime, anywhere at the literal press of a button, just like having a second brain.
 
-I originally made this to fix some huge annoyances in other tools like a frustrating user experience, strangely limited features and only working on one platform. But now? CB is the world's first (and currently only) complete, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard.
+I originally made this to fix some huge annoyances in other tools like a frustrating user experience, strangely limited features and only working on one platform. 
+
+But now? 
+
+CB is now the world's first (and currently only) complete, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard.
 
 <br>
 
