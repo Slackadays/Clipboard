@@ -8,20 +8,18 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="The fully-featured yet oh-so-easy-to-use clipboard manager for everyone." />
 
-The Clipboard Project <sub>(CB for short)</sub> is a fast and lightweight, feature packed, and user friendly tool that saves you time and effort in _style_.
+The Clipboard Project <sub>(CB for short)</sub> is a fast and lightweight, feature packed, and user friendly tool that makes you do more on the computer in _style_.
 
 I originally made this to fix some HUGE annoyances in other tools like a frustrating user experience, strangely limited features and frankly sad compatibility.
 
-But now? 
-
-Consider CB the world's first (and currently only) complete, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard. Don't just take my word for it!
+Now, CB is the world's first (and currently only) real, honest-to-goodness clipboard manager for anybody who can press keys on a keyboard. Don't just take my word for it!
 
 <br>
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
 - Works with text, files, directories, binary data, your goat, _anything_,
-- Infinite numbers of clipboards with unlimited capacity each,
+- An infinite number of clipboards with unlimited capacity each,
 - Seamless integration with your [existing clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
 - Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
