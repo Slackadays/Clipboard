@@ -73,7 +73,7 @@ Let's kick it up a notch.
 $ CLIPBOARD_THEME=green CLIPBOARD_NOEMOJI=1 cb -fc -nc -np cp_500 *.txt *.png
 ```
 
-Ok, so maybe we kicked it up too many notches. But you get the idea - although CB is super easy to use, you can do a lot of thing, and me mean <i>a whole lot</i>, with it.
+Ok, so maybe we kicked it up too many notches. But you get the idea - although CB is super easy to use, you can do a lot of things, and me mean <i>a whole lot</i>, with it.
 
 
 We've only scratched the surface of what's possible. Check out [the complete page on GitHub](https://github.com/Slackadays/Clipboard) for detailed help and some great tips and tricks.
