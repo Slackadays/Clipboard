@@ -19,7 +19,7 @@
 {% block hero %}
 <section class="text-center">
     <h1 class="heading-text" style="font-size: 30px">
-        Your new second brain that remembers anything, anytime, anywhere.
+        A second brain that remembers anything, anytime, anywhere.
     </h1>
     <h3 class="title-text">
         Turn your productivity up, <i>way</i> up, in style.
@@ -27,10 +27,11 @@
     <div>
         <a href="https://github.com/Slackadays/Clipboard">
             <img class="button" src="{{ get_url(path="get_it_on_github.png") }}" width="300px" alt="Get It On GitHub" />
+            <div class="heading-text" id="below-button" style="font-size: 20px;"><i>You know you want it!</i></div>
         </a>
     </div>
 </section>
-<img class="hero-image" style="width: 45%" src="{{ get_url(path="ClipboardDemo.gif") }}" alt="">
+<img class="hero-image" style="width: 47%" src="{{ get_url(path="ClipboardDemo.gif") }}" alt="">
 
 <div class="explore-more text" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
     Explore More ⇩
@@ -38,9 +39,14 @@
 <style>
     @font-face {
         font-family: 'Lobster Two';
-        src: url('LobsterTwo-Bold.ttf');
+        src: url('/LobsterTwo-Bold.ttf');
         font-weight: normal;
         font-style: normal;
+    }
+
+    :root {
+        /* Primary theme color */
+        --primary-color: #ffe899;
     }
 
     .logo {
@@ -52,11 +58,21 @@
     }
 
     .content h1 {
-        margin-top: 2.75em;
+        margin-top: 5em;
     }
 
     div.explore-more {
-        font-size: 1.5em;
+        font-size: 1.6em;
+    }
+
+    div.heading-text#features {
+        visibility: hidden;
+    }
+
+    div.heading-text#features:after {
+        visibility: visible;
+        content: "The clipboard manager for everyone.";
+        display: block;
     }
 
     @media screen and (max-width: 768px) {
@@ -80,6 +96,17 @@
 
     img.button:active {
         transform: scale(.95);
+    }
+
+    div#below-button {
+        /* make this invisible normally */
+        filter: opacity(0);
+        transition: filter 0.4s cubic-bezier(0.33, 0.53, 0.12, 1);
+    }
+
+    img.button:hover + div#below-button {
+        /* make this visible on hover */
+        filter: opacity(1);
     }
 </style>
 {% endblock hero %}

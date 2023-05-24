@@ -14,7 +14,8 @@ build_search_index = false
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = false
+highlight_code = true
+highlight_theme = "inspired-github"
 
 render_emoji = true
 
@@ -23,8 +24,7 @@ render_emoji = true
 juice_logo_name = "The Clipboard Project"
 juice_logo_path = "cb_small.png"
 juice_extra_menu = [
-    { title = "Star us on GitHub", link = "https://github.com/Slackadays/Clipboard" },
     { title = "Discord", link = "https://discord.gg/jc7bcEeR" },
-    { title = "Docs", link = "https://github.com/Slackadays/Clipboard/wiki" }
+    { title = "Star us on GitHub", link = "https://github.com/Slackadays/Clipboard" }
 ]
 repository_url = "https://github.com/Slackadays/Clipboard"

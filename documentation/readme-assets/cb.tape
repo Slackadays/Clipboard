@@ -53,22 +53,22 @@
 
 Output ClipboardDemo.gif
 
-Set Margin 40
-Set MarginFill "#3D34EB"
+Set Margin 120
+Set MarginFill "#33EA82"
 Set WindowBar "ColorfulRight"
-Set WindowBarSize 80
-Set BorderRadius 15
-Set PlaybackSpeed .4
-Set TypingSpeed .1
+Set WindowBarSize 40
+Set BorderRadius 25
+Set PlaybackSpeed 1
+Set TypingSpeed 2
 
 Require echo
 
 Set Shell "bash"
 Set FontSize 40
-Set Width 2400
-Set Height 1600
+Set Width 500
+Set Height 400
 
-Type "cb copy Foobar" 
+Type "cb copy 'Welcome to the Clipboard Project!'" 
 Sleep 750ms  
 Enter
 

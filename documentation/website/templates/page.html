@@ -1,0 +1,32 @@
+{% import "_macros.html" as macros %}
+{% extends "index.html" %}
+
+{% block title %}{{ page.title }} | {{ super() }} {% endblock title %}
+
+{% block header %}
+<header class="box-shadow">
+    {{ macros::render_header() }}
+</header>
+<style>
+    @font-face {
+        font-family: 'Lobster Two';
+        src: url('/LobsterTwo-Bold.ttf');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    :root {
+        /* Primary theme color */
+        --primary-color: #ffe899;
+    }
+
+    .logo {
+        font-family: "Lobster Two";
+    }
+</style>
+{% endblock header %}
+
+{% block content %}
+<div class="heading-text">{{ page.description }}</div>
+{{ page.content | safe }}
+{% endblock content %}
