@@ -123,12 +123,13 @@ TerminalSize thisTerminalSize() {
 #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    return TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1);
+    auto temp = TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1);
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     struct winsize w;
     ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
-    return TerminalSize(w.ws_row, w.ws_col);
+    auto temp = TerminalSize(w.ws_row, w.ws_col);
 #endif
+    if (temp.rows >= 10 && temp.columns >= 10) return temp;
     return TerminalSize(80, 24);
 }
 
@@ -211,14 +212,18 @@ bool userIsARobot() {
     return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
 }
 
+bool action_is_one_of(auto... options) {
+    return ((action == options) || ...);
+}
+
 bool isAWriteAction() {
     using enum Action;
-    return action == Cut || action == Copy || action == Add || action == Clear || action == Remove || action == Swap || action == Load || action == Import || action == Edit;
+    return action_is_one_of(Cut, Copy, Add, Clear, Remove, Swap, Load, Import, Edit);
 }
 
 bool isAClearingAction() {
     using enum Action;
-    return action == Copy || action == Cut || action == Clear;
+    return action_is_one_of(Copy, Cut, Clear);
 }
 
 bool needsANewEntry() {
@@ -501,16 +506,16 @@ Action getAction() {
 IOType getIOType() {
     using enum Action;
     using enum IOType;
-    if (action == Cut || action == Copy || action == Add) {
+    if (action_is_one_of(Cut, Copy, Add)) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in) return Pipe;
-    } else if (action == Paste || action == Show || action == Clear || action == Edit || action == Status || action == Info || action == History) {
+    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History)) {
         if (!is_tty.out) return Pipe;
         return Text;
     } else if (action == Remove) {
         if (!is_tty.in) return Pipe;
         return Text;
-    } else if (action == Note || action == Ignore || action == Swap || action == Load || action == Import || action == Export || action == Search) {
+    } else if (action_is_one_of(Note, Ignore, Swap, Load, Import, Export, Search)) {
         if (!is_tty.in && copying.items.empty()) return Pipe;
         return Text;
     }
@@ -568,10 +573,10 @@ void setFilepaths() {
 
 void checkForNoItems() {
     using enum Action;
-    if ((action == Cut || action == Copy || action == Add || action == Remove) && io_type != IOType::Pipe && copying.items.size() < 1) {
+    if (action_is_one_of(Cut, Copy, Add, Remove) && io_type != IOType::Pipe && copying.items.size() < 1) {
         error_exit(choose_action_items_message(), actions[action], actions[action], clipboard_invocation, actions[action]);
     }
-    if (((action == Paste || action == Show || (action == Clear && !all_option))) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
+    if (((action_is_one_of(Paste, Show) || (action == Clear && !all_option))) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
         PerformAction::status();
         exit(EXIT_SUCCESS);
     }
@@ -602,7 +607,7 @@ void setupIndicator() {
         display_progress("");
         step == 21 ? step = 0 : step++;
     }
-    static size_t items_size = (action == Action::Cut || action == Action::Copy) ? copying.items.size() : itemsToProcess();
+    static size_t items_size = action_is_one_of(Action::Cut, Action::Copy) ? copying.items.size() : itemsToProcess();
     if (items_size == 0) items_size++;
     auto percent_done = [&] {
         return std::to_string(((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size) + "%";
@@ -642,7 +647,8 @@ void startIndicator() { // If cancelled, leave cancelled
 
 unsigned long long totalItemSize() {
     unsigned long long total_item_size = 0;
-    if ((action == Action::Cut || action == Action::Copy || action == Action::Add) && io_type == IOType::File) {
+    using enum Action;
+    if (action_is_one_of(Cut, Copy, Add) && io_type == IOType::File) {
         for (const auto& item : copying.items) {
             try {
                 if (fs::is_directory(item))
@@ -661,7 +667,7 @@ unsigned long long totalItemSize() {
 void checkItemSize(unsigned long long total_item_size) {
     unsigned long long space_available = 0;
     using enum Action;
-    if ((action == Cut || action == Copy || action == Add) && io_type == IOType::File)
+    if (action_is_one_of(Cut, Copy, Add) && io_type == IOType::File)
         space_available = fs::space(path).available;
     else if (action == Action::Paste && io_type == IOType::File)
         space_available = fs::space(fs::current_path()).available;
