@@ -58,9 +58,10 @@ void info() {
     fprintf(stderr, formatMessage("[info]│ Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Total entries: [help]%zu[blank]\n").data(), path.totalEntries());
-
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Total clipboard size: [help]%s[blank]\n").data(), formatBytes(totalDirectorySize(path)).data());
+    displayEndbar();
+    fprintf(stderr, formatMessage("[info]│ Total space remaining: [help]%s[blank]\n").data(), formatBytes(fs::space(path).available).data());
 
     if (path.holdsRawData()) {
         displayEndbar();
@@ -143,7 +144,8 @@ void infoJSON() {
     printf("    \"path\": \"%s\",\n", path.string().data());
     printf("    \"isPersistent\": %s,\n", path.is_persistent ? "true" : "false");
     printf("    \"totalEntries\": %zu,\n", path.totalEntries());
-    printf("    \"totalBytes\": %zu,\n", totalDirectorySize(path));
+    printf("    \"totalBytesUsed\": %zu,\n", totalDirectorySize(path));
+    printf("    \"totalBytesRemaining\": %zu,\n", fs::space(path).available);
 
     if (path.holdsRawData()) {
         printf("    \"contentBytes\": %zu,\n", fs::file_size(path.data.raw));
@@ -153,7 +155,7 @@ void infoJSON() {
         size_t directories = 0;
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
-        printf("    \"bytes\": %zu,\n", totalDirectorySize(path.data));
+        printf("    \"contentBytes\": %zu,\n", totalDirectorySize(path.data));
         printf("    \"files\": %zu,\n", files);
         printf("    \"directories\": %zu,\n", directories);
     }
