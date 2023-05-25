@@ -30,15 +30,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Fetch theme
-        uses: actions/checkout@v3
-        with:
-          repository: huhu/juice
-          path: documentation/website/themes/juice
+      #- name: Fetch theme
+      #  uses: actions/checkout@v3
+      #  with:
+      #    repository: huhu/juice
+      #    path: documentation/website/themes/juice
       - name: Install Zola
         uses: taiki-e/install-action@v2
         with:
-          tool: zola@0.17
+          tool: zola@0.17.2
       - name: Build content
         run: zola build
         working-directory: ./documentation/website

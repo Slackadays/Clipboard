@@ -10,6 +10,4 @@ build/*
 
 documentation/website/public/
 
-documentation/website/themes/
-
 gmon.out
