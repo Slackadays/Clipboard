@@ -58,7 +58,7 @@ void load() {
 
     stopIndicator();
 
-    if (std::find(destinations.begin(), destinations.end(), constants.default_clipboard_name) != destinations.end()) updateGUIClipboard(true);
+    if (std::find(destinations.begin(), destinations.end(), constants.default_clipboard_name) != destinations.end()) updateExternalClipboards(true);
 }
 
 } // namespace PerformAction

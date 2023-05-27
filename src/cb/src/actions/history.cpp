@@ -46,7 +46,7 @@ void moveHistory() {
     }
     stopIndicator();
     fprintf(stderr, formatMessage("[success]✅ Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
-    if (clipboard_name == constants.default_clipboard_name) updateGUIClipboard(true);
+    if (clipboard_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }
 
 void history() {

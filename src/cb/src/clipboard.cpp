@@ -770,10 +770,47 @@ std::string getMIMEType() {
     return "text/plain";
 }
 
-void updateGUIClipboard(bool force) {
-    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name && !getenv("CLIPBOARD_NOGUI"))
-        || (force && !getenv("CLIPBOARD_NOGUI"))) { // only update GUI clipboard on write operations
-        writeToGUIClipboard(thisClipboard());
+void writeToRemoteClipboard(const ClipboardContent& content) {
+    if (content.type() != ClipboardContentType::Text) return;
+    auto isARemoteSession = [] {
+        if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION") || getenv("SSH_AUTH_SOCK")) return true;
+        return false;
+    };
+    if (!isARemoteSession()) return;
+    auto toBase64 = [](const std::string_view& content) {
+        std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+        std::string output;
+        for (size_t i = 0; i < content.size(); i += 3) {
+            auto first = static_cast<unsigned char>(content.at(i));
+            output.append(1, convertToChar.at(first >> 2));
+            if (i + 1 < content.size()) {
+                auto second = static_cast<unsigned char>(content.at(i + 1));
+                output.append(1, convertToChar.at(((first & 0x03) << 4) | (second >> 4)));
+                if (i + 2 < content.size()) {
+                    auto third = static_cast<unsigned char>(content.at(i + 2));
+                    output.append(1, convertToChar.at(((second & 0x0F) << 2) | (third >> 6)));
+                    output.append(1, convertToChar.at(third & 0x3F));
+                } else {
+                    output.append(1, convertToChar.at((second & 0x0F) << 2));
+                    output.append("=");
+                }
+            } else {
+                output.append(1, convertToChar.at((first & 0x03) << 4));
+                output.append("==");
+            }
+        }
+        return output;
+    };
+    printf("\033]52;c;\007"); // clear clipboard first
+    printf("\033]52;c;%s\007", toBase64(content.text().substr(0, 8192)).data());
+    fflush(stdout);
+}
+
+void updateExternalClipboards(bool force) {
+    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name) || force) { // only update GUI clipboard on write operations
+        auto thisContent = thisClipboard();
+        if (!getenv("CLIPBOARD_NOGUI")) writeToGUIClipboard(thisContent);
+        writeToRemoteClipboard(thisContent);
     }
 }
 
@@ -867,7 +904,7 @@ int main(int argc, char* argv[]) {
 
         copying.mime = getMIMEType();
 
-        updateGUIClipboard();
+        updateExternalClipboards();
 
         stopIndicator();
 

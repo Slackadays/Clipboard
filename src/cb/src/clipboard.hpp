@@ -592,7 +592,7 @@ bool userIsARobot();
 void pasteFiles();
 void clearClipboard();
 void performAction();
-void updateGUIClipboard(bool force = false);
+void updateExternalClipboards(bool force = false);
 std::string pipedInContent();
 void showFailures();
 void showSuccesses();

@@ -60,7 +60,7 @@ void swap() {
 
     fprintf(stderr, formatMessage("[success]✅ Swapped clipboard %s with %s[blank]\n").data(), clipboard_name.data(), destination_name.data());
 
-    if (destination_name == constants.default_clipboard_name) updateGUIClipboard(true);
+    if (destination_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }
 
 } // namespace PerformAction

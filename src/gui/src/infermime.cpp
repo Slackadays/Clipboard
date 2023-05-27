@@ -48,6 +48,9 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
     // ttf
     if (beginning_matches("\x00\x01\x00\x00\x00"sv)) return "font/ttf";
 
+    // otf
+    if (beginning_matches("\x4F\x54\x54\x4F"sv)) return "font/otf";
+
     // xml
     if (beginning_matches("\x00\x3C\x00\x3F\x00\x78\x00\x6D\x00\x6C\x00\x20"sv)) return "text/xml";
 
@@ -168,6 +171,33 @@ std::optional<std::string_view> inferMIMEType(const std::string& temporaryConten
 
     // elf
     if (beginning_matches("\x7F\x45\x4C\x46"sv)) return "application/x-executable";
+
+    // mach-o 32 bit
+    if (beginning_matches("\xFE\xED\xFA\xCE"sv)) return "application/x-mach-binary";
+
+    // mach-o 64 bit
+    if (beginning_matches("\xFE\xED\xFA\xCF"sv)) return "application/x-mach-binary";
+
+    // mach-o reverse 32 bit
+    if (beginning_matches("\xCE\xFA\xED\xFE"sv)) return "application/x-mach-binary";
+
+    // mach-o reverse 64 bit
+    if (beginning_matches("\xCF\xFA\xED\xFE"sv)) return "application/x-mach-binary";
+
+    // matroska
+    if (beginning_matches("\x1A\x45\xDF\xA3"sv)) return "video/x-matroska";
+
+    // macos file alias
+    if (beginning_matches("\x62\x6F\x6F\x6B\x00\x00\x00\x00\x6D\x61\x72\x6B\x00\x00\x00\x00"sv)) return "application/x-apple-file-alias";
+
+    // xcf
+    if (beginning_matches("gimp xcf"sv)) return "image/x-xcf";
+
+    // qcow
+    if (beginning_matches("QFI"sv)) return "application/x-qcow";
+
+    // icc profile
+    if (beginning_matches("KCMS"sv)) return "application/vnd.iccprofile";
 
     return std::nullopt;
 }
