@@ -3,6 +3,7 @@
 .cache/
 .flatpak-builder/
 Exported_Clipboards/
+CMakeFiles/
 
 src/tests/test_*
 

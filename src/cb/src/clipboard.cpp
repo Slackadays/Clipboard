@@ -17,6 +17,7 @@
 #include <array>
 #include <atomic>
 #include <chrono>
+#include <climits>
 #include <clipboard/fork.hpp>
 #include <condition_variable>
 #include <csignal>
@@ -42,12 +43,14 @@
 #include <windows.h>
 #define isatty _isatty
 #define fileno _fileno
+#define read _read
 #include "windows.hpp"
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 #endif
 
@@ -136,7 +139,7 @@ TerminalSize thisTerminalSize() {
 std::string fileContents(const fs::path& path) {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     int fd = open(path.string().data(), O_RDONLY);
-    if (fd == -1) return "";
+    if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
     std::string contents;
     std::array<char, 65536> buffer;
     ssize_t bytes_read;
@@ -229,6 +232,11 @@ bool isAClearingAction() {
 bool needsANewEntry() {
     using enum Action;
     return (action == Copy || action == Cut || (action == Clear && !all_option)) && clipboard_entry == constants.default_clipboard_entry;
+}
+
+bool isARemoteSession() {
+    if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION") || getenv("SSH_AUTH_SOCK")) return true;
+    return false;
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -447,7 +455,73 @@ void setupVariables(int& argc, char* argv[]) {
     clipboard_invocation = argv[0];
 }
 
-void syncWithGUIClipboard(bool force) {
+ClipboardContent getRemoteClipboard() {
+    // if (!isARemoteSession()) return {};
+
+    std::string response;
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+    // set terminal to a raw mode
+    struct termios told;
+    tcgetattr(STDIN_FILENO, &told);
+    struct termios tnew = told;
+    tnew.c_lflag &= ~(ICANON);
+    tnew.c_lflag &= ~(ECHO);
+    tnew.c_cc[VMIN] = 0;
+    tnew.c_cc[VTIME] = 1;
+    tcsetattr(STDIN_FILENO, TCSANOW, &tnew);
+
+    printf("\033]52;c;?\007");
+    fflush(stdout);
+
+    std::array<char, 16384> buffer;
+    size_t n = 0;
+    while ((n = read(STDIN_FILENO, buffer.data(), buffer.size())) > 0)
+        response += std::string(buffer.data(), n);
+
+    // restore terminal
+    tcsetattr(STDIN_FILENO, TCSANOW, &told);
+#elif defined(_WIN64) || defined(_WIN32)
+
+#endif
+
+    // remove terminal control characters
+    response = response.substr(response.find_last_of(';') + 1);
+    response = response.substr(0, response.find_last_of('\007'));
+
+    std::cerr << "response: " << response << std::endl;
+
+    auto fromBase64 = [](const std::string_view& content) {
+        static_assert(CHAR_BIT == 8);
+        const std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+        std::string output;
+        output.reserve(content.size() * 3 / 4);
+        for (size_t i = 0; i < content.size(); i += 4) {
+            auto first = content.at(i);
+            auto second = content.at(i + 1);
+            auto byte = static_cast<char>((convertToChar.find(first) << 2) | (convertToChar.find(second) >> 4));
+            output += byte;
+            if (i + 2 < content.size() && content.at(i + 2) != '=') {
+                auto third = content.at(i + 2);
+                byte = static_cast<char>(((convertToChar.find(second) & 0x0F) << 4) | (convertToChar.find(third) >> 2));
+                output += byte;
+                if (i + 3 < content.size() && content.at(i + 3) != '=') {
+                    auto fourth = content.at(i + 3);
+                    byte = static_cast<char>(((convertToChar.find(third) & 0x03) << 6) | convertToChar.find(fourth));
+                    output += byte;
+                }
+            }
+        }
+        return output;
+    };
+
+    std::cout << "content: " << fromBase64(response) << std::endl;
+
+    exit(EXIT_SUCCESS);
+}
+
+void syncWithExternalClipboards(bool force) {
+    // auto temp = getRemoteClipboard();
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && !getenv("CLIPBOARD_NOGUI"))
         || (force && !getenv("CLIPBOARD_NOGUI"))) {
         using enum ClipboardContentType;
@@ -772,31 +846,29 @@ std::string getMIMEType() {
 
 void writeToRemoteClipboard(const ClipboardContent& content) {
     if (content.type() != ClipboardContentType::Text) return;
-    auto isARemoteSession = [] {
-        if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION") || getenv("SSH_AUTH_SOCK")) return true;
-        return false;
-    };
     if (!isARemoteSession()) return;
     auto toBase64 = [](const std::string_view& content) {
-        std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+        static_assert(CHAR_BIT == 8);
+        const std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
         std::string output;
+        output.reserve(4 * ((content.size() + 2) / 3));
         for (size_t i = 0; i < content.size(); i += 3) {
             auto first = static_cast<unsigned char>(content.at(i));
-            output.append(1, convertToChar.at(first >> 2));
+            output += convertToChar.at(first >> 2);
             if (i + 1 < content.size()) {
                 auto second = static_cast<unsigned char>(content.at(i + 1));
-                output.append(1, convertToChar.at(((first & 0x03) << 4) | (second >> 4)));
+                output += convertToChar.at(((first & 0x03) << 4) | (second >> 4));
                 if (i + 2 < content.size()) {
                     auto third = static_cast<unsigned char>(content.at(i + 2));
-                    output.append(1, convertToChar.at(((second & 0x0F) << 2) | (third >> 6)));
-                    output.append(1, convertToChar.at(third & 0x3F));
+                    output += convertToChar.at(((second & 0x0F) << 2) | (third >> 6));
+                    output += convertToChar.at(third & 0x3F);
                 } else {
-                    output.append(1, convertToChar.at((second & 0x0F) << 2));
-                    output.append("=");
+                    output += convertToChar.at((second & 0x0F) << 2);
+                    output += "=";
                 }
             } else {
-                output.append(1, convertToChar.at((first & 0x03) << 4));
-                output.append("==");
+                output += convertToChar.at((first & 0x03) << 4);
+                output += "==";
             }
         }
         return output;
@@ -882,7 +954,7 @@ int main(int argc, char* argv[]) {
 
         startIndicator();
 
-        syncWithGUIClipboard();
+        syncWithExternalClipboards();
 
         ignoreItemsPreemptively(copying.items);
 
