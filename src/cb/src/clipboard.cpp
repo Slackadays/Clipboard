@@ -265,7 +265,8 @@ bool isARemoteSession() {
 }
 
 void convertFromGUIClipboard(const std::string& text) {
-    if (path.holdsRawData() && fileContents(path.data.raw) == text) return;
+    if (path.holdsRawData() && (fileContents(path.data.raw) == text || text.size() == 4096 && fileContents(path.data.raw).size() > 4096))
+        return; // check if 4096b long because remote clipboard is up to 4096b long
     auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
         if (std::regex_match(text, regex)) return;
@@ -457,7 +458,7 @@ void setupVariables(int& argc, char* argv[]) {
 }
 
 ClipboardContent getRemoteClipboard() {
-    if (!isARemoteSession()) return {};
+    if (!isARemoteSession() || !is_tty.out) return {};
 
     std::string response;
 
@@ -465,7 +466,7 @@ ClipboardContent getRemoteClipboard() {
         printf("\033]52;c;?\007");
         fflush(stdout);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(80));
 
         std::array<char, 65536> buffer;
         size_t n = 0;
@@ -500,11 +501,17 @@ ClipboardContent getRemoteClipboard() {
     SetConsoleMode(hIn, dwMode);
 #endif
 
+    // std::cerr << "response: " << response << std::endl;
+
     // remove terminal control characters
     response = response.substr(response.find_last_of(';') + 1);
-    response = response.substr(0, response.find_last_of('\007'));
+    response = response.substr(0, response.size() - 2); // remove the \007 character and something before it
 
+    if (response.empty()) return {};
+
+    // std::cerr << "response character 2 ID: " << static_cast<int>(response.at(1)) << std::endl;
     // std::cerr << "response: " << response << std::endl;
+    // std::cerr << "response size: " << response.size() << std::endl;
 
     auto fromBase64 = [](const std::string_view& content) {
         static_assert(CHAR_BIT == 8);
@@ -530,26 +537,26 @@ ClipboardContent getRemoteClipboard() {
         return output;
     };
 
-    // std::cout << "content: " << fromBase64(response) << std::endl;
+    // std::cerr << "content: " << fromBase64(response) << std::endl;
+    // std::cerr << "content size: " << fromBase64(response).size() << std::endl;
 
     return ClipboardContent(fromBase64(response));
 }
 
 void syncWithExternalClipboards(bool force) {
     using enum ClipboardContentType;
-    auto content = getRemoteClipboard();
-    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && !getenv("CLIPBOARD_NOGUI"))
-        || (force && !getenv("CLIPBOARD_NOGUI"))) {
-        if (content.type() == Empty) content = getGUIClipboard(preferred_mime);
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry) || force) {
+        auto content = getRemoteClipboard();
+        if (content.type() == Empty && !getenv("CLIPBOARD_NOGUI")) content = getGUIClipboard(preferred_mime);
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        } else if (content.type() == Paths) {
+            convertFromGUIClipboard(content.paths());
+            copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
+        }
+        available_mimes = content.availableTypes();
     }
-    if (content.type() == Text) {
-        convertFromGUIClipboard(content.text());
-        copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
-    } else if (content.type() == Paths) {
-        convertFromGUIClipboard(content.paths());
-        copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
-    }
-    available_mimes = content.availableTypes();
 }
 
 template <typename T>
@@ -888,7 +895,7 @@ void writeToRemoteClipboard(const ClipboardContent& content) {
         return output;
     };
     printf("\033]52;c;\007"); // clear clipboard first
-    printf("\033]52;c;%s\007", toBase64(content.text()).data());
+    printf("\033]52;c;%s\007", toBase64(content.text().substr(0, 4096)).data());
     fflush(stdout);
 }
 
