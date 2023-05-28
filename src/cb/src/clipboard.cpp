@@ -44,6 +44,7 @@
 #define isatty _isatty
 #define fileno _fileno
 #define read _read
+#define STDIN_FILENO 0
 #include "windows.hpp"
 #endif
 
@@ -456,44 +457,58 @@ void setupVariables(int& argc, char* argv[]) {
 }
 
 ClipboardContent getRemoteClipboard() {
-    // if (!isARemoteSession()) return {};
+    if (!isARemoteSession()) return {};
 
     std::string response;
 
+    auto requestAndReadResponse = [&] {
+        printf("\033]52;c;?\007");
+        fflush(stdout);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+        std::array<char, 65536> buffer;
+        size_t n = 0;
+        while ((n = read(STDIN_FILENO, buffer.data(), buffer.size())) > 0)
+            response += std::string(buffer.data(), n);
+    };
+
 #if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
-    // set terminal to a raw mode
+    // set terminal to raw mode
     struct termios told;
     tcgetattr(STDIN_FILENO, &told);
     struct termios tnew = told;
     tnew.c_lflag &= ~(ICANON);
     tnew.c_lflag &= ~(ECHO);
     tnew.c_cc[VMIN] = 0;
-    tnew.c_cc[VTIME] = 1;
     tcsetattr(STDIN_FILENO, TCSANOW, &tnew);
 
-    printf("\033]52;c;?\007");
-    fflush(stdout);
-
-    std::array<char, 16384> buffer;
-    size_t n = 0;
-    while ((n = read(STDIN_FILENO, buffer.data(), buffer.size())) > 0)
-        response += std::string(buffer.data(), n);
+    requestAndReadResponse();
 
     // restore terminal
     tcsetattr(STDIN_FILENO, TCSANOW, &told);
 #elif defined(_WIN64) || defined(_WIN32)
+    // set terminal to raw mode
+    DWORD dwMode = 0;
+    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+    GetConsoleMode(hIn, &dwMode);
+    SetConsoleMode(hIn, (dwMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT)));
 
+    requestAndReadResponse();
+
+    // restore terminal
+    SetConsoleMode(hIn, dwMode);
 #endif
 
     // remove terminal control characters
     response = response.substr(response.find_last_of(';') + 1);
     response = response.substr(0, response.find_last_of('\007'));
 
-    std::cerr << "response: " << response << std::endl;
+    // std::cerr << "response: " << response << std::endl;
 
     auto fromBase64 = [](const std::string_view& content) {
         static_assert(CHAR_BIT == 8);
-        const std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+        constexpr std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
         std::string output;
         output.reserve(content.size() * 3 / 4);
         for (size_t i = 0; i < content.size(); i += 4) {
@@ -515,26 +530,26 @@ ClipboardContent getRemoteClipboard() {
         return output;
     };
 
-    std::cout << "content: " << fromBase64(response) << std::endl;
+    // std::cout << "content: " << fromBase64(response) << std::endl;
 
-    exit(EXIT_SUCCESS);
+    return ClipboardContent(fromBase64(response));
 }
 
 void syncWithExternalClipboards(bool force) {
-    // auto temp = getRemoteClipboard();
+    using enum ClipboardContentType;
+    auto content = getRemoteClipboard();
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && !getenv("CLIPBOARD_NOGUI"))
         || (force && !getenv("CLIPBOARD_NOGUI"))) {
-        using enum ClipboardContentType;
-        auto content = getGUIClipboard(preferred_mime);
-        if (content.type() == Text) {
-            convertFromGUIClipboard(content.text());
-            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
-        } else if (content.type() == Paths) {
-            convertFromGUIClipboard(content.paths());
-            copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
-        }
-        available_mimes = content.availableTypes();
+        if (content.type() == Empty) content = getGUIClipboard(preferred_mime);
     }
+    if (content.type() == Text) {
+        convertFromGUIClipboard(content.text());
+        copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+    } else if (content.type() == Paths) {
+        convertFromGUIClipboard(content.paths());
+        copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
+    }
+    available_mimes = content.availableTypes();
 }
 
 template <typename T>
@@ -845,11 +860,10 @@ std::string getMIMEType() {
 }
 
 void writeToRemoteClipboard(const ClipboardContent& content) {
-    if (content.type() != ClipboardContentType::Text) return;
-    if (!isARemoteSession()) return;
+    if (content.type() != ClipboardContentType::Text || !isARemoteSession()) return;
     auto toBase64 = [](const std::string_view& content) {
         static_assert(CHAR_BIT == 8);
-        const std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+        constexpr std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
         std::string output;
         output.reserve(4 * ((content.size() + 2) / 3));
         for (size_t i = 0; i < content.size(); i += 3) {
@@ -874,7 +888,7 @@ void writeToRemoteClipboard(const ClipboardContent& content) {
         return output;
     };
     printf("\033]52;c;\007"); // clear clipboard first
-    printf("\033]52;c;%s\007", toBase64(content.text().substr(0, 8192)).data());
+    printf("\033]52;c;%s\007", toBase64(content.text()).data());
     fflush(stdout);
 }
 
