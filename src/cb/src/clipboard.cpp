@@ -291,7 +291,7 @@ bool isARemoteSession() {
 }
 
 void convertFromGUIClipboard(const std::string& text) {
-    if (path.holdsRawData() && (fileContents(path.data.raw) == text || text.size() == 4096 && fileContents(path.data.raw).size() > 4096))
+    if (fs::exists(path.data.raw) && (fileContents(path.data.raw) == text || text.size() == 4096 && fileContents(path.data.raw).size() > 4096))
         return; // check if 4096b long because remote clipboard is up to 4096b long
     auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
@@ -699,10 +699,11 @@ void setupIndicator() {
 
     makeTerminalRaw();
 
-    printf("\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
-    printf("\033[?25l");                                              // hide the cursor
-    printf("\033[?1004h");                                            // enable focus tracking
+    fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
+    fprintf(stderr, "\033[?25l");                                              // hide the cursor
+    if (is_tty.out) printf("\033[?1004h");                                     // enable focus tracking
     fflush(stdout);
+    fflush(stderr);
 
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
@@ -747,9 +748,9 @@ void setupIndicator() {
         step == 21 ? step = 0 : step++;
     }
 
-    printf("\033[?25h");           // restore the cursor
-    printf("\033[?1004l");         // disable focus tracking
-    if (!hasFocus) printf("\007"); // play a bell sound if the terminal doesn't have focus
+    fprintf(stderr, "\033[?25h");          // restore the cursor
+    if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
+    if (!hasFocus) printf("\007");         // play a bell sound if the terminal doesn't have focus
     fflush(stdout);
     fprintf(stderr, "\r%*s\r", output_length, "");
     fflush(stderr);
@@ -902,7 +903,8 @@ std::string getMIMEType() {
 }
 
 void writeToRemoteClipboard(const ClipboardContent& content) {
-    if (content.type() != ClipboardContentType::Text || !isARemoteSession()) {
+    if (!isARemoteSession()) return;
+    if (content.type() != ClipboardContentType::Text) {
         printf("\033]52;c;\007");
         fflush(stdout);
         return;
