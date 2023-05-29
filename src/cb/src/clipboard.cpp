@@ -546,7 +546,8 @@ ClipboardContent getRemoteClipboard() {
 void syncWithExternalClipboards(bool force) {
     using enum ClipboardContentType;
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry) || force) {
-        auto content = getRemoteClipboard();
+        ClipboardContent content;
+        if (!getenv("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
         if (content.type() == Empty && !getenv("CLIPBOARD_NOGUI")) content = getGUIClipboard(preferred_mime);
         if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
@@ -895,7 +896,11 @@ void writeToRemoteClipboard(const ClipboardContent& content) {
         return output;
     };
     printf("\033]52;c;\007"); // clear clipboard first
-    printf("\033]52;c;%s\007", toBase64(content.text().substr(0, 4096)).data());
+    if (auto term = getenv("TERM"); term && !strcmp(term, "xterm-kitty")) {
+        for (size_t i = 0; i < content.text().size(); i += 4096) // kitty has a limit of 4096 bytes per write
+            printf("\033]52;c;%s\007", toBase64(content.text().substr(i, 4096)).data());
+    } else
+        printf("\033]52;c;%s\007", toBase64(content.text()).data());
     fflush(stdout);
 }
 
@@ -903,7 +908,7 @@ void updateExternalClipboards(bool force) {
     if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name) || force) { // only update GUI clipboard on write operations
         auto thisContent = thisClipboard();
         if (!getenv("CLIPBOARD_NOGUI")) writeToGUIClipboard(thisContent);
-        writeToRemoteClipboard(thisContent);
+        if (!getenv("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
     }
 }
 
