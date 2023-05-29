@@ -262,7 +262,7 @@ bool needsANewEntry() {
 }
 
 bool isARemoteSession() {
-    if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION") || getenv("SSH_AUTH_SOCK")) return true;
+    if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION")) return true;
     return false;
 }
 
