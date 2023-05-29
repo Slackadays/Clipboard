@@ -498,11 +498,6 @@ ClipboardContent getRemoteClipboard() {
         std::this_thread::sleep_for(std::chrono::milliseconds(80));
 
         std::array<char, 65536> buffer;
-#if defined(_WIN32) || defined(_WIN64)
-        DWORD numEvents = 0;
-        GetNumberOfConsoleInputEvents(GetStdHandle(STD_INPUT_HANDLE), &numEvents);
-        if (numEvents < 8) return;
-#endif
         size_t n = 0;
         while ((n = read(STDIN_FILENO, buffer.data(), buffer.size())) > 8)
             response += std::string(buffer.data(), n);
@@ -713,11 +708,6 @@ void setupIndicator() {
     int step = 0;
     auto poll_focus = [&] {
         std::array<char, 16> buf;
-#if defined(_WIN32) || defined(_WIN64)
-        DWORD numEvents = 0;
-        GetNumberOfConsoleInputEvents(GetStdHandle(STD_INPUT_HANDLE), &numEvents);
-        if (numEvents < 3) return;
-#endif
         if (read(STDIN_FILENO, buf.data(), buf.size()) >= 3) {
             if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'I') hasFocus = true;
             if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'O') hasFocus = false;
