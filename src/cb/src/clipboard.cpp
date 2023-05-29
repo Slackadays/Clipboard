@@ -117,18 +117,6 @@ std::array<std::pair<std::string_view, std::string_view>, 7> colors = {
 UINT old_code_page;
 #endif
 
-bool stopIndicator(bool change_condition_variable) {
-    IndicatorState expect = IndicatorState::Active;
-
-    if (!change_condition_variable) return progress_state.exchange(IndicatorState::Cancel) == expect;
-
-    if (!progress_state.compare_exchange_strong(expect, IndicatorState::Done)) return false;
-
-    cv.notify_one();
-    indicator.join();
-    return true;
-}
-
 TerminalSize thisTerminalSize() {
 #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -235,10 +223,6 @@ void makeTerminalNormal() {
 
 bool userIsARobot() {
     return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
-}
-
-bool action_is_one_of(auto... options) {
-    return ((action == options) || ...);
 }
 
 bool isAWriteAction() {
@@ -685,91 +669,6 @@ void checkForNoItems() {
         PerformAction::status();
         exit(EXIT_SUCCESS);
     }
-}
-
-void setupIndicator() {
-    if (!is_tty.err || output_silent || progress_silent) return;
-
-    bool hasFocus = true;
-
-    makeTerminalRaw();
-
-    fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
-    fprintf(stderr, "\033[?25l");                                              // hide the cursor
-    if (is_tty.out) printf("\033[?1004h");                                     // enable focus tracking
-    fflush(stdout);
-    fflush(stderr);
-
-    std::unique_lock<std::mutex> lock(m);
-    int output_length = 0;
-    const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ",
-                                                          "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
-                                                          "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
-    int step = 0;
-    auto poll_focus = [&] {
-        std::array<char, 16> buf;
-        if (read(STDIN_FILENO, buf.data(), buf.size()) >= 3) {
-            if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'I') hasFocus = true;
-            if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'O') hasFocus = false;
-        }
-    };
-    auto display_progress = [&](const auto& formattedNum) {
-        output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(step).data());
-        fflush(stderr);
-        cv.wait_for(lock, std::chrono::milliseconds(20), [&] { return progress_state != IndicatorState::Active; });
-    };
-    auto itemsToProcess = [&] {
-        return std::distance(fs::directory_iterator(path.data), fs::directory_iterator());
-    };
-    while (clipboard_state == ClipboardState::Setup && progress_state == IndicatorState::Active) {
-        display_progress("");
-        step == 21 ? step = 0 : step++;
-    }
-    static size_t items_size = action_is_one_of(Action::Cut, Action::Copy) ? copying.items.size() : itemsToProcess();
-    if (items_size == 0) items_size++;
-    auto percent_done = [&] {
-        return std::to_string(((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size) + "%";
-    };
-    while (clipboard_state == ClipboardState::Action && progress_state == IndicatorState::Active) {
-        if (io_type == IOType::File)
-            display_progress(percent_done().data());
-        else if (io_type == IOType::Pipe)
-            display_progress(formatBytes(successes.bytes.load(std::memory_order_relaxed)).data());
-        else
-            display_progress("");
-
-        poll_focus();
-
-        step == 21 ? step = 0 : step++;
-    }
-
-    fprintf(stderr, "\033[?25h");          // restore the cursor
-    if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
-    if (!hasFocus) printf("\007");         // play a bell sound if the terminal doesn't have focus
-    fflush(stdout);
-    fprintf(stderr, "\r%*s\r", output_length, "");
-    fflush(stderr);
-
-    makeTerminalNormal();
-
-    if (progress_state == IndicatorState::Cancel) {
-        if (io_type == IOType::File)
-            fprintf(stderr, cancelled_with_progress_message().data(), actions[action].data(), percent_done().data());
-        else if (io_type == IOType::Pipe)
-            fprintf(stderr, cancelled_with_progress_message().data(), actions[action].data(), formatBytes(successes.bytes.load(std::memory_order_relaxed)).data());
-        else
-            fprintf(stderr, cancelled_message().data(), actions[action].data());
-        fflush(stderr);
-        path.releaseLock();
-        _exit(EXIT_FAILURE);
-    }
-    fflush(stderr);
-}
-
-void startIndicator() { // If cancelled, leave cancelled
-    IndicatorState expect = IndicatorState::Done;
-    progress_state.compare_exchange_strong(expect, IndicatorState::Active);
-    indicator = std::thread(setupIndicator);
 }
 
 unsigned long long totalItemSize() {

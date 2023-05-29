@@ -207,6 +207,10 @@ extern EnumArray<std::string_view, 18> did_action;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
+bool action_is_one_of(auto... options) {
+    return ((action == options) || ...);
+}
+
 class TerminalSize {
 public:
     size_t rows;
@@ -577,6 +581,8 @@ void setupTerminal();
 void setClipboardAttributes();
 void setFlags();
 void setFilepaths();
+void makeTerminalRaw();
+void makeTerminalNormal();
 Action getAction();
 IOType getIOType();
 void verifyAction();

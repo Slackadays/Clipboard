@@ -3,6 +3,7 @@ add_executable(cb
   src/main.cpp
   src/messages.cpp
   src/themes.cpp
+  src/indicator.cpp
   src/actions/add.cpp
   src/actions/clear.cpp
   src/actions/copy.cpp
