@@ -27,8 +27,8 @@ std::vector<Clipboard> clipboardsWithContent() {
 }
 
 void status() {
-    syncWithExternalClipboards(true);
     stopIndicator();
+    syncWithExternalClipboards(true);
     auto clipboards_with_contents = clipboardsWithContent();
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());

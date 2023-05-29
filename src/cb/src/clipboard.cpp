@@ -59,6 +59,12 @@ namespace fs = std::filesystem;
 
 Forker forker {};
 
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+struct termios tnormal;
+#elif defined(_WIN32) || defined(_WIN64)
+DWORD dwNormalMode = 0;
+#endif
+
 GlobalFilepaths global_path;
 Clipboard path;
 Copying copying;
@@ -210,6 +216,26 @@ void ignoreItemsPreemptively(auto& items) {
     for (const auto& regex : regexes)
         for (const auto& item : items)
             if (std::regex_match(item.string(), regex)) items.erase(std::find(items.begin(), items.end(), item));
+}
+
+void makeTerminalRaw() {
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+    struct termios tnew = tnormal;
+    tnew.c_lflag &= ~(ICANON);
+    tnew.c_lflag &= ~(ECHO);
+    tnew.c_cc[VMIN] = 0;
+    tcsetattr(STDIN_FILENO, TCSANOW, &tnew);
+#elif defined(_WIN32) || defined(_WIN64)
+    SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), (dwNormalMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT)));
+#endif
+}
+
+void makeTerminalNormal() {
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+    tcsetattr(STDIN_FILENO, TCSANOW, &tnormal);
+#elif defined(_WIN32) || defined(_WIN64)
+    SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), dwNormalMode);
+#endif
 }
 
 bool userIsARobot() {
@@ -457,6 +483,14 @@ void setupVariables(int& argc, char* argv[]) {
     clipboard_invocation = argv[0];
 }
 
+void setupTerminal() {
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+    tcgetattr(STDIN_FILENO, &tnormal);
+#elif defined(_WIN64) || defined(_WIN32)
+    GetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), &dwNormalMode);
+#endif
+}
+
 ClipboardContent getRemoteClipboard() {
     if (!isARemoteSession() || !is_tty.out) return {};
 
@@ -474,32 +508,11 @@ ClipboardContent getRemoteClipboard() {
             response += std::string(buffer.data(), n);
     };
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
-    // set terminal to raw mode
-    struct termios told;
-    tcgetattr(STDIN_FILENO, &told);
-    struct termios tnew = told;
-    tnew.c_lflag &= ~(ICANON);
-    tnew.c_lflag &= ~(ECHO);
-    tnew.c_cc[VMIN] = 0;
-    tcsetattr(STDIN_FILENO, TCSANOW, &tnew);
+    makeTerminalRaw();
 
     requestAndReadResponse();
 
-    // restore terminal
-    tcsetattr(STDIN_FILENO, TCSANOW, &told);
-#elif defined(_WIN64) || defined(_WIN32)
-    // set terminal to raw mode
-    DWORD dwMode = 0;
-    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
-    GetConsoleMode(hIn, &dwMode);
-    SetConsoleMode(hIn, (dwMode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT)));
-
-    requestAndReadResponse();
-
-    // restore terminal
-    SetConsoleMode(hIn, dwMode);
-#endif
+    makeTerminalNormal();
 
     // std::cerr << "response: " << response << std::endl;
 
@@ -682,9 +695,14 @@ void checkForNoItems() {
 void setupIndicator() {
     if (!is_tty.err || output_silent || progress_silent) return;
 
-    fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
-    fprintf(stderr, "\033[?25l");                                              // hide the cursor
-    fflush(stderr);
+    bool hasFocus = true;
+
+    makeTerminalRaw();
+
+    printf("\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
+    printf("\033[?25l");                                              // hide the cursor
+    printf("\033[?1004h");                                            // enable focus tracking
+    fflush(stdout);
 
     std::unique_lock<std::mutex> lock(m);
     int output_length = 0;
@@ -692,6 +710,13 @@ void setupIndicator() {
                                                           "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
                                                           "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     int step = 0;
+    auto poll_focus = [&] {
+        std::array<char, 16> buf;
+        if (read(STDIN_FILENO, buf.data(), buf.size()) >= 3) {
+            if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'I') hasFocus = true;
+            if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'O') hasFocus = false;
+        }
+    };
     auto display_progress = [&](const auto& formattedNum) {
         output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(step).data());
         fflush(stderr);
@@ -717,11 +742,20 @@ void setupIndicator() {
         else
             display_progress("");
 
+        poll_focus();
+
         step == 21 ? step = 0 : step++;
     }
+
+    printf("\033[?25h");           // restore the cursor
+    printf("\033[?1004l");         // disable focus tracking
+    if (!hasFocus) printf("\007"); // play a bell sound if the terminal doesn't have focus
+    fflush(stdout);
     fprintf(stderr, "\r%*s\r", output_length, "");
-    fprintf(stderr, "\033[?25h"); // restore the cursor
     fflush(stderr);
+
+    makeTerminalNormal();
+
     if (progress_state == IndicatorState::Cancel) {
         if (io_type == IOType::File)
             fprintf(stderr, cancelled_with_progress_message().data(), actions[action].data(), percent_done().data());
@@ -868,7 +902,11 @@ std::string getMIMEType() {
 }
 
 void writeToRemoteClipboard(const ClipboardContent& content) {
-    if (content.type() != ClipboardContentType::Text || !isARemoteSession()) return;
+    if (content.type() != ClipboardContentType::Text || !isARemoteSession()) {
+        printf("\033]52;c;\007");
+        fflush(stdout);
+        return;
+    }
     auto toBase64 = [](const std::string_view& content) {
         static_assert(CHAR_BIT == 8);
         constexpr std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
@@ -959,6 +997,8 @@ int main(int argc, char* argv[]) {
         setupHandlers();
 
         setupVariables(argc, argv);
+
+        setupTerminal();
 
         setLocale();
 
