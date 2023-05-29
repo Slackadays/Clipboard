@@ -135,6 +135,11 @@ void error_exit(const std::string& message, const auto&... args) {
     exit(EXIT_FAILURE);
 }
 
+void deduplicate(auto& items) {
+    std::sort(items.begin(), items.end());
+    items.erase(std::unique(items.begin(), items.end()), items.end());
+}
+
 size_t writeToFile(const fs::path& path, const std::string& content, bool append = false);
 
 extern std::vector<std::string> arguments;
@@ -568,6 +573,18 @@ void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
 void setupHandlers();
+void setupTerminal();
+void setClipboardAttributes();
+void setFlags();
+void setFilepaths();
+Action getAction();
+IOType getIOType();
+void verifyAction();
+bool needsANewEntry();
+void checkItemSize(unsigned long long total_item_size);
+bool isAWriteAction();
+std::string getMIMEType();
+void ignoreItemsPreemptively(std::vector<fs::path>& items);
 void setLocale();
 void showHelpMessage(int& argc, char* argv[]);
 void setupItems(int& argc, char* argv[]);

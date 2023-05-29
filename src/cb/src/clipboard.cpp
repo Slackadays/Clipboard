@@ -205,12 +205,7 @@ size_t writeToFile(const fs::path& path, const std::string& content, bool append
     return content.size();
 }
 
-void deduplicate(auto& items) {
-    std::sort(items.begin(), items.end());
-    items.erase(std::unique(items.begin(), items.end()), items.end());
-}
-
-void ignoreItemsPreemptively(auto& items) {
+void ignoreItemsPreemptively(std::vector<fs::path>& items) {
     if (!path.holdsIgnoreRegexes() || copying.items.empty() || action == Action::Ignore || io_type == IOType::Pipe) return;
     auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
@@ -992,76 +987,4 @@ void showSuccesses() {
         else if ((successes.files > 1) && (successes.directories > 1))
             fprintf(stderr, many_files_many_directories_success_message().data(), did_action[action].data(), successes.files.load(), successes.directories.load());
     }
-}
-
-int main(int argc, char* argv[]) {
-    try {
-        setupHandlers();
-
-        setupVariables(argc, argv);
-
-        setupTerminal();
-
-        setLocale();
-
-        setClipboardAttributes();
-
-        setFlags();
-
-        setFilepaths();
-
-        action = getAction();
-
-        copying.items.assign(arguments.begin(), arguments.end());
-
-        io_type = getIOType();
-
-        verifyAction();
-
-        if (action != Action::Info) path.getLock();
-
-        startIndicator();
-
-        syncWithExternalClipboards();
-
-        ignoreItemsPreemptively(copying.items);
-
-        checkForNoItems();
-
-        if (needsANewEntry()) path.makeNewEntry();
-
-        (clipboard_state.exchange(ClipboardState::Action), cv.notify_one());
-
-        (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
-
-        deduplicate(copying.items);
-
-        checkItemSize(totalItemSize());
-
-        performAction();
-
-        if (isAWriteAction()) path.applyIgnoreRegexes();
-
-        copying.mime = getMIMEType();
-
-        updateExternalClipboards();
-
-        stopIndicator();
-
-        deduplicate(copying.failedItems);
-
-        showFailures();
-
-        showSuccesses();
-
-        path.trimHistoryEntries();
-    } catch (const std::exception& e) {
-        stopIndicator();
-        fprintf(stderr, internal_error_message().data(), e.what());
-        exit(EXIT_FAILURE);
-    }
-    if (copying.failedItems.empty())
-        exit(EXIT_SUCCESS);
-    else
-        exit(EXIT_FAILURE);
 }
