@@ -16,6 +16,34 @@
 
 namespace PerformAction {
 
-void edit() {}
+void edit() {
+    if (!path.holdsRawData()) {
+        if (path.holdsData())
+            error_exit("%s", formatMessage("[error]❌ You can currently only edit text content. 💡 [help]Try copying some text instead.[blank]\n"));
+        else
+            error_exit("%s", formatMessage("[error]❌ You can't edit an empty clipboard. 💡 [help]Try copying some text instead.[blank]\n"));
+        return;
+    }
+
+    auto preferredEditor = []() -> std::optional<std::string> {
+        if (auto editor = std::getenv("CLIPBOARD_EDITOR"); editor != nullptr) return editor;
+        if (auto editor = std::getenv("EDITOR"); editor != nullptr) return editor;
+        if (auto editor = std::getenv("VISUAL"); editor != nullptr) return editor;
+        return std::nullopt;
+    };
+
+    auto editor = preferredEditor();
+
+    if (!editor) error_exit("%s", formatMessage("[error]❌ CB couldn't find a suitable editor to use. 💡 [help]Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
+
+    // now run this editor with the text file as the argument
+    std::string command = editor.value() + " " + path.data.raw.string();
+
+    stopIndicator();
+
+    int res = system(command.data());
+
+    if (res != 0) error_exit("%s", formatMessage("[error]❌ CB couldn't open the editor. 💡 [help]Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
+}
 
 } // namespace PerformAction
