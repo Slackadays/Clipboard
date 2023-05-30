@@ -26,13 +26,42 @@ void edit() {
     }
 
     auto preferredEditor = []() -> std::optional<std::string> {
-        if (auto editor = std::getenv("CLIPBOARD_EDITOR"); editor != nullptr) return editor;
-        if (auto editor = std::getenv("EDITOR"); editor != nullptr) return editor;
-        if (auto editor = std::getenv("VISUAL"); editor != nullptr) return editor;
+        if (auto editor = getenv("CLIPBOARD_EDITOR"); editor != nullptr) return editor;
+        if (auto editor = getenv("EDITOR"); editor != nullptr) return editor;
+        if (auto editor = getenv("VISUAL"); editor != nullptr) return editor;
+        return std::nullopt;
+    };
+
+    auto fallbackEditor = []() -> std::optional<std::string> {
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
+        constexpr std::array fallbacks {"nano", "vim", "gedit", "vi"};
+#elif defined(_WIN32) || defined(_WIN64)
+        constexpr std::array fallbacks {"notepad", "notepad++", "wordpad", "word"};
+#else
+        return std::nullopt;
+#endif
+
+        // get everything in PATH
+        std::string paths = getenv("PATH");
+
+        // check each path for the fallbacks
+        fs::path temp;
+        for (size_t i = 0; i < paths.size(); i++) {
+            if (paths.at(i) == ':' || paths.at(i) == ';' || i == paths.size() - 1) {
+                for (const auto& fallback : fallbacks)
+                    if (fs::exists(temp / fallback)) return fallback;
+                temp.clear();
+                continue;
+            }
+            temp += paths.at(i);
+        }
+
         return std::nullopt;
     };
 
     auto editor = preferredEditor();
+
+    if (!editor) editor = fallbackEditor();
 
     if (!editor) error_exit("%s", formatMessage("[error]❌ CB couldn't find a suitable editor to use. 💡 [help]Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
 
