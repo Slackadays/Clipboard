@@ -16,6 +16,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #define STDIN_FILENO 0
+#define read _read
 #endif
 
 bool stopIndicator(bool change_condition_variable) {

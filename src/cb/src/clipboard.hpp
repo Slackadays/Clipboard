@@ -578,6 +578,7 @@ void setLanguageTR();
 void setLanguageES();
 void setupHandlers();
 void setupTerminal();
+bool isAClearingAction();
 void setClipboardAttributes();
 void setFlags();
 void setFilepaths();
