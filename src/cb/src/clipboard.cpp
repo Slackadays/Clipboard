@@ -481,6 +481,12 @@ ClipboardContent getRemoteClipboard() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(80));
 
+#if defined(_WIN32) || defined(_WIN64)
+        DWORD bytesAvailable = 0;
+        PeekNamedPipe(GetStdHandle(STD_INPUT_HANDLE), nullptr, 0, nullptr, &bytesAvailable, nullptr);
+        if (bytesAvailable < 8) return;
+#endif
+
         std::array<char, 65536> buffer;
         size_t n = 0;
         while ((n = read(STDIN_FILENO, buffer.data(), buffer.size())) > 8)

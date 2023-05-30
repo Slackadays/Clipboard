@@ -14,6 +14,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
+#if defined(_WIN32) || defined(_WIN64)
+#define STDIN_FILENO 0
+#endif
+
 bool stopIndicator(bool change_condition_variable) {
     IndicatorState expect = IndicatorState::Active;
 
@@ -47,6 +51,11 @@ void setupIndicator() {
     int step = 0;
     auto poll_focus = [&] {
         std::array<char, 16> buf;
+#if defined(_WIN32) || defined(_WIN64)
+        DWORD bytesAvailable = 0;
+        PeekNamedPipe(GetStdHandle(STD_INPUT_HANDLE), nullptr, 0, nullptr, &bytesAvailable, nullptr);
+        if (bytesAvailable < 3) return;
+#endif
         if (read(STDIN_FILENO, buf.data(), buf.size()) >= 3) {
             if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'I') hasFocus = true;
             if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'O') hasFocus = false;
