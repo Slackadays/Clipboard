@@ -86,7 +86,7 @@ void setupIndicator() {
         else
             display_progress("");
 
-        poll_focus();
+        if (is_tty.out) poll_focus();
 
         step == 21 ? step = 0 : step++;
     }
