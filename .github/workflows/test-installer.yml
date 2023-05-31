@@ -103,3 +103,20 @@ jobs:
             sh install.sh
             #export CLIPBOARD_TMPDIR=/tmp
             #bash src/tests/suite.sh
+  netbsd-amd64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a script
+        uses: cross-platform-actions/action@v0.13.0
+        with:
+          operating_system: netbsd
+          architecture: x86_64
+          version: '9.2'
+          shell: bash
+          run: |
+            sh install.sh
+            #export CLIPBOARD_TMPDIR=/tmp
+            #bash src/tests/suite.sh

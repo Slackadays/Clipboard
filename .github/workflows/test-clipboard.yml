@@ -269,3 +269,24 @@ jobs:
             sudo cmake --install .
             export CLIPBOARD_TMPDIR=/tmp
             bash ../src/tests/suite.sh
+  netbsd-amd64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a script
+        uses: cross-platform-actions/action@v0.13.0
+        with:
+          operating_system: netbsd
+          architecture: x86_64
+          version: '9.2'
+          shell: bash
+          run: |
+            sudo pkgin -y install cmake gcc12
+            cd build
+            cmake .. -DNO_LTO=1 -DNO_COVERAGE=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++ -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc
+            cmake --build . -j 2
+            sudo cmake --install .
+            export CLIPBOARD_TMPDIR=/tmp
+            bash ../src/tests/suite.sh
