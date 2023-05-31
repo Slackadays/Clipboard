@@ -22,10 +22,10 @@ void edit() {
             error_exit("%s", formatMessage("[error]❌ You can currently only edit text content. 💡 [help]Try copying some text instead.[blank]\n"));
         else
             error_exit("%s", formatMessage("[error]❌ You can't edit an empty clipboard. 💡 [help]Try copying some text instead.[blank]\n"));
-        return;
     }
 
     auto preferredEditor = []() -> std::optional<std::string> {
+        if (!copying.items.empty()) return copying.items.at(0).string();
         if (auto editor = getenv("CLIPBOARD_EDITOR"); editor != nullptr) return editor;
         if (auto editor = getenv("EDITOR"); editor != nullptr) return editor;
         if (auto editor = getenv("VISUAL"); editor != nullptr) return editor;
@@ -40,21 +40,17 @@ void edit() {
 #else
         return std::nullopt;
 #endif
-
         // get everything in PATH
-        std::string paths = getenv("PATH");
+        std::string pathContent(getenv("PATH"));
 
-        // check each path for the fallbacks
-        fs::path temp;
-        for (size_t i = 0; i < paths.size(); i++) {
-            if (paths.at(i) == ':' || paths.at(i) == ';' || i == paths.size() - 1) {
-                for (const auto& fallback : fallbacks)
-                    if (fs::exists(temp / fallback)) return fallback;
-                temp.clear();
-                continue;
-            }
-            temp += paths.at(i);
-        }
+        // split paths by : or ; (: for posix, ; for windows)
+        std::regex regex("[:;]");
+        std::sregex_token_iterator begin(pathContent.begin(), pathContent.end(), regex, -1), end; // -1: return the things that are not matched
+        std::vector<std::string> paths(begin, end);
+
+        for (const auto& path : paths)
+            for (const auto& fallback : fallbacks)
+                if (fs::exists(fs::path(path) / fallback)) return fallback;
 
         return std::nullopt;
     };
