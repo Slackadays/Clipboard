@@ -36,21 +36,21 @@ void edit() {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
         constexpr std::array fallbacks {"nano", "vim", "gedit", "vi"};
 #elif defined(_WIN32) || defined(_WIN64)
-        constexpr std::array fallbacks {"notepad", "notepad++", "wordpad", "word"};
+        constexpr std::array fallbacks {"notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
 #else
         return std::nullopt;
 #endif
-        // get everything in PATH
         std::string pathContent(getenv("PATH"));
+        std::vector<fs::path> paths;
 
         // split paths by : or ; (: for posix, ; for windows)
         std::regex regex("[:;]");
         std::sregex_token_iterator begin(pathContent.begin(), pathContent.end(), regex, -1), end; // -1: return the things that are not matched
-        std::vector<std::string> paths(begin, end);
+        std::transform(begin, end, std::back_inserter(paths), [](const std::string& path) { return fs::path(path); });
 
         for (const auto& path : paths)
             for (const auto& fallback : fallbacks)
-                if (fs::exists(fs::path(path) / fallback)) return fallback;
+                if (fs::exists(path / fallback)) return fallback;
 
         return std::nullopt;
     };
