@@ -49,11 +49,15 @@ ClipboardContent getRemoteClipboard() {
             response += std::string(buffer.data(), n);
     };
 
+    stopIndicator();
+
     makeTerminalRaw();
 
     requestAndReadResponse();
 
     makeTerminalNormal();
+
+    startIndicator();
 
     // std::cerr << "response: " << response << std::endl;
 
