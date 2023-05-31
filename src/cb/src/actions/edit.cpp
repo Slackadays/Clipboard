@@ -33,13 +33,8 @@ void edit() {
     };
 
     auto fallbackEditor = []() -> std::optional<std::string> {
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
-        constexpr std::array fallbacks {"nano", "vim", "gedit", "vi"};
-#elif defined(_WIN32) || defined(_WIN64)
-        constexpr std::array fallbacks {"notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
-#else
-        return std::nullopt;
-#endif
+        constexpr std::array fallbacks {"nano", "vim", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
+
         std::string pathContent(getenv("PATH"));
         std::vector<fs::path> paths;
 
@@ -62,7 +57,7 @@ void edit() {
     if (!editor) error_exit("%s", formatMessage("[error]❌ CB couldn't find a suitable editor to use. 💡 [help]Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
 
     // now run this editor with the text file as the argument
-    std::string command = editor.value() + " " + path.data.raw.string();
+    auto command = editor.value() + " " + path.data.raw.string();
 
     stopIndicator();
 
