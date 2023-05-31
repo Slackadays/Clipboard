@@ -12,7 +12,9 @@ The Clipboard Project <sub>(CB for short)</sub> is the fast and lightweight, fea
 
 I originally made this to fix some huge annoyances in other tools like a frustrating user experience, strangely limited features, and frankly sad compatibility.
 
-CB is the world's first (and currently only) real, honest-to-goodness clipboard manager made for anybody who can press keys on a keyboard. Don't just take my word for it!
+CB is the world's first (and currently only) real, honest-to-goodness clipboard manager made for anybody who can press keys on a keyboard. 
+
+Don't just take my word for it!
 
 <br>
 
