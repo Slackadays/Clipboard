@@ -79,4 +79,4 @@ struct WriteGuiContext {
     const ClipboardContent& clipboard;
 };
 
-extern std::optional<std::string_view> inferMIMEType(const std::string& temporaryContent);
+extern std::optional<std::string_view> inferMIMEType(const std::string_view& content);
