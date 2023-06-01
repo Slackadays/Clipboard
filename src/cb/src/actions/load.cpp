@@ -17,7 +17,7 @@
 namespace PerformAction {
 
 void load() {
-    if (!path.holdsData()) {
+    if (!path.holdsDataInCurrentEntry()) {
         error_exit("%s", formatMessage("[error]❌ The clipboard you're trying to load from is empty. 💡 [help]Try choosing a different source instead.[blank]\n"));
     }
 

@@ -178,7 +178,7 @@ ClipboardContent thisClipboard() {
 
     if (!copying.buffer.empty()) return {copying.buffer, copying.mime};
 
-    if (default_cb.holdsRawData()) return {fileContents(default_cb.data.raw), std::string(inferMIMEType(fileContents(default_cb.data.raw)).value_or("text/plain"))};
+    if (default_cb.holdsRawDataInCurrentEntry()) return {fileContents(default_cb.data.raw), std::string(inferMIMEType(fileContents(default_cb.data.raw)).value_or("text/plain"))};
 
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;

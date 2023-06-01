@@ -390,15 +390,15 @@ public:
     auto operator=(const auto& other) { return root = other; }
     auto operator/(const auto& other) { return root / other; }
     std::string string() { return root.string(); }
-    bool holdsRawData() const {
+    bool holdsRawDataInCurrentEntry() const {
         std::error_code ec;
         bool empty = fs::is_empty(data.raw, ec);
         if (ec) return false; // errors out if the file doesn't exist, return false to save on a syscall
         return !empty;
     }
-    bool holdsData() {
+    bool holdsDataInCurrentEntry() {
         if (fs::is_empty(data)) return false;
-        if (holdsRawData()) return true;
+        if (holdsRawDataInCurrentEntry()) return true;
         for (const auto& entry : fs::directory_iterator(data))
             if (!fs::is_empty(entry)) return true;
         return false;
@@ -414,7 +414,7 @@ public:
     void applyIgnoreRegexes() {
         if (!holdsIgnoreRegexes()) return;
         auto regexes = ignoreRegexes();
-        if (holdsRawData())
+        if (holdsRawDataInCurrentEntry())
             for (const auto& regex : regexes)
                 writeToFile(data.raw, std::regex_replace(fileContents(data.raw), regex, ""));
         else
@@ -423,7 +423,7 @@ public:
                     if (std::regex_match(entry.path().filename().string(), regex)) fs::remove_all(entry.path());
     }
     bool isUnused() {
-        if (holdsData()) return false;
+        if (holdsDataInCurrentEntry()) return false;
         if (fs::exists(metadata.notes) && !fs::is_empty(metadata.notes)) return false;
         if (fs::exists(metadata.originals) && !fs::is_empty(metadata.originals)) return false;
         return true;
@@ -476,6 +476,11 @@ public:
                     entry);
             exit(EXIT_FAILURE);
         }
+    }
+    bool holdsData() {
+        for (const auto& entry : entryIndex)
+            if (!fs::is_empty(entryPathFor(entry))) return true;
+        return false;
     }
     void trimHistoryEntries() {
         if (maximumHistorySize.empty()) return;

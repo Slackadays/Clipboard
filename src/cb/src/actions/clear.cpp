@@ -31,12 +31,12 @@ void clear() {
             int clipboards_cleared = 0;
             if (decision.substr(0, 1) == "y" || decision.substr(0, 1) == "Y") {
                 for (const auto& entry : fs::directory_iterator(global_path.temporary)) {
-                    bool predicate = Clipboard(entry.path().filename().string()).holdsData();
+                    bool predicate = Clipboard(entry.path().filename().string()).holdsDataInCurrentEntry();
                     fs::remove_all(entry);
                     if (predicate) clipboards_cleared++;
                 }
                 for (const auto& entry : fs::directory_iterator(global_path.persistent)) {
-                    bool predicate = Clipboard(entry.path().filename().string()).holdsData();
+                    bool predicate = Clipboard(entry.path().filename().string()).holdsDataInCurrentEntry();
                     fs::remove_all(entry);
                     if (predicate) clipboards_cleared++;
                 }

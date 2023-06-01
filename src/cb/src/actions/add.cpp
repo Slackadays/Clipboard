@@ -17,7 +17,7 @@
 namespace PerformAction {
 
 void addFiles() {
-    if (path.holdsRawData())
+    if (path.holdsRawDataInCurrentEntry())
         error_exit(
                 "%s",
                 formatMessage("[error]❌ You can't add items to text. [blank]💡 [help]Try copying text first, or add "
@@ -28,7 +28,7 @@ void addFiles() {
 }
 
 void addData() {
-    if (path.holdsRawData()) {
+    if (path.holdsRawDataInCurrentEntry()) {
         std::string content;
         if (io_type == IOType::Pipe)
             content = pipedInContent();

@@ -24,7 +24,7 @@ void show() {
 
     stopIndicator();
 
-    if (path.holdsRawData()) {
+    if (path.holdsRawDataInCurrentEntry()) {
         std::string content(fileContents(path.data.raw));
         std::erase(content, '\n');
         fprintf(stderr, clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());

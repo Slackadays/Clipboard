@@ -63,7 +63,7 @@ void info() {
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Total space remaining: [help]%s[blank]\n").data(), formatBytes(fs::space(path).available).data());
 
-    if (path.holdsRawData()) {
+    if (path.holdsRawDataInCurrentEntry()) {
         displayEndbar();
         fprintf(stderr, formatMessage("[info]│ Content size: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
         displayEndbar();
@@ -147,7 +147,7 @@ void infoJSON() {
     printf("    \"totalBytesUsed\": %zu,\n", totalDirectorySize(path));
     printf("    \"totalBytesRemaining\": %zu,\n", fs::space(path).available);
 
-    if (path.holdsRawData()) {
+    if (path.holdsRawDataInCurrentEntry()) {
         printf("    \"contentBytes\": %zu,\n", fs::file_size(path.data.raw));
         printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {

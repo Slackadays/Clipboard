@@ -23,7 +23,7 @@ void removeRegex() {
     else
         std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
 
-    if (path.holdsRawData()) {
+    if (path.holdsRawDataInCurrentEntry()) {
         std::string content(fileContents(path.data.raw));
         size_t oldLength = content.size();
 

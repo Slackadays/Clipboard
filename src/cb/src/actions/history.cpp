@@ -134,7 +134,7 @@ void history() {
                 + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[blank][info]│ "
         );
 
-        if (path.holdsRawData()) {
+        if (path.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(path.data.raw));
             if (auto type = inferMIMEType(content); type.has_value())
                 content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
@@ -192,7 +192,7 @@ void historyJSON() {
         printf("    \"%lu\": {\n", entry);
         printf("        \"date\": %zu,\n", fs::last_write_time(path.data).time_since_epoch().count());
         printf("        \"content\": ");
-        if (path.holdsRawData()) {
+        if (path.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(path.data.raw));
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
@@ -202,7 +202,7 @@ void historyJSON() {
             } else {
                 printf("\"%s\"", JSONescape(content).data());
             }
-        } else if (path.holdsData()) {
+        } else if (path.holdsDataInCurrentEntry()) {
             printf("[\n");
             std::vector<fs::path> itemsInPath(fs::directory_iterator(path.data), fs::directory_iterator());
             for (const auto& entry : itemsInPath) {

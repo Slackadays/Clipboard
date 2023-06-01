@@ -17,8 +17,8 @@
 namespace PerformAction {
 
 void edit() {
-    if (!path.holdsRawData()) {
-        if (path.holdsData())
+    if (!path.holdsRawDataInCurrentEntry()) {
+        if (path.holdsDataInCurrentEntry())
             error_exit("%s", formatMessage("[error]❌ You can currently only edit text content. 💡 [help]Try copying some text instead.[blank]\n"));
         else
             error_exit("%s", formatMessage("[error]❌ You can't edit an empty clipboard. 💡 [help]Try copying some text instead.[blank]\n"));

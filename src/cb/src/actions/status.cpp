@@ -19,9 +19,9 @@ namespace PerformAction {
 std::vector<Clipboard> clipboardsWithContent() {
     std::vector<Clipboard> clipboards;
     for (const auto& entry : fs::directory_iterator(global_path.temporary))
-        if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsData()) clipboards.emplace_back(cb);
+        if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsDataInCurrentEntry()) clipboards.emplace_back(cb);
     for (const auto& entry : fs::directory_iterator(global_path.persistent))
-        if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsData()) clipboards.emplace_back(cb);
+        if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsDataInCurrentEntry()) clipboards.emplace_back(cb);
     std::sort(clipboards.begin(), clipboards.end(), [](const auto& a, const auto& b) { return a.name() < b.name(); });
     return clipboards;
 }
@@ -55,7 +55,7 @@ void status() {
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
         fprintf(stderr, formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
-        if (clipboard.holdsRawData()) {
+        if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));
             if (auto type = inferMIMEType(content); type.has_value())
                 content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
@@ -110,7 +110,7 @@ void statusJSON() {
 
         printf("    \"%s\": ", clipboard.name().data());
 
-        if (clipboard.holdsRawData()) {
+        if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
