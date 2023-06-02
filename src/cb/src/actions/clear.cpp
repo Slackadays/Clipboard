@@ -21,7 +21,7 @@ void clear() {
         if (!userIsARobot()) {
             stopIndicator();
             fprintf(stderr,
-                    formatMessage("[progress]🟡 Are you sure you want to clear all clipboards?[blank] [help]This will remove everything in locations [bold]%s[blank][help] and "
+                    formatMessage("[progress]⬤ Are you sure you want to clear all clipboards?[blank] [help]This will remove everything in locations [bold]%s[blank][help] and "
                                   "[bold]%s[blank][help]. [bold][y(es)/n(o)] ")
                             .data(),
                     global_path.temporary.string().data(),

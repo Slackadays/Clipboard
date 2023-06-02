@@ -233,7 +233,6 @@ static std::string formatMessage(const std::string_view& str, bool colorful = !n
     if (no_emoji) {
         replaceThis("✅", "✓");
         replaceThis("❌", "✗");
-        replaceThis("🟡", "-");
         replaceThis("💡", "•");
         replaceThis("🔷", "•");
     }

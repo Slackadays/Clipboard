@@ -104,11 +104,11 @@ Message fix_problem_message = "[help]💡 See if you have the needed permissions
 Message not_enough_storage_message = "[error]❌ There won't be enough storage available to %s everything (%gMB to "
                                      "paste, %gMB available). 💡 [blank][help] Try double-checking what items you've "
                                      "selected or delete some files to free up space.[blank]\n";
-Message item_already_exists_message = "[progress]🟡 The item [bold]%s[blank][progress] already exists here. Do you want to "
+Message item_already_exists_message = "[progress]⬤ The item [bold]%s[blank][progress] already exists here. Do you want to "
                                       "replace it? [help]Use [bold]all [blank][help]to replace all existing, or "
                                       "[bold]skip[blank][help] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "[error]❌ Sorry, that wasn't a valid choice. Try again: [blank][help][bold][(y)es/(n)o)] ";
-Message working_message = "\r[progress]🟡 %s... %s %s    [blank]";
+Message working_message = "\r[progress]⬤ %s... %s %s    [blank]";
 Message cancelled_message = "[success]✅ Cancelled %s[blank]\n";
 Message cancelled_with_progress_message = "[success]✅ Cancelled %s (%s in progress)[blank]\n";
 Message byte_success_message = "[success]✅ %s %s[blank]\n";
