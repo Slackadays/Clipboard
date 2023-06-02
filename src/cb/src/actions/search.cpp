@@ -26,8 +26,8 @@ void search() {
     struct Result {
         std::string preview;
         std::string clipboard;
-        unsigned long entry;
-        unsigned long score;
+        unsigned long entry = 0;
+        unsigned long score = 0;
     };
 
     std::vector<Result> results;
@@ -80,32 +80,19 @@ void search() {
 
         if (content == query) {
             result.score = 1000;
-            result.preview = "\033[1m" + content + "\033[0m";
-            return result;
-        }
-        // then check if the content regex matches the query
-
-        else if (std::regex_match(content, std::regex(query))) {
+            result.preview = "\033[1m" + content + "\033[22m";
+        } else if (std::regex_match(content, std::regex(query))) { // then check if the content regex matches the query
             result.score = 800;
-            result.preview = "\033[1m" + content + "\033[0m";
-            return result;
-        }
-        // then do a regex search of the content for the query
-
-        else if (std::smatch sm; std::regex_search(content, sm, std::regex(query))) {
-            result.score = 600;
-            result.preview = content.substr(0, sm.position(0)) + "\033[1m" + sm.str(0) + "\033[0m" + content.substr(sm.position(0) + sm.length(0));
-            return result;
+            result.preview = "\033[1m" + content + "\033[22m";
+        } else if (unsigned long distance; content.size() < 1000 && (distance = levenshteinDistance(content, query)) < 25) { // then do a fuzzy search of the content for the query
+            result.score = 600 - (distance * 5);
+            result.preview = "\033[1m" + content + "\033[22m";
+        } else if (std::smatch sm; std::regex_search(content, sm, std::regex(query))) { // then do a regex search of the content for the query
+            result.score = 400;
+            result.preview = content.substr(0, sm.position(0)) + "\033[1m" + sm.str(0) + "\033[22m" + content.substr(sm.position(0) + sm.length(0));
         }
 
-        // then do a fuzzy search of the content for the query
-
-        else if (content.size() < 1000)
-            if (auto distance = levenshteinDistance(content, query); distance < 20) {
-                result.score = 500 - (distance * 10);
-                result.preview = "\033[1m" + content + "\033[0m";
-                return result;
-            }
+        if (result.score > 0) return result;
 
         return std::nullopt;
     };
@@ -146,18 +133,21 @@ void search() {
 
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.score > two.score; });
 
+    auto available = thisTerminalSize();
+
+    if (results.size() > (available.rows * 2)) results.erase(results.begin() + (available.rows * 2), results.end());
+
     auto longestClipboardLength = (*std::max_element(targets.begin(), targets.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); })).name().size();
 
     auto longestEntryLength = numberLength((*std::max_element(results.begin(), results.end(), [](const auto& a, const auto& b) { return a.entry < b.entry; })).entry);
 
     stopIndicator();
 
-    auto available = thisTerminalSize();
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
-    Message search_result_message = "[info]Search results (clipboard │ entry │ result)[blank]";
+    Message search_result_message = "[info]Your search results[blank]";
     fprintf(stderr, "%s", search_result_message().data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    auto usedSpace = (search_result_message.rawLength() - 2) + 5;
+    auto usedSpace = (search_result_message.rawLength() - 2) + 9;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
     std::string bar1;
@@ -167,7 +157,7 @@ void search() {
 
     for (const auto& result : results) {
         fprintf(stderr,
-                formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ %*s%lu| [blank]").data(),
+                formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ %*s%lu│ [blank]").data(),
                 available.columns,
                 longestClipboardLength - result.clipboard.length(),
                 "",
@@ -182,12 +172,12 @@ void search() {
             preview = preview.substr(0, widthRemaining - 3);
             preview += "...";
         }
-        fprintf(stderr, "%s\n", preview.data());
+        fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), preview.data());
     }
 
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
-    Message search_legend_message = "blah blah blah";
-    int cols = available.columns - (search_legend_message.rawLength() + 7);
+    Message search_legend_message = "[bold]Clipboard│ Entry│[blank][help] Result[info]";
+    int cols = available.columns - (search_legend_message.rawLength() + 3);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";
