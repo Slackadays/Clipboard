@@ -85,10 +85,10 @@ void search() {
             result.score = 800;
             result.preview = "\033[1m" + content + "\033[22m";
         } else if (unsigned long distance; content.size() < 1000 && (distance = levenshteinDistance(content, query)) < 25) { // then do a fuzzy search of the content for the query
-            result.score = 600 - (distance * 5);
+            result.score = 700 - (distance * 20);
             result.preview = "\033[1m" + content + "\033[22m";
         } else if (std::smatch sm; std::regex_search(content, sm, std::regex(query))) { // then do a regex search of the content for the query
-            result.score = 400;
+            result.score = 600;
             result.preview = content.substr(0, sm.position(0)) + "\033[1m" + sm.str(0) + "\033[22m" + content.substr(sm.position(0) + sm.length(0));
         }
 
@@ -100,7 +100,7 @@ void search() {
     for (auto& clipboard : targets) {
         for (const auto& entry : clipboard.entryIndex) {
             auto adjustScoreByEntryPosition = [&](Result& result) {
-                float multiplier = 1.0f - (static_cast<float>(entry) / (2.0f * static_cast<float>(clipboard.entryIndex.size())));
+                float multiplier = 1.0f - (static_cast<float>(entry) / (20.0f * static_cast<float>(clipboard.entryIndex.size())));
                 float newScore = static_cast<float>(result.score) * multiplier;
                 result.score = static_cast<unsigned long>(newScore);
             };
