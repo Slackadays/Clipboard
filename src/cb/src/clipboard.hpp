@@ -593,6 +593,7 @@ void setFlags();
 void setFilepaths();
 void makeTerminalRaw();
 void makeTerminalNormal();
+unsigned long numberLength(const unsigned long& number);
 Action getAction();
 IOType getIOType();
 void verifyAction();

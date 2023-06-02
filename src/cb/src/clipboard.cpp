@@ -191,6 +191,19 @@ size_t writeToFile(const fs::path& path, const std::string& content, bool append
     return content.size();
 }
 
+unsigned long numberLength(const unsigned long& number) {
+    if (number < 10) return 1;
+    if (number < 100) return 2;
+    if (number < 1000) return 3;
+    if (number < 10000) return 4;
+    if (number < 100000) return 5;
+    if (number < 1000000) return 6;
+    if (number < 10000000) return 7;
+    if (number < 100000000) return 8;
+    if (number < 1000000000) return 9;
+    return 10; // because 4 billion is the max for unsigned long, we know we'll have 10 or fewer digits
+}
+
 void ignoreItemsPreemptively(std::vector<fs::path>& items) {
     if (!path.holdsIgnoreRegexes() || copying.items.empty() || action == Action::Ignore || io_type == IOType::Pipe) return;
     auto regexes = path.ignoreRegexes();

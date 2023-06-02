@@ -101,8 +101,8 @@ void search() {
         // then do a fuzzy search of the content for the query
 
         else if (content.size() < 1000)
-            if (auto distance = levenshteinDistance(content, query); distance < 100) {
-                result.score = 400 - distance;
+            if (auto distance = levenshteinDistance(content, query); distance < 20) {
+                result.score = 500 - (distance * 10);
                 result.preview = "\033[1m" + content + "\033[0m";
                 return result;
             }
@@ -112,12 +112,18 @@ void search() {
 
     for (auto& clipboard : targets) {
         for (const auto& entry : clipboard.entryIndex) {
+            auto adjustScoreByEntryPosition = [&](Result& result) {
+                float multiplier = 1.0f - (static_cast<float>(entry) / (2.0f * static_cast<float>(clipboard.entryIndex.size())));
+                float newScore = static_cast<float>(result.score) * multiplier;
+                result.score = static_cast<unsigned long>(newScore);
+            };
             clipboard.setEntry(entry);
             if (clipboard.holdsRawDataInCurrentEntry()) {
                 for (const auto& query : queries) {
                     if (auto rating = contentMatchRating(fileContents(clipboard.data.raw), query); rating.has_value()) {
                         rating->clipboard = clipboard.name();
                         rating->entry = entry;
+                        adjustScoreByEntryPosition(rating.value());
                         results.emplace_back(rating.value());
                     }
                 }
@@ -127,6 +133,7 @@ void search() {
                         if (auto rating = contentMatchRating(item.path().filename().string(), query); rating.has_value()) {
                             rating->clipboard = clipboard.name();
                             rating->entry = entry;
+                            adjustScoreByEntryPosition(rating.value());
                             results.emplace_back(rating.value());
                         }
                     }
@@ -135,13 +142,57 @@ void search() {
         }
     }
 
+    if (results.empty()) error_exit("%s", formatMessage("[error]❌ CB couldn't find anything matching your query.[blank] 💡 [help]Try searching for something else instead.[blank]\n"));
+
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.score > two.score; });
+
+    auto longestClipboardLength = (*std::max_element(targets.begin(), targets.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); })).name().size();
+
+    auto longestEntryLength = numberLength((*std::max_element(results.begin(), results.end(), [](const auto& a, const auto& b) { return a.entry < b.entry; })).entry);
 
     stopIndicator();
 
+    auto available = thisTerminalSize();
+    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+    Message search_result_message = "[info]Search results (clipboard │ entry │ result)[blank]";
+    fprintf(stderr, "%s", search_result_message().data());
+    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    auto usedSpace = (search_result_message.rawLength() - 2) + 5;
+    if (usedSpace > available.columns) available.columns = usedSpace;
+    int columns = available.columns - usedSpace;
+    std::string bar1;
+    for (int i = 0; i < columns; i++)
+        bar1 += "━";
+    fprintf(stderr, "%s%s", bar1.data(), formatMessage("┑[blank]\n").data());
+
     for (const auto& result : results) {
-        std::cout << "clipboard " << result.clipboard << " entry " << result.entry << " score " << result.score << " preview " << result.preview << std::endl;
+        fprintf(stderr,
+                formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ %*s%lu| [blank]").data(),
+                available.columns,
+                longestClipboardLength - result.clipboard.length(),
+                "",
+                result.clipboard.data(),
+                longestEntryLength - numberLength(result.entry),
+                "",
+                result.entry);
+        std::string preview = result.preview;
+        std::erase(preview, '\n');
+        int widthRemaining = available.columns - (longestClipboardLength + longestEntryLength);
+        if (preview.length() > widthRemaining) {
+            preview = preview.substr(0, widthRemaining - 3);
+            preview += "...";
+        }
+        fprintf(stderr, "%s\n", preview.data());
     }
+
+    fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
+    Message search_legend_message = "blah blah blah";
+    int cols = available.columns - (search_legend_message.rawLength() + 7);
+    std::string bar2 = " ┣";
+    for (int i = 0; i < cols; i++)
+        bar2 += "━";
+    fprintf(stderr, "%s", (search_legend_message() + bar2).data());
+    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }
 
 } // namespace PerformAction
