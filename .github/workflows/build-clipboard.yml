@@ -78,7 +78,7 @@ jobs:
         with:
           name: clipboard-linux-${{ matrix.arch.os }}
           path: build/output
-  linux-flatpak-amd64:
+  flatpak-amd64:
     runs-on: ubuntu-22.04
 
     steps:
@@ -99,7 +99,6 @@ jobs:
           cmake --build . -j 4
 
           cp ../app.getclipboard.Clipboard.* .
-          cp ../documentation/readme-assets/CB.png app.getclipboard.Clipboard.png
           cp output/bin/* .
           cp output/lib/* .
 
@@ -107,9 +106,13 @@ jobs:
           flatpak install --user --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
           flatpak-builder --repo=repo --force-clean build-dir app.getclipboard.Clipboard.yml
           flatpak build-bundle repo clipboard-flatpak-amd64.flatpak app.getclipboard.Clipboard
+
+          echo -e "After you install the Clipboard Project through this Flatpak, you'll likely be able to run it with the command \"flatpak run app.getclipboard.Clipboard\". \nHowever, this is long and hard to remember, and Flatpak doesn't yet offer a built-in solution so that you can just use \"cb\". \nSo, to work around this issue, run the command \"alias cb='flatpak run app.getclipboard.Clipboard'\" so that the command \"cb\" does what you want you expect. \nAdd that command to your terminal startup file like .bashrc so that it works every time you start the terminal." > READ_THIS_AFTER_INSTALLING.txt
       - uses: actions/upload-artifact@v3
         with:
-          name: clipboard-flatpak-amd64
+          name: 
+            - clipboard-flatpak-amd64
+            - READ_THIS_AFTER_INSTALLING.txt
           path: build/clipboard-flatpak-amd64.flatpak
   macos-arm64-amd64:
     runs-on: macos-latest
