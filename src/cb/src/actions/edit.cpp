@@ -33,7 +33,7 @@ void edit() {
     };
 
     auto fallbackEditor = []() -> std::optional<std::string> {
-        constexpr std::array fallbacks {"nano", "vim", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
+        constexpr std::array fallbacks {"nano", "vim", "nvim", "micro", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
 
         std::string pathContent(getenv("PATH"));
         std::vector<fs::path> paths;
