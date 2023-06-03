@@ -21,7 +21,7 @@ Don't just take my word for it!
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
 - Works with text, files, directories, binary data, your goat, anything,
-- An infinite number of clipboards with unlimited capacity AND endless history each,
+- An infinite number of clipboards with unlimited capacity AND history each,
 - Seamless integration with your [existing clipboards](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
 - Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
