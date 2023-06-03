@@ -601,6 +601,36 @@ $ cb --clr
 
 <br>
 
+<details><summary> &ensp; <b>Edit Clipboard Content</b> &emsp; <code>cb [--](edit|ed)[(num)|_(id)] [editor]</code></summary>
+
+<br>
+
+Start by copying some text.
+```sh
+$ cb copy "Hello Clipboard! This is just some example content."
+```
+
+Edit the clipboard content.
+```sh
+$ cb edit
+$ cb --edit
+$ cb ed
+$ cb --ed
+# These all work great!
+```
+
+Use a custom editor to edit with.
+```sh
+cb edit nano
+cb ed vim
+cb ed code
+```
+
+</details>
+
+<br>
+
+
 ### <img src="documentation/readme-assets/MoveThingsAround.png" alt="Move Things Around" height=25px />
 
 <details><summary> &ensp; <b>Load Contents</b> &emsp; <code>cb [--](load|ld)[(num)|_(id)] [clipboard] [clipboards]</code></summary>
@@ -727,6 +757,54 @@ $ cb export 1 2 3
 
 <br>
 
+<details><summary> &ensp; <b>Queue Clipboard History</b> &emsp; <code>cb [--](history|hs)[(num)|_(id)]</code></summary>
+
+<br>
+
+Start by copying several things.
+```sh
+$ cb copy "There are at least two \"Anthony Santos\" who are known for bachata music: the \"regular\" Anthony Santos and Anthony \"Romeo\" Santos."
+$ cb copy "blah blah blah"
+$ cb copy "Clipboard Project is the best clipboard manager around"
+```
+
+Show the history.
+```sh
+$ cb history
+$ cb --history
+$ cb hs
+$ cb --hs
+# These all work great!
+```
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b>Get Older Clipboard Entries</b> &emsp; <code>cb [--](history|hs)[(num)|_(id)] (clipboard) [clipboards]</code></summary>
+
+<br>
+
+Start by copying several things.
+```sh
+$ cb copy "There are at least two \"Anthony Santos\" who are known for bachata music: the \"regular\" Anthony Santos and Anthony \"Romeo\" Santos."
+$ cb copy "blah blah blah"
+$ cb copy "Clipboard Project is the best clipboard manager around"
+```
+
+Bring an older entry (or entries) to the front.
+```sh
+$ cb history 1
+$ cb --history 2
+$ cb hs 1
+$ cb --hs 1 2
+# These all work great!
+```
+
+</details>
+
+<br>
+
 ### <img src="documentation/readme-assets/SeeEverything.png" alt="See Everything" height=25px />
 
 <details><summary> &ensp; <b>Set Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [[--](note|nt)][(num)|_(id)]</code></summary>
@@ -843,6 +921,30 @@ Output these helpful details in JSON format.
 ```sh
 $ cb info | cat
 $ cb info | jq
+```
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b>Search Clipboard Contents</b> &emsp; <code>cb [--](search|sr)[(num)|_(id)] (query) [queries]</code></summary>
+
+<br>
+
+Start by copying several things.
+```sh
+$ cb copy Foo Bar Baz
+$ cb copy "Some example content"
+$ cb copy2 "Blah bleh bluh bloh"
+```
+
+Search a clipboard's contents.
+```sh
+$ cb search Foo
+$ cb --search Blah
+$ cb sr Bar
+$ cb --sr Baz
+# All are the same!
 ```
 
 </details>
@@ -1023,6 +1125,22 @@ $ cb -c _ copy "Generation Next"/*
 
 <br>
 
+<details><summary> &ensp; <b><code>--entry (entry)</code>, <code>-e (entry)</code></b> &emsp; Add this to choose which history entry you want to use. </summary>
+
+<br>
+
+Choose a non-default history entry.
+```sh
+$ cb -e 5 copy Foobar
+$ cb --entry 10 copy BarBaz
+```
+
+Note: To copy to a non-default entry, that entry must exist already.
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b><code>--fast-copy</code>, <code>-fc</code></b> &emsp; Add this to use links when copying, cutting, pasting, or loading. If you modify the items that you used with this flag, then the items you paste will have the same changes.</summary>
 
 <br>
@@ -1103,6 +1221,50 @@ cb cp Temp/*
 cb p
 ...
 ```
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b><code>CLIPBOARD_EDITOR</code></b> &emsp; Set this to the editor you want to use for the Edit action. </summary>
+
+<br>
+
+Set a custom editor to use.
+```sh
+$ export CLIPBOARD_EDITOR=nano
+```
+
+Note: The environment variables `EDITOR` and `VISUAL` by default take precedence if `CLIPBOARD_EDITOR` isn't set.
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b><code>CLIPBOARD_HISTORY</code></b> &emsp; Set this to the maximum history size you want to keep, like <code>10000</code> or <code>50gb</code>. </summary>
+
+<br>
+
+`CLIPBOARD_HISTORY` supports up to 2^32 - 1 as a value. So, go ahead. Crank that b*tch up to a billion.
+```sh
+$ export CLIPBOARD_HISTORY=1000000000
+$ cb copy "Oh yeah!"
+```
+
+Only keep a certain amount of data.
+```sh
+$ export CLIPBOARD_HISTORY=100tb
+$ cb copy Yo_Mama.tar.gz
+```
+
+Note: You can choose between `tb`, `gb`, `mb`, `kb`, and `b` to specify amounts for terabytes, gigabytes, megabytes, kilobytes, and bytes respectively.
+
+Only keep a certain time length.
+```sh
+$ export CLIPBOARD_HISTORY=52w
+```
+
+Note: You can choose between `y`, `m`, `w`, `d`, and `h` to specify amounts for years, months, weeks, days, and hours respectively.
 
 </details>
 
@@ -1241,6 +1403,19 @@ Disable progress messages from CB entirely.
 ```sh
 $ export CLIPBOARD_NOPROGRESS=1
 $ fzf | cb
+```
+
+</details>
+
+<br>
+
+<details><summary> &ensp; <b><code>CLIPBOARD_NOREMOTE</code></b> &emsp; Set this to anything to disable remote clipboard sharing.</summary>
+
+<br>
+
+Disable all clipboard content transfers through the terminal.
+```sh
+$ export CLIPBOARD_NOREMOTE=1
 ```
 
 </details>
