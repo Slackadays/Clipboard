@@ -98,11 +98,15 @@ fi
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir"
 
-if [ -w "/usr/local/bin" ] && [ -w "/usr/local/lib" ]
+if can_use_sudo
 then
     install_path="/usr/local"
+    sudo mkdir -p "$install_path/bin"
+    sudo mkdir -p "$install_path/lib"
 else
     install_path="$HOME/.local"
+    mkdir -p "$install_path/bin"
+    mkdir -p "$install_path/lib"
 fi
 
 if [ "$(uname)" = "Linux" ]
