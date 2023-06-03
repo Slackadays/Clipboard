@@ -1085,7 +1085,7 @@ cb note "Latest files from website ABCXYZ"
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
-<details><summary> &ensp; <b><code>--all</code>, <code>-a</code></b> &emsp; Add this when clearing to clear all clipboards at once.</summary>
+<details><summary> &ensp; <b><code>--all</code>, <code>-a</code></b> &emsp; Add this when clearing to clear all clipboards at once, or when searching to search all clipboards.</summary>
 
 <br>
 
