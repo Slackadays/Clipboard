@@ -139,6 +139,7 @@ void search() {
     if (results.empty()) error_exit("%s", formatMessage("[error]❌ CB couldn't find anything matching your query.[blank] 💡 [help]Try searching for something else instead.[blank]\n"));
 
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.score > two.score; });
+    results.erase(std::unique(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.clipboard == two.clipboard && one.entry == two.entry; }), results.end());
 
     auto available = thisTerminalSize();
 
