@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 #make a universal binary on macOS
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 
-project(Clipboard LANGUAGES CXX C VERSION 0.7.1)
+project(Clipboard LANGUAGES CXX C VERSION 0.8.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
