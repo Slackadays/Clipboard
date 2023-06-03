@@ -38,18 +38,38 @@ compile() {
     fi
 }
 
+can_use_sudo() {
+    # return 0 if sudo isn't available
+    if ! command -v sudo > /dev/null 2>&1
+    then
+        return 0
+    fi
+    # check if we are a sudoer, return 1 if we are
+    sudo -n true 2> /dev/null
+    return $?
+}
+
 if command -v apk > /dev/null 2>&1
 then
-    sudo apk add clipboard
-    verify
+    if can_use_sudo
+    then
+        sudo apk add clipboard
+        verify
+    fi
 elif command -v yay > /dev/null 2>&1
 then
-    sudo yay -S clipboard
-    verify
+    if can_use_sudo
+    then
+        sudo yay -S clipboard
+        verify
+    fi
 elif command -v emerge > /dev/null 2>&1
 then
-    sudo emerge -av app-misc/clipboard
-    verify
+    if can_use_sudo
+    then
+        sudo emerge -av app-misc/clipboard
+        verify
+    fi
 elif command -v brew > /dev/null 2>&1
 then
     brew install clipboard
@@ -68,12 +88,22 @@ then
     verify
 elif command -v xbps-install > /dev/null 2>&1
 then
-    sudo xbps-install -S clipboard
-    verify
+    if can_use_sudo
+    then
+        sudo xbps-install -S clipboard
+        verify
+    fi
 fi
 
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir"
+
+if [ -w "/usr/local/bin" ] && [ -w "/usr/local/lib" ]
+then
+    install_path="/usr/local"
+else
+    install_path="$HOME/.local"
+fi
 
 if [ "$(uname)" = "Linux" ]
 then
@@ -103,15 +133,15 @@ then
         curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
-        sudo mv bin/cb /usr/local/bin/cb
-        chmod +x /usr/local/bin/cb
+        sudo mv bin/cb "$install_path/bin/cb"
+        chmod +x "$install_path/bin/cb"
         if [ -f "lib/libcbx11.so" ]
         then
-            sudo mv lib/libcbx11.so /usr/local/lib/libcbx11.so
+            sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
         fi
         if [ -f "lib/libcbwayland.so" ]
         then
-            sudo mv lib/libcbwayland.so /usr/local/lib/libcbwayland.so
+            sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
         fi
     fi
 elif [ "$(uname)" = "Darwin" ]
@@ -119,8 +149,8 @@ then
     curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64-amd64.zip -o clipboard-macos.zip
     unzip clipboard-macos.zip
     rm clipboard-macos.zip
-    sudo mv bin/cb /usr/local/bin/cb
-    chmod +x /usr/local/bin/cb
+    sudo mv bin/cb "$install_path/bin/cb"
+    chmod +x "$install_path/bin/cb"
 elif [ "$(uname)" = "FreeBSD" ]
 then
     unsupported "FreeBSD"

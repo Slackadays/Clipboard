@@ -129,7 +129,25 @@ scoop install clipboard
 sudo xbps-install -S clipboard
 ```
 
-You can also get the latest revision of the Clipboard Project [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
+**GitHub Downloads**
+
+First, get the latest revision of the Clipboard Project [from GitHub Actions](https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main) or the latest release [from GitHub Releases.](https://github.com/Slackadays/Clipboard/releases/latest)
+
+Then, unpack what you just downloaded to a nice place anywhere on your system.
+
+Finally, add CB to your PATH (so that you can run it anywhere) by doing one of following:
+
+```sh
+# For all platforms except Windows
+$ export PATH=$PATH:/where/you/unpacked/cb
+# Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
+# To get the current path (in case you don't know it), do the "pwd" command.
+
+# For Windows PowerShell
+> $Env:PATH += ";C:\where\you\unpacked\cb"
+# Add this to your PowerShell profile (which is located in $profile) so that this works every time.
+# To get the current path (in case you don't know it), do the "Get-Location" command.
+```
 
 <br>
 <br>
