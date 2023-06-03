@@ -26,7 +26,7 @@ Don't just take my word for it!
 - Support for your favorite languages like español, português, and Türkçe,
 - Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
 - Documentation you'll actually want to read <sub>(all in this readme)</sub>
-- And tons more!
+- And oodles more! <sub>(just look at that documentation!)</sub>
 
 <br>
 
