@@ -28,11 +28,14 @@ void search() {
         std::string clipboard;
         unsigned long entry = 0;
         unsigned long score = 0;
+        size_t hash;
     };
 
+    std::vector<Clipboard> targets;
     std::vector<Result> results;
 
-    std::vector<Clipboard> targets;
+    std::hash<std::string> hashString;
+    std::hash<unsigned long> hashULong;
 
     if (all_option) {
         for (const auto& entry : fs::directory_iterator(global_path.temporary))
@@ -42,23 +45,22 @@ void search() {
     } else
         targets.emplace_back(path);
 
-    auto levenshteinDistance = [](const std::string& one, const std::string& two) -> unsigned long {
+    auto levenshteinDistance = [](const std::string_view& one, const std::string_view& two) -> unsigned long {
         if (one == two) return 0;
 
         if (one.empty()) return two.size();
-
         if (two.empty()) return one.size();
 
-        std::vector<std::vector<unsigned long>> matrix(one.size() + 1, std::vector<unsigned long>(two.size() + 1));
+        std::vector<std::vector<size_t>> matrix(one.size() + 1, std::vector<size_t>(two.size() + 1));
 
-        for (unsigned long i = 0; i <= one.size(); i++)
+        for (size_t i = 0; i <= one.size(); i++)
             matrix.at(i).at(0) = i;
 
-        for (unsigned long j = 0; j <= two.size(); j++)
+        for (size_t j = 0; j <= two.size(); j++)
             matrix.at(0).at(j) = j;
 
-        for (unsigned long i = 1; i <= one.size(); i++) {
-            for (unsigned long j = 1; j <= two.size(); j++) {
+        for (size_t i = 1; i <= one.size(); i++) {
+            for (size_t j = 1; j <= two.size(); j++) {
                 if (one.at(i - 1) == two.at(j - 1))
                     matrix.at(i).at(j) = matrix.at(i - 1).at(j - 1);
                 else
@@ -84,7 +86,7 @@ void search() {
             } else if (std::regex_match(content, std::regex(query))) { // then check if the content regex matches the query
                 result.score = 800;
                 result.preview = "\033[1m" + content + "\033[22m";
-            } else if (unsigned long distance; content.size() < 1000 && (distance = levenshteinDistance(content, query)) < 25) { // then do a fuzzy search of the content for the query
+            } else if (size_t distance; content.size() < 1000 && (distance = levenshteinDistance(content, query)) < 25) { // then do a fuzzy search of the content for the query
                 result.score = 700 - (distance * 20);
                 result.preview = "\033[1m" + content + "\033[22m";
             } else if (std::smatch sm; std::regex_search(content, sm, std::regex(query))) { // then do a regex search of the content for the query
@@ -104,6 +106,10 @@ void search() {
         return std::nullopt;
     };
 
+    auto combineHashes = [](size_t one, size_t two) -> size_t {
+        return one ^ (two + 0x9e3779b9 + (one << 6) + (one >> 2)); // from Boost
+    };
+
     for (auto& clipboard : targets) {
         for (const auto& entry : clipboard.entryIndex) {
             auto adjustScoreByEntryPosition = [&](Result& result) {
@@ -117,6 +123,7 @@ void search() {
                     if (auto rating = contentMatchRating(fileContents(clipboard.data.raw), query); rating.has_value()) {
                         rating->clipboard = clipboard.name();
                         rating->entry = entry;
+                        rating->hash = combineHashes(hashString(clipboard.name()), hashULong(entry));
                         adjustScoreByEntryPosition(rating.value());
                         results.emplace_back(rating.value());
                     }
@@ -127,6 +134,7 @@ void search() {
                         if (auto rating = contentMatchRating(item.path().filename().string(), query); rating.has_value()) {
                             rating->clipboard = clipboard.name();
                             rating->entry = entry;
+                            rating->hash = combineHashes(hashString(clipboard.name()), hashULong(entry));
                             adjustScoreByEntryPosition(rating.value());
                             results.emplace_back(rating.value());
                         }
@@ -138,12 +146,12 @@ void search() {
 
     if (results.empty()) error_exit("%s", formatMessage("[error]❌ CB couldn't find anything matching your query.[blank] 💡 [help]Try searching for something else instead.[blank]\n"));
 
-    std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.score > two.score; });
-    results.erase(std::unique(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.clipboard == two.clipboard && one.entry == two.entry; }), results.end());
+    std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash < two.hash; });
+    results.erase(std::unique(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash == two.hash; }), results.end());
+
+    std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.score < two.score; });
 
     auto available = thisTerminalSize();
-
-    if (results.size() > (available.rows * 2)) results.erase(results.begin() + (available.rows * 2), results.end());
 
     auto longestClipboardLength = (*std::max_element(targets.begin(), targets.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); })).name().size();
 
