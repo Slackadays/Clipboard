@@ -100,10 +100,12 @@ cd "$tmp_dir"
 
 if can_use_sudo
 then
+    requires_sudo=true
     install_path="/usr/local"
     sudo mkdir -p "$install_path/bin"
     sudo mkdir -p "$install_path/lib"
 else
+    requires_sudo=false
     install_path="$HOME/.local"
     mkdir -p "$install_path/bin"
     mkdir -p "$install_path/lib"
@@ -137,15 +139,30 @@ then
         curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
-        sudo mv bin/cb "$install_path/bin/cb"
+        if [ "$requires_sudo" = true ]
+        then
+            sudo mv bin/cb "$install_path/bin/cb"
+        else
+            mv bin/cb "$install_path/bin/cb"
+        fi
         chmod +x "$install_path/bin/cb"
         if [ -f "lib/libcbx11.so" ]
         then
-            sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
+            if [ "$requires_sudo" = true ]
+            then
+                sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
+            else
+                mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
+            fi
         fi
         if [ -f "lib/libcbwayland.so" ]
         then
-            sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+            if [ "$requires_sudo" = true ]
+            then
+                sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+            else
+                mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+            fi
         fi
     fi
 elif [ "$(uname)" = "Darwin" ]
