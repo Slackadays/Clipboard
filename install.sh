@@ -161,7 +161,7 @@ then
             then
                 sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
             else
-                sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+                mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
             fi
         fi
     fi
