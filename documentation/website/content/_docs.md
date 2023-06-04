@@ -703,10 +703,6 @@ $ cb --sr Baz
 
 <br>
 
-<details><summary> &ensp; <b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code></summary>
-
-<br>
-
 Show the help message.
 ```sh
 $ cb help
