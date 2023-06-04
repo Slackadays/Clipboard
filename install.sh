@@ -139,7 +139,6 @@ then
         curl -SL $download_link -o clipboard-linux.zip
         unzip clipboard-linux.zip
         rm clipboard-linux.zip
-        echo "Need sudo:" $requires_sudo
         if [ "$requires_sudo" = true ]
         then
             sudo mv bin/cb "$install_path/bin/cb"
@@ -147,7 +146,6 @@ then
             mv bin/cb "$install_path/bin/cb"
         fi
         chmod +x "$install_path/bin/cb"
-        echo "Need sudo:" $requires_sudo
         if [ -f "lib/libcbx11.so" ]
         then
             if [ "$requires_sudo" = true ]
@@ -157,7 +155,6 @@ then
                 mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
             fi
         fi
-        echo "Need sudo:" $requires_sudo
         if [ -f "lib/libcbwayland.so" ]
         then
             if [ "$requires_sudo" = true ]
@@ -167,7 +164,6 @@ then
                 mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
             fi
         fi
-        echo "Need sudo:" $requires_sudo
     fi
 elif [ "$(uname)" = "Darwin" ]
 then
