@@ -18,7 +18,7 @@ Don't just take my word for it.
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
-- Copy and paste text, files, directories, binary data, your goat, _anything_, anytime and anywhere
+- Copy and paste text, files, directories, binary data, your goat, _anything_
 - Infinite numbers of clipboards with unlimited capacity AND history each,
 - Seamless integration with your [existing clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
