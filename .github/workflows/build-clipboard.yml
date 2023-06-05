@@ -97,8 +97,7 @@ jobs:
         with:
           name: clipboard-flatpak-amd64
           path: |
-            build/clipboard-flatpak-amd64.flatpak
-            build/READ_THIS_AFTER_INSTALLING.txt
+            clipboard-flatpak-amd64.flatpak
   macos-arm64-amd64:
     runs-on: macos-latest
 
