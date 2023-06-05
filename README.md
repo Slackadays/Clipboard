@@ -8,11 +8,11 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="The fully-featured yet oh-so-easy-to-use clipboard manager for everyone." />
 
-The Clipboard Project <sub>(CB for short)</sub> is the fast and featherlight, feature packed, and user friendly tool that lets you do more on the computer in _style_.
+The Clipboard Project <sub>(CB for short)</sub> is the super fast and lightweight, feature packed, and user friendly tool that lets you do more on the computer in _style_.
 
-This is the world's first (and currently only) complete clipboard manager for anybody who can mash keys on a keyboard. 
+This is the world's first (and currently only) real, complete clipboard manager for anybody who can mash keys on a keyboard. 
 
-Don't just take my word for it.
+Don't just take my word for it!
 
 <br>
 
