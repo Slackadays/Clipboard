@@ -12,6 +12,9 @@ The Clipboard Project <sub>(CB for short)</sub> is the super fast and lightweigh
 
 This is the world's first (and currently only) real, complete clipboard manager for anybody who can mash keys on a keyboard. 
 
+Imagine having a second brain that could remember anything, anytime, anywhere. That's almost what having CB is like for you.
+
+
 Don't just take my word for it!
 
 <br>
