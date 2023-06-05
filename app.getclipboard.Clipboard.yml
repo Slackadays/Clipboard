@@ -14,6 +14,8 @@ modules:
     buildsystem: cmake-ninja
     build-commands:
       - install -D app.getclipboard.Clipboard.metainfo.xml /app/share/metainfo/app.getclipboard.Clipboard.metainfo.xml
+      - install -D app.getclipboard.Clipboard.desktop /app/share/applications/app.getclipboard.Clipboard.desktop
+      - install -D documentation/readme-assets/CB.png /app/share/icons/hicolor/512x512/apps/app.getclipboard.Clipboard.png
     sources:
       - type: git
         url: https://github.com/Slackadays/Clipboard
@@ -21,4 +23,8 @@ modules:
         commit: 083bdbb6ea2886681227899754b22c3c6f686376
       - type: file
         path: app.getclipboard.Clipboard.metainfo.xml
+      - type: file
+        path: app.getclipboard.Clipboard.desktop
+      - type: file
+        path: documentation/readme-assets/CB.png
     config-opts: ["-DCMAKE_BUILD_TYPE=MinSizeRel"]

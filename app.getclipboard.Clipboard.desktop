@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Clipboard
+Icon=app.getclipboard.Clipboard
+GenericName=Clipboard Manager
+Exec=cb
+Type=Application
+Terminal=true
+Categories=Utility;Office;Development
+Comment=Cut, copy, and paste anything in your terminal
