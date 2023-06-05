@@ -3,17 +3,22 @@ runtime: org.freedesktop.Platform
 runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
 command: cb
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=host
+  - --filesystem=xdg-run/Clipboard
 modules:
   - name: cb
-    buildsystem: cmake
+    buildsystem: cmake-ninja
+    build-commands:
+      - install -D app.getclipboard.Clipboard.metainfo.xml /app/share/metainfo/app.getclipboard.Clipboard.metainfo.xml
     sources:
       - type: git
         url: https://github.com/Slackadays/Clipboard
         tag: 0.8.0
         commit: 083bdbb6ea2886681227899754b22c3c6f686376
+      - type: file
+        path: app.getclipboard.Clipboard.metainfo.xml
     config-opts: ["-DCMAKE_BUILD_TYPE=MinSizeRel"]
-finish-args:
-  - --socket=x11
-  - --socket=wayland
-  - --filesystem=host
-  - --filesystem=xdg-run/Clipboard

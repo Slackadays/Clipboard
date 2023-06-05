@@ -7,6 +7,8 @@
   
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
+
+  <content_rating type="oars-1.1" />
   
   <description>
     <p>
@@ -18,6 +20,13 @@
   </description>
   
   <icon type="remote" height="512" width="512">https://raw.githubusercontent.com/Slackadays/Clipboard/0.8.0/documentation/readme-assets/CB.png</icon>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>An example of using Clipboard.</caption>
+      <image type="source" width="1906" height="1010">https://raw.githubusercontent.com/Slackadays/Clipboard/0.8.0/documentation/readme-assets/CBDemo.png</image>
+    </screenshot>
+  </screenshots>
   
   <categories>
     <category>System</category>
