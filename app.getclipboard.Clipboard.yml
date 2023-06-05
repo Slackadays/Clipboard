@@ -5,21 +5,13 @@ sdk: org.freedesktop.Sdk
 command: cb
 modules:
   - name: cb
-    buildsystem: simple
-    build-commands:
-      - install -D cb /app/bin/cb
-      - install -D libcbx11.so /app/lib/libcbx11.so
-      - install -D libcbwayland.so /app/lib/libcbwayland.so
-      - install -D app.getclipboard.Clipboard.metainfo.xml /app/share/metainfo/app.getclipboard.Clipboard.metainfo.xml
+    buildsystem: cmake
     sources:
-      - type: file
-        path: cb
-      - type: file
-        path: libcbx11.so
-      - type: file
-        path: libcbwayland.so
-      - type: file
-        path: app.getclipboard.Clipboard.metainfo.xml
+      - type: git
+        url: https://github.com/Slackadays/Clipboard
+        tag: 0.8.0
+        commit: 083bdbb6ea2886681227899754b22c3c6f686376
+    config-opts: ["-DCMAKE_BUILD_TYPE=MinSizeRel"]
 finish-args:
   - --socket=x11
   - --socket=wayland
