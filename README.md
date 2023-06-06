@@ -103,7 +103,7 @@ yay -S clipboard
 flatpak install app.getclipboard.Clipboard
 ```
 
-<a href='https://flathub.org/apps/org.gimp.GIMP'><img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png' align="right"/></a>
+<img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png' align="right"/>
 
 **Gentoo GURU and LiGurOS** (For Gentoo, enable the GURU repo first)
 ```sh
