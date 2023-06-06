@@ -100,6 +100,11 @@ apk add clipboard
 yay -S clipboard
 ```
 
+**Flatpak** (You can also get our nightly Flatpak builds under **GitHub Downloads**)
+```sh
+flatpak install app.getclipboard.Clipboard
+```
+
 **Gentoo GURU and LiGurOS** (For Gentoo, enable the GURU repo first)
 ```sh
 emerge -av app-misc/clipboard
