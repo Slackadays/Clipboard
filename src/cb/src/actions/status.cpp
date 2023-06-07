@@ -29,6 +29,7 @@ std::vector<Clipboard> clipboardsWithContent() {
 void status() {
     syncWithExternalClipboards(true);
     auto clipboards_with_contents = clipboardsWithContent();
+    stopIndicator();
     if (clipboards_with_contents.empty()) {
         printf("%s", no_clipboard_contents_message().data());
         printf(clipboard_action_prompt().data(), clipboard_invocation.data(), clipboard_invocation.data());
@@ -54,7 +55,12 @@ void status() {
         clipboard.getLock();
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
-        fprintf(stderr, formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
+        fprintf(stderr,
+                formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[blank][info]│ [blank]").data(),
+                available.columns,
+                longestClipboardLength - clipboard.name().length(),
+                "",
+                clipboard.name().data());
 
         if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));

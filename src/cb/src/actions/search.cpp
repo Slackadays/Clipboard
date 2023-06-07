@@ -173,7 +173,7 @@ void search() {
 
     for (const auto& result : results) {
         fprintf(stderr,
-                formatMessage("[bold][info]\033[%ldG│\r│ %*s%s│ %*s%lu│ [blank]").data(),
+                formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[blank][info]│ [bold]%*s%lu[blank][info]│ [blank]").data(),
                 available.columns,
                 longestClipboardLength - result.clipboard.length(),
                 "",
@@ -192,7 +192,7 @@ void search() {
     }
 
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
-    Message search_legend_message = "[bold]Clipboard│ Entry│[blank][help] Result[info]";
+    Message search_legend_message = "[bold]Clipboard[blank][info]│ [bold]Entry[blank][info]│[blank][help] Result[info]";
     int cols = available.columns - (search_legend_message.rawLength() + 3);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)

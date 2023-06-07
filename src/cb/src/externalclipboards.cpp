@@ -193,7 +193,8 @@ ClipboardContent thisClipboard() {
 
 void syncWithExternalClipboards(bool force) {
     using enum ClipboardContentType;
-    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry) || force) {
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
+        || force) { // exclude Status because it does this manually
         ClipboardContent content;
         if (!getenv("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
         if (content.type() == Empty && !getenv("CLIPBOARD_NOGUI")) content = getGUIClipboard(preferred_mime);

@@ -52,7 +52,7 @@ void setupIndicator() {
                                                           "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
     int step = 0;
     auto poll_focus = [&] {
-        std::array<char, 16> buf;
+        std::array<char, 32> buf;
 #if defined(_WIN32) || defined(_WIN64)
         DWORD bytesAvailable = 0;
         PeekNamedPipe(GetStdHandle(STD_INPUT_HANDLE), nullptr, 0, nullptr, &bytesAvailable, nullptr);
@@ -93,15 +93,19 @@ void setupIndicator() {
         step == 21 ? step = 0 : step++;
     }
 
-    fprintf(stderr, "\033[?25h");          // restore the cursor
+    fprintf(stderr, "\033[?25h"); // restore the cursor
+    fflush(stderr);
     if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
-    if (!hasFocus) printf("\007");         // play a bell sound if the terminal doesn't have focus
-    printf("\r%*s\r", columns, "");
+    fflush(stdout);
+    if (!hasFocus) printf("\007"); // play a bell sound if the terminal doesn't have focus
+    fflush(stdout);
+
+    makeTerminalNormal();
+
+    if (is_tty.out) printf("\r%*s\r", columns, "");
     fflush(stdout);
     fprintf(stderr, "\r%*s\r", columns, "");
     fflush(stderr);
-
-    makeTerminalNormal();
 
     if (progress_state == IndicatorState::Cancel) {
         if (io_type == IOType::File)
