@@ -195,7 +195,8 @@ void historyJSON() {
             std::vector<fs::path> itemsInPath(fs::directory_iterator(path.data), fs::directory_iterator());
             for (const auto& entry : itemsInPath) {
                 printf("            {\n");
-                printf("                \"name\": \"%s\",\n", entry.filename().string().data());
+                printf("                \"filename\": \"%s\",\n", entry.filename().string().data());
+                printf("                \"path\": \"%s\",\n", entry.string().data());
                 printf("                \"isDirectory\": %s\n", fs::is_directory(entry) ? "true" : "false");
                 printf("            }%s\n", entry == itemsInPath.back() ? "" : ",");
             }

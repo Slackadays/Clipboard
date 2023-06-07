@@ -116,16 +116,18 @@ UINT old_code_page;
 #endif
 
 TerminalSize thisTerminalSize() {
+    static TerminalSize temp;
+    if (temp.rows != 0 && temp.columns != 0) return temp;
 #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    auto temp = TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1);
+    temp = TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1);
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     struct winsize w;
     ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
-    auto temp = TerminalSize(w.ws_row, w.ws_col);
+    temp = TerminalSize(w.ws_row, w.ws_col);
 #endif
-    if (temp.rows >= 10 && temp.columns >= 10) return temp;
+    if (temp.rows >= 5 && temp.columns >= 10) return temp;
     return TerminalSize(80, 24);
 }
 

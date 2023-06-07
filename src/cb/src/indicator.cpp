@@ -44,8 +44,9 @@ void setupIndicator() {
     fflush(stdout);
     fflush(stderr);
 
+    int columns = thisTerminalSize().columns;
+
     std::unique_lock<std::mutex> lock(m);
-    int output_length = 0;
     const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ",
                                                           "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
                                                           "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
@@ -63,7 +64,7 @@ void setupIndicator() {
         }
     };
     auto display_progress = [&](const auto& formattedNum) {
-        output_length = fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(step).data());
+        fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(step).data());
         fflush(stderr);
         cv.wait_for(lock, std::chrono::milliseconds(20), [&] { return progress_state != IndicatorState::Active; });
     };
@@ -96,7 +97,7 @@ void setupIndicator() {
     if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
     if (!hasFocus) printf("\007");         // play a bell sound if the terminal doesn't have focus
     fflush(stdout);
-    fprintf(stderr, "\r%*s\r", output_length, "");
+    fprintf(stderr, "\r%*s\r", columns, "");
     fflush(stderr);
 
     makeTerminalNormal();

@@ -217,9 +217,10 @@ bool action_is_one_of(auto... options) {
 
 class TerminalSize {
 public:
-    size_t rows;
-    size_t columns;
+    size_t rows = 0;
+    size_t columns = 0;
     TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
+    TerminalSize() = default;
 };
 
 static std::string formatMessage(const std::string_view& str, bool colorful = !no_color) {

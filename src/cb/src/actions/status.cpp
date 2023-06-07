@@ -126,7 +126,8 @@ void statusJSON() {
                 if (!first) printf(", ");
                 printf("\n");
                 printf("        {\n");
-                printf("            \"name\": \"%s\",\n", entry.path().filename().string().data());
+                printf("            \"filename\": \"%s\",\n", entry.path().filename().string().data());
+                printf("            \"path\": \"%s\",\n", entry.path().string().data());
                 printf("            \"isDirectory\": %s\n", entry.is_directory() ? "true" : "false");
                 printf("        }");
                 first = false;
