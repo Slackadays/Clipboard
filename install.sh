@@ -74,6 +74,10 @@ elif command -v brew > /dev/null 2>&1
 then
     brew install clipboard
     verify
+elif command -v flatpak > /dev/null 2>&1
+then
+    flatpak install flathub app.getclipboard.Clipboard
+    verify
 elif command -v nix-env > /dev/null 2>&1
 then
     nix-env -iA nixpkgs.clipboard-jh
