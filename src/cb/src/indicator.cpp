@@ -96,6 +96,7 @@ void setupIndicator() {
     fprintf(stderr, "\033[?25h");          // restore the cursor
     if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
     if (!hasFocus) printf("\007");         // play a bell sound if the terminal doesn't have focus
+    printf("\r%*s\r", columns, "");
     fflush(stdout);
     fprintf(stderr, "\r%*s\r", columns, "");
     fflush(stderr);

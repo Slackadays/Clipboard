@@ -27,7 +27,6 @@ std::vector<Clipboard> clipboardsWithContent() {
 }
 
 void status() {
-    stopIndicator();
     syncWithExternalClipboards(true);
     auto clipboards_with_contents = clipboardsWithContent();
     if (clipboards_with_contents.empty()) {
@@ -38,6 +37,8 @@ void status() {
     auto longestClipboardLength =
             (*std::max_element(clipboards_with_contents.begin(), clipboards_with_contents.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); })).name().size();
     auto available = thisTerminalSize();
+
+    stopIndicator();
 
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, "%s", check_clipboard_status_message().data());
