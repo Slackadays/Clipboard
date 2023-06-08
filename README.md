@@ -143,7 +143,7 @@ Then, unpack what you just downloaded to a nice place anywhere on your system.
 
 If you downloaded the Flatpak, then do `flatpak install what-you-downloaded.flatpak` and you're done. If not, then keep reading.
 
-Finally, add CB to your PATH (so that you can run it anywhere) by doing one of following:
+Finally, add CB to your PATH (so that you can run it anywhere) by doing one of the following:
 
 ```sh
 # For all platforms except Windows
