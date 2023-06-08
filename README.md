@@ -14,8 +14,6 @@ It is one of the most advanced clipboard managers ever, and you'll be able to sa
 
 Don't just take my word for it!
 
-<br>
-
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
 
 - Copy and paste text, files, directories, binary data, your goat, _anything_
