@@ -8,9 +8,9 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="The fully-featured yet oh-so-easy-to-use clipboard manager for everyone." />
 
-The Clipboard Project is a blazingly fast and lightweight, feature packed, and user friendly tool that lets you do more on the computer in _style_.
+The Clipboard Project is a blazingly fast and lightweight, feature packed, and user friendly tool that lets you do more on the computer in _style_. Seriously.
 
-It is one of the most advanced clipboard managers ever, and you'll be able to save time and effort easier than ever before.
+It's one of the most advanced clipboard managers ever. And, you'll be able to save time and effort easier than ever before.
 
 Don't just take my word for it!
 
@@ -21,7 +21,7 @@ Don't just take my word for it!
 - Seamless integration with your [existing clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
 - Superb scriptability to automate your workflows in a cinch, 
-- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
+- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your 𝓋𝒾𝑒𝓌𝒾𝓃𝑔 𝓅𝓁𝑒𝒶𝓈𝓊𝓇𝑒,
 - Documentation you'll actually want to read <sub>(all in this readme)</sub>
 - And oodles more! <sub>(just <i>look</i> at that documentation!)</sub>
 
