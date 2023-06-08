@@ -44,6 +44,11 @@ Don't just take my word for it!
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2&logo=codecov&labelColor=rgb(55,55,55)">
     </a>
     <br>
+    <img src="https://forthebadge.com/images/badges/compatibility-club-penguin.svg">
+    <img src="https://forthebadge.com/images/badges/uses-badges.svg">
+    <img src="https://forthebadge.com/images/badges/gluten-free.svg">
+    <img src="https://forthebadge.com/images/badges/ctrl-c-ctrl-v.svg">
+    <br>
     <a href="https://github.com/Slackadays/Clipboard/releases">
         <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)&color=brightgreen">
     </a>
@@ -52,11 +57,6 @@ Don't just take my word for it!
     </a>
     <img src="https://img.shields.io/github/downloads/Slackadays/Clipboard/total?style=for-the-badge&labelColor=rgb(55,55,55)&logo=github">
     <img src="https://img.shields.io/github/license/slackadays/clipboard?label=OPEN%20SOURCE&style=for-the-badge&labelColor=rgb(55,55,55)">
-    <br>
-    <img src="https://forthebadge.com/images/badges/compatibility-club-penguin.svg">
-    <img src="https://forthebadge.com/images/badges/uses-badges.svg">
-    <img src="https://forthebadge.com/images/badges/gluten-free.svg">
-    <img src="https://forthebadge.com/images/badges/ctrl-c-ctrl-v.svg">
 </p>
 
 <br>
