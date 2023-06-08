@@ -33,7 +33,7 @@ Don't just take my word for it!
 
 <p align="center" id="dummy">
     <a href="https://discord.gg/J6asnc3pEG">
-        <img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge&logo=discord&labelColor=rgb(55,55,55)" alt="Discord Support">
+        <img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge&logo=discord&labelColor=rgb(55,55,55)&color=blueviolet" alt="Discord Support">
     </a>
     <a href="https://github.com/Slackadays/Clipboard/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/build-clipboard.yml?branch=main&label=BUILDS&style=for-the-badge&logo=githubactions&labelColor=rgb(55,55,55)">
@@ -45,15 +45,18 @@ Don't just take my word for it!
     </a>
     <br>
     <a href="https://github.com/Slackadays/Clipboard/releases">
-        <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)">
+        <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)&color=brightgreen">
     </a>
     <a href="https://twitter.com/GetClipboard">
         <img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter">
     </a>
-    <a href="https://github.com/Slackadays/Clipboard/contributors">
-        <img src="https://img.shields.io/github/contributors-anon/slackadays/clipboard?style=for-the-badge&labelColor=rgb(55,55,55)&logo=github">
-    </a>
+    <img src="https://img.shields.io/github/downloads/Slackadays/Clipboard/total?style=for-the-badge&labelColor=rgb(55,55,55)&logo=github">
     <img src="https://img.shields.io/github/license/slackadays/clipboard?label=OPEN%20SOURCE&style=for-the-badge&labelColor=rgb(55,55,55)">
+    <br>
+    <img src="https://forthebadge.com/images/badges/compatibility-club-penguin.svg">
+    <img src="https://forthebadge.com/images/badges/uses-badges.svg">
+    <img src="https://forthebadge.com/images/badges/gluten-free.svg">
+    <img src="https://forthebadge.com/images/badges/ctrl-c-ctrl-v.svg">
 </p>
 
 <br>
