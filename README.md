@@ -45,8 +45,7 @@ Don't just take my word for it!
     </a>
     <br>
     <img src="https://forthebadge.com/images/badges/compatibility-club-penguin.svg">
-    <img src="https://forthebadge.com/images/badges/uses-badges.svg">
-    <img src="https://forthebadge.com/images/badges/gluten-free.svg">
+    <img src="https://forthebadge.com/images/badges/powered-by-black-magic.svg">
     <img src="https://forthebadge.com/images/badges/ctrl-c-ctrl-v.svg">
     <br>
     <a href="https://github.com/Slackadays/Clipboard/releases">
