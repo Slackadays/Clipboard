@@ -10,7 +10,7 @@
 
 The Clipboard Project is a fast and lightweight, feature packed, and user friendly tool that lets you do more on the computer in _style_. Seriously.
 
-This is one of the most advanced clipboard managers ever. And with it, you'll be able to save time and effort easier than ever before.
+This is one of the most advanced clipboard managers ever, and you'll be able to save time and effort easier than ever before.
 
 Don't just take my word for it!
 
@@ -26,6 +26,22 @@ Don't just take my word for it!
 - And oodles more! <sub>(just <i>look</i> at that documentation!)</sub>
 
 <br>
+
+`I believe Clipboard is the best tool for clipboard interaction. As a matter of fact, as of today you have 2713 stars on github, kudos! Keep up the good work.`
+
+\- pidario on GitHub.com
+
+`Thanks for your work! This is by-far one of my favourite projects on GitHub!`
+
+\- MiguelGuthridge on GitHub.com
+
+`I started using this because I just wanted an easy "cb copy && cb paste" VS trying to remember the correct input AND output flags when Im using xclip with different file types. I write a lot of shell scripts that copy certain stuff like images and text and this makes it a lot easier.`
+
+\- SweetBabyAlaska on Reddit.com
+
+`As a sysadmin and hourly terminal user, I found it so useful. Making stuffs some easier.`
+
+\- Simpleboy_ir on Reddit.com
 
 <br>
 
