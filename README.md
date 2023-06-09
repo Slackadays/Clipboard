@@ -118,6 +118,7 @@ yay -S clipboard
 ```sh
 flatpak install app.getclipboard.Clipboard
 # After installing, do "alias cb='flatpak run app.getclipboard.Clipboard'" to use CB easily.
+# Then, add that command to your terminal profile (like .bashrc) to make it work every time.
 ```
 
 <img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.svg' align="right"/>
