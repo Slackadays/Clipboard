@@ -27,27 +27,27 @@ Don't just take my word for it!
 
 <br>
 
-<code>I believe Clipboard is <b>the best tool for clipboard interaction</b>. As a matter of fact, as of today you have 2713 stars on github, kudos! Keep up the good work.</code>
+<code><i>I believe Clipboard is <b>the best tool for clipboard interaction</b>. As a matter of fact, as of today you have 2713 stars on github, kudos! Keep up the good work.</i></code>
 
 \- pidario on GitHub.com
 
-<code>Thanks for your work! This is by-far <b>one of my favourite projects</b> on GitHub!</code>
+<code><i>Thanks for your work! This is by-far <b>one of my favourite projects</b> on GitHub!</i></code>
 
 \- MiguelGuthridge on GitHub.com
 
-<code>...I've just discovered CB & <b>it's suiting my needs very well!</b></code>
+<code><i>...I've just discovered CB & <b>it's suiting my needs very well!</b></i></code>
 
 \- all64bits on Discord.com
 
-<code>I started using this because <b>I just wanted an easy "cb copy && cb paste"</b> VS trying to remember the correct input AND output flags when Im using xclip with different file types. I write a lot of shell scripts that copy certain stuff like images and text and <b>this makes it a lot easier.</b></code>
+<code><i>I started using this because <b>I just wanted an easy "cb copy && cb paste"</b> VS trying to remember the correct input AND output flags when Im using xclip with different file types. I write a lot of shell scripts that copy certain stuff like images and text and <b>this makes it a lot easier.</b></i></code>
 
 \- SweetBabyAlaska on Reddit.com
 
-<code>As a sysadmin and hourly terminal user, <b>I found it so useful.</b> Making stuffs some easier.</code>
+<code><i>As a sysadmin and hourly terminal user, <b>I found it so useful.</b> Making stuffs some easier.</i></code>
 
 \- Simpleboy_ir on Reddit.com
 
-<code>Thank you for this app, <b>so simple yet effective!</b> Hats off 🎩 👌</code>
+<code><i>Thank you for this app, <b>so simple yet effective!</b> Hats off 🎩 👌</i></code>
 
 \- GlassGruber on GitHub.com
 
