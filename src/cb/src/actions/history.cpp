@@ -185,7 +185,7 @@ void historyJSON() {
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
                 printf("            \"dataType\": \"%s\",\n", type.value().data());
-                printf("            \"dataSize\": %zd\n", content.length());
+                printf("            \"dataSize\": %zd,\n", content.length());
                 printf("            \"path\": \"%s\"\n", path.data.raw.string().data());
                 printf("        }");
             } else {
