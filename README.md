@@ -29,27 +29,27 @@ Don't just take my word for it!
 
 <code>I believe Clipboard is <b>the best tool for clipboard interaction</b>. As a matter of fact, as of today you have 2713 stars on github, kudos! Keep up the good work.</code>
 
-\- pidario on GitHub
+\- pidario on GitHub.com
 
 <code>Thanks for your work! This is by-far <b>one of my favourite projects</b> on GitHub!</code>
 
-\- MiguelGuthridge on GitHub
+\- MiguelGuthridge on GitHub.com
 
 <code>...I've just discovered CB & <b>it's suiting my needs very well!</b></code>
 
-\- all64bits on Discord
+\- all64bits on Discord.com
 
 <code>I started using this because <b>I just wanted an easy "cb copy && cb paste"</b> VS trying to remember the correct input AND output flags when Im using xclip with different file types. I write a lot of shell scripts that copy certain stuff like images and text and <b>this makes it a lot easier.</b></code>
 
-\- SweetBabyAlaska on Reddit
+\- SweetBabyAlaska on Reddit.com
 
 <code>As a sysadmin and hourly terminal user, <b>I found it so useful.</b> Making stuffs some easier.</code>
 
-\- Simpleboy_ir on Reddit
+\- Simpleboy_ir on Reddit.com
 
 <code>Thank you for this app, <b>so simple yet effective!</b> Hats off 🎩 👌</code>
 
-\- GlassGruber on GitHub
+\- GlassGruber on GitHub.com
 
 <br>
 
