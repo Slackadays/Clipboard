@@ -439,14 +439,11 @@ IOType getIOType() {
     using enum IOType;
     if (action_is_one_of(Cut, Copy, Add)) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
-        if (!is_tty.in) return Pipe;
+        if (!is_tty.in && copying.items.empty()) return Pipe;
     } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History)) {
         if (!is_tty.out) return Pipe;
         return Text;
-    } else if (action == Remove) {
-        if (!is_tty.in) return Pipe;
-        return Text;
-    } else if (action_is_one_of(Note, Ignore, Swap, Load, Import, Export, Search)) {
+    } else if (action_is_one_of(Remove, Note, Ignore, Swap, Load, Import, Export, Search)) {
         if (!is_tty.in && copying.items.empty()) return Pipe;
         return Text;
     }
