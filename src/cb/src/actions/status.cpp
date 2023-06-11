@@ -123,6 +123,7 @@ void statusJSON() {
                 printf("{\n");
                 printf("        \"dataType\": \"%s\",\n", type.value().data());
                 printf("        \"dataSize\": %zu\n", content.length());
+                printf("        \"path\": \"%s\"\n", clipboard.data.raw.string().data());
                 printf("    }");
             } else {
                 printf("\"%s\"", JSONescape(content).data());
