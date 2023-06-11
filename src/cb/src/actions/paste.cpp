@@ -21,6 +21,10 @@ void paste() {
     if (!copying.items.empty()) {
         std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
     }
+    if (!is_tty.in) {
+        auto splitted = regexSplit(pipedInContent(false), std::regex("[\\n]"));
+        std::transform(splitted.begin(), splitted.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item); });
+    }
 
     for (const auto& entry : fs::directory_iterator(path.data)) {
         auto target = fs::current_path() / entry.path().filename();
@@ -30,7 +34,10 @@ void paste() {
             }
             incrementSuccessesForItem(entry);
         };
-        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) continue;
+        if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) {
+                return std::regex_match(entry.path().filename().string(), regex) || std::regex_match(entry.path().string(), regex);
+            }))
+            continue;
         try {
             if (fs::exists(target)) {
                 using enum CopyPolicy;

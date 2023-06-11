@@ -40,8 +40,8 @@ void edit() {
 
         // split paths by : or ; (: for posix, ; for windows)
         std::regex regex("[:;]");
-        std::sregex_token_iterator begin(pathContent.begin(), pathContent.end(), regex, -1), end; // -1: return the things that are not matched
-        std::transform(begin, end, std::back_inserter(paths), [](const std::string& path) { return fs::path(path); });
+        auto strings = regexSplit(pathContent, regex);
+        std::transform(strings.begin(), strings.end(), std::back_inserter(paths), [](const std::string& path) { return fs::path(path); });
 
         for (const auto& path : paths)
             for (const auto& fallback : fallbacks)

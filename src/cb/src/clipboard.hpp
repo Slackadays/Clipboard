@@ -627,11 +627,12 @@ void pasteFiles();
 void clearClipboard();
 void performAction();
 void updateExternalClipboards(bool force = false);
-std::string pipedInContent();
+std::string pipedInContent(bool count = true);
 void showFailures();
 void showSuccesses();
 [[nodiscard]] CopyPolicy userDecision(const std::string& item);
 void setTheme(const std::string& theme);
+std::vector<std::string> regexSplit(const std::string& content, const std::regex& regex);
 
 extern Message help_message;
 extern Message check_clipboard_status_message;
