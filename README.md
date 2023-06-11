@@ -27,7 +27,7 @@ Don't just take my word for it!
 
 <br>
 
-<i>I believe <b>Clipboard is the best tool for clipboard interaction</b>. As a matter of fact, as of today you have 2713 stars on github, kudos! Keep up the good work.</i>
+<i>I believe Clipboard is <b>the best tool for clipboard interaction</b>. As a matter of fact, as of today you have 2713 stars on github, kudos! Keep up the good work.</i>
 
 \- pidario on GitHub.com
 
