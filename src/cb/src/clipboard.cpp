@@ -288,6 +288,11 @@ void setupHandlers() {
         stopIndicator(true);
 #if defined(_WIN64) || defined(_WIN32)
         SetConsoleOutputCP(old_code_page);
+        FlushFileBuffers(CreateFileA(global_path.temporary.string().data(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL));
+        FlushFileBuffers(CreateFileA(global_path.persistent.string().data(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL));
+#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+        fsync(open(global_path.temporary.string().data(), O_RDONLY));
+        fsync(open(global_path.persistent.string().data(), O_RDONLY));
 #endif
     });
 
