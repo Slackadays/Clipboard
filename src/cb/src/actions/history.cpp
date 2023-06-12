@@ -178,7 +178,7 @@ void historyJSON() {
     for (unsigned long entry = 0; entry < path.entryIndex.size(); entry++) {
         path.setEntry(entry);
         printf("    \"%lu\": {\n", entry);
-        printf("        \"date\": %zu,\n", fs::last_write_time(path.data).time_since_epoch().count());
+        printf("        \"date\": %zu,\n", static_cast<size_t>(fs::last_write_time(path.data).time_since_epoch().count()));
         printf("        \"content\": ");
         if (path.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(path.data.raw));
