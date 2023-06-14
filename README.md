@@ -78,10 +78,6 @@ Don't just take my word for it!
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2&logo=codecov&labelColor=rgb(55,55,55)">
     </a>
     <br>
-    <img src="https://forthebadge.com/images/badges/compatibility-club-penguin.svg">
-    <img src="https://forthebadge.com/images/badges/powered-by-black-magic.svg">
-    <img src="https://forthebadge.com/images/badges/ctrl-c-ctrl-v.svg">
-    <br>
     <a href="https://github.com/Slackadays/Clipboard/releases">
         <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)&color=brightgreen">
     </a>
