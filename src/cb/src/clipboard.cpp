@@ -43,7 +43,7 @@
 #include <windows.h>
 #define isatty _isatty
 #define fileno _fileno
-#include "windows.hpp"
+#include "platforms/windows.hpp"
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)

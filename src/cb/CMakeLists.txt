@@ -76,7 +76,9 @@ elseif(X11WL)
   )
   target_link_options(cb PRIVATE -z origin) # set the rpath to $ORIGIN
   target_link_libraries(cb ${CMAKE_DL_LIBS})
-elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
   target_sources(cb PRIVATE src/platforms/bsd.cpp)
 endif()
 
