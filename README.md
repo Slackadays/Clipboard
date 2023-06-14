@@ -197,7 +197,7 @@ $ export PATH=$PATH:/where/you/unpacked/cb
 <br>
 
 ### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px />
-You'll need CMake and C++20 support, and if you want X11 and/or Wayland compatibility, you'll also need libx11 and/or libwayland plus Wayland Protocols.
+You'll need CMake and C++20 support, and if you want X11, Wayland, or ALSA support, you'll also need libx11, libwayland plus Wayland Protocols, or libasound respectively.
 
 Get the latest release instead of the latest commit by adding `--branch 0.8.0` right after `git clone...`.
 
@@ -1088,9 +1088,12 @@ Yank anything sitting in your terminal without ever touching the mouse.
 $ env | yank -d = -- cb
 ```
     
-Choose a text clipboard entry to instantly copy to the main clipboard using dmenu.
+Instantly copy to the main clipboard using your favorite dmenu tool.
 ```sh
-cb st | jq -r '.[]' | dmenu | cb
+$ cb cp "$(cb st | jq -r '.[] | if type=="array" then .[].path else if type=="object" then .path else . end end' | dmenu)"
+# For copying the latest entry from any of your clipboards
+$ cb cp "$(cb hs | jq -r '.[].content | if type=="array" then .[].path else if type=="object" then .path else . end end' | dmenu)"
+# For copying any entry from a specific clipboard
 ```
 
 Need to share or pore over log files? Copy them in one step!
