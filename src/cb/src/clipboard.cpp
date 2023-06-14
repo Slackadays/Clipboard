@@ -482,7 +482,14 @@ void setFlags() {
             clipboard_entry = std::stoul(flag);
         } catch (...) {}
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
-        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data());
+        auto tempActions = actions;
+        std::sort(tempActions.begin(), tempActions.end());
+        std::string actionsList;
+        for (int i = 0; i < tempActions.size(); i++) {
+            actionsList.append(tempActions.at(i));
+            if (i != tempActions.size() - 1) actionsList.append(", ");
+        }
+        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), actionsList.data());
         exit(EXIT_SUCCESS);
     }
     if (auto pos = std::find_if(arguments.begin(), arguments.end(), [](const auto& entry) { return entry == "--"; }); pos != arguments.end()) arguments.erase(pos);

@@ -14,6 +14,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
+#include "sounds/error.hpp"
+#include "sounds/success.hpp"
+
 #if defined(_WIN32) || defined(_WIN64)
 #define STDIN_FILENO 0
 #define read _read
@@ -22,9 +25,9 @@
 bool stopIndicator(bool change_condition_variable) {
     IndicatorState expect = IndicatorState::Active;
 
-    if (!change_condition_variable) return progress_state.exchange(IndicatorState::Cancel) == expect;
+    if (!change_condition_variable) return progress_state.exchange(IndicatorState::Cancel) == expect; // return true if the state was changed from Active to Cancel
 
-    if (!progress_state.compare_exchange_strong(expect, IndicatorState::Done)) return false;
+    if (!progress_state.compare_exchange_strong(expect, IndicatorState::Done)) return false; // return false if the state was not changed from Active to Done
 
     cv.notify_one();
     indicator.join();
@@ -97,7 +100,15 @@ void setupIndicator() {
     fflush(stderr);
     if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
     fflush(stdout);
-    if (!hasFocus) printf("\007"); // play a bell sound if the terminal doesn't have focus
+    if (!hasFocus && clipboard_state != ClipboardState::Error) {
+        std::valarray<short> samples(success_pcm_len / 2);
+        std::generate(std::begin(samples), std::end(samples), [i = 0]() mutable { return static_cast<short>(success_pcm[i++] | (success_pcm[i++] << 8)); });
+        if (!playAsyncSoundEffect(samples)) printf("\007");
+    } else if (clipboard_state == ClipboardState::Error) {
+        std::valarray<short> samples(error_pcm_len / 2);
+        std::generate(std::begin(samples), std::end(samples), [i = 0]() mutable { return static_cast<short>(error_pcm[i++] | (error_pcm[i++] << 8)); });
+        if (!playAsyncSoundEffect(samples)) printf("\007");
+    }
     fflush(stdout);
 
     makeTerminalNormal();

@@ -74,6 +74,7 @@ Message help_message = "[info]│This is the Clipboard Project %s (commit %s), t
                        "[info]│Show this help screen anytime with [bold]cb -h[blank][info], [bold]cb "
                        "--help[blank][info], or[bold] cb help[blank][info].\n"
                        "[info]│You can also get more help in our Discord server at [bold]https://discord.gg/J6asnc3pEG[blank]\n"
+                       "[info]│All actions available: [bold]%s[blank]\n"
                        "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                        "[info]│This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                        "redistribute it under certain conditions.[blank]\n";
@@ -158,6 +159,7 @@ void setLanguageES() {
                    "[progress]│cb pegar[blank]\n"
                    "[info]│Muestra este mensaje de ayudar en cualquier tiempo que quieras con [bold]cb "
                    "-h[blank][info], [bold]cb --help[blank][info] o[bold] cb help[blank][info].\n"
+                   "[info]│All actions available: [bold]%s[blank]\n"
                    "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]│This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
                    "to redistribute it under certain conditions.[blank]\n";
@@ -215,6 +217,7 @@ void setLanguagePT() {
                    "[progress]│cb colar[blank]\n"
                    "[info]│Você pode rever esta tela de instruções à qualquer momento com [bold]cb "
                    "-h[blank][info], [bold]cb --help[blank][info] ou[bold] cb help[blank][info].\n"
+                   "[info]│All actions available: [bold]%s[blank]\n"
                    "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]│Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
                    "bem-vindo a redistribuí-lo sob certas condições.[blank]\n";
@@ -281,6 +284,7 @@ void setLanguageTR() {
                    "[info]│Bu yardım ekranını herhangi bir zaman şu komutlardan birisiyle görebilirsiniz:[blank]\n"
                    "[info]│    [bold]cb -h[blank][info], [bold]cb --help[blank][info], ya da[bold] cb "
                    "help[blank][info].\n"
+                   "[info]│All actions available: [bold]%s[blank]\n"
                    "[info]│Discord sunucumuzdan daha fazla yardım alabilirsiniz: [bold]https://discord.gg/J6asnc3pEG[blank]\n"
                    "[info]│Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]│                                 GPLv3 altında lisanslanmıştır.[blank]\n"

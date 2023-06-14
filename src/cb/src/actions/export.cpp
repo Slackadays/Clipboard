@@ -41,7 +41,7 @@ void exportClipboards() {
             Clipboard clipboard(name);
             clipboard.getLock();
             if (clipboard.isUnused()) return;
-            fs::copy(clipboard, exportDirectory / name, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+            fs::copy(clipboard, exportDirectory / name, copying.opts);
             fs::remove(exportDirectory / name / constants.metadata_directory / constants.lock_name);
             clipboard.releaseLock();
             successes.clipboards++;

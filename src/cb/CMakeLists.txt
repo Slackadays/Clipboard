@@ -23,6 +23,7 @@ add_executable(cb
   src/actions/show.cpp
   src/actions/status.cpp
   src/actions/swap.cpp
+  src/actions/menu.cpp
 )
 
 enable_lto(cb)
@@ -75,6 +76,13 @@ elseif(X11WL)
   )
   target_link_options(cb PRIVATE -z origin) # set the rpath to $ORIGIN
   target_link_libraries(cb ${CMAKE_DL_LIBS})
+endif()
+
+if(ALSA_FOUND)
+  target_sources(cb PRIVATE 
+  src/linux.cpp
+  )
+  target_link_libraries(cb asound)
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD True)

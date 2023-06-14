@@ -57,3 +57,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
         writeFiles(files.get());
     }
 }
+
+bool playAsyncSoundEffect(const std::valarray<short>& samples) {
+    return false;
+}

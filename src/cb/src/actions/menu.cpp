@@ -12,25 +12,4 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include <iostream>
-#include <memory>
-#include <string>
-
-#include "clipboard.hpp"
-
-const bool GUIClipboardSupportsCut = false;
-
-ClipboardContent getGUIClipboard(const std::string& requested_mime) {
-    return ClipboardContent();
-}
-
-void writeToGUIClipboard(const ClipboardContent& clipboard) {
-    if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
-
-    } else if (clipboard.type() == ClipboardContentType::Paths) {
-    }
-}
-
-bool playAsyncSoundEffect(const std::valarray<short>& samples) {
-    return false;
-}
+#include "../clipboard.hpp"

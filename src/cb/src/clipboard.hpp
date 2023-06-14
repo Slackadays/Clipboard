@@ -24,6 +24,7 @@
 #include <regex>
 #include <string_view>
 #include <thread>
+#include <valarray>
 #include <vector>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -133,12 +134,6 @@ std::vector<std::string> fileLines(const fs::path& path);
 
 bool stopIndicator(bool change_condition_variable = true);
 
-void error_exit(const std::string& message, const auto&... args) {
-    stopIndicator();
-    fprintf(stderr, message.data(), args.data()...);
-    exit(EXIT_FAILURE);
-}
-
 void deduplicate(auto& items) {
     std::sort(items.begin(), items.end());
     items.erase(std::unique(items.begin(), items.end()), items.end());
@@ -166,7 +161,7 @@ extern bool all_option;
 extern std::string preferred_mime;
 extern std::vector<std::string> available_mimes;
 
-enum class ClipboardState : int { Setup, Action };
+enum class ClipboardState : int { Setup, Action, Error };
 enum class IndicatorState : int { Done, Active, Cancel };
 
 extern std::condition_variable cv;
@@ -174,6 +169,13 @@ extern std::mutex m;
 extern std::atomic<ClipboardState> clipboard_state;
 extern std::atomic<IndicatorState> progress_state;
 static std::thread indicator;
+
+void error_exit(const std::string& message, const auto&... args) {
+    clipboard_state = ClipboardState::Error;
+    stopIndicator();
+    fprintf(stderr, message.data(), args.data()...);
+    exit(EXIT_FAILURE);
+}
 
 struct Successes {
     std::atomic<unsigned long> files;
@@ -190,7 +192,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Menu };
 
 extern Action action;
 
@@ -675,6 +677,7 @@ extern Message internal_error_message;
 extern ClipboardContent getGUIClipboard(const std::string& requested_mime);
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);
 extern const bool GUIClipboardSupportsCut;
+extern bool playAsyncSoundEffect(const std::valarray<short>& samples);
 
 namespace PerformAction {
 void copyItem(const fs::path& f);

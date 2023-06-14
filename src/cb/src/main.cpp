@@ -66,6 +66,8 @@ int main(int argc, char* argv[]) {
 
         updateExternalClipboards();
 
+        if (!copying.failedItems.empty()) clipboard_state = ClipboardState::Error;
+
         stopIndicator();
 
         deduplicate(copying.failedItems);
@@ -76,12 +78,13 @@ int main(int argc, char* argv[]) {
 
         path.trimHistoryEntries();
     } catch (const std::exception& e) {
+        clipboard_state = ClipboardState::Error;
         stopIndicator();
         fprintf(stderr, internal_error_message().data(), e.what());
         exit(EXIT_FAILURE);
     }
-    if (copying.failedItems.empty())
-        exit(EXIT_SUCCESS);
-    else
+    if (clipboard_state == ClipboardState::Error)
         exit(EXIT_FAILURE);
+    else
+        exit(EXIT_SUCCESS);
 }

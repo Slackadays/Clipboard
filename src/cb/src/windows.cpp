@@ -221,3 +221,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
         onWindowsError("CloseClipboard");
     }
 }
+
+bool playAsyncSoundEffect(const std::valarray<short>& samples) {
+    return false;
+}

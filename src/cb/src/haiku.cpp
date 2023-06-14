@@ -49,3 +49,7 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
     }
     gui_clipboard->Unlock();
 }
+
+bool playAsyncSoundEffect(const std::valarray<short>& samples) {
+    return false;
+}
