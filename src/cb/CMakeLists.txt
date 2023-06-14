@@ -5,7 +5,6 @@ add_executable(cb
   src/themes.cpp
   src/indicator.cpp
   src/externalclipboards.cpp
-  src/alsaandfallback.cpp
   src/actions/add.cpp
   src/actions/clear.cpp
   src/actions/copy.cpp
@@ -80,6 +79,7 @@ elseif(X11WL)
 endif()
 
 if(ALSA_FOUND)
+  target_sources(cb PRIVATE src/linux.cpp)
   target_link_libraries(cb asound)
 endif()
 

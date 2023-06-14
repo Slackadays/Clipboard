@@ -41,15 +41,8 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-# check for alsa if on Linux
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  find_package(ALSA)
-  if (ALSA_FOUND)
-    message(STATUS "Building the Clipboard Project with ALSA support")
-    add_definitions(-DUSE_ALSA)
-  else()
-    message(STATUS "Building the Clipboard Project without ALSA support")
-  endif()
+  find_package(ALSA REQUIRED)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
