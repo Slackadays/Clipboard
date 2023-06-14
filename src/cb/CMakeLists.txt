@@ -5,6 +5,7 @@ add_executable(cb
   src/themes.cpp
   src/indicator.cpp
   src/externalclipboards.cpp
+  src/alsaandfallback.cpp
   src/actions/add.cpp
   src/actions/clear.cpp
   src/actions/copy.cpp
@@ -78,13 +79,8 @@ elseif(X11WL)
   target_link_libraries(cb ${CMAKE_DL_LIBS})
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_sources(cb PRIVATE 
-  src/linux.cpp
-  )
-  if(ALSA_FOUND)
-    target_link_libraries(cb asound)
-  endif()
+if(ALSA_FOUND)
+  target_link_libraries(cb asound)
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD True)
