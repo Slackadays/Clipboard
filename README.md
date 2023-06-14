@@ -123,10 +123,14 @@ curl -sSL https://github.com/Slackadays/Clipboard/raw/main/install.sh | sh
 apk add clipboard
 ```
 
+<br>
+
 **AUR** (Use your favorite AUR helper such as `yay`. You can also get `clipboard-bin` and `clipboard-git`)
 ```sh
 yay -S clipboard
 ```
+
+<br>
 
 **Flatpak Flathub** (You can also get our nightly Flatpak builds under **GitHub Downloads**)
 ```sh
@@ -137,35 +141,49 @@ flatpak install app.getclipboard.Clipboard
 
 <img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.svg' align="right"/>
 
+<br>
+
 **Gentoo GURU and LiGurOS** (For Gentoo, enable the GURU repo first)
 ```sh
 emerge -av app-misc/clipboard
 ```
+
+<br>
 
 **Homebrew**
 ```sh
 brew install clipboard
 ```
 
+<br>
+
 **Nix**
 ```sh
 nix-env -iA nixpkgs.clipboard-jh
 ```
+
+<br>
 
 **Pacstall**
 ```sh
 pacstall -I clipboard-bin
 ```
 
+<br>
+
 **Scoop**
 ```powershell
 scoop install clipboard
 ```
 
+<br>
+
 **Void Linux**
 ```sh
 sudo xbps-install -S clipboard
 ```
+
+<br>
 
 **GitHub Downloads**
 
