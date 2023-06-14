@@ -32,29 +32,29 @@ target_link_libraries(cb gui)
 
 if(WIN32)
   target_sources(cb PRIVATE
-    src/windows.cpp
-    src/windows.manifest
+    src/platforms/windows.cpp
+    src/platforms/windows.manifest
   )
   target_compile_options(cb PRIVATE /utf-8)
 elseif(APPLE)
   enable_language(OBJC)
   target_sources(cb PRIVATE
-    src/macos.m
-    src/macos.cpp
+    src/platforms/macos.m
+    src/platforms/macos.cpp
   )
   target_link_libraries(cb "-framework AppKit")
   target_compile_options(cb PRIVATE -fobjc-arc)
 elseif(HAIKU)
   target_sources(cb PRIVATE
-    src/haiku.cpp
+    src/platforms/haiku.cpp
   )
   target_link_libraries(cb be)
 elseif(ANDROID)
   target_sources(cb PRIVATE
-    src/android.cpp
+    src/platforms/android.cpp
   )
 elseif(X11WL)
-  target_sources(cb PRIVATE src/x11wl.cpp)
+  target_sources(cb PRIVATE src/platforms/x11wl.cpp)
 
   set_property(
     TARGET cb
@@ -76,10 +76,12 @@ elseif(X11WL)
   )
   target_link_options(cb PRIVATE -z origin) # set the rpath to $ORIGIN
   target_link_libraries(cb ${CMAKE_DL_LIBS})
+elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+  target_sources(cb PRIVATE src/platforms/bsd.cpp)
 endif()
 
 if(ALSA_FOUND)
-  target_sources(cb PRIVATE src/linux.cpp)
+  target_sources(cb PRIVATE src/platforms/linux.cpp)
   target_link_libraries(cb asound)
 endif()
 

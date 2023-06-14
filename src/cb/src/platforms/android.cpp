@@ -12,42 +12,23 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include <Clipboard.h>
 #include <iostream>
 #include <memory>
 #include <string>
 
-#include "clipboard.hpp"
+#include "../clipboard.hpp"
 
 const bool GUIClipboardSupportsCut = false;
 
 ClipboardContent getGUIClipboard(const std::string& requested_mime) {
-    std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
-    if (!gui_clipboard->Lock()) return {};
-    BMessage* content = gui_clipboard->Data();
-    gui_clipboard->Unlock();
-    const char* temp;
-    ssize_t tempLength = 0;
-    if (!content->FindData("text/plain", B_MIME_TYPE, (const void**)&temp, &tempLength)) {
-        std::string CBcontent(temp, tempLength);
-        return ClipboardContent(CBcontent);
-    }
-    return {};
+    return ClipboardContent();
 }
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
-    std::unique_ptr<BClipboard> gui_clipboard = std::make_unique<BClipboard>("system");
-    if (!gui_clipboard->Lock()) return;
-    gui_clipboard->Clear();
-    BMessage* content = (BMessage*)NULL;
-    if (content = gui_clipboard->Data()) {
-        if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
-            content->AddData("text/plain", B_MIME_TYPE, clipboard.text().data(), clipboard.text().length());
-        } else if (clipboard.type() == ClipboardContentType::Paths) {
-        }
-        gui_clipboard->Commit();
+    if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
+
+    } else if (clipboard.type() == ClipboardContentType::Paths) {
     }
-    gui_clipboard->Unlock();
 }
 
 bool playAsyncSoundEffect(const std::valarray<short>& samples) {

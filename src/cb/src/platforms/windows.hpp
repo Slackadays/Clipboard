@@ -12,7 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "clipboard.hpp"
+#include "../clipboard.hpp"
 #include <filesystem>
 #include <string_view>
 #include <vector>

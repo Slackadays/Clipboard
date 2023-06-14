@@ -12,14 +12,18 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
-#include "clipboard.hpp"
+#include "../clipboard.hpp"
 #include <alsa/asoundlib.h>
+
+void dummy_handler(const char* file, int line, const char* function, int err, const char* fmt, ...) {}
 
 bool playAsyncSoundEffect(const std::valarray<short>& samples) {
     if (fork()) return true;
 
+    snd_lib_error_set_handler(dummy_handler); // suppress errors in console
+
     snd_pcm_t* device;
-    snd_pcm_open(&device, "default", SND_PCM_STREAM_PLAYBACK, 0);
+    if (snd_pcm_open(&device, "default", SND_PCM_STREAM_PLAYBACK, 0) < 0) std::_Exit(EXIT_FAILURE);
     snd_pcm_hw_params_t* params;
     snd_pcm_hw_params_alloca(&params);
     snd_pcm_hw_params_any(device, params);

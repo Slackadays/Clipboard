@@ -15,7 +15,7 @@
 #include <iostream>
 #include <memory>
 
-#include "clipboard.hpp"
+#include "../clipboard.hpp"
 
 extern "C" {
 const char* textContent();
