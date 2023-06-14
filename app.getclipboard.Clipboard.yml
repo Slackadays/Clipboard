@@ -12,19 +12,18 @@ finish-args:
 modules:
   - name: cb
     buildsystem: cmake-ninja
-    build-commands:
+    post-install:
       - install -D app.getclipboard.Clipboard.metainfo.xml /app/share/metainfo/app.getclipboard.Clipboard.metainfo.xml
       - install -D app.getclipboard.Clipboard.desktop /app/share/applications/app.getclipboard.Clipboard.desktop
-      - install -D documentation/readme-assets/CB.png /app/share/icons/hicolor/512x512/apps/app.getclipboard.Clipboard.png
+      - install -D app.getclipboard.Clipboard.png /app/share/icons/hicolor/512x512/apps/app.getclipboard.Clipboard.png
     sources:
       - type: git
         url: https://github.com/Slackadays/Clipboard
-        tag: 0.8.0
-        commit: 083bdbb6ea2886681227899754b22c3c6f686376
+        branch: main
       - type: file
         path: app.getclipboard.Clipboard.metainfo.xml
       - type: file
         path: app.getclipboard.Clipboard.desktop
       - type: file
-        path: documentation/readme-assets/CB.png
+        path: app.getclipboard.Clipboard.png
     config-opts: ["-DCMAKE_BUILD_TYPE=MinSizeRel"]

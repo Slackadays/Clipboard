@@ -78,11 +78,13 @@ elseif(X11WL)
   target_link_libraries(cb ${CMAKE_DL_LIBS})
 endif()
 
-if(ALSA_FOUND)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   target_sources(cb PRIVATE 
   src/linux.cpp
   )
-  target_link_libraries(cb asound)
+  if(ALSA_FOUND)
+    target_link_libraries(cb asound)
+  endif()
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD True)

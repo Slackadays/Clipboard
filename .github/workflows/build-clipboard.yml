@@ -64,7 +64,8 @@ jobs:
             "${GPP_PACKAGE}" \
             "libx11-dev:${{ matrix.arch.os }}" \
             "libwayland-dev:${{ matrix.arch.os }}" \
-            "wayland-protocols:${{ matrix.arch.os }}"
+            "wayland-protocols:${{ matrix.arch.os }}" \
+            "libasound-dev:${{ matrix.arch.os }}"
           
           cd build
           

@@ -7,24 +7,25 @@
   
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-
+  <launchable type="desktop-id">app.getclipboard.Clipboard.desktop</launchable>
   <content_rating type="oars-1.1" />
   
   <description>
     <p>
-      The Clipboard Project (CB for short) is an advanced clipboard manager that&apos;s made for your terminal. Cut, copy and paste anything, anytime, anywhere with unlimited capacity, clipboards, and history. You can also script CB to seamlessly work with your other favorite terminal tools. Plus, it seamlessly integrates with your existing system clipboards.
+      The Clipboard Project is your new second brain.
+      <br>
+      This is an advanced clipboard manager that&apos;s made especially for your terminal. Cut, copy and paste anything, anytime, anywhere with unlimited capacity, clipboards, and history! 
+      <br>  
+      Script CB to work superbly with your other favorite terminal tools. Integrate it with your existing system clipboards. Save time and effort the easy way.
     </p>
     <p>
-      IMPORTANT! If you install the Clipboard Project with Flatpak, you'll likely be able to run it with the command "flatpak run app.getclipboard.Clipboard". However, this is long and hard to remember, and Flatpak doesn't yet offer a built-in solution so that you can just use "cb". So, to work around this issue, run the command "alias cb='flatpak run app.getclipboard.Clipboard'" so that the command "cb" does what you expect. Add that command to your terminal startup file like .bashrc so that it works every time you start the terminal.
+      IMPORTANT! If you install the Clipboard Project with Flatpak, you'll likely be able to run it with the command "flatpak run app.getclipboard.Clipboard" or through the desktop entry. However, this is long and hard to remember, and Flatpak doesn't yet offer a built-in solution so that you can just use "cb". So, to work around this issue, run the command "alias cb='flatpak run app.getclipboard.Clipboard'" so that the command "cb" does what you expect. Add that command to your terminal startup file like .bashrc so that it works every time you start the terminal.
     </p>
   </description>
-  
-  <icon type="remote" height="512" width="512">https://raw.githubusercontent.com/Slackadays/Clipboard/0.8.0/documentation/readme-assets/CB.png</icon>
-  <icon type="local" height="512" width="512">documentation/readme-assets/CB.png</icon>
 
   <screenshots>
     <screenshot type="default">
-      <caption>An example of using Clipboard.</caption>
+      <caption>An example of using Clipboard</caption>
       <image type="source" width="1906" height="1010">https://raw.githubusercontent.com/Slackadays/Clipboard/0.8.0/documentation/readme-assets/CBDemo.png</image>
     </screenshot>
   </screenshots>

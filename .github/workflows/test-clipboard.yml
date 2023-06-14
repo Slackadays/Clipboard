@@ -53,7 +53,7 @@ jobs:
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
           sudo apt-get upgrade -y
-          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard
+          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard libasound-dev
 
           cd build
           cmake .. \
@@ -124,7 +124,7 @@ jobs:
                       
             apt-get update
             apt-get upgrade -y
-            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo pkg-config cmake-data
+            apt-get install -y $PACKAGES xvfb sway xclip cmake wl-clipboard squeekboard sudo pkg-config cmake-data libasound-dev
 
           run: |
             NO_X11=1
