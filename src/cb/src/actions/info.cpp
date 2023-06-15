@@ -21,6 +21,7 @@
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#include <pwd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
@@ -42,18 +43,44 @@ void info() {
         fprintf(stderr, "\033[%zdG%s\r", total_cols, formatMessage("[info]│[blank]").data());
     };
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+    // creation date
+    displayEndbar();
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
+    fprintf(stderr, formatMessage("[info]│ Created [help]%s[blank]\n").data(), time.data());
+#elif defined(__WIN32__) || defined(__WIN64__)
+    fprintf(stderr, formatMessage("[info]│ Created [help]n/a[blank]\n").data());
+#endif
+
     displayEndbar();
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
+    time_t latest = 0;
+    for (const auto& entry : fs::recursive_directory_iterator(path)) {
+        struct stat info;
+        stat(entry.path().string().data(), &info);
+        if (info.st_ctime > latest) latest = info.st_ctime;
+    }
+    time = std::ctime(&latest);
+    std::erase(time, '\n');
     fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
     fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
+
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
+
+    displayEndbar();
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
+    struct passwd* pw = getpwuid(info.st_uid);
+    fprintf(stderr, formatMessage("[info]│ Owned by [help]%s[blank]\n").data(), pw->pw_name);
+#elif defined(__WIN32__) || defined(__WIN64__)
+    fprintf(stderr, formatMessage("[info]│ Owned by [help]n/a[blank]\n").data());
+#endif
+
     displayEndbar();
     fprintf(stderr, formatMessage("[info]│ Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
     displayEndbar();
@@ -131,10 +158,24 @@ void infoJSON() {
 
     printf("    \"name\": \"%s\",\n", clipboard_name.data());
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
+    std::erase(time, '\n');
+    printf("    \"created\": \"%s\",\n", time.data());
+#elif defined(__WIN32__) || defined(__WIN64__)
+    printf("    \"created\": \"n/a\",\n");
+#endif
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+    time_t latest = 0;
+    for (const auto& entry : fs::recursive_directory_iterator(path)) {
+        struct stat info;
+        stat(entry.path().string().data(), &info);
+        if (info.st_ctime > latest) latest = info.st_ctime;
+    }
+    time = std::ctime(&latest);
     std::erase(time, '\n');
     printf("    \"lastChanged\": \"%s\",\n", time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
@@ -142,6 +183,14 @@ void infoJSON() {
 #endif
 
     printf("    \"path\": \"%s\",\n", path.string().data());
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
+    struct passwd* pw = getpwuid(getuid());
+    printf("    \"owner\": \"%s\",\n", pw->pw_name);
+#elif defined(__WIN32__) || defined(__WIN64__)
+    printf("    \"owner\": \"n/a\",\n");
+#endif
+
     printf("    \"isPersistent\": %s,\n", path.is_persistent ? "true" : "false");
     printf("    \"totalEntries\": %zu,\n", path.totalEntries());
     printf("    \"totalBytesUsed\": %zu,\n", totalDirectorySize(path));
