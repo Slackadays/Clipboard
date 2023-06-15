@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
 
         setFilepaths();
 
+        startIndicator();
+
         action = getAction();
 
         copying.items.assign(arguments.begin(), arguments.end());
@@ -39,8 +41,6 @@ int main(int argc, char* argv[]) {
         verifyAction();
 
         if (action != Action::Info) path.getLock();
-
-        startIndicator();
 
         syncWithExternalClipboards();
 

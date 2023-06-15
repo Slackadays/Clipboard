@@ -163,7 +163,7 @@ void search() {
     Message search_result_message = "[info]Your search results[blank]";
     fprintf(stderr, "%s", search_result_message().data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    auto usedSpace = (search_result_message.rawLength() - 2) + 9;
+    auto usedSpace = (search_result_message.columnLength() - 2) + 9;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
     std::string bar1;
@@ -193,7 +193,7 @@ void search() {
 
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message search_legend_message = "[bold]Clipboard[blank][info]│ [bold]Entry[blank][info]│[blank][help] Result[info]";
-    int cols = available.columns - (search_legend_message.rawLength() + 3);
+    int cols = available.columns - (search_legend_message.columnLength() + 3);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";

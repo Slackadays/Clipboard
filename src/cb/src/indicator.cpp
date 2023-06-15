@@ -50,9 +50,9 @@ void setupIndicator() {
     int columns = thisTerminalSize().columns;
 
     std::unique_lock<std::mutex> lock(m);
-    const std::array<std::string_view, 22> spinner_steps {"╸         ", "━         ", "╺╸        ", " ━        ", " ╺╸       ", "  ━       ", "  ╺╸      ", "   ━      ",
-                                                          "   ╺╸     ", "    ━     ", "    ╺╸    ", "     ━    ", "     ╺╸   ", "      ━   ", "      ╺╸  ", "       ━  ",
-                                                          "       ╺╸ ", "        ━ ", "        ╺╸", "         ━", "         ╺", "          "};
+
+    auto start = std::chrono::steady_clock::now();
+
     int step = 0;
     auto poll_focus = [&] {
         std::array<char, 32> buf;
@@ -67,16 +67,29 @@ void setupIndicator() {
         }
     };
     auto display_progress = [&](const auto& formattedNum) {
-        fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, spinner_steps.at(step).data());
+        std::string progressBar;
+        if (step < 40) {
+            for (int i = 0; i < step; i++)
+                progressBar += "█";
+            for (int i = 0; i < 39 - step; i++)
+                progressBar += "▒";
+        } else {
+            for (int i = 0; i < step - 40; i++)
+                progressBar += "▒";
+            for (int i = 0; i < 39 - (step - 40); i++)
+                progressBar += "█";
+        }
+        std::string formattedSeconds = std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count()) + "s";
+        fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, formattedSeconds.data(), progressBar.data());
         fflush(stderr);
-        cv.wait_for(lock, std::chrono::milliseconds(20), [&] { return progress_state != IndicatorState::Active; });
+        cv.wait_for(lock, std::chrono::milliseconds(17), [&] { return progress_state != IndicatorState::Active; });
     };
     auto itemsToProcess = [&] {
         return std::distance(fs::directory_iterator(path.data), fs::directory_iterator());
     };
     while (clipboard_state == ClipboardState::Setup && progress_state == IndicatorState::Active) {
         display_progress("");
-        step == 21 ? step = 0 : step++;
+        step == 79 ? step = 0 : step++;
     }
     static size_t items_size = action_is_one_of(Action::Cut, Action::Copy) ? copying.items.size() : itemsToProcess();
     if (items_size == 0) items_size++;
@@ -93,7 +106,7 @@ void setupIndicator() {
 
         if (is_tty.out) poll_focus();
 
-        step == 21 ? step = 0 : step++;
+        step == 79 ? step = 0 : step++;
     }
 
     fprintf(stderr, "\033[?25h"); // restore the cursor

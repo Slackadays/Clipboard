@@ -60,7 +60,7 @@ void history() {
     Message clipboard_history_message = "[info]Entry history for clipboard [bold][help]%s[blank]";
     fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    auto usedSpace = (clipboard_history_message.rawLength() - 2) + clipboard_name.length() + 7;
+    auto usedSpace = (clipboard_history_message.columnLength() - 2) + clipboard_name.length() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
     std::string bar1;
@@ -163,7 +163,7 @@ void history() {
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
-    usedSpace = status_legend_message.rawLength() + 7;
+    usedSpace = status_legend_message.columnLength() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
     std::string bar2 = " ┣";

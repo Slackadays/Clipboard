@@ -432,6 +432,7 @@ Action getAction() {
                 return entry;
             }
         }
+        clipboard_state = ClipboardState::Error;
         stopIndicator();
         printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);
@@ -497,6 +498,7 @@ void setFlags() {
 
 void verifyAction() {
     if (io_type == IOType::Pipe && arguments.size() >= 2 && action != Action::Show) {
+        clipboard_state = ClipboardState::Error;
         stopIndicator();
         fprintf(stderr, redirection_no_items_message().data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);
@@ -553,6 +555,7 @@ void checkItemSize(unsigned long long total_item_size) {
     else if (action == Action::Paste && io_type == IOType::File)
         space_available = fs::space(fs::current_path()).available;
     if (total_item_size > space_available) {
+        clipboard_state = ClipboardState::Error;
         stopIndicator();
         fprintf(stderr, not_enough_storage_message().data(), actions[action].data(), total_item_size / (1024.0 * 1024.0), space_available / (1024.0 * 1024.0));
         exit(EXIT_FAILURE);
@@ -654,9 +657,9 @@ std::string getMIMEType() {
 void showFailures() {
     if (copying.failedItems.size() <= 0) return;
     TerminalSize available(thisTerminalSize());
-    available.rows -= clipboard_failed_many_message.rawLength() / available.columns;
+    available.rows -= clipboard_failed_many_message.columnLength() / available.columns;
 
-    if (copying.failedItems.size() > available.rows) available.rows -= and_more_fails_message.rawLength() / available.columns;
+    if (copying.failedItems.size() > available.rows) available.rows -= and_more_fails_message.columnLength() / available.columns;
 
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());

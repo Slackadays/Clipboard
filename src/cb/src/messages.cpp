@@ -109,7 +109,7 @@ Message item_already_exists_message = "[progress]⬤ The item [bold]%s[blank][pr
                                       "replace it? [help]Use [bold]all [blank][help]to replace all existing, or "
                                       "[bold]skip[blank][help] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
 Message bad_response_message = "[error]❌ Sorry, that wasn't a valid choice. Try again: [blank][help][bold][(y)es/(n)o)] ";
-Message working_message = "\r[progress]⬤ %s... %s %s    [blank]";
+Message working_message = "\r[progress]⬤ %s... %s, %s elapsed %s    [blank]";
 Message cancelled_message = "[success]✅ Cancelled %s[blank]\n";
 Message cancelled_with_progress_message = "[success]✅ Cancelled %s (%s in progress)[blank]\n";
 Message byte_success_message = "[success]✅ %s %s[blank]\n";

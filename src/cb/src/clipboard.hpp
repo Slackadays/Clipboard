@@ -17,6 +17,7 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <cwchar>
 #include <deque>
 #include <filesystem>
 #include <functional>
@@ -369,6 +370,7 @@ public:
         try {
             data = root / constants.data_directory / std::to_string(entryIndex.at(this_entry));
         } catch (...) {
+            clipboard_state = ClipboardState::Error;
             stopIndicator();
             fprintf(stderr,
                     formatMessage("[error]❌ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]").data(),
@@ -472,6 +474,7 @@ public:
         try {
             return root / constants.data_directory / std::to_string(entryIndex.at(entry));
         } catch (...) {
+            clipboard_state = ClipboardState::Error;
             stopIndicator();
             fprintf(stderr,
                     formatMessage("[error]❌ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. 💡 [help]Try choosing a different or newer one instead.\n[blank]").data(),
@@ -566,7 +569,14 @@ private:
 public:
     Message(const auto& message) : internal_message(std::move(message)) {}
     std::string operator()() const { return std::move(formatMessage(internal_message)); }
-    size_t rawLength() const { return std::regex_replace(std::string(internal_message), std::regex("\\[[a-z]+\\]|\\\033\\[\\d+m"), "").length(); }
+    size_t columnLength() const {
+        std::string temp = std::regex_replace(std::string(internal_message), std::regex("[\\r\\n]|\\[[a-z]+\\]|\\\033\\[\\d+m"), "");
+        std::mbstate_t state = std::mbstate_t();
+        size_t length = 0;
+        for (size_t i = 0; i < temp.size(); i += std::mbrlen(&temp[i], temp.size() - i, &state))
+            length++;
+        return length;
+    }
 };
 
 std::string formatNumbers(const auto& num) {

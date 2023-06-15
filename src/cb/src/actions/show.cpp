@@ -39,7 +39,7 @@ void show() {
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, clipboard_item_many_contents_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    auto usedSpace = (clipboard_item_many_contents_message.rawLength() - 2) + clipboard_name.length() + 7;
+    auto usedSpace = (clipboard_item_many_contents_message.columnLength() - 2) + clipboard_name.length() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
     for (int i = 0; i < columns; i++)
@@ -58,7 +58,7 @@ void show() {
 
     fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
     Message status_legend_message = "\033[1mFiles\033[22m, \033[4mDirectories\033[24m";
-    usedSpace = status_legend_message.rawLength() + 7;
+    usedSpace = status_legend_message.columnLength() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
     std::string bar2 = " ┣";

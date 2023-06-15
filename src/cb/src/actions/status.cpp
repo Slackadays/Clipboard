@@ -44,7 +44,7 @@ void status() {
     fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
     fprintf(stderr, "%s", check_clipboard_status_message().data());
     fprintf(stderr, "%s", formatMessage("[info] ┣").data());
-    int columns = available.columns - (check_clipboard_status_message.rawLength() + 7);
+    int columns = available.columns - (check_clipboard_status_message.columnLength() + 7);
     std::string bar;
     for (int i = 0; i < columns; i++)
         bar += "━";
@@ -100,7 +100,7 @@ void status() {
     }
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
-    int cols = available.columns - (status_legend_message.rawLength() + 7);
+    int cols = available.columns - (status_legend_message.columnLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";
