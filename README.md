@@ -21,9 +21,9 @@ Don't just take my word for it!
 - Seamless integration with your [existing clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
 - Superb scriptability to automate your workflows in a cinch, 
-- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> for your viewing pleasure,
+- Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> and ear candy for your viewing and listening pleasure,
 - Documentation you'll actually want to read <sub>(all in this readme)</sub>
-- And oodles more! <sub>(just <i>look</i> at that documentation!)</sub>
+- And oodles more!
 
 <br>
 
