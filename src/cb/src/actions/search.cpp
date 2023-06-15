@@ -193,7 +193,7 @@ void search() {
 
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message search_legend_message = "[bold]Clipboard[blank][info]│ [bold]Entry[blank][info]│[blank][help] Result[info]";
-    int cols = available.columns - (search_legend_message.columnLength() + 3);
+    int cols = available.columns - (search_legend_message.columnLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)
         bar2 += "━";
