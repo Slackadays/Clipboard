@@ -222,7 +222,7 @@ $ git clone https://github.com/Slackadays/Clipboard
 $ cd Clipboard/build
 
 # Now let's set up CMake and build CB.
-$ cmake -DCMAKE_BUILD_TYPE=MinSizeRel ..
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ cmake --build . -j 12
 
 # Finally, let's install it onto our system.

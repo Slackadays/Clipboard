@@ -26,4 +26,4 @@ modules:
         path: app.getclipboard.Clipboard.desktop
       - type: file
         path: app.getclipboard.Clipboard.png
-    config-opts: ["-DCMAKE_BUILD_TYPE=MinSizeRel"]
+    config-opts: ["-DCMAKE_BUILD_TYPE=Release"]

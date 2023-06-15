@@ -72,7 +72,7 @@ jobs:
           cmake .. \
             "-DCMAKE_CXX_COMPILER=${{ matrix.arch.gcc }}-g++-${{ matrix.gcc }}" \
             "-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc-${{ matrix.gcc }}" \
-            "-DCMAKE_BUILD_TYPE=MinSizeRel"
+            "-DCMAKE_BUILD_TYPE=Release"
           
           cmake --build . -j 4
       - uses: actions/upload-artifact@v3
@@ -108,7 +108,7 @@ jobs:
       - name: Run a script
         run: |
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+          cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . -j 3
       - uses: actions/upload-artifact@v3
         with:
@@ -123,7 +123,7 @@ jobs:
       - name: Run a script
         run: |
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+          cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release -j 3
       - uses: actions/upload-artifact@v3
         with:
@@ -160,7 +160,7 @@ jobs:
           run: |
             sudo pkg install -y cmake llvm15 xorg wayland
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=clang15 -DCMAKE_CXX_COMPILER=clang++15 -DNO_X11=1
+            cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang15 -DCMAKE_CXX_COMPILER=clang++15 -DNO_X11=1
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -182,7 +182,7 @@ jobs:
           run: |
             sudo pkg_add cmake
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
+            cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -204,7 +204,7 @@ jobs:
           run: |
             sudo pkg_add cmake
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DNO_X11=1
+            cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
@@ -226,7 +226,7 @@ jobs:
           run: |
             sudo pkgin -y install cmake gcc12
             cd build
-            cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
+            cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
             cmake --build . -j 2
       - uses: actions/upload-artifact@v3
         with:
