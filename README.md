@@ -14,7 +14,7 @@ Say hello to one of the most cutting-edge clipboard managers ever. Save time and
 
 Don't just take my word for it!
 
-<img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=25px>
+<img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=35px>
 
 - Copy and paste text, files, directories, binary data, your goat, _anything_
 - Infinite numbers of clipboards with unlimited capacity AND history each,
