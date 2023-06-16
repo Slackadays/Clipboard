@@ -166,7 +166,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 }
 
 ClipboardContent thisClipboard() {
-    Clipboard default_cb(constants.default_clipboard_name);
+    Clipboard default_cb(std::string(constants.default_clipboard_name));
     if (fs::exists(default_cb.metadata.originals) && GUIClipboardSupportsCut) {
         std::vector<fs::path> files;
 
