@@ -131,6 +131,74 @@ TerminalSize thisTerminalSize() {
     return TerminalSize(80, 24);
 }
 
+std::string formatMessage(const std::string_view& str, bool colorful) {
+    std::string temp(str); // a string to do scratch work on
+    auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
+        for (size_t i = 0; (i = temp.find(str, i)) != std::string::npos; i += with.length())
+            temp.replace(i, str.length(), with);
+    };
+    for (const auto& key : colors) // iterate over all the possible colors to replace
+        replaceThis(key.first, colorful ? key.second : "");
+    if (no_emoji) {
+        replaceThis("✅", "✓");
+        replaceThis("❌", "✗");
+        replaceThis("💡", "•");
+        replaceThis("🔷", "•");
+    }
+    return temp;
+}
+
+std::string JSONescape(const std::string_view& input) {
+    std::string temp(input);
+
+    for (size_t i = 0; i < temp.size(); i++) {
+        switch (temp[i]) {
+        case '"':
+            temp.replace(i, 1, "\\\"");
+            i++;
+            break;
+        case '\\':
+            temp.replace(i, 1, "\\\\");
+            i++;
+            break;
+        case '/':
+            temp.replace(i, 1, "\\/");
+            i++;
+            break;
+        case '\b':
+            temp.replace(i, 1, "\\b");
+            i++;
+            break;
+        case '\f':
+            temp.replace(i, 1, "\\f");
+            i++;
+            break;
+        case '\n':
+            temp.replace(i, 1, "\\n");
+            i++;
+            break;
+        case '\r':
+            temp.replace(i, 1, "\\r");
+            i++;
+            break;
+        case '\t':
+            temp.replace(i, 1, "\\t");
+            i++;
+            break;
+        default:
+            if (temp[i] < 32) {
+                std::stringstream ss;
+                ss << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (int)temp[i];
+                temp.replace(i, 1, ss.str());
+                i += 5;
+            }
+            break;
+        }
+    }
+
+    return temp;
+}
+
 std::string fileContents(const fs::path& path) {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     int fd = open(path.string().data(), O_RDONLY);
@@ -301,6 +369,7 @@ void setupHandlers() {
     });
 
     signal(SIGINT, [](int) {
+        fprintf(stderr, "%s", formatMessage("[blank]").data());
         if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
             // message, directly to standard error. Note: There is no standard C++ interface for this, so this requires
@@ -424,14 +493,18 @@ template <typename T>
         return false;
 }
 
+std::optional<Action> getActionByFunction(std::function<bool(Action)> func) {
+    using enum Action;
+    for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Menu})
+        if (func(entry)) return entry;
+    return std::nullopt;
+}
+
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search}) {
-            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "--")) {
-                return entry;
-            }
-        }
+        auto action = getActionByFunction([](const Action& action) { return flagIsPresent<bool>(actions[action], "--") || flagIsPresent<bool>(action_shortcuts[action], "--"); });
+        if (action.has_value()) return action.value();
         clipboard_state = ClipboardState::Error;
         stopIndicator();
         printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data(), clipboard_invocation.data());
@@ -450,7 +523,7 @@ IOType getIOType() {
     if (action_is_one_of(Cut, Copy, Add)) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in && copying.items.empty()) return Pipe;
-    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History)) {
+    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History, Menu)) {
         if (!is_tty.out) return Pipe;
         return Text;
     } else if (action_is_one_of(Remove, Note, Ignore, Swap, Load, Import, Export, Search)) {
@@ -642,6 +715,8 @@ void performAction() {
             history();
         else if (action == Search)
             search();
+        else if (action == Menu)
+            menu();
     }
 }
 

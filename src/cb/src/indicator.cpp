@@ -41,9 +41,8 @@ void setupIndicator() {
 
     makeTerminalRaw();
 
-    fprintf(stderr, "\033]0;%s - Clipboard\007", "Setting up"); // set the terminal title
-    fprintf(stderr, "\033[?25l");                               // hide the cursor
-    if (is_tty.out) printf("\033[?1004h");                      // enable focus tracking
+    fprintf(stderr, "\033[?25l");          // hide the cursor
+    if (is_tty.out) printf("\033[?1004h"); // enable focus tracking
     fflush(stdout);
     fflush(stderr);
 
@@ -83,20 +82,19 @@ void setupIndicator() {
         }
         std::string formattedSeconds = std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count()) + "s";
         fprintf(stderr, working_message().data(), actionText.data(), formattedNum, formattedSeconds.data(), progressBar.data());
+        fprintf(stderr, "\033]0;%s (%s) - Clipboard\007", actionText.data(), formattedNum); // set the terminal title
         fflush(stderr);
         cv.wait_for(lock, std::chrono::milliseconds(17), [&] { return progress_state != IndicatorState::Active; });
     };
 
     while (clipboard_state == ClipboardState::Setup && progress_state == IndicatorState::Active) {
-        display_progress("", "Setting up");
+        display_progress("%?", "Setting up");
         step == 79 ? step = 0 : step++;
     }
 
     auto itemsToProcess = [&] {
         return std::distance(fs::directory_iterator(path.data), fs::directory_iterator());
     };
-
-    fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data());
 
     static size_t items_size = action_is_one_of(Action::Cut, Action::Copy) ? copying.items.size() : itemsToProcess();
 
@@ -112,7 +110,7 @@ void setupIndicator() {
         else if (io_type == IOType::Pipe)
             display_progress(formatBytes(successes.bytes.load(std::memory_order_relaxed)).data());
         else
-            display_progress("");
+            display_progress("?%");
 
         if (is_tty.out) poll_focus();
 

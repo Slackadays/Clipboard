@@ -207,10 +207,11 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 18> actions;
-extern EnumArray<std::string_view, 18> action_shortcuts;
-extern EnumArray<std::string_view, 18> doing_action;
-extern EnumArray<std::string_view, 18> did_action;
+extern EnumArray<std::string_view, 19> actions;
+extern EnumArray<std::string_view, 19> action_shortcuts;
+extern EnumArray<std::string_view, 19> doing_action;
+extern EnumArray<std::string_view, 19> did_action;
+extern EnumArray<std::string_view, 19> action_descriptions;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
@@ -226,73 +227,8 @@ public:
     TerminalSize() = default;
 };
 
-static std::string formatMessage(const std::string_view& str, bool colorful = !no_color) {
-    std::string temp(str); // a string to do scratch work on
-    auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
-        for (size_t i = 0; (i = temp.find(str, i)) != std::string::npos; i += with.length())
-            temp.replace(i, str.length(), with);
-    };
-    for (const auto& key : colors) // iterate over all the possible colors to replace
-        replaceThis(key.first, colorful ? key.second : "");
-    if (no_emoji) {
-        replaceThis("✅", "✓");
-        replaceThis("❌", "✗");
-        replaceThis("💡", "•");
-        replaceThis("🔷", "•");
-    }
-    return temp;
-}
-
-static std::string JSONescape(const std::string_view& input) {
-    std::string temp(input);
-
-    for (size_t i = 0; i < temp.size(); i++) {
-        switch (temp[i]) {
-        case '"':
-            temp.replace(i, 1, "\\\"");
-            i++;
-            break;
-        case '\\':
-            temp.replace(i, 1, "\\\\");
-            i++;
-            break;
-        case '/':
-            temp.replace(i, 1, "\\/");
-            i++;
-            break;
-        case '\b':
-            temp.replace(i, 1, "\\b");
-            i++;
-            break;
-        case '\f':
-            temp.replace(i, 1, "\\f");
-            i++;
-            break;
-        case '\n':
-            temp.replace(i, 1, "\\n");
-            i++;
-            break;
-        case '\r':
-            temp.replace(i, 1, "\\r");
-            i++;
-            break;
-        case '\t':
-            temp.replace(i, 1, "\\t");
-            i++;
-            break;
-        default:
-            if (temp[i] < 32) {
-                std::stringstream ss;
-                ss << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (int)temp[i];
-                temp.replace(i, 1, ss.str());
-                i += 5;
-            }
-            break;
-        }
-    }
-
-    return temp;
-}
+std::string JSONescape(const std::string_view& input);
+std::string formatMessage(const std::string_view& str, bool colorful = !no_color);
 
 class Clipboard {
     fs::path root;
@@ -394,6 +330,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+std::optional<Action> getActionByFunction(std::function<bool(Action)> func);
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
@@ -520,4 +457,5 @@ void statusJSON();
 void history();
 void historyJSON();
 void search();
+void menu();
 } // namespace PerformAction

@@ -14,12 +14,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-EnumArray<std::string_view, 18> actions =
-        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "history", "ignore", "search"};
+EnumArray<std::string_view, 19> actions =
+        {"cut", "copy", "paste", "clear", "show", "edit", "add", "remove", "note", "swap", "status", "info", "load", "import", "export", "history", "ignore", "search", "menu"};
 
-EnumArray<std::string_view, 18> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig", "sr"};
+EnumArray<std::string_view, 19> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig", "sr", "mn"};
 
-EnumArray<std::string_view, 18> doing_action = {
+EnumArray<std::string_view, 19> doing_action = {
         "Cutting",
         "Copying",
         "Pasting",
@@ -37,9 +37,10 @@ EnumArray<std::string_view, 18> doing_action = {
         "Exporting",
         "Getting history",
         "Ignoring",
-        "Searching"};
+        "Searching",
+        "Opening menu"};
 
-EnumArray<std::string_view, 18> did_action = {
+EnumArray<std::string_view, 19> did_action = {
         "Cut",
         "Copied",
         "Pasted",
@@ -57,7 +58,29 @@ EnumArray<std::string_view, 18> did_action = {
         "Exported",
         "Got history",
         "Ignored",
-        "Searched"};
+        "Searched",
+        "Opened menu"};
+
+EnumArray<std::string_view, 19> action_descriptions = {
+        "Cut items into a clipboard.",
+        "Copy items into a clipboard.",
+        "Paste items from a clipboard.",
+        "Clear a clipboard.",
+        "Show the contents of a clipboard.",
+        "Edit the contents of a clipboard.",
+        "Add items to a clipboard.",
+        "Remove items from a clipboard.",
+        "Add a note to a clipboard.",
+        "Swap the contents of multiple clipboards.",
+        "Check the status of a clipboard.",
+        "Show info about a clipboard.",
+        "Load a clipboard into another clipboard.",
+        "Import a clipboard from a file.",
+        "Export a clipboard to a file.",
+        "Show the history of a clipboard.",
+        "Ignore types of content in a clipboard.",
+        "Search for items in a clipboard.",
+        "Open the interactive menu."};
 
 Message help_message = "[info]│This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]│Examples[blank]\n"
