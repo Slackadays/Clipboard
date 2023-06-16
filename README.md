@@ -63,6 +63,12 @@ Don't just take my word for it!
 
 <br>
 
+<i>...Thank you again for <b>this great application!</b></i>
+
+\- kohane27 on GitHub.com
+
+<br>
+
 ![CB Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
 <p align="center" id="dummy">
