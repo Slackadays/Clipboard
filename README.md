@@ -63,6 +63,12 @@ Don't just take my word for it!
 
 <br>
 
+<i>BTW, really LOVE this project. Its [sic] <b>so unbelievable it isn't already in Linux.</b></i>
+
+\- AtomicRobotMan0101 on GitHub.com
+
+<br>
+
 <i>...Thank you again for <b>this great application!</b></i>
 
 \- kohane27 on GitHub.com
