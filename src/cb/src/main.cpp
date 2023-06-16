@@ -28,9 +28,9 @@ int main(int argc, char* argv[]) {
 
         setFlags();
 
-        setFilepaths();
-
         startIndicator();
+
+        setFilepaths();
 
         action = getAction();
 

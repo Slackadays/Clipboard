@@ -41,9 +41,9 @@ void setupIndicator() {
 
     makeTerminalRaw();
 
-    fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data()); // set the terminal title
-    fprintf(stderr, "\033[?25l");                                              // hide the cursor
-    if (is_tty.out) printf("\033[?1004h");                                     // enable focus tracking
+    fprintf(stderr, "\033]0;%s - Clipboard\007", "Setting up"); // set the terminal title
+    fprintf(stderr, "\033[?25l");                               // hide the cursor
+    if (is_tty.out) printf("\033[?1004h");                      // enable focus tracking
     fflush(stdout);
     fflush(stderr);
 
@@ -54,6 +54,7 @@ void setupIndicator() {
     auto start = std::chrono::steady_clock::now();
 
     int step = 0;
+
     auto poll_focus = [&] {
         std::array<char, 32> buf;
 #if defined(_WIN32) || defined(_WIN64)
@@ -66,7 +67,8 @@ void setupIndicator() {
             if (buf.at(0) == '\033' && buf.at(1) == '[' && buf.at(2) == 'O') hasFocus = false;
         }
     };
-    auto display_progress = [&](const auto& formattedNum) {
+
+    auto display_progress = [&](const auto& formattedNum, const std::string_view& actionText = doing_action[action]) {
         std::string progressBar;
         if (step < 40) {
             for (int i = 0; i < step; i++)
@@ -80,22 +82,30 @@ void setupIndicator() {
                 progressBar += "█";
         }
         std::string formattedSeconds = std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count()) + "s";
-        fprintf(stderr, working_message().data(), doing_action[action].data(), formattedNum, formattedSeconds.data(), progressBar.data());
+        fprintf(stderr, working_message().data(), actionText.data(), formattedNum, formattedSeconds.data(), progressBar.data());
         fflush(stderr);
         cv.wait_for(lock, std::chrono::milliseconds(17), [&] { return progress_state != IndicatorState::Active; });
     };
+
+    while (clipboard_state == ClipboardState::Setup && progress_state == IndicatorState::Active) {
+        display_progress("", "Setting up");
+        step == 79 ? step = 0 : step++;
+    }
+
     auto itemsToProcess = [&] {
         return std::distance(fs::directory_iterator(path.data), fs::directory_iterator());
     };
-    while (clipboard_state == ClipboardState::Setup && progress_state == IndicatorState::Active) {
-        display_progress("");
-        step == 79 ? step = 0 : step++;
-    }
+
+    fprintf(stderr, "\033]0;%s - Clipboard\007", doing_action[action].data());
+
     static size_t items_size = action_is_one_of(Action::Cut, Action::Copy) ? copying.items.size() : itemsToProcess();
+
     if (items_size == 0) items_size++;
+
     auto percent_done = [&] {
         return std::to_string(((successes.files + successes.directories + copying.failedItems.size()) * 100) / items_size) + "%";
     };
+
     while (clipboard_state == ClipboardState::Action && progress_state == IndicatorState::Active) {
         if (io_type == IOType::File)
             display_progress(percent_done().data());
@@ -113,6 +123,7 @@ void setupIndicator() {
     fflush(stderr);
     if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
     fflush(stdout);
+
     if (!hasFocus && clipboard_state != ClipboardState::Error) {
         std::valarray<short> samples(success_pcm_len / 2);
         std::generate(std::begin(samples), std::end(samples), [i = 0]() mutable { return static_cast<short>(success_pcm[i++] | (success_pcm[i++] << 8)); });
@@ -122,6 +133,7 @@ void setupIndicator() {
         std::generate(std::begin(samples), std::end(samples), [i = 0]() mutable { return static_cast<short>(error_pcm[i++] | (error_pcm[i++] << 8)); });
         if (!playAsyncSoundEffect(samples)) printf("\007");
     }
+
     fflush(stdout);
 
     makeTerminalNormal();
@@ -142,6 +154,7 @@ void setupIndicator() {
         path.releaseLock();
         _exit(EXIT_FAILURE);
     }
+
     fflush(stderr);
 }
 
