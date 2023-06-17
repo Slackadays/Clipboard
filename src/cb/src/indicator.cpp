@@ -122,11 +122,11 @@ void setupIndicator() {
     if (is_tty.out) printf("\033[?1004l"); // disable focus tracking
     fflush(stdout);
 
-    if (!hasFocus && clipboard_state != ClipboardState::Error) {
+    if (!hasFocus && clipboard_state != ClipboardState::Error && !getenv("CLIPBOARD_NOAUDIO")) {
         std::valarray<short> samples(success_pcm_len / 2);
         std::generate(std::begin(samples), std::end(samples), [i = 0]() mutable { return static_cast<short>(success_pcm[i++] | (success_pcm[i++] << 8)); });
         if (!playAsyncSoundEffect(samples)) printf("\007");
-    } else if (clipboard_state == ClipboardState::Error) {
+    } else if (clipboard_state == ClipboardState::Error && !getenv("CLIPBOARD_NOAUDIO")) {
         std::valarray<short> samples(error_pcm_len / 2);
         std::generate(std::begin(samples), std::end(samples), [i = 0]() mutable { return static_cast<short>(error_pcm[i++] | (error_pcm[i++] << 8)); });
         if (!playAsyncSoundEffect(samples)) printf("\007");

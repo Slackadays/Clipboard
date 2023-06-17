@@ -2,7 +2,7 @@
 Name=Clipboard
 Icon=app.getclipboard.Clipboard
 GenericName=Clipboard Manager
-Exec=bash -c "while true; do cb hs; cb; echo -n -e '\033[?25l'; sleep 5; clear; done"
+Exec=bash -c "export CLIPBOARD_NOAUDIO=1; while true; do cb hs; cb; echo -n -e '\033[?25l'; sleep 4; clear; done"
 Type=Application
 Terminal=true
 Categories=Utility;Office;Development

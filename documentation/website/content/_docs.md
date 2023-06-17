@@ -1096,6 +1096,19 @@ $ cb copy Foo Bar Baz
 
 <br>
 
+<details><summary> &ensp; <b><code>CLIPBOARD_NOAUDIO</code></b> &emsp; Set this to anything to disable audio coming from CB.</summary>
+
+<br>
+
+Turn off those sound effects.
+```sh
+$ export CLIPBOARD_NOAUDIO=1
+$ cb ffksdjfdj 
+# No more error sounds after doing a nonexistent command
+```
+
+</details>
+
 <details><summary> &ensp; <b><code>CLIPBOARD_NOEMOJI</code></b> &emsp; Set this to anything to strip emojis from CB's messages.</summary>
 
 <br>
