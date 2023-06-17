@@ -552,14 +552,27 @@ void setFlags() {
             clipboard_entry = std::stoul(flag);
         } catch (...) {}
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
-        auto tempActions = actions;
-        std::sort(tempActions.begin(), tempActions.end());
+        auto longestAction = std::max_element(actions.begin(), actions.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
+        auto longestActionShortcut = std::max_element(action_shortcuts.begin(), action_shortcuts.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
+        auto generatedSpaces = [](const int& length) {
+            std::string spaces;
+            for (int i = 0; i < length; i++)
+                spaces += " ";
+            return spaces;
+        };
         std::string actionsList;
-        for (int i = 0; i < tempActions.size(); i++) {
-            actionsList.append(tempActions.at(i));
-            if (i != tempActions.size() - 1) actionsList.append(", ");
+        for (int i = 0; i < actions.size(); i++) {
+            actionsList.append("[progress]│ ")
+                    .append(generatedSpaces(longestAction - actions.at(i).size()))
+                    .append(actions.at(i))
+                    .append(", ")
+                    .append(generatedSpaces(longestActionShortcut - action_shortcuts[static_cast<Action>(i)].size()))
+                    .append(action_shortcuts[static_cast<Action>(i)])
+                    .append("│ [help]")
+                    .append(action_descriptions[static_cast<Action>(i)])
+                    .append("[blank]\n");
         }
-        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), actionsList.data());
+        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), formatMessage(actionsList).data());
         exit(EXIT_SUCCESS);
     }
     if (auto pos = std::find_if(arguments.begin(), arguments.end(), [](const auto& entry) { return entry == "--"; }); pos != arguments.end()) arguments.erase(pos);
