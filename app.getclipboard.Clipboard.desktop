@@ -2,7 +2,7 @@
 Name=Clipboard
 Icon=app.getclipboard.Clipboard
 GenericName=Clipboard Manager
-Exec=cb
+Exec=sh -c "while true; do cb; sleep 3; clear; done"
 Type=Application
 Terminal=true
 Categories=Utility;Office;Development
