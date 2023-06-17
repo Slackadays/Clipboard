@@ -493,18 +493,14 @@ template <typename T>
         return false;
 }
 
-std::optional<Action> getActionByFunction(std::function<bool(Action)> func) {
-    using enum Action;
-    for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Menu})
-        if (func(entry)) return entry;
-    return std::nullopt;
-}
-
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        auto action = getActionByFunction([](const Action& action) { return flagIsPresent<bool>(actions[action], "--") || flagIsPresent<bool>(action_shortcuts[action], "--"); });
-        if (action.has_value()) return action.value();
+        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search}) {
+            if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "--")) {
+                return entry;
+            }
+        }
         clipboard_state = ClipboardState::Error;
         stopIndicator();
         printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data(), clipboard_invocation.data());
@@ -523,7 +519,7 @@ IOType getIOType() {
     if (action_is_one_of(Cut, Copy, Add)) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in && copying.items.empty()) return Pipe;
-    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History, Menu)) {
+    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History)) {
         if (!is_tty.out) return Pipe;
         return Text;
     } else if (action_is_one_of(Remove, Note, Ignore, Swap, Load, Import, Export, Search)) {
@@ -715,8 +711,6 @@ void performAction() {
             history();
         else if (action == Search)
             search();
-        else if (action == Menu)
-            menu();
     }
 }
 

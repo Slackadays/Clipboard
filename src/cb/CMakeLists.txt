@@ -24,7 +24,6 @@ add_executable(cb
   src/actions/show.cpp
   src/actions/status.cpp
   src/actions/swap.cpp
-  src/actions/menu.cpp
 )
 
 enable_lto(cb)

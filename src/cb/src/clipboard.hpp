@@ -193,7 +193,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Menu };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search };
 
 extern Action action;
 
@@ -207,11 +207,11 @@ public:
     T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
 };
 
-extern EnumArray<std::string_view, 19> actions;
-extern EnumArray<std::string_view, 19> action_shortcuts;
-extern EnumArray<std::string_view, 19> doing_action;
-extern EnumArray<std::string_view, 19> did_action;
-extern EnumArray<std::string_view, 19> action_descriptions;
+extern EnumArray<std::string_view, 18> actions;
+extern EnumArray<std::string_view, 18> action_shortcuts;
+extern EnumArray<std::string_view, 18> doing_action;
+extern EnumArray<std::string_view, 18> did_action;
+extern EnumArray<std::string_view, 18> action_descriptions;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 7> colors;
 
@@ -330,7 +330,6 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
-std::optional<Action> getActionByFunction(std::function<bool(Action)> func);
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
@@ -457,5 +456,4 @@ void statusJSON();
 void history();
 void historyJSON();
 void search();
-void menu();
 } // namespace PerformAction
