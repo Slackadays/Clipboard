@@ -3,6 +3,7 @@ add_library(gui STATIC
   src/gui.cpp
   src/utils.cpp
   src/infermime.cpp
+  src/mimetoextension.cpp
 )
 target_include_directories(gui PUBLIC include/all)
 set_property(TARGET gui PROPERTY POSITION_INDEPENDENT_CODE ON)

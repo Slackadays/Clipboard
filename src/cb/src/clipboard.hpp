@@ -223,8 +223,7 @@ class TerminalSize {
 public:
     size_t rows = 0;
     size_t columns = 0;
-    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {std::max(1u, rows)}, columns {std::max(1u, columns)} {}
-    TerminalSize() = default;
+    TerminalSize(const unsigned int& rows, const unsigned int& columns) : rows {rows}, columns {columns} {}
 };
 
 std::string JSONescape(const std::string_view& input);

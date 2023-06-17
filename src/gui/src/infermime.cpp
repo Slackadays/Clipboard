@@ -24,11 +24,26 @@ std::optional<std::string_view> inferMIMEType(const std::string_view& content) {
         return content.substr(0 + offset, pattern.size() + offset) == pattern;
     };
 
+    // revit project
+    if (beginning_matches("\x00\x00\x00\x00\x00\x00\x00\x00"sv, 512)) return "application/x-revit";
+
     // jpeg xl
     if (beginning_matches("\x00\x00\x00\x0C\x4A\x58\x4C\x20\x0D\x0A\x87\x0A"sv)) return "image/jxl";
 
+    // tbi
+    if (beginning_matches("\x00\x00\x00\x14\x00\x00\x00"sv)) return "application/x-tbi";
+
+    // heic
+    if (beginning_matches("\x00\x00\x00\x20\x66\x74\x79\x70\x68\x65\x69\x63"sv)) return "image/heic";
+
+    // bitcoin core
+    if (beginning_matches("\x00\x00\x00\x00\x62\x31\x05\x00\x09\x00\x00\x00\x00\x20\x00\x00\x00\x09\x00\x00\x00\x00\x00"sv, 8)) return "application/x-bitcoin-core";
+
     // xml
     if (beginning_matches("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"sv)) return "text/xml";
+
+    // svg
+    if (beginning_matches("<svg"sv)) return "image/svg+xml";
 
     // ico
     if (beginning_matches("\x00\x00\x01\x00"sv)) return "image/x-icon";
@@ -85,7 +100,7 @@ std::optional<std::string_view> inferMIMEType(const std::string_view& content) {
     if (beginning_matches("\x02\x64\x73\x73"sv)) return "audio/dss";
 
     // deb
-    if (beginning_matches("\x21\x3C\x61\x72\x63\x68\x3E\x0A"sv)) return "application/x-deb";
+    if (beginning_matches("\x21\x3C\x61\x72\x63\x68\x3E\x0A"sv)) return "application/vnd.debian.binary-package";
 
     // postscript
     if (beginning_matches("\x25\x21\x50\x53"sv)) return "application/postscript";
@@ -129,6 +144,9 @@ std::optional<std::string_view> inferMIMEType(const std::string_view& content) {
 
     // webp
     if (beginning_matches("RIFF\x00\x00\x00\x00WEBPVP8 "sv)) return "image/webp";
+
+    // webm
+    if (beginning_matches("\x1A\x45\xDF\xA3"sv)) return "video/webm";
 
     // bmp
     if (beginning_matches("BM"sv)) return "image/bmp";
@@ -195,6 +213,12 @@ std::optional<std::string_view> inferMIMEType(const std::string_view& content) {
 
     // icc profile
     if (beginning_matches("KCMS"sv)) return "application/vnd.iccprofile";
+
+    // odt
+    if (beginning_matches("\x50\x4B\x03\x04\x14"sv)) return "application/vnd.oasis.opendocument.text";
+
+    // java jar
+    if (beginning_matches("\x50\x4B\x03\x04\x14\x00\x08\x00\x08\x00"sv)) return "application/java-archive";
 
     return std::nullopt;
 }

@@ -80,3 +80,4 @@ struct WriteGuiContext {
 };
 
 extern std::optional<std::string_view> inferMIMEType(const std::string_view& content);
+extern std::optional<std::string_view> MIMETypeToExtension(const std::string_view& type);

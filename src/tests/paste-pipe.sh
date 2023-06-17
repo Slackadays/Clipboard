@@ -8,4 +8,4 @@ export CLIPBOARD_FORCETTY=1
 
 cb paste
 
-item_exists rawdata.clipboard
+item_exists clipboard0-0.txt

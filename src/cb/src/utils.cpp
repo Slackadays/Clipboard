@@ -116,7 +116,7 @@ UINT old_code_page;
 #endif
 
 TerminalSize thisTerminalSize() {
-    static TerminalSize temp;
+    static TerminalSize temp(0, 0);
     if (temp.rows != 0 && temp.columns != 0) return temp;
 #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;

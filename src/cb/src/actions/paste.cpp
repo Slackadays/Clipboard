@@ -27,7 +27,13 @@ void paste() {
     }
 
     for (const auto& entry : fs::directory_iterator(path.data)) {
-        auto target = fs::current_path() / entry.path().filename();
+        auto target = [&] {
+            if (path.holdsRawDataInCurrentEntry())
+                return (fs::current_path() / ("clipboard" + clipboard_name + "-" + std::to_string(clipboard_entry)))
+                        .replace_extension(MIMETypeToExtension(inferMIMEType(fileContents(path.data.raw)).value_or("text/plain")).value_or(".txt"));
+            else
+                return fs::current_path() / entry.path().filename();
+        }();
         auto pasteItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
             if (!(fs::exists(target) && fs::equivalent(entry, target))) {
                 fs::copy(entry, target, use_regular_copy || entry.is_directory() ? copying.opts : copying.opts | fs::copy_options::create_hard_links);
@@ -49,7 +55,7 @@ void paste() {
                     break;
                 default:
                     stopIndicator();
-                    copying.policy = userDecision(entry.path().filename().string());
+                    copying.policy = userDecision(target.filename().string());
                     startIndicator();
                     if (copying.policy == ReplaceOnce || copying.policy == ReplaceAll) {
                         pasteItem();
