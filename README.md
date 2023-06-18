@@ -8,11 +8,15 @@
 
 <img src="documentation/readme-assets/ProductivityTools.png" alt="The fully-featured yet oh-so-easy-to-use clipboard manager for everyone." />
 
+<br>
+
 The Clipboard Project is a fast and lightweight, feature packed, and user friendly tool that lets you do more on the computer in _style_. Seriously.
 
 Say hello to one of the most cutting-edge clipboard managers ever. Save time and effort easier than ever before.
 
 Don't just take my word for it!
+
+<br>
 
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=35px>
 
