@@ -24,7 +24,7 @@ Don't just take my word for it!
 - Infinite numbers of clipboards with unlimited capacity AND history each,
 - Seamless integration with your [existing clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
-- Superb scriptability to automate your workflows in a cinch, 
+- A superbly scriptable API to automate your workflows in a cinch, 
 - Gorgeous <img src="documentation/readme-assets/eyecandy.svg" height="16px" alt="eye candy"/> and ear candy for your viewing and listening pleasure,
 - Documentation you'll actually want to read <sub>(all in this readme)</sub>
 - And oodles more!
