@@ -33,11 +33,11 @@ void noteText() {
         if (fs::is_regular_file(path.metadata.notes)) {
             std::string content(fileContents(path.metadata.notes));
             if (is_tty.out)
-                printf(formatMessage("[info]🔷 Note for this clipboard: %s\n").data(), content.data());
+                printf(formatMessage("[info]│ Note for this clipboard: %s\n").data(), content.data());
             else
                 printf(formatMessage("%s").data(), content.data());
         } else {
-            fprintf(stderr, "%s", formatMessage("[info]🔷 There is no note for this clipboard.[blank]\n").data());
+            fprintf(stderr, "%s", formatMessage("[info]│ There is no note for this clipboard.[blank]\n").data());
         }
     } else
         error_exit("%s", formatMessage("[error]❌ You can't add multiple items to a note. 💡 [blank][help]Try providing a single piece of text instead.[blank]\n"));

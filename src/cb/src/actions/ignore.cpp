@@ -28,7 +28,8 @@ void ignoreRegex() {
             std::vector<std::string> ignorePatterns(fileLines(path.metadata.ignore));
 
             if (is_tty.out) {
-                fprintf(stderr, "%s", formatMessage("[info]🔷 Ignore patterns for this clipboard: [help]").data());
+                stopIndicator();
+                fprintf(stderr, "%s", formatMessage("[info]│ Ignore patterns for this clipboard: [help]").data());
                 for (const auto& pattern : ignorePatterns)
                     fprintf(stderr, "%s%s", pattern.data(), pattern != ignorePatterns.back() ? ", " : "");
                 fprintf(stderr, "%s", formatMessage("[blank]\n").data());
@@ -37,7 +38,8 @@ void ignoreRegex() {
                     printf("%s%s", pattern.data(), pattern != ignorePatterns.back() ? ", " : "");
             }
         } else {
-            fprintf(stderr, "%s", formatMessage("[info]🔷 There are no ignore patterns for this clipboard.[blank]\n").data());
+            stopIndicator();
+            fprintf(stderr, "%s", formatMessage("[info]│ There are no ignore patterns for this clipboard.[blank]\n").data());
         }
         return;
     }

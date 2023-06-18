@@ -143,7 +143,6 @@ std::string formatMessage(const std::string_view& str, bool colorful) {
         replaceThis("✅", "✓");
         replaceThis("❌", "✗");
         replaceThis("💡", "•");
-        replaceThis("🔷", "•");
     }
     return temp;
 }
