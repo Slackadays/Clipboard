@@ -329,6 +329,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
@@ -389,6 +390,7 @@ extern Message clipboard_text_contents_message;
 extern Message no_clipboard_contents_message;
 extern Message clipboard_action_prompt;
 extern Message no_valid_action_message;
+extern Message no_valid_action_with_candidate_message;
 extern Message choose_action_items_message;
 extern Message fix_redirection_action_message;
 extern Message redirection_no_items_message;

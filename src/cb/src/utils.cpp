@@ -131,6 +131,32 @@ TerminalSize thisTerminalSize() {
     return TerminalSize(80, 24);
 }
 
+unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two) {
+    if (one == two) return 0;
+
+    if (one.empty()) return two.size();
+    if (two.empty()) return one.size();
+
+    std::vector<std::vector<size_t>> matrix(one.size() + 1, std::vector<size_t>(two.size() + 1));
+
+    for (size_t i = 0; i <= one.size(); i++)
+        matrix.at(i).at(0) = i;
+
+    for (size_t j = 0; j <= two.size(); j++)
+        matrix.at(0).at(j) = j;
+
+    for (size_t i = 1; i <= one.size(); i++) {
+        for (size_t j = 1; j <= two.size(); j++) {
+            if (one.at(i - 1) == two.at(j - 1))
+                matrix.at(i).at(j) = matrix.at(i - 1).at(j - 1);
+            else
+                matrix.at(i).at(j) = std::min({matrix.at(i - 1).at(j - 1), matrix.at(i - 1).at(j), matrix.at(i).at(j - 1)}) + 1;
+        }
+    }
+
+    return matrix.at(one.size()).at(two.size());
+};
+
 std::string formatMessage(const std::string_view& str, bool colorful) {
     std::string temp(str); // a string to do scratch work on
     auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
@@ -500,9 +526,22 @@ Action getAction() {
                 return entry;
             }
         }
+        auto possible_action = arguments.at(0);
+        auto lowest_distance_action =
+                *(std::min_element(actions.begin(), actions.end(), [&](const auto& a, const auto& b) { return levenshteinDistance(possible_action, a) < levenshteinDistance(possible_action, b); }));
+        auto lowest_distance_for_action = levenshteinDistance(possible_action, lowest_distance_action);
+        auto lowest_distance_shortcut = *(std::min_element(action_shortcuts.begin(), action_shortcuts.end(), [&](const auto& a, const auto& b) {
+            return levenshteinDistance(possible_action, a) < levenshteinDistance(possible_action, b);
+        }));
+        auto lowest_distance_for_shortcut = levenshteinDistance(possible_action, lowest_distance_shortcut);
+        auto lowest_distance = std::min(lowest_distance_for_action, lowest_distance_for_shortcut);
+        auto lowest_distance_candidate = lowest_distance_for_action < lowest_distance_for_shortcut ? lowest_distance_action : lowest_distance_shortcut;
         clipboard_state = ClipboardState::Error;
         stopIndicator();
-        printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data(), clipboard_invocation.data());
+        if (lowest_distance <= 2)
+            printf(no_valid_action_with_candidate_message().data(), arguments.at(0).data(), clipboard_invocation.data(), lowest_distance_candidate.data());
+        else
+            printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);
     } else if (!is_tty.in) {
         return Copy;

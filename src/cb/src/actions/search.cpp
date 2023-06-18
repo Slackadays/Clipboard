@@ -45,32 +45,6 @@ void search() {
     } else
         targets.emplace_back(path);
 
-    auto levenshteinDistance = [](const std::string_view& one, const std::string_view& two) -> unsigned long {
-        if (one == two) return 0;
-
-        if (one.empty()) return two.size();
-        if (two.empty()) return one.size();
-
-        std::vector<std::vector<size_t>> matrix(one.size() + 1, std::vector<size_t>(two.size() + 1));
-
-        for (size_t i = 0; i <= one.size(); i++)
-            matrix.at(i).at(0) = i;
-
-        for (size_t j = 0; j <= two.size(); j++)
-            matrix.at(0).at(j) = j;
-
-        for (size_t i = 1; i <= one.size(); i++) {
-            for (size_t j = 1; j <= two.size(); j++) {
-                if (one.at(i - 1) == two.at(j - 1))
-                    matrix.at(i).at(j) = matrix.at(i - 1).at(j - 1);
-                else
-                    matrix.at(i).at(j) = std::min({matrix.at(i - 1).at(j - 1), matrix.at(i - 1).at(j), matrix.at(i).at(j - 1)}) + 1;
-            }
-        }
-
-        return matrix.at(one.size()).at(two.size());
-    };
-
     // std::cerr << "distance between foo and fobobar is " << levenshteinDistance("foo", "fobobar") << std::endl;
 
     // exit(0);

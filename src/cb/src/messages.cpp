@@ -109,6 +109,8 @@ Message clipboard_action_prompt = "[help]│ Add [bold]cut, copy, [blank][help]o
 Message no_valid_action_message = "[error]❌ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
                                   "to include one. 💡 [help]Try using or adding [bold]cut, copy, [blank][help]or "
                                   "[bold]paste[blank][help] instead, like [bold]%s copy,[blank][help] or do the [bold]help[blank][help] action for a complete list of them.[blank]\n";
+Message no_valid_action_with_candidate_message = "[error]❌ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
+                                                 "to include one. 💡 [help]Did you mean [bold]%s %s[blank][help] instead?[blank]\n";
 Message choose_action_items_message = "[error]❌ You need to choose something to %s.[help] 💡 Try adding the items you want "
                                       "to %s to the end, like [bold]%s %s contacts.txt myprogram.cpp[blank]\n";
 Message fix_redirection_action_message = "[error]❌ You can't use the [bold]%s[blank][error] action with redirection here. 💡 [help]Try removing "
