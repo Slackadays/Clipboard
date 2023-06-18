@@ -207,15 +207,19 @@ First, get the latest revision of the Clipboard Project [from GitHub Actions](ht
 
 Then, unpack what you just downloaded to a nice place anywhere on your system.
 
-If you downloaded the Flatpak, then do `flatpak install what-you-downloaded.flatpak` and you're done. If not, then keep reading.
+If you downloaded the Flatpak, now do `flatpak install what-you-downloaded.flatpak`.
 
 Finally, add CB to your PATH (so that you can run it anywhere) by doing one of the following:
 
 ```sh
-# For all platforms except Windows
+# For all platforms except Windows and Flatpak
 $ export PATH=$PATH:/where/you/unpacked/cb
 # Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
 # To get the current path (in case you don't know it), do the "pwd" command.
+
+# For Flatpak
+$ alias cb='flatpak run app.getclipboard.Clipboard'
+# Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
 
 # For Windows PowerShell
 > $Env:PATH += ";C:\where\you\unpacked\cb"
