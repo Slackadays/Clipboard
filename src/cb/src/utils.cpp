@@ -535,7 +535,7 @@ Action getAction() {
         }));
         auto lowest_distance_for_shortcut = levenshteinDistance(possible_action, lowest_distance_shortcut);
         auto lowest_distance = std::min(lowest_distance_for_action, lowest_distance_for_shortcut);
-        auto lowest_distance_candidate = lowest_distance_for_action < lowest_distance_for_shortcut ? lowest_distance_action : lowest_distance_shortcut;
+        auto lowest_distance_candidate = lowest_distance_for_shortcut < lowest_distance_for_action ? lowest_distance_shortcut : lowest_distance_action;
         clipboard_state = ClipboardState::Error;
         stopIndicator();
         if (lowest_distance <= 2)
