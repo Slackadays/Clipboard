@@ -13,6 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
+#include <fstream>
 
 namespace PerformAction {
 
@@ -21,7 +22,7 @@ void edit() {
         if (path.holdsDataInCurrentEntry())
             error_exit("%s", formatMessage("[error]❌ You can currently only edit text content. 💡 [help]Try copying some text instead.[blank]\n"));
         else
-            error_exit("%s", formatMessage("[error]❌ You can't edit an empty clipboard. 💡 [help]Try copying some text instead.[blank]\n"));
+            std::ofstream temp(path.data.raw);
     }
 
     auto preferredEditor = []() -> std::optional<std::string> {
@@ -33,14 +34,13 @@ void edit() {
     };
 
     auto fallbackEditor = []() -> std::optional<std::string> {
-        constexpr std::array fallbacks {"nano", "vim", "nvim", "micro", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
+        constexpr std::array fallbacks {"nano", "vim", "nvim", "micro", "code", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
 
         std::string pathContent(getenv("PATH"));
         std::vector<fs::path> paths;
 
         // split paths by : or ; (: for posix, ; for windows)
-        std::regex regex("[:;]");
-        auto strings = regexSplit(pathContent, regex);
+        auto strings = regexSplit(pathContent, std::regex("[:;]"));
         std::transform(strings.begin(), strings.end(), std::back_inserter(paths), [](const std::string& path) { return fs::path(path); });
 
         for (const auto& path : paths)
