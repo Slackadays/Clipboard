@@ -176,69 +176,78 @@ bool Clipboard::holdsData() {
 
 void Clipboard::trimHistoryEntries() {
     if (maximumHistorySize.empty()) return;
-    unsigned long maximumBytes = 0;
-    unsigned long maximumMinutes = 0;
+    auto settings = regexSplit(maximumHistorySize, std::regex("\\s+"));
+    unsigned long long maximumBytes = 0;
+    unsigned long maximumSeconds = 0;
     unsigned long maximumEntries = 0;
-    try {
-        std::string lastTwoChars(maximumHistorySize.end() - 2, maximumHistorySize.end());
-        std::transform(lastTwoChars.begin(), lastTwoChars.end(), lastTwoChars.begin(), ::tolower);
-        if (lastTwoChars == "tb")
-            maximumBytes = std::stoul(maximumHistorySize) * 1024 * 1024 * 1024 * 1024;
-        else if (lastTwoChars == "gb")
-            maximumBytes = std::stoul(maximumHistorySize) * 1024 * 1024 * 1024;
-        else if (lastTwoChars == "mb")
-            maximumBytes = std::stoul(maximumHistorySize) * 1024 * 1024;
-        else if (lastTwoChars == "kb")
-            maximumBytes = std::stoul(maximumHistorySize) * 1024;
-        else if (lastTwoChars.at(1) == 'b')
-            maximumBytes = std::stoul(maximumHistorySize);
-        else if (lastTwoChars.at(1) == 'y')
-            maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24 * 365;
-        else if (lastTwoChars.at(1) == 'm')
-            maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24 * 30;
-        else if (lastTwoChars.at(1) == 'w')
-            maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24 * 7;
-        else if (lastTwoChars.at(1) == 'd')
-            maximumMinutes = std::stoul(maximumHistorySize) * 60 * 24;
-        else if (lastTwoChars.at(1) == 'h')
-            maximumMinutes = std::stoul(maximumHistorySize) * 60;
-        else
-            maximumEntries = std::stoul(maximumHistorySize);
+    for (const auto& setting : settings) {
+        try {
+            std::string lastTwoChars(setting.end() - 2, setting.end());
+            std::transform(lastTwoChars.begin(), lastTwoChars.end(), lastTwoChars.begin(), ::tolower);
+            if (lastTwoChars == "tb")
+                maximumBytes = std::stold(setting) * 1024.0 * 1024.0 * 1024.0 * 1024.0;
+            else if (lastTwoChars == "gb")
+                maximumBytes = std::stold(setting) * 1024.0 * 1024.0 * 1024.0;
+            else if (lastTwoChars == "mb")
+                maximumBytes = std::stold(setting) * 1024.0 * 1024.0;
+            else if (lastTwoChars == "kb")
+                maximumBytes = std::stold(setting) * 1024.0;
+            else if (lastTwoChars.at(1) == 'b')
+                maximumBytes = std::stoull(setting);
+            else if (lastTwoChars.at(1) == 'y')
+                maximumSeconds = std::stold(setting) * 60.0 * 60.0 * 24.0 * 365.0;
+            else if (lastTwoChars.at(1) == 'm')
+                maximumSeconds = std::stold(setting) * 60.0 * 60.0 * 24.0 * 30.0;
+            else if (lastTwoChars.at(1) == 'w')
+                maximumSeconds = std::stold(setting) * 60.0 * 60.0 * 24.0 * 7.0;
+            else if (lastTwoChars.at(1) == 'd')
+                maximumSeconds = std::stold(setting) * 60.0 * 60.0 * 24.0;
+            else if (lastTwoChars.at(1) == 'h')
+                maximumSeconds = std::stold(setting) * 60.0 * 60.0;
+            else if (lastTwoChars.at(1) == 's')
+                maximumSeconds = std::stoul(setting);
+            else
+                maximumEntries = std::stoul(setting);
+        } catch (...) {}
+    }
 
-        if (maximumBytes > 0) {
-            size_t startingClipboardSize = totalDirectorySize(root);
+    // std::cout << "maximumBytes = " << maximumBytes << std::endl;
+    // std::cout << "maximumSeconds = " << maximumSeconds << std::endl;
+    // std::cout << "maximumEntries = " << maximumEntries << std::endl;
 
-            while (startingClipboardSize > maximumBytes) {
-                auto oldestPath = entryPathFor(entryIndex.size() - 1);
-                size_t oldestEntrySize = totalDirectorySize(oldestPath);
-                fs::remove_all(oldestPath);
-                entryIndex.pop_back();
-                startingClipboardSize -= oldestEntrySize;
-            }
+    if (maximumBytes > 0) {
+        size_t startingClipboardSize = totalDirectorySize(root);
+
+        while (startingClipboardSize > maximumBytes) {
+            auto oldestPath = entryPathFor(entryIndex.size() - 1);
+            size_t oldestEntrySize = totalDirectorySize(oldestPath);
+            fs::remove_all(oldestPath);
+            entryIndex.pop_back();
+            startingClipboardSize -= oldestEntrySize;
         }
+    }
 
-        if (maximumMinutes > 0) {
-            auto now = std::chrono::system_clock::now();
+    if (maximumSeconds > 0) {
+        auto now = std::chrono::system_clock::now();
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-            struct stat info;
-            auto lastModified = [&](const fs::path path) {
-                if (stat(path.string().data(), &info) != 0) return now;
-                return std::chrono::system_clock::from_time_t(info.st_mtime);
-            };
+        struct stat info;
+        auto lastModified = [&](const fs::path path) {
+            if (stat(path.string().data(), &info) != 0) return now;
+            return std::chrono::system_clock::from_time_t(info.st_mtime);
+        };
 
-            while (lastModified(entryPathFor(entryIndex.size() - 1)) < now - std::chrono::minutes(maximumMinutes)) {
-                fs::remove_all(entryPathFor(entryIndex.size() - 1));
-                entryIndex.pop_back();
-            }
+        while (lastModified(entryPathFor(entryIndex.size() - 1)) < now - std::chrono::seconds(maximumSeconds)) {
+            fs::remove_all(entryPathFor(entryIndex.size() - 1));
+            entryIndex.pop_back();
+        }
 #endif
-        }
+    }
 
-        if (maximumEntries > 0) {
-            if (entryIndex.size() <= maximumEntries || maximumEntries == 0) return;
-            while (entryIndex.size() > maximumEntries) {
-                fs::remove_all(root / constants.data_directory / std::to_string(entryIndex.back()));
-                entryIndex.pop_back();
-            }
+    if (maximumEntries > 0) {
+        if (entryIndex.size() <= maximumEntries || maximumEntries == 0) return;
+        while (entryIndex.size() > maximumEntries) {
+            fs::remove_all(entryPathFor(entryIndex.size() - 1));
+            entryIndex.pop_back();
         }
-    } catch (...) {}
+    }
 }
