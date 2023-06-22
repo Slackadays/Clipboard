@@ -102,13 +102,14 @@ std::mutex m;
 std::atomic<ClipboardState> clipboard_state;
 std::atomic<IndicatorState> progress_state;
 
-std::array<std::pair<std::string_view, std::string_view>, 7> colors = {
+std::array<std::pair<std::string_view, std::string_view>, 8> colors = {
         {{"[error]", "\033[38;5;196m"},    // red
          {"[success]", "\033[38;5;40m"},   // green
          {"[progress]", "\033[38;5;214m"}, // yellow
          {"[info]", "\033[38;5;51m"},      // blue
          {"[help]", "\033[38;5;213m"},     // pink
          {"[bold]", "\033[1m"},
+         {"[nobold]", "\033[22m"},
          {"[blank]", "\033[0m"}}};
 
 #if defined(_WIN64) || defined(_WIN32)

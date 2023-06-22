@@ -23,6 +23,7 @@ void setTheme(const std::string& theme) {
                  {"[info]", "\033[38;5;20m"},
                  {"[help]", "\033[38;5;200m"},
                  {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "amber") {
         colors = {
@@ -32,6 +33,7 @@ void setTheme(const std::string& theme) {
                  {"[info]", "\033[38;5;222m"},
                  {"[help]", "\033[38;5;226m"},
                  {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "green") {
         colors = {
@@ -41,6 +43,7 @@ void setTheme(const std::string& theme) {
                  {"[info]", "\033[38;5;154m"},
                  {"[help]", "\033[38;5;46m"},
                  {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "darkhighcontrast") {
         colors = {
@@ -50,6 +53,7 @@ void setTheme(const std::string& theme) {
                  {"[info]", "\033[38;5;195m"},
                  {"[help]", "\033[38;5;225m"},
                  {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
                  {"[blank]", "\033[0m"}}};
     } else if (theme == "lighthighcontrast") {
         colors = {
@@ -59,6 +63,7 @@ void setTheme(const std::string& theme) {
                  {"[info]", "\033[38;5;18m"},
                  {"[help]", "\033[38;5;161m"},
                  {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
                  {"[blank]", "\033[0m"}}};
     }
 }

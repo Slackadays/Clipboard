@@ -118,8 +118,8 @@ void history() {
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
         batchedMessage += formatMessage(
-                "\n[info]\033[" + std::to_string(available.columns) + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[blank][info]│ [bold]"
-                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[blank][info]│ "
+                "\n[info]\033[" + std::to_string(available.columns) + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold]│ [bold]"
+                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold]│ "
         );
 
         if (path.holdsRawDataInCurrentEntry()) {

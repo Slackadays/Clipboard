@@ -55,12 +55,7 @@ void status() {
         clipboard.getLock();
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
-        fprintf(stderr,
-                formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[blank][info]│ [blank]").data(),
-                available.columns,
-                longestClipboardLength - clipboard.name().length(),
-                "",
-                clipboard.name().data());
+        fprintf(stderr, formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[nobold]│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
         if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));

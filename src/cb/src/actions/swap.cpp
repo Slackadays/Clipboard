@@ -20,7 +20,7 @@ void swap() {
     if (copying.items.size() > 1)
         error_exit(
                 formatMessage("[error]❌ You can only swap one clipboard at a time. [help]Try making sure there's only one other clipboard specified, like [bold]%s swap "
-                              "5[blank][help] or [bold]%s swap3 0[blank][help].[blank]\n"),
+                              "5[nobold] or [bold]%s swap3 0[nobold].[blank]\n"),
                 clipboard_invocation,
                 clipboard_invocation
         );
@@ -29,8 +29,8 @@ void swap() {
 
     if (destination_name == clipboard_name)
         error_exit(
-                formatMessage("[error]❌ You can't swap a clipboard with itself. [help]Try choosing a different clipboard to swap with, like [bold]%s swap 5[blank][help] or "
-                              "[bold]%s swap3 0[blank][help].[blank]\n"),
+                formatMessage("[error]❌ You can't swap a clipboard with itself. [help]Try choosing a different clipboard to swap with, like [bold]%s swap 5[nobold] or "
+                              "[bold]%s swap3 0[nobold].[blank]\n"),
                 clipboard_invocation,
                 clipboard_invocation
         );

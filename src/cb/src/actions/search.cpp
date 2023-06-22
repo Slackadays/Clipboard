@@ -18,7 +18,7 @@ namespace PerformAction {
 
 void search() {
     if (copying.items.empty())
-        error_exit("%s", formatMessage("[error]❌ You need to enter something to search for. 💡 [help]Try entering a search term after the action, like [bold]cb search Foobar[blank][help].[blank]\n"));
+        error_exit("%s", formatMessage("[error]❌ You need to enter something to search for. 💡 [help]Try entering a search term after the action, like [bold]cb search Foobar[nobold].[blank]\n"));
 
     std::vector<std::string> queries;
     std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(queries), [](const auto& item) { return item.string(); });
@@ -70,7 +70,7 @@ void search() {
         } catch (const std::regex_error& e) {
             error_exit(
                     formatMessage("[error]❌ CB couldn't process your query as regex. (Specific error: %s) 💡 [help]Try entering a valid regex instead, like [bold]cb search "
-                                  "\"Foobar.*\"[blank][help].[blank]\n"),
+                                  "\"Foobar.*\"[nobold].[blank]\n"),
                     std::string(e.what())
             );
         }
@@ -147,7 +147,7 @@ void search() {
 
     for (const auto& result : results) {
         fprintf(stderr,
-                formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[blank][info]│ [bold]%*s%lu[blank][info]│ [blank]").data(),
+                formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[nobold]│ [bold]%*s%lu[nobold]│ [blank]").data(),
                 available.columns,
                 longestClipboardLength - result.clipboard.length(),
                 "",
@@ -166,7 +166,7 @@ void search() {
     }
 
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
-    Message search_legend_message = "[bold]Clipboard[blank][info]│ [bold]Entry[blank][info]│[blank][help] Result[info]";
+    Message search_legend_message = "[bold]Clipboard[nobold]│ [bold]Entry[nobold]│[help] Result[info]";
     int cols = available.columns - (search_legend_message.columnLength() + 7);
     std::string bar2 = " ┣";
     for (int i = 0; i < cols; i++)

@@ -40,7 +40,7 @@ void noteText() {
             fprintf(stderr, "%s", formatMessage("[info]│ There is no note for this clipboard.[blank]\n").data());
         }
     } else
-        error_exit("%s", formatMessage("[error]❌ You can't add multiple items to a note. 💡 [blank][help]Try providing a single piece of text instead.[blank]\n"));
+        error_exit("%s", formatMessage("[error]❌ You can't add multiple items to a note. 💡 [help]Try providing a single piece of text instead.[blank]\n"));
 }
 
 void notePipe() {
