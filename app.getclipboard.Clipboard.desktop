@@ -6,4 +6,4 @@ Exec=bash -c "export CLIPBOARD_NOAUDIO=1; while true; do cb hs; cb; echo -n -e '
 Type=Application
 Terminal=true
 Categories=Utility;Office;Development
-Comment=Cut, copy, and paste anything in your terminal
+Comment=Cut, copy, and paste anything, anytime, anywhere
