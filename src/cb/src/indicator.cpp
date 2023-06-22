@@ -70,15 +70,11 @@ void setupIndicator() {
     auto display_progress = [&](const auto& formattedNum, const std::string_view& actionText = doing_action[action]) {
         std::string progressBar;
         if (step < 40) {
-            for (int i = 0; i < step; i++)
-                progressBar += "█";
-            for (int i = 0; i < 39 - step; i++)
-                progressBar += "▒";
+            progressBar += repeatString("█", step);
+            progressBar += repeatString("▒", 39 - step);
         } else {
-            for (int i = 0; i < step - 40; i++)
-                progressBar += "▒";
-            for (int i = 0; i < 39 - (step - 40); i++)
-                progressBar += "█";
+            progressBar += repeatString("▒", step - 40);
+            progressBar += repeatString("█", 39 - (step - 40));
         }
         std::string formattedSeconds = std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - start).count()) + "s";
         fprintf(stderr, working_message().data(), actionText.data(), formattedNum, formattedSeconds.data(), progressBar.data());

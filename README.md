@@ -1472,22 +1472,6 @@ $ cb ffksdjfdj
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_NOEMOJI</code></b> &emsp; Set this to anything to strip emojis from CB's messages.</summary>
-
-<br>
-
-Get rid of those ugly emojis.
-```sh
-$ export CLIPBOARD_NOEMOJI=1
-$ cb cp "You won't be annoyed 😒 by these things ever again! 😏😋🥵"
-```
-
-Note: This option only strips emojis from CB's own messages. So, if you copied some text that happens to contain emojis, then those will still remain.
-
-</details>
-
-<br>
-
 <details><summary> &ensp; <b><code>CLIPBOARD_NOGUI</code></b> &emsp; Set this to anything to disable integration with GUI clipboards.</summary>
 
 <br>

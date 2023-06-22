@@ -38,24 +38,17 @@ void info() {
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
 
-    auto displayEndbar = [] {
-        static auto total_cols = thisTerminalSize().columns;
-        fprintf(stderr, "\033[%zdG%s\r", total_cols, formatMessage("[info]│[blank]").data());
-    };
-
     // creation date
-    displayEndbar();
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
-    fprintf(stderr, formatMessage("[info]│ Created [help]%s[blank]\n").data(), time.data());
+    fprintf(stderr, formatMessage("[info]%s│ Created [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
     fprintf(stderr, formatMessage("[info]│ Created [help]n/a[blank]\n").data());
 #endif
 
-    displayEndbar();
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     time_t latest = 0;
     for (const auto& entry : fs::recursive_directory_iterator(path)) {
@@ -65,78 +58,61 @@ void info() {
     }
     time = std::ctime(&latest);
     std::erase(time, '\n');
-    fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), time.data());
+    fprintf(stderr, formatMessage("[info]%s│ Last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
     fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
 
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Stored in [help]%s[blank]\n").data(), path.string().data());
+    fprintf(stderr, formatMessage("[info]%s│ Stored in [help]%s[blank]\n").data(), generatedEndbar().data(), path.string().data());
 
-    displayEndbar();
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
     struct passwd* pw = getpwuid(info.st_uid);
-    fprintf(stderr, formatMessage("[info]│ Owned by [help]%s[blank]\n").data(), pw->pw_name);
+    fprintf(stderr, formatMessage("[info]%s│ Owned by [help]%s[blank]\n").data(), generatedEndbar().data(), pw->pw_name);
 #elif defined(__WIN32__) || defined(__WIN64__)
     fprintf(stderr, formatMessage("[info]│ Owned by [help]n/a[blank]\n").data());
 #endif
 
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Persistent? [help]%s[blank]\n").data(), path.is_persistent ? "Yes" : "No");
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Total entries: [help]%zu[blank]\n").data(), path.totalEntries());
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Total clipboard size: [help]%s[blank]\n").data(), formatBytes(totalDirectorySize(path)).data());
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Total space remaining: [help]%s[blank]\n").data(), formatBytes(fs::space(path).available).data());
+    fprintf(stderr, formatMessage("[info]%s│ Persistent? [help]%s[blank]\n").data(), generatedEndbar().data(), path.is_persistent ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]%s│ Total entries: [help]%zu[blank]\n").data(), generatedEndbar().data(), path.totalEntries());
+    fprintf(stderr, formatMessage("[info]%s│ Total clipboard size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path)).data());
+    fprintf(stderr, formatMessage("[info]%s│ Total space remaining: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::space(path).available).data());
 
     if (path.holdsRawDataInCurrentEntry()) {
-        displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Content size: [help]%s[blank]\n").data(), formatBytes(fs::file_size(path.data.raw)).data());
-        displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Content type: [help]%s[blank]\n").data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        fprintf(stderr, formatMessage("[info]%s│ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]%s│ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
-        displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Content size: [help]%s[blank]\n").data(), formatBytes(totalDirectorySize(path.data)).data());
+        fprintf(stderr, formatMessage("[info]%s│ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path.data)).data());
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
-        displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Files: [help]%zu[blank]\n").data(), files);
-        displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Directories: [help]%zu[blank]\n").data(), directories);
+        fprintf(stderr, formatMessage("[info]%s│ Files: [help]%zu[blank]\n").data(), generatedEndbar().data(), files);
+        fprintf(stderr, formatMessage("[info]%s│ Directories: [help]%zu[blank]\n").data(), generatedEndbar().data(), directories);
     }
 
     if (!available_mimes.empty()) {
-        displayEndbar();
-        fprintf(stderr, "%s", formatMessage("[info]│ Available types from GUI: [help]").data());
+        fprintf(stderr, formatMessage("[info]%s│ Available types from GUI: [help]").data(), generatedEndbar().data());
         for (const auto& mime : available_mimes) {
             fprintf(stderr, "%s", mime.data());
             if (mime != available_mimes.back()) fprintf(stderr, ", ");
         }
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     }
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Content cut? [help]%s[blank]\n").data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]%s│ Content cut? [help]%s[blank]\n").data(), generatedEndbar().data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
-    displayEndbar();
-    fprintf(stderr, formatMessage("[info]│ Locked by another process? [help]%s[blank]\n").data(), path.isLocked() ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]%s│ Locked by another process? [help]%s[blank]\n").data(), generatedEndbar().data(), path.isLocked() ? "Yes" : "No");
 
     if (path.isLocked()) {
-        displayEndbar();
-        fprintf(stderr, formatMessage("[info]│ Locked by process with pid [help]%s[blank]\n").data(), fileContents(path.metadata.lock).data());
+        fprintf(stderr, formatMessage("[info]%s│ Locked by process with pid [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.lock).data());
     }
 
-    displayEndbar();
     if (fs::exists(path.metadata.notes))
-        fprintf(stderr, formatMessage("[info]│ Note: [help]%s[blank]\n").data(), fileContents(path.metadata.notes).data());
+        fprintf(stderr, formatMessage("[info]%s│ Note: [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.notes).data());
     else
-        fprintf(stderr, "%s", formatMessage("[info]│ There is no note for this clipboard.[blank]\n").data());
+        fprintf(stderr, formatMessage("[info]%s│ There is no note for this clipboard.[blank]\n").data(), generatedEndbar().data());
 
-    displayEndbar();
     if (path.holdsIgnoreRegexes()) {
-        fprintf(stderr, "%s", formatMessage("[info]│ Ignore regexes: [help]").data());
+        fprintf(stderr, formatMessage("[info]%s│ Ignore regexes: [help]").data(), generatedEndbar().data());
         auto regexes = fileLines(path.metadata.ignore);
         for (const auto& regex : regexes) {
             fprintf(stderr, "%s", regex.data());
@@ -144,7 +120,7 @@ void info() {
         }
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     } else
-        fprintf(stderr, "%s", formatMessage("[info]│ There are no ignore regexes for this clipboard.[blank]\n").data());
+        fprintf(stderr, formatMessage("[info]%s│ There are no ignore regexes for this clipboard.[blank]\n").data(), generatedEndbar().data());
 
     fprintf(stderr, "%s", formatMessage("[info]┕").data());
     int cols = thisTerminalSize().columns;

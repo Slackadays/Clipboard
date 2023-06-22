@@ -106,46 +106,46 @@ Message no_clipboard_contents_message = "[info]│ There is currently nothing in
 Message clipboard_action_prompt = "[help]│ Add [bold]cut, copy, [nobold]or[bold] paste[nobold] to the end, "
                                   "like [bold]%s copy[nobold] to get started, or if you need help, try "
                                   "[bold]%s -h[nobold] to show the help screen.[blank]\n";
-Message no_valid_action_message = "[error]❌ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
-                                  "to include one. 💡 [help]Try using or adding [bold]cut, copy, [nobold]or "
+Message no_valid_action_message = "[error]│ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
+                                  "to include one. [help]⬤ Try using or adding [bold]cut, copy, [nobold]or "
                                   "[bold]paste[nobold] instead, like [bold]%s copy,[nobold] or do the [bold]help[nobold] action for a complete list of them.[blank]\n";
-Message no_valid_action_with_candidate_message = "[error]❌ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
-                                                 "to include one. 💡 [help]Did you mean [bold]%s %s[nobold] instead?[blank]\n";
-Message choose_action_items_message = "[error]❌ You need to choose something to %s.[help] 💡 Try adding the items you want "
+Message no_valid_action_with_candidate_message = "[error]│ You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
+                                                 "to include one. [help]⬤ Did you mean [bold]%s %s[nobold] instead?[blank]\n";
+Message choose_action_items_message = "[error]│ You need to choose something to %s.[help] ⬤ Try adding the items you want "
                                       "to %s to the end, like [bold]%s %s contacts.txt myprogram.cpp[blank]\n";
-Message fix_redirection_action_message = "[error]❌ You can't use the [bold]%s[blank][error] action with redirection here. 💡 [help]Try removing "
+Message fix_redirection_action_message = "[error]│ You can't use the [bold]%s[blank][error] action with redirection here. [help]⬤ Try removing "
                                          "[bold]%s[nobold] or use [bold]%s[nobold] instead, like [bold]%s %s[nobold].\n";
-Message redirection_no_items_message = "[error]❌ You can't specify items when you use redirection. 💡 [help]Try removing "
+Message redirection_no_items_message = "[error]│ You can't specify items when you use redirection. [help]⬤ Try removing "
                                        "the items that come after [bold]%s [action].\n";
-Message paste_success_message = "[success]✅ Pasted successfully[blank]\n";
-Message clipboard_failed_one_message = "[error]❌ CB couldn't %s this item:[blank]\n";
-Message clipboard_failed_many_message = "[error]❌ CB couldn't %s these items:[blank]\n";
+Message paste_success_message = "[success]│ Pasted successfully[blank]\n";
+Message clipboard_failed_one_message = "[error]│ CB couldn't %s this item:[blank]\n";
+Message clipboard_failed_many_message = "[error]│ CB couldn't %s these items:[blank]\n";
 Message and_more_fails_message = "[error]│ ...and [bold]%i[nobold] more.[blank]\n";
 Message and_more_items_message = "[info]│ ...and [bold]%i[nobold] more.[blank]\n";
-Message fix_problem_message = "[help]💡 See if you have the needed permissions, or\n"
+Message fix_problem_message = "[help]⬤ See if you have the needed permissions, or\n"
                               "│ try double-checking the spelling of the files or what directory you're in.[blank]\n";
-Message not_enough_storage_message = "[error]❌ There won't be enough storage available to %s everything (%gMB to "
-                                     "paste, %gMB available). 💡 [help] Try double-checking what items you've "
+Message not_enough_storage_message = "[error]│ There won't be enough storage available to %s everything (%gMB to "
+                                     "paste, %gMB available). [help]⬤ Try double-checking what items you've "
                                      "selected or delete some files to free up space.[blank]\n";
 Message item_already_exists_message = "[progress]⬤ The item [bold]%s[blank][progress] already exists here. Do you want to "
                                       "replace it? [help]Use [bold]all [nobold]to replace all existing, or "
                                       "[bold]skip[nobold] to replace nothing. [bold][(y)es/(n)o)/(a)ll/(s)kip] ";
-Message bad_response_message = "[error]❌ Sorry, that wasn't a valid choice. Try again: [bold][(y)es/(n)o)] ";
+Message bad_response_message = "[error]│ Sorry, that wasn't a valid choice. Try again: [bold][(y)es/(n)o)] ";
 Message working_message = "\r[progress]⬤ %s... %s, %s elapsed %s    [blank]";
-Message cancelled_message = "[success]✅ Cancelled %s[blank]\n";
-Message cancelled_with_progress_message = "[success]✅ Cancelled %s (%s in progress)[blank]\n";
-Message byte_success_message = "[success]✅ %s %s[blank]\n";
-Message one_item_success_message = "[success]✅ %s one item[blank]\n";
-Message many_files_success_message = "[success]✅ %s %lu files[blank]\n";
-Message many_directories_success_message = "[success]✅ %s %lu directories[blank]\n";
-Message one_file_one_directory_success_message = "[success]✅ %s one file and one directory[blank]\n";
-Message one_file_many_directories_success_message = "[success]✅ %s one file and %lu directories[blank]\n";
-Message many_files_one_directory_success_message = "[success]✅ %s %lu files and one directory[blank]\n";
-Message many_files_many_directories_success_message = "[success]✅ %s %lu files and %lu directories[blank]\n";
-Message one_clipboard_success_message = "[success]✅ %s one clipboard[blank]\n";
-Message many_clipboards_success_message = "[success]✅ %s %lu clipboards[blank]\n";
+Message cancelled_message = "[success]│ Cancelled %s[blank]\n";
+Message cancelled_with_progress_message = "[success]│ Cancelled %s (%s in progress)[blank]\n";
+Message byte_success_message = "[success]│ %s %s[blank]\n";
+Message one_item_success_message = "[success]│ %s one item[blank]\n";
+Message many_files_success_message = "[success]│ %s %lu files[blank]\n";
+Message many_directories_success_message = "[success]│ %s %lu directories[blank]\n";
+Message one_file_one_directory_success_message = "[success]│ %s one file and one directory[blank]\n";
+Message one_file_many_directories_success_message = "[success]│ %s one file and %lu directories[blank]\n";
+Message many_files_one_directory_success_message = "[success]│ %s %lu files and one directory[blank]\n";
+Message many_files_many_directories_success_message = "[success]│ %s %lu files and %lu directories[blank]\n";
+Message one_clipboard_success_message = "[success]│ %s one clipboard[blank]\n";
+Message many_clipboards_success_message = "[success]│ %s %lu clipboards[blank]\n";
 Message clipboard_name_message = "[info]Info for clipboard [bold][help]%s[blank]";
-Message internal_error_message = "[error]❌ Internal error: %s\n│ This might be a bug, or you might be lacking "
+Message internal_error_message = "[error]│ Internal error: %s\n│ This might be a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 
 void setLanguageES() {
@@ -186,7 +186,7 @@ void setLanguageES() {
                    "[info]│ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]│ This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
                    "to redistribute it under certain conditions.[blank]\n";
-    no_valid_action_message = "[error]❌ No especificaste ninguna acción válida o se te olvidó. 💡 [help]Inténta usar o añadir [bold]cortar, "
+    no_valid_action_message = "[error]│ No especificaste ninguna acción válida o se te olvidó. [help]⬤ Inténta usar o añadir [bold]cortar, "
                               "copiar o pegar[nobold] en su lugar, como [bold]%s copiar.[blank]\n";
     clipboard_item_many_contents_message = "[info]Aquí están las cosas primeras del "
                                            "portapapeles [bold][help]%s[nobold][info]";
@@ -194,25 +194,25 @@ void setLanguageES() {
     clipboard_action_prompt = "[help]Añade [bold]cortar, copiar [nobold]o[bold] pegar[nobold] al final, como "
                               "[bold]%s copiar[nobold] para comenzar, o si necesitas ayuda, haz "
                               "[bold]%s -h[nobold] para mostrar el mensaje de ayudar.[blank]\n";
-    choose_action_items_message = "[error]❌ Necesitas escoger una cosa para %s. 💡 [help] Inténta añadir las cosas que "
+    choose_action_items_message = "[error]│ Necesitas escoger una cosa para %s. [help]⬤ Inténta añadir las cosas que "
                                   "quieres %s al final, como [bold]%s %s contactos.txt miprograma.cpp[blank]\n";
-    fix_redirection_action_message = "[error]❌ No se puede usar la acción [bold]%s[blank][error] con la redirección. 💡 [help]Inténta sacar "
+    fix_redirection_action_message = "[error]│ No se puede usar la acción [bold]%s[blank][error] con la redirección. [help]⬤ Inténta sacar "
                                      "[bold]%s[nobold] o usa [bold]%s[nobold] en su lugar, como [bold]%s %s[nobold].\n";
-    redirection_no_items_message = "[error]❌ No se pueden especificar las cosas con redirección. 💡 [help]Inténta sacar las "
+    redirection_no_items_message = "[error]│ No se pueden especificar las cosas con redirección. [help]⬤ Inténta sacar las "
                                    "cosas que siguen [bold]%s [acción].\n";
-    paste_success_message = "[success]✅ Pegó con éxito[blank]\n";
-    clipboard_failed_many_message = "[error]❌ CB no pudo %s estas cosas.[blank]\n";
+    paste_success_message = "[success]│ Pegó con éxito[blank]\n";
+    clipboard_failed_many_message = "[error]│ CB no pudo %s estas cosas.[blank]\n";
     and_more_fails_message = "[error]│ ...y [bold]%i[nobold] más.[blank]\n";
     and_more_items_message = "[info]│ ...y [bold]%i[nobold] más.[blank]\n";
-    fix_problem_message = "[help]💡 Verífica si tengas los permisos necesarios, o\n"
+    fix_problem_message = "[help]⬤ Verífica si tengas los permisos necesarios, o\n"
                           "│ vuelve a revisar el deletro de los archivos o la carpeta en que estás.[blank]\n";
-    not_enough_storage_message = "[error]❌ No habrá espacio suficiente para %s todas tus cosas (%gMB a pegar, %gMB "
-                                 "disponible). 💡 [help] Vuelve a revisar las cosas que especificaste o saca "
+    not_enough_storage_message = "[error]│ No habrá espacio suficiente para %s todas tus cosas (%gMB a pegar, %gMB "
+                                 "disponible). [help]⬤ Vuelve a revisar las cosas que especificaste o saca "
                                  "algunas cosas para hacer más espacio.[blank]\n";
-    many_files_success_message = "[success]✅ %s %lu archivos[blank]\n";
-    many_directories_success_message = "[success]✅ %s %lu carpetas[blank]\n";
-    many_files_many_directories_success_message = "[success]✅ %s %lu archivos y %lu carpetas[blank]\n";
-    internal_error_message = "[error]❌ Error internal: %s[blank]\n";
+    many_files_success_message = "[success]│ %s %lu archivos[blank]\n";
+    many_directories_success_message = "[success]│ %s %lu carpetas[blank]\n";
+    many_files_many_directories_success_message = "[success]│ %s %lu archivos y %lu carpetas[blank]\n";
+    internal_error_message = "[error]│ Error internal: %s[blank]\n";
 }
 
 void setLanguagePT() {
@@ -245,27 +245,27 @@ void setLanguagePT() {
                    "[info]│ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]│ Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
                    "bem-vindo a redistribuí-lo sob certas condições.[blank]\n";
-    no_valid_action_message = "[error]❌ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. 💡 [help]Tente utilizar "
+    no_valid_action_message = "[error]│ Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. [help]⬤ Tente utilizar "
                               "[bold]recortar, copiar ou colar[nobold], como em [bold]%s copiar.[blank]\n";
-    no_clipboard_contents_message = "[error]❌ Você não especificou uma ação válida. 💡 [help]Tente adicionar [bold]recortar, copiar, or "
+    no_clipboard_contents_message = "[error]│ Você não especificou uma ação válida. [help]⬤ Tente adicionar [bold]recortar, copiar, or "
                                     "colar[nobold] no final, como em [bold]clipboard copiar[nobold]. Caso precise de ajuda, tente "
                                     "[bold]clipboard -h[nobold] para mostrar a tela de instruções.[blank]\n";
-    choose_action_items_message = "[error]❌ Você precisa especificar algo para %s. 💡 [help] Tenta adicionar os itens que você quer %s ao final, "
+    choose_action_items_message = "[error]│ Você precisa especificar algo para %s. [help]⬤ Tenta adicionar os itens que você quer %s ao final, "
                                   "como em [bold]%s %s contatos.txt meuprograma.cpp[blank]\n";
-    fix_redirection_action_message = "[error]❌ Você não pode [bold]%s[blank][error] com redirecionamento aqui. 💡 [help]Tente remover "
+    fix_redirection_action_message = "[error]│ Você não pode [bold]%s[blank][error] com redirecionamento aqui. [help]⬤ Tente remover "
                                      "[bold]%s[nobold] ou utilizar [bold]%s[nobold], como em [bold]%s %s[nobold].\n";
-    redirection_no_items_message = "[error]❌ Você não pode especificar itens ao redirecionar. 💡 [help]Tente remover itens "
+    redirection_no_items_message = "[error]│ Você não pode especificar itens ao redirecionar. [help]⬤ Tente remover itens "
                                    "que vêm após [bold]%s [action].\n";
-    paste_success_message = "[success]✅ Colado com sucesso[blank]\n";
-    clipboard_failed_many_message = "[error]❌ CB não pôde %s esses itens.[blank]\n";
+    paste_success_message = "[success]│ Colado com sucesso[blank]\n";
+    clipboard_failed_many_message = "[error]│ CB não pôde %s esses itens.[blank]\n";
     and_more_fails_message = "[error]│ ...e mais [bold]%i[nobold].[blank]\n";
     and_more_items_message = "[info]│ ...e mais [bold]%i[nobold].[blank]\n";
-    fix_problem_message = "[help]💡 Veja se você possui as permissões necessárias, ou\n"
+    fix_problem_message = "[help]⬤ Veja se você possui as permissões necessárias, ou\n"
                           "│ verifique a ortografia do arquivo ou diretório que voce está.[blank]\n";
-    many_files_success_message = "[success]✅ %s %lu arquivos[blank]\n";
-    many_directories_success_message = "[success]✅ %s %lu diretórios[blank]\n";
-    many_files_many_directories_success_message = "[success]✅ %s %lu arquivos e %lu diretórios[blank]\n";
-    internal_error_message = "[error]❌ Erro interno: %s\n│ Isso é provavelmente um bug.[blank]\n";
+    many_files_success_message = "[success]│ %s %lu arquivos[blank]\n";
+    many_directories_success_message = "[success]│ %s %lu diretórios[blank]\n";
+    many_files_many_directories_success_message = "[success]│ %s %lu arquivos e %lu diretórios[blank]\n";
+    internal_error_message = "[error]│ Erro interno: %s\n│ Isso é provavelmente um bug.[blank]\n";
 }
 
 void setLanguageTR() {
@@ -321,26 +321,26 @@ void setLanguageTR() {
     clipboard_action_prompt = "[help]Başlamak için sonuna [bold]kes, kopyala, [nobold]veya[bold] yapistir[nobold] ekleyin, "
                               "[bold]%s kopyala[nobold] gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için "
                               "[bold]%s -h[nobold]'i dene.[blank]\n";
-    no_valid_action_message = "[error]❌ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz 💡 [help]Komutunuza [bold]cut, "
+    no_valid_action_message = "[error]│ Geçerli bir işlem vermediniz (\"%s\") veya işlem vermeyi unuttunuz [help]⬤ Komutunuza [bold]cut, "
                               "copy, [nobold]ya da [bold]paste[nobold] eklemelisiniz, örneğin [bold]%s copy.[blank]\n";
-    choose_action_items_message = "[error]❌ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir. 💡 [help] %s işleminden sonra öğeler eklemeyi "
+    choose_action_items_message = "[error]│ %s(ma/me) işlemi için bir öğe seçmeniz gerekmektedir. [help]⬤ %s işleminden sonra öğeler eklemeyi "
                                   "deneyiniz, örneğin [bold]%s %s contacts.txt myprogram.cpp[blank]\n";
-    fix_redirection_action_message = "[error]❌ [bold]%s[blank][error](ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. [help] "
-                                     "💡 [bold]%s[nobold] işlemini silin veya [bold]%s[nobold] işlemini kullanın, örneğin "
+    fix_redirection_action_message = "[error]│ [bold]%s[blank][error](ma/me) işlemini burada yeniden yönlendirme ile kullanamazsın. [help] "
+                                     "⬤ [bold]%s[nobold] işlemini silin veya [bold]%s[nobold] işlemini kullanın, örneğin "
                                      "[bold]%s %s[nobold].\n";
-    redirection_no_items_message = "[error]❌ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. 💡 [help][bold]%s "
+    redirection_no_items_message = "[error]│ Yeniden yönlendirme işlemi yaparken öğe veremezsiniz. [help]⬤[bold]%s "
                                    "[action][nobold]'dan sonra  gelen öğeleri siliniz.\n";
-    paste_success_message = "[success]✅ Yapıştırma başarıyla tamamlandı[blank]\n";
-    clipboard_failed_many_message = "[error]❌ %s(ma/me) işlemi şu öğeler için başarısız oldu:[blank]\n";
+    paste_success_message = "[success]│ Yapıştırma başarıyla tamamlandı[blank]\n";
+    clipboard_failed_many_message = "[error]│ %s(ma/me) işlemi şu öğeler için başarısız oldu:[blank]\n";
     and_more_fails_message = "[error]│ ...ve [bold]%i[nobold] fazla.[blank]\n";
     and_more_items_message = "[info]│ ...ve [bold]%i[nobold] fazla.[blank]\n";
-    fix_problem_message = "[help]💡 Erişime ihtiyacınız varsa şuna bakın, veya\n"
+    fix_problem_message = "[help]⬤ Erişime ihtiyacınız varsa şuna bakın, veya\n"
                           "│ bulunduğunuz dizini veya girdiğiniz dosya isimlerini ikinci kez kontrol edin.[blank]\n";
-    not_enough_storage_message = "[error]❌ Bütün öğelerinizi %s kadar yeterli bir alanınız yok (%gMB "
-                                 "yapıştırılacak, %gMB boş). 💡 [help] Hangi öğeleri seçtiğinizi ikinci kez kontrol "
+    not_enough_storage_message = "[error]│ Bütün öğelerinizi %s kadar yeterli bir alanınız yok (%gMB "
+                                 "yapıştırılacak, %gMB boş). [help]⬤ Hangi öğeleri seçtiğinizi ikinci kez kontrol "
                                  "etmeyi deneyin veya yer açmak için bazı dosyaları silin.[blank]\n";
-    many_files_success_message = "[success]✅ %s %lu dosya[blank]\n";
-    many_directories_success_message = "[success]✅ %s %lu dizin[blank]\n";
-    many_files_many_directories_success_message = "[success]✅ %s %lu dosya ve %lu dizin[blank]\n";
-    internal_error_message = "[error]❌ İçsel hata: %s\n│ Bu yüksek ihtimal bir hata veya bu sistemde erişim sorunu yaşıyorsunuz.[blank]\n";
+    many_files_success_message = "[success]│ %s %lu dosya[blank]\n";
+    many_directories_success_message = "[success]│ %s %lu dizin[blank]\n";
+    many_files_many_directories_success_message = "[success]│ %s %lu dosya ve %lu dizin[blank]\n";
+    internal_error_message = "[error]│ İçsel hata: %s\n│ Bu yüksek ihtimal bir hata veya bu sistemde erişim sorunu yaşıyorsunuz.[blank]\n";
 }

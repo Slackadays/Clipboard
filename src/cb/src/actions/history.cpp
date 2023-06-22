@@ -45,7 +45,7 @@ void moveHistory() {
         successful_entries++;
     }
     stopIndicator();
-    fprintf(stderr, formatMessage("[success]✅ Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
+    fprintf(stderr, formatMessage("[success]│ Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
     if (clipboard_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }
 
@@ -63,10 +63,7 @@ void history() {
     auto usedSpace = (clipboard_history_message.columnLength() - 2) + clipboard_name.length() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
-    std::string bar1;
-    for (int i = 0; i < columns; i++)
-        bar1 += "━";
-    fprintf(stderr, "%s%s", bar1.data(), formatMessage("┑[blank]").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┑[blank]").data());
 
     std::vector<std::string> dates;
     dates.reserve(path.entryIndex.size());
@@ -105,7 +102,9 @@ void history() {
 
     auto longestEntryLength = numberLength(path.entryIndex.size() - 1);
 
+    std::string availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
+    batchedMessage.reserve(50000);
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
@@ -118,7 +117,7 @@ void history() {
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
         batchedMessage += formatMessage(
-                "\n[info]\033[" + std::to_string(available.columns) + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold]│ [bold]"
+                "\n[info]\033[" + availableColumnsAsString + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold]│ [bold]"
                 + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold]│ "
         );
 
@@ -166,9 +165,7 @@ void history() {
     usedSpace = status_legend_message.columnLength() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
-    std::string bar2 = " ┣";
-    for (int i = 0; i < cols; i++)
-        bar2 += "━";
+    std::string bar2 = " ┣" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }

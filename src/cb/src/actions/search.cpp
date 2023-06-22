@@ -18,7 +18,7 @@ namespace PerformAction {
 
 void search() {
     if (copying.items.empty())
-        error_exit("%s", formatMessage("[error]❌ You need to enter something to search for. 💡 [help]Try entering a search term after the action, like [bold]cb search Foobar[nobold].[blank]\n"));
+        error_exit("%s", formatMessage("[error]│ You need to enter something to search for. [help]⬤ Try entering a search term after the action, like [bold]cb search Foobar[nobold].[blank]\n"));
 
     std::vector<std::string> queries;
     std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(queries), [](const auto& item) { return item.string(); });
@@ -69,7 +69,7 @@ void search() {
             }
         } catch (const std::regex_error& e) {
             error_exit(
-                    formatMessage("[error]❌ CB couldn't process your query as regex. (Specific error: %s) 💡 [help]Try entering a valid regex instead, like [bold]cb search "
+                    formatMessage("[error]│ CB couldn't process your query as regex. (Specific error: %s) [help]⬤ Try entering a valid regex instead, like [bold]cb search "
                                   "\"Foobar.*\"[nobold].[blank]\n"),
                     std::string(e.what())
             );
@@ -118,7 +118,7 @@ void search() {
         }
     }
 
-    if (results.empty()) error_exit("%s", formatMessage("[error]❌ CB couldn't find anything matching your query.[blank] 💡 [help]Try searching for something else instead.[blank]\n"));
+    if (results.empty()) error_exit("%s", formatMessage("[error]│ CB couldn't find anything matching your query.[blank] [help]⬤ Try searching for something else instead.[blank]\n"));
 
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash < two.hash; });
     results.erase(std::unique(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash == two.hash; }), results.end());
@@ -140,10 +140,7 @@ void search() {
     auto usedSpace = (search_result_message.columnLength() - 2) + 9;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
-    std::string bar1;
-    for (int i = 0; i < columns; i++)
-        bar1 += "━";
-    fprintf(stderr, "%s%s", bar1.data(), formatMessage("┑[blank]\n").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┑[blank]\n").data());
 
     for (const auto& result : results) {
         fprintf(stderr,
@@ -168,9 +165,7 @@ void search() {
     fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
     Message search_legend_message = "[bold]Clipboard[nobold]│ [bold]Entry[nobold]│[help] Result[info]";
     int cols = available.columns - (search_legend_message.columnLength() + 7);
-    std::string bar2 = " ┣";
-    for (int i = 0; i < cols; i++)
-        bar2 += "━";
+    std::string bar2 = " ┣" + repeatString("━", cols);
     fprintf(stderr, "%s", (search_legend_message() + bar2).data());
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }

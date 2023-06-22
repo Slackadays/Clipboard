@@ -156,7 +156,6 @@ extern bool output_silent;
 extern bool progress_silent;
 extern bool confirmation_silent;
 extern bool no_color;
-extern bool no_emoji;
 extern bool all_option;
 
 extern std::string preferred_mime;
@@ -329,6 +328,8 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+std::string generatedEndbar();
+std::string repeatString(const std::string_view& character, const size_t& length);
 unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
 void setLanguagePT();
 void setLanguageTR();

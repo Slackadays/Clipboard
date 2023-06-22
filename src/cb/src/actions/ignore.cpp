@@ -48,7 +48,7 @@ void ignoreRegex() {
         fs::remove(path.metadata.ignore);
         if (output_silent) return;
         stopIndicator();
-        fprintf(stderr, "%s", formatMessage("[success]✅ Removed ignore patterns\n").data());
+        fprintf(stderr, "%s", formatMessage("[success]│ Removed ignore patterns\n").data());
         exit(EXIT_SUCCESS);
     }
 
@@ -57,7 +57,7 @@ void ignoreRegex() {
             volatile auto test = std::regex(pattern); // volatile makes sure this otherwise unused variable isn't optimized out
         } catch (const std::regex_error& e) {
             error_exit(
-                    formatMessage("[error]❌ The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s 💡 [help]Try using a different one instead.[blank]\n"),
+                    formatMessage("[error]│ The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s [help]⬤ Try using a different one instead.[blank]\n"),
                     pattern,
                     std::string(e.what())
             );
@@ -71,7 +71,7 @@ void ignoreRegex() {
     writeToFile(path.metadata.ignore, writeToFileContent);
 
     stopIndicator();
-    fprintf(stderr, "%s", formatMessage("[success]✅ Saved ignore patterns [bold]").data());
+    fprintf(stderr, "%s", formatMessage("[success]│ Saved ignore patterns [bold]").data());
     for (const auto& pattern : regexes) {
         fprintf(stderr, "%s", pattern.data());
         if (pattern != regexes.back()) fprintf(stderr, ", ");

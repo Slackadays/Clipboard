@@ -61,9 +61,7 @@ void show() {
     usedSpace = status_legend_message.columnLength() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
-    std::string bar2 = " ┣";
-    for (int i = 0; i < cols; i++)
-        bar2 += "━";
+    std::string bar2 = " ┣" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
     fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
 }

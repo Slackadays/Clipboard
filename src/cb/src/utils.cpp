@@ -71,7 +71,6 @@ bool output_silent = false;
 bool progress_silent = false;
 bool confirmation_silent = false;
 bool no_color = false;
-bool no_emoji = false;
 bool all_option = false;
 
 std::string maximumHistorySize;
@@ -166,11 +165,6 @@ std::string formatMessage(const std::string_view& str, bool colorful) {
     };
     for (const auto& key : colors) // iterate over all the possible colors to replace
         replaceThis(key.first, colorful ? key.second : "");
-    if (no_emoji) {
-        replaceThis("✅", "✓");
-        replaceThis("❌", "✗");
-        replaceThis("💡", "•");
-    }
     return temp;
 }
 
@@ -241,6 +235,19 @@ std::string fileContents(const fs::path& path) {
     buffer << std::ifstream(path, std::ios::binary).rdbuf();
     return buffer.str();
 #endif
+}
+
+std::string generatedEndbar() {
+    static auto columns = thisTerminalSize().columns;
+    return "\033[" + std::to_string(columns) + "G│\r";
+}
+
+std::string repeatString(const std::string_view& character, const size_t& length) {
+    std::string repeated;
+    repeated.reserve(character.size() * length);
+    for (int i = 0; i < length; i++)
+        repeated += character;
+    return repeated;
 }
 
 std::vector<std::string> fileLines(const fs::path& path) {
@@ -473,8 +480,6 @@ void setupVariables(int& argc, char* argv[]) {
 
     no_color = (NO_COLOR || CLICOLOR) && !FORCE_COLOR && !CLICOLOR_FORCE;
 
-    no_emoji = getenv("CLIPBOARD_NOEMOJI") ? true : false;
-
     output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
 
     progress_silent = getenv("CLIPBOARD_NOPROGRESS") ? true : false;
@@ -593,19 +598,13 @@ void setFlags() {
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
         auto longestAction = std::max_element(actions.begin(), actions.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
         auto longestActionShortcut = std::max_element(action_shortcuts.begin(), action_shortcuts.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
-        auto generatedSpaces = [](const int& length) {
-            std::string spaces;
-            for (int i = 0; i < length; i++)
-                spaces += " ";
-            return spaces;
-        };
         std::string actionsList;
         for (int i = 0; i < actions.size(); i++) {
             actionsList.append("[progress]│ ")
-                    .append(generatedSpaces(longestAction - actions.at(i).size()))
+                    .append(repeatString(" ", longestAction - actions.at(i).size()))
                     .append(actions.at(i))
                     .append(", ")
-                    .append(generatedSpaces(longestActionShortcut - action_shortcuts[static_cast<Action>(i)].size()))
+                    .append(repeatString(" ", longestActionShortcut - action_shortcuts[static_cast<Action>(i)].size()))
                     .append(action_shortcuts[static_cast<Action>(i)])
                     .append("│ [help]")
                     .append(action_descriptions[static_cast<Action>(i)])
