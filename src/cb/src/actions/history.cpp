@@ -72,14 +72,14 @@ void history() {
 
     auto now = std::chrono::system_clock::now();
 
+    struct stat dateInfo;
+    std::string agoMessage;
+    agoMessage.reserve(16);
+
     for (auto entry = 0; entry < path.entryIndex.size(); entry++) {
-        auto entryPath = path.entryPathFor(entry);
-        std::string agoMessage;
-        agoMessage.reserve(16);
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-        struct stat info;
-        stat(entryPath.string().data(), &info);
-        auto timeSince = now - std::chrono::system_clock::from_time_t(info.st_mtime);
+        stat(path.entryPathFor(entry).string().data(), &dateInfo);
+        auto timeSince = now - std::chrono::system_clock::from_time_t(dateInfo.st_mtime);
         // format time like 1y 2d 3h 4m 5s
         auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
         auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
@@ -94,6 +94,7 @@ void history() {
         dates.emplace_back(agoMessage);
 
         if (agoMessage.length() > longestDateLength) longestDateLength = agoMessage.length();
+        agoMessage.clear();
 #else
         dates.push_back("n/a");
         longestDateLength = 3;
@@ -104,13 +105,13 @@ void history() {
 
     std::string availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
-    batchedMessage.reserve(50000);
+    batchedMessage.reserve(50200);
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
 
         if (batchedMessage.size() > 50000) {
-            fprintf(stderr, "%s", batchedMessage.data());
+            fputs(batchedMessage.data(), stderr);
             batchedMessage.clear();
         }
 
@@ -158,16 +159,16 @@ void history() {
         }
     }
 
-    fprintf(stderr, "%s", batchedMessage.data());
+    fputs(batchedMessage.data(), stderr);
 
-    fprintf(stderr, "%s", formatMessage("[info]\n┗━━▌").data());
+    fputs(formatMessage("[info]\n┗━━▌").data(), stderr);
     Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
     usedSpace = status_legend_message.columnLength() + 6;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
     std::string bar2 = "▐" + repeatString("━", cols);
-    fprintf(stderr, "%s", (status_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
+    fputs((status_legend_message() + bar2).data(), stderr);
+    fputs(formatMessage("┛[blank]\n").data(), stderr);
 }
 
 void historyJSON() {
