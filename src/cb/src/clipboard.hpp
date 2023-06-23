@@ -203,7 +203,14 @@ extern IOType io_type;
 template <typename T, size_t N>
 class EnumArray : public std::array<T, N> {
 public:
-    T& operator[](Action index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
+    std::optional<std::array<T, N>> internal_original;
+
+    EnumArray(const auto&... args) : std::array<T, N> {args...} { // inherit constructors
+        if (!internal_original) internal_original = std::array<T, N> {args...};
+    }
+
+    T& operator[](const Action& index) { return std::array<T, N>::operator[](static_cast<unsigned int>(index)); } // switch to std::to_underlying when available
+    T& original(const Action& index) { return internal_original.value()[static_cast<unsigned int>(index)]; }
 };
 
 extern EnumArray<std::string_view, 18> actions;
