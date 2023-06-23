@@ -23,6 +23,7 @@ clear_tempdirs
 run_one() {
     if ! sh "$1"
     then
+        clear_tempdirs
         sh "$1"
     fi
 }

@@ -30,7 +30,8 @@ Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& cli
         clipboard_state = ClipboardState::Error;
         stopIndicator();
         fprintf(stderr,
-                formatMessage("[error]│ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. [help]⬤ Try choosing a different or newer one instead.\n[blank]").data(),
+                formatMessage("[error][inverse]✘[noinverse] The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. [help]⬤ Try choosing a different or newer one instead.\n[blank]")
+                        .data(),
                 this_entry);
         exit(EXIT_FAILURE);
     }
@@ -162,8 +163,10 @@ fs::path Clipboard::entryPathFor(const unsigned long& entry) {
     } catch (...) {
         clipboard_state = ClipboardState::Error;
         stopIndicator();
-        fprintf(stderr, formatMessage("[error]│ The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. [help]⬤ Try choosing a different or newer one instead.\n[blank]").data(), entry
-        );
+        fprintf(stderr,
+                formatMessage("[error][inverse]✘[noinverse] The history entry you chose (\"[bold]%lu[blank][error]\") doesn't exist. [help]⬤ Try choosing a different or newer one instead.\n[blank]")
+                        .data(),
+                entry);
         exit(EXIT_FAILURE);
     }
 }

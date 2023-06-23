@@ -45,7 +45,7 @@ void moveHistory() {
         successful_entries++;
     }
     stopIndicator();
-    fprintf(stderr, formatMessage("[success]│ Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
+    fprintf(stderr, formatMessage("[success][inverse]✔[noinverse] Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
     if (clipboard_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }
 
@@ -56,14 +56,14 @@ void history() {
     }
     stopIndicator();
     auto available = thisTerminalSize();
-    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
-    Message clipboard_history_message = "[info]Entry history for clipboard [bold][help]%s[blank]";
+    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
+    Message clipboard_history_message = "[bold]Entry history for clipboard[help] %s";
     fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    fprintf(stderr, "%s", formatMessage(" [noinverse][info]━").data());
     auto usedSpace = (clipboard_history_message.columnLength() - 2) + clipboard_name.length() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┑[blank]").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]").data());
 
     std::vector<std::string> dates;
     dates.reserve(path.entryIndex.size());
@@ -117,8 +117,8 @@ void history() {
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
         batchedMessage += formatMessage(
-                "\n[info]\033[" + availableColumnsAsString + "G│\r│ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold]│ [bold]"
-                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold]│ "
+                "\n[info]\033[" + availableColumnsAsString + "G┃\r┃ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold][info]│ [bold]"
+                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold][info]│ "
         );
 
         if (path.holdsRawDataInCurrentEntry()) {
@@ -160,14 +160,14 @@ void history() {
 
     fprintf(stderr, "%s", batchedMessage.data());
 
-    fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
-    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
-    usedSpace = status_legend_message.columnLength() + 7;
+    fprintf(stderr, "%s", formatMessage("[info]\n┗━━▌").data());
+    Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
+    usedSpace = status_legend_message.columnLength() + 6;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
-    std::string bar2 = " ┣" + repeatString("━", cols);
+    std::string bar2 = "▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
 }
 
 void historyJSON() {

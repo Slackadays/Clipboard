@@ -41,17 +41,17 @@ void status() {
 
     stopIndicator();
 
-    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
     fprintf(stderr, "%s", check_clipboard_status_message().data());
-    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    fprintf(stderr, "%s", formatMessage(" [noinverse]━").data());
     int columns = available.columns - (check_clipboard_status_message.columnLength() + 7);
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┑[blank]\n").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]\n").data());
 
     for (auto& clipboard : clipboards_with_contents) {
         clipboard.getLock();
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
-        fprintf(stderr, formatMessage("[info]\033[%ldG│\r│ [bold]%*s%s[nobold]│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
+        fprintf(stderr, formatMessage("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
         if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));
@@ -89,12 +89,12 @@ void status() {
         clipboard.releaseLock();
         fprintf(stderr, "\n");
     }
-    fprintf(stderr, "%s", formatMessage("[info]┕━┫ ").data());
-    Message status_legend_message = "Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m";
-    int cols = available.columns - (status_legend_message.columnLength() + 7);
-    std::string bar2 = " ┣" + repeatString("━", cols);
+    fprintf(stderr, "%s", formatMessage("[info]┗━━▌").data());
+    Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
+    int cols = available.columns - (status_legend_message.columnLength() + 6);
+    std::string bar2 = "▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
 }
 
 void statusJSON() {

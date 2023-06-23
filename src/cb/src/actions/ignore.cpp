@@ -29,7 +29,7 @@ void ignoreRegex() {
 
             if (is_tty.out) {
                 stopIndicator();
-                fprintf(stderr, "%s", formatMessage("[info]│ Ignore patterns for this clipboard: [help]").data());
+                fprintf(stderr, "%s", formatMessage("[info]┃ Ignore patterns for this clipboard: [help]").data());
                 for (const auto& pattern : ignorePatterns)
                     fprintf(stderr, "%s%s", pattern.data(), pattern != ignorePatterns.back() ? ", " : "");
                 fprintf(stderr, "%s", formatMessage("[blank]\n").data());
@@ -39,7 +39,7 @@ void ignoreRegex() {
             }
         } else {
             stopIndicator();
-            fprintf(stderr, "%s", formatMessage("[info]│ There are no ignore patterns for this clipboard.[blank]\n").data());
+            fprintf(stderr, "%s", formatMessage("[info]┃ There are no ignore patterns for this clipboard.[blank]\n").data());
         }
         return;
     }
@@ -48,7 +48,7 @@ void ignoreRegex() {
         fs::remove(path.metadata.ignore);
         if (output_silent) return;
         stopIndicator();
-        fprintf(stderr, "%s", formatMessage("[success]│ Removed ignore patterns\n").data());
+        fprintf(stderr, "%s", formatMessage("[success][inverse]✔[noinverse] Removed ignore patterns\n").data());
         exit(EXIT_SUCCESS);
     }
 
@@ -57,7 +57,9 @@ void ignoreRegex() {
             volatile auto test = std::regex(pattern); // volatile makes sure this otherwise unused variable isn't optimized out
         } catch (const std::regex_error& e) {
             error_exit(
-                    formatMessage("[error]│ The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s [help]⬤ Try using a different one instead.[blank]\n"),
+                    formatMessage(
+                            "[error][inverse]✘[noinverse] The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s [help]⬤ Try using a different one instead.[blank]\n"
+                    ),
                     pattern,
                     std::string(e.what())
             );
@@ -71,7 +73,7 @@ void ignoreRegex() {
     writeToFile(path.metadata.ignore, writeToFileContent);
 
     stopIndicator();
-    fprintf(stderr, "%s", formatMessage("[success]│ Saved ignore patterns [bold]").data());
+    fprintf(stderr, "%s", formatMessage("[success][inverse]✔[noinverse] Saved ignore patterns [bold]").data());
     for (const auto& pattern : regexes) {
         fprintf(stderr, "%s", pattern.data());
         if (pattern != regexes.back()) fprintf(stderr, ", ");

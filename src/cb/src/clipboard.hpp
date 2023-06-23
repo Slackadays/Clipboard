@@ -212,7 +212,7 @@ extern EnumArray<std::string_view, 18> doing_action;
 extern EnumArray<std::string_view, 18> did_action;
 extern EnumArray<std::string_view, 18> action_descriptions;
 
-extern std::array<std::pair<std::string_view, std::string_view>, 8> colors;
+extern std::array<std::pair<std::string_view, std::string_view>, 10> colors;
 
 bool action_is_one_of(auto... options) {
     return ((action == options) || ...);
@@ -305,26 +305,21 @@ public:
     std::string operator()() const { return std::move(formatMessage(internal_message)); }
     size_t columnLength() const {
         std::string temp = std::regex_replace(std::string(internal_message), std::regex("[\\r\\n]|\\[[a-z]+\\]|\\\033\\[\\d+m"), "");
-        std::mbstate_t state = std::mbstate_t();
-        size_t length = 0;
-        for (size_t i = 0; i < temp.size(); i += std::mbrlen(&temp[i], temp.size() - i, &state))
-            length++;
-        return length;
+        return temp.size() - std::count_if(temp.begin(), temp.end(), [](auto c) { return (c & 0xC0) == 0x80; }); // remove UTF-8 multibyte characters
     }
 };
 
 std::string formatNumbers(const auto& num) {
     static std::stringstream ss;
     ss.str(std::string());
-    ss << std::fixed << std::setprecision(2);
-    ss << num;
+    ss << std::fixed << std::setprecision(2) << num;
     return ss.str();
 }
 
 std::string formatBytes(const auto& bytes) {
-    if (bytes < (1024 * 10.0)) return formatNumbers(bytes) + "B";
-    if (bytes < (1024 * 1024 * 10.0)) return formatNumbers(bytes / 1024.0) + "kB";
-    if (bytes < (1024 * 1024 * 1024 * 10.0)) return formatNumbers(bytes / (1024.0 * 1024.0)) + "MB";
+    if (bytes < (1024.0 * 10.0)) return formatNumbers(bytes) + "B";
+    if (bytes < (1024.0 * 1024.0 * 10.0)) return formatNumbers(bytes / 1024.0) + "kB";
+    if (bytes < (1024.0 * 1024.0 * 1024.0 * 10.0)) return formatNumbers(bytes / (1024.0 * 1024.0)) + "MB";
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 

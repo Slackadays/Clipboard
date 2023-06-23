@@ -30,13 +30,13 @@ namespace PerformAction {
 
 void info() {
     stopIndicator();
-    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
     fprintf(stderr, clipboard_name_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    fprintf(stderr, "%s", formatMessage(" [noinverse][info]━").data());
     int columns = thisTerminalSize().columns - ((clipboard_name_message.columnLength() - 2) + clipboard_name.length() + 7);
     for (int i = 0; i < columns; i++)
         fprintf(stderr, "━");
-    fprintf(stderr, "%s", formatMessage("┑[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("┓[blank]\n").data());
 
     // creation date
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
@@ -44,9 +44,9 @@ void info() {
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
-    fprintf(stderr, formatMessage("[info]%s│ Created [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
+    fprintf(stderr, formatMessage("[info]%s┃ Created [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
-    fprintf(stderr, formatMessage("[info]│ Created [help]n/a[blank]\n").data());
+    fprintf(stderr, formatMessage("[info]┃ Created [help]n/a[blank]\n").data());
 #endif
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
@@ -58,61 +58,61 @@ void info() {
     }
     time = std::ctime(&latest);
     std::erase(time, '\n');
-    fprintf(stderr, formatMessage("[info]%s│ Last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
+    fprintf(stderr, formatMessage("[info]%s┃ Last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
 #elif defined(__WIN32__) || defined(__WIN64__)
-    fprintf(stderr, formatMessage("[info]│ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
+    fprintf(stderr, formatMessage("[info]┃ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
 
-    fprintf(stderr, formatMessage("[info]%s│ Stored in [help]%s[blank]\n").data(), generatedEndbar().data(), path.string().data());
+    fprintf(stderr, formatMessage("[info]%s┃ Stored in [help]%s[blank]\n").data(), generatedEndbar().data(), path.string().data());
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
     struct passwd* pw = getpwuid(info.st_uid);
-    fprintf(stderr, formatMessage("[info]%s│ Owned by [help]%s[blank]\n").data(), generatedEndbar().data(), pw->pw_name);
+    fprintf(stderr, formatMessage("[info]%s┃ Owned by [help]%s[blank]\n").data(), generatedEndbar().data(), pw->pw_name);
 #elif defined(__WIN32__) || defined(__WIN64__)
-    fprintf(stderr, formatMessage("[info]│ Owned by [help]n/a[blank]\n").data());
+    fprintf(stderr, formatMessage("[info]┃ Owned by [help]n/a[blank]\n").data());
 #endif
 
-    fprintf(stderr, formatMessage("[info]%s│ Persistent? [help]%s[blank]\n").data(), generatedEndbar().data(), path.is_persistent ? "Yes" : "No");
-    fprintf(stderr, formatMessage("[info]%s│ Total entries: [help]%zu[blank]\n").data(), generatedEndbar().data(), path.totalEntries());
-    fprintf(stderr, formatMessage("[info]%s│ Total clipboard size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path)).data());
-    fprintf(stderr, formatMessage("[info]%s│ Total space remaining: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::space(path).available).data());
+    fprintf(stderr, formatMessage("[info]%s┃ Persistent? [help]%s[blank]\n").data(), generatedEndbar().data(), path.is_persistent ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]%s┃ Total entries: [help]%zu[blank]\n").data(), generatedEndbar().data(), path.totalEntries());
+    fprintf(stderr, formatMessage("[info]%s┃ Total clipboard size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path)).data());
+    fprintf(stderr, formatMessage("[info]%s┃ Total space remaining: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::space(path).available).data());
 
     if (path.holdsRawDataInCurrentEntry()) {
-        fprintf(stderr, formatMessage("[info]%s│ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::file_size(path.data.raw)).data());
-        fprintf(stderr, formatMessage("[info]%s│ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        fprintf(stderr, formatMessage("[info]%s┃ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::file_size(path.data.raw)).data());
+        fprintf(stderr, formatMessage("[info]%s┃ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
-        fprintf(stderr, formatMessage("[info]%s│ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path.data)).data());
+        fprintf(stderr, formatMessage("[info]%s┃ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path.data)).data());
         for (const auto& entry : fs::directory_iterator(path.data))
             entry.is_directory() ? directories++ : files++;
-        fprintf(stderr, formatMessage("[info]%s│ Files: [help]%zu[blank]\n").data(), generatedEndbar().data(), files);
-        fprintf(stderr, formatMessage("[info]%s│ Directories: [help]%zu[blank]\n").data(), generatedEndbar().data(), directories);
+        fprintf(stderr, formatMessage("[info]%s┃ Files: [help]%zu[blank]\n").data(), generatedEndbar().data(), files);
+        fprintf(stderr, formatMessage("[info]%s┃ Directories: [help]%zu[blank]\n").data(), generatedEndbar().data(), directories);
     }
 
     if (!available_mimes.empty()) {
-        fprintf(stderr, formatMessage("[info]%s│ Available types from GUI: [help]").data(), generatedEndbar().data());
+        fprintf(stderr, formatMessage("[info]%s┃ Available types from GUI: [help]").data(), generatedEndbar().data());
         for (const auto& mime : available_mimes) {
             fprintf(stderr, "%s", mime.data());
             if (mime != available_mimes.back()) fprintf(stderr, ", ");
         }
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     }
-    fprintf(stderr, formatMessage("[info]%s│ Content cut? [help]%s[blank]\n").data(), generatedEndbar().data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]%s┃ Content cut? [help]%s[blank]\n").data(), generatedEndbar().data(), fs::exists(path.metadata.originals) ? "Yes" : "No");
 
-    fprintf(stderr, formatMessage("[info]%s│ Locked by another process? [help]%s[blank]\n").data(), generatedEndbar().data(), path.isLocked() ? "Yes" : "No");
+    fprintf(stderr, formatMessage("[info]%s┃ Locked by another process? [help]%s[blank]\n").data(), generatedEndbar().data(), path.isLocked() ? "Yes" : "No");
 
     if (path.isLocked()) {
-        fprintf(stderr, formatMessage("[info]%s│ Locked by process with pid [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.lock).data());
+        fprintf(stderr, formatMessage("[info]%s┃ Locked by process with pid [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.lock).data());
     }
 
     if (fs::exists(path.metadata.notes))
-        fprintf(stderr, formatMessage("[info]%s│ Note: [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.notes).data());
+        fprintf(stderr, formatMessage("[info]%s┃ Note: [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.notes).data());
     else
-        fprintf(stderr, formatMessage("[info]%s│ There is no note for this clipboard.[blank]\n").data(), generatedEndbar().data());
+        fprintf(stderr, formatMessage("[info]%s┃ There is no note for this clipboard.[blank]\n").data(), generatedEndbar().data());
 
     if (path.holdsIgnoreRegexes()) {
-        fprintf(stderr, formatMessage("[info]%s│ Ignore regexes: [help]").data(), generatedEndbar().data());
+        fprintf(stderr, formatMessage("[info]%s┃ Ignore regexes: [help]").data(), generatedEndbar().data());
         auto regexes = fileLines(path.metadata.ignore);
         for (const auto& regex : regexes) {
             fprintf(stderr, "%s", regex.data());
@@ -120,13 +120,13 @@ void info() {
         }
         fprintf(stderr, "%s", formatMessage("[blank]\n").data());
     } else
-        fprintf(stderr, formatMessage("[info]%s│ There are no ignore regexes for this clipboard.[blank]\n").data(), generatedEndbar().data());
+        fprintf(stderr, formatMessage("[info]%s┃ There are no ignore regexes for this clipboard.[blank]\n").data(), generatedEndbar().data());
 
-    fprintf(stderr, "%s", formatMessage("[info]┕").data());
+    fprintf(stderr, "%s", formatMessage("[info]┗").data());
     int cols = thisTerminalSize().columns;
     for (int i = 0; i < cols - 2; i++)
         fprintf(stderr, "━");
-    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
 }
 
 void infoJSON() {

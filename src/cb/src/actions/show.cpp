@@ -36,15 +36,15 @@ void show() {
     }
 
     auto available = thisTerminalSize();
-    fprintf(stderr, "%s", formatMessage("[info]┍━┫ ").data());
+    fprintf(stderr, "%s", formatMessage("[info]┏━▌ ").data());
     fprintf(stderr, clipboard_item_many_contents_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatMessage("[info] ┣").data());
+    fprintf(stderr, "%s", formatMessage("[info] ▐").data());
     auto usedSpace = (clipboard_item_many_contents_message.columnLength() - 2) + clipboard_name.length() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
     for (int i = 0; i < columns; i++)
         fprintf(stderr, "━");
-    fprintf(stderr, "%s", formatMessage("┑[blank]").data());
+    fprintf(stderr, "%s", formatMessage("┓[blank]").data());
 
     for (const auto& entry : fs::directory_iterator(path.data)) {
         if (!regexes.empty() && !std::any_of(regexes.begin(), regexes.end(), [&](const auto& regex) { return std::regex_match(entry.path().filename().string(), regex); })) continue;
@@ -53,17 +53,17 @@ void show() {
             stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
         else
             stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
-        fprintf(stderr, formatMessage("\n[info]\033[%zuG│\r│ [help]%s[blank]").data(), available.columns, stylizedEntry.data());
+        fprintf(stderr, formatMessage("\n[info]\033[%zuG┃\r┃ [help]%s[blank]").data(), available.columns, stylizedEntry.data());
     }
 
-    fprintf(stderr, "%s", formatMessage("[info]\n┕━┫ ").data());
+    fprintf(stderr, "%s", formatMessage("[info]\n┗━▌ ").data());
     Message status_legend_message = "\033[1mFiles\033[22m, \033[4mDirectories\033[24m";
     usedSpace = status_legend_message.columnLength() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
-    std::string bar2 = " ┣" + repeatString("━", cols);
+    std::string bar2 = " ▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┙[blank]\n").data());
+    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
 }
 
 void showFilepaths() {

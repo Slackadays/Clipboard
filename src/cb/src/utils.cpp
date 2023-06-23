@@ -101,14 +101,16 @@ std::mutex m;
 std::atomic<ClipboardState> clipboard_state;
 std::atomic<IndicatorState> progress_state;
 
-std::array<std::pair<std::string_view, std::string_view>, 8> colors = {
+std::array<std::pair<std::string_view, std::string_view>, 10> colors = {
         {{"[error]", "\033[38;5;196m"},    // red
          {"[success]", "\033[38;5;40m"},   // green
          {"[progress]", "\033[38;5;214m"}, // yellow
-         {"[info]", "\033[38;5;51m"},      // blue
-         {"[help]", "\033[38;5;213m"},     // pink
+         {"[info]", "\033[38;5;45m"},      // blue
+         {"[help]", "\033[38;5;207m"},     // pink
          {"[bold]", "\033[1m"},
          {"[nobold]", "\033[22m"},
+         {"[inverse]", "\033[7m"},
+         {"[noinverse]", "\033[27m"},
          {"[blank]", "\033[0m"}}};
 
 #if defined(_WIN64) || defined(_WIN32)
@@ -239,7 +241,7 @@ std::string fileContents(const fs::path& path) {
 
 std::string generatedEndbar() {
     static auto columns = thisTerminalSize().columns;
-    return "\033[" + std::to_string(columns) + "G│\r";
+    return "\033[" + std::to_string(columns) + "G┃\r";
 }
 
 std::string repeatString(const std::string_view& character, const size_t& length) {
@@ -600,7 +602,7 @@ void setFlags() {
         auto longestActionShortcut = std::max_element(action_shortcuts.begin(), action_shortcuts.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
         std::string actionsList;
         for (int i = 0; i < actions.size(); i++) {
-            actionsList.append("[progress]│ ")
+            actionsList.append("[progress]┃ ")
                     .append(repeatString(" ", longestAction - actions.at(i).size()))
                     .append(actions.at(i))
                     .append(", ")
@@ -784,7 +786,7 @@ void showFailures() {
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
     for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-        printf(formatMessage("[error]│ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+        printf(formatMessage("[error][inverse]✘[noinverse] [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
         if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
     }
     printf("%s", fix_problem_message().data());
