@@ -22,12 +22,12 @@ void noteText() {
             fs::remove(path.metadata.notes);
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, "%s", formatMessage("[success][inverse]✔[noinverse] Removed note\n").data());
+            fprintf(stderr, "%s", formatMessage("[success][inverse] ✔ [noinverse] Removed note\n").data());
         } else {
             writeToFile(path.metadata.notes, copying.items.at(0).string());
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, formatMessage("[success][inverse]✔[noinverse] Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
+            fprintf(stderr, formatMessage("[success][inverse] ✔ [noinverse] Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
         }
     } else if (copying.items.empty()) {
         if (fs::is_regular_file(path.metadata.notes)) {
@@ -40,7 +40,7 @@ void noteText() {
             fprintf(stderr, "%s", formatMessage("[info]┃ There is no note for this clipboard.[blank]\n").data());
         }
     } else
-        error_exit("%s", formatMessage("[error][inverse]✘[noinverse] You can't add multiple items to a note. [help]⬤ Try providing a single piece of text instead.[blank]\n"));
+        error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] You can't add multiple items to a note. [help]⬤ Try providing a single piece of text instead.[blank]\n"));
 }
 
 void notePipe() {
@@ -48,7 +48,7 @@ void notePipe() {
     writeToFile(path.metadata.notes, content);
     if (output_silent) return;
     stopIndicator();
-    fprintf(stderr, formatMessage("[success][inverse]✔[noinverse] Saved note \"%s\"\n").data(), content.data());
+    fprintf(stderr, formatMessage("[success][inverse] ✔ [noinverse] Saved note \"%s\"\n").data(), content.data());
     exit(EXIT_SUCCESS);
 }
 

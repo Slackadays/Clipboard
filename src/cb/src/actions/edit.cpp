@@ -20,7 +20,7 @@ namespace PerformAction {
 void edit() {
     if (!path.holdsRawDataInCurrentEntry()) {
         if (path.holdsDataInCurrentEntry())
-            error_exit("%s", formatMessage("[error][inverse]✘[noinverse] You can currently only edit text content. [help]⬤ Try copying some text instead.[blank]\n"));
+            error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] You can currently only edit text content. [help]⬤ Try copying some text instead.[blank]\n"));
         else
             std::ofstream temp(path.data.raw);
     }
@@ -54,7 +54,7 @@ void edit() {
 
     if (!editor) editor = fallbackEditor();
 
-    if (!editor) error_exit("%s", formatMessage("[error][inverse]✘[noinverse] CB couldn't find a suitable editor to use. [help]⬤ Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
+    if (!editor) error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] CB couldn't find a suitable editor to use. [help]⬤ Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
 
     // now run this editor with the text file as the argument
     auto command = editor.value() + " " + path.data.raw.string();
@@ -63,7 +63,7 @@ void edit() {
 
     int res = system(command.data());
 
-    if (res != 0) error_exit("%s", formatMessage("[error][inverse]✘[noinverse] CB couldn't open the editor. [help]⬤ Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
+    if (res != 0) error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] CB couldn't open the editor. [help]⬤ Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
 }
 
 } // namespace PerformAction

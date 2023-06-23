@@ -33,7 +33,7 @@ void exportClipboards() {
         if (fs::exists(exportDirectory)) fs::remove_all(exportDirectory);
         fs::create_directory(exportDirectory);
     } catch (const fs::filesystem_error& e) {
-        error_exit("%s", formatMessage("[error][inverse]✘[noinverse] CB couldn't create the export directory. [help]⬤ Try checking if you have the right permissions or not.[blank]\n"));
+        error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] CB couldn't create the export directory. [help]⬤ Try checking if you have the right permissions or not.[blank]\n"));
     }
 
     auto exportClipboard = [&](const std::string& name) {

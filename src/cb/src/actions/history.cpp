@@ -45,7 +45,7 @@ void moveHistory() {
         successful_entries++;
     }
     stopIndicator();
-    fprintf(stderr, formatMessage("[success][inverse]✔[noinverse] Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
+    fprintf(stderr, formatMessage("[success][inverse] ✔ [noinverse] Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
     if (clipboard_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }
 

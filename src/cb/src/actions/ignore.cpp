@@ -48,7 +48,7 @@ void ignoreRegex() {
         fs::remove(path.metadata.ignore);
         if (output_silent) return;
         stopIndicator();
-        fprintf(stderr, "%s", formatMessage("[success][inverse]✔[noinverse] Removed ignore patterns\n").data());
+        fprintf(stderr, "%s", formatMessage("[success][inverse] ✔ [noinverse] Removed ignore patterns\n").data());
         exit(EXIT_SUCCESS);
     }
 
@@ -58,7 +58,7 @@ void ignoreRegex() {
         } catch (const std::regex_error& e) {
             error_exit(
                     formatMessage(
-                            "[error][inverse]✘[noinverse] The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s [help]⬤ Try using a different one instead.[blank]\n"
+                            "[error][inverse] ✘ [noinverse] The regex pattern you provided [bold](\"%s\")[blank][error] is invalid with error %s [help]⬤ Try using a different one instead.[blank]\n"
                     ),
                     pattern,
                     std::string(e.what())
@@ -73,7 +73,7 @@ void ignoreRegex() {
     writeToFile(path.metadata.ignore, writeToFileContent);
 
     stopIndicator();
-    fprintf(stderr, "%s", formatMessage("[success][inverse]✔[noinverse] Saved ignore patterns [bold]").data());
+    fprintf(stderr, "%s", formatMessage("[success][inverse] ✔ [noinverse] Saved ignore patterns [bold]").data());
     for (const auto& pattern : regexes) {
         fprintf(stderr, "%s", pattern.data());
         if (pattern != regexes.back()) fprintf(stderr, ", ");

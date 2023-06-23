@@ -21,7 +21,7 @@ void search() {
         error_exit(
                 "%s",
                 formatMessage(
-                        "[error][inverse]✘[noinverse] You need to enter something to search for. [help]⬤ Try entering a search term after the action, like [bold]cb search Foobar[nobold].[blank]\n"
+                        "[error][inverse] ✘ [noinverse] You need to enter something to search for. [help]⬤ Try entering a search term after the action, like [bold]cb search Foobar[nobold].[blank]\n"
                 )
         );
 
@@ -74,7 +74,7 @@ void search() {
             }
         } catch (const std::regex_error& e) {
             error_exit(
-                    formatMessage("[error][inverse]✘[noinverse] CB couldn't process your query as regex. (Specific error: %s) [help]⬤ Try entering a valid regex instead, like [bold]cb search "
+                    formatMessage("[error][inverse] ✘ [noinverse] CB couldn't process your query as regex. (Specific error: %s) [help]⬤ Try entering a valid regex instead, like [bold]cb search "
                                   "\"Foobar.*\"[nobold].[blank]\n"),
                     std::string(e.what())
             );
@@ -124,7 +124,7 @@ void search() {
     }
 
     if (results.empty())
-        error_exit("%s", formatMessage("[error][inverse]✘[noinverse] CB couldn't find anything matching your query.[blank] [help]⬤ Try searching for something else instead.[blank]\n"));
+        error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] CB couldn't find anything matching your query.[blank] [help]⬤ Try searching for something else instead.[blank]\n"));
 
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash < two.hash; });
     results.erase(std::unique(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash == two.hash; }), results.end());

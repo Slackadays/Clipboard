@@ -36,7 +36,7 @@ void removeRegex() {
         else
             error_exit(
                     "%s",
-                    formatMessage("[error][inverse]✘[noinverse] CB couldn't match your pattern(s) against anything. [help]⬤ Try using a different pattern instead or check what's "
+                    formatMessage("[error][inverse] ✘ [noinverse] CB couldn't match your pattern(s) against anything. [help]⬤ Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
             );
     } else {
@@ -55,7 +55,7 @@ void removeRegex() {
         if (successes.directories == 0 && successes.files == 0)
             error_exit(
                     "%s",
-                    formatMessage("[error][inverse]✘[noinverse] CB couldn't match your pattern(s) against anything. [help]⬤ Try using a different pattern instead or check what's "
+                    formatMessage("[error][inverse] ✘ [noinverse] CB couldn't match your pattern(s) against anything. [help]⬤ Try using a different pattern instead or check what's "
                                   "stored.[blank]\n")
             );
     }
