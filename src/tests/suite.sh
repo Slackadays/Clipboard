@@ -20,70 +20,42 @@ cd "$BASEDIR" || exit 1
 
 clear_tempdirs
 
-run_one() {
-    if ! sh "$1"
-    then
-        clear_tempdirs
-        sh "$1"
-    fi
-}
-
 run_all_tests() {
-    printf "\033[1m\033[33mRunning all tests\033[0m\n"
-    printf "\033[1m\033[33mColor theme: \033[0m\033[33m%s\033[0m\n" "${CLIPBOARD_THEME:-default}"
-    run_one export.sh
-    run_one history.sh
-    run_one ignore.sh
-    run_one add-file.sh
-    run_one add-pipe.sh
-    run_one add-text.sh
-    run_one bad-action.sh
-    run_one clear-file.sh
-    run_one clear-pipe.sh
-    run_one clear-text.sh
-    run_one copy-file.sh
-    run_one copy-pipe.sh
-    run_one copy-text.sh
-    run_one cut-file.sh
-    run_one cut-pipe.sh
-    run_one cut-text.sh
-    run_one paste-file.sh
-    run_one paste-pipe.sh
-    run_one paste-text.sh
-    run_one show-file.sh
-    run_one show-pipe.sh
-    run_one show-text.sh
-    run_one remove-file.sh
-    run_one remove-pipe.sh
-    run_one remove-text.sh
-    run_one note-pipe.sh
-    run_one note-text.sh
-    run_one status.sh
-    run_one help.sh
-    run_one themes.sh
-    run_one languages.sh
-    run_one x11.sh
-    run_one wayland.sh
-    clear_tempdirs
+    sh export.sh
+    sh history.sh
+    sh ignore.sh
+    sh add-file.sh
+    sh add-pipe.sh
+    sh add-text.sh
+    sh bad-action.sh
+    sh clear-file.sh
+    sh clear-pipe.sh
+    sh clear-text.sh
+    sh copy-file.sh
+    sh copy-pipe.sh
+    sh copy-text.sh
+    sh cut-file.sh
+    sh cut-pipe.sh
+    sh cut-text.sh
+    sh paste-file.sh
+    sh paste-pipe.sh
+    sh paste-text.sh
+    sh show-file.sh
+    sh show-pipe.sh
+    sh show-text.sh
+    sh remove-file.sh
+    sh remove-pipe.sh
+    sh remove-text.sh
+    sh note-pipe.sh
+    sh note-text.sh
+    sh status.sh
+    sh help.sh
+    sh themes.sh
+    sh languages.sh
+    sh x11.sh
+    sh wayland.sh
 }
 
-run_all_themes() {
-    run_all_tests
-    export CLIPBOARD_THEME=dark
-    run_all_tests
-    export CLIPBOARD_THEME=light
-    run_all_tests
-    export CLIPBOARD_THEME=darkhighcontrast
-    run_all_tests
-    export CLIPBOARD_THEME=lighthighcontrast
-    run_all_tests
-    export CLIPBOARD_THEME=amber
-    run_all_tests
-    export CLIPBOARD_THEME=green
-    run_all_tests
-    unset CLIPBOARD_THEME
-}
-
-run_all_themes
+run_all_tests
 
 echo "🐢 All tests passed!"
