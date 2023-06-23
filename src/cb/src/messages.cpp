@@ -144,7 +144,7 @@ Message many_files_one_directory_success_message = "[success][inverse]✔[noinve
 Message many_files_many_directories_success_message = "[success][inverse]✔[noinverse] %s %lu files and %lu directories[blank]\n";
 Message one_clipboard_success_message = "[success][inverse]✔[noinverse] %s one clipboard[blank]\n";
 Message many_clipboards_success_message = "[success][inverse]✔[noinverse] %s %lu clipboards[blank]\n";
-Message clipboard_name_message = "[info][bold]Info for clipboard[help] %s[nobold]";
+Message clipboard_name_message = "[info][bold]Info for clipboard [help] %s[nobold]";
 Message internal_error_message = "[error][inverse]✘[noinverse] Internal error: %s\n┃ This might be a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
 

@@ -57,7 +57,7 @@ void history() {
     stopIndicator();
     auto available = thisTerminalSize();
     fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
-    Message clipboard_history_message = "[bold]Entry history for clipboard[help] %s";
+    Message clipboard_history_message = "[bold]Entry history for clipboard [help] %s[nobold]";
     fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage(" [noinverse][info]━").data());
     auto usedSpace = (clipboard_history_message.columnLength() - 2) + clipboard_name.length() + 7;
