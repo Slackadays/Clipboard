@@ -90,7 +90,7 @@ void search() {
     };
 
     for (auto& clipboard : targets) {
-        for (const auto& entry : clipboard.entryIndex) {
+        for (auto entry = 0; entry < clipboard.entryIndex.size(); entry++) {
             auto adjustScoreByEntryPosition = [&](Result& result) {
                 float multiplier = 1.0f - (static_cast<float>(entry) / (20.0f * static_cast<float>(clipboard.entryIndex.size())));
                 float newScore = static_cast<float>(result.score) * multiplier;
@@ -160,7 +160,7 @@ void search() {
                 result.entry);
         std::string preview = result.preview;
         std::erase(preview, '\n');
-        int widthRemaining = available.columns - (longestClipboardLength + longestEntryLength);
+        auto widthRemaining = available.columns - (longestClipboardLength + longestEntryLength);
         if (preview.length() > widthRemaining) {
             preview = preview.substr(0, widthRemaining - 3);
             preview += "...";
