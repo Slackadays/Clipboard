@@ -16,7 +16,73 @@
 
 namespace PerformAction {
 
-void search() {
+struct Result {
+    std::string preview;
+    std::string clipboard;
+    unsigned long entry = 0;
+    unsigned long score = 0;
+    size_t hash;
+};
+
+void displaySearchResults(const std::vector<Result>& results) {
+    auto available = thisTerminalSize();
+
+    auto longestClipboardLength = (*std::max_element(results.begin(), results.end(), [](const auto& a, const auto& b) { return a.clipboard.size() < b.clipboard.size(); })).clipboard.size();
+
+    auto longestEntryLength = numberLength((*std::max_element(results.begin(), results.end(), [](const auto& a, const auto& b) { return a.entry < b.entry; })).entry);
+
+    stopIndicator();
+
+    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
+    Message search_result_message = "[info][bold]Your search results[nobold]";
+    fprintf(stderr, "%s", search_result_message().data());
+    fprintf(stderr, "%s", formatMessage(" [noinverse]━").data());
+    auto usedSpace = (columnLength(search_result_message) - 2) + 9;
+    if (usedSpace > available.columns) available.columns = usedSpace;
+    int columns = available.columns - usedSpace;
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]\n").data());
+
+    for (const auto& result : results) {
+        fprintf(stderr,
+                formatMessage("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [bold]%*s%lu[nobold]│ [blank]").data(),
+                available.columns,
+                longestClipboardLength - result.clipboard.length(),
+                "",
+                result.clipboard.data(),
+                longestEntryLength - numberLength(result.entry),
+                "",
+                result.entry);
+        std::string preview = result.preview;
+        std::erase(preview, '\n');
+        auto widthRemaining = available.columns - (longestClipboardLength + longestEntryLength + 7);
+        if (preview.length() > widthRemaining) {
+            preview = preview.substr(0, widthRemaining - (preview.length() - columnLength(preview)));
+        }
+        fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), preview.data());
+    }
+
+    fprintf(stderr, "%s", formatMessage("[info]┗━━▌").data());
+    Message search_legend_message = "[bold]Clipboard[nobold]│ [bold]Entry[nobold]│[help] Result[info]";
+    int cols = available.columns - (columnLength(search_legend_message) + 6);
+    std::string bar2 = "▐" + repeatString("━", cols);
+    fprintf(stderr, "%s", (search_legend_message() + bar2).data());
+    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
+}
+
+void displaySearchJSON(const std::vector<Result>& results) {
+    printf("[\n");
+    for (size_t i = results.size() - 1; i > 0; i--) {
+        printf("    {\n");
+        printf("        \"clipboard\": \"%s\",\n", results.at(i).clipboard.data());
+        printf("        \"entry\": %lu,\n", results.at(i).entry);
+        printf("        \"preview\": \"%s\",\n", JSONescape(results.at(i).preview).data());
+        printf("        \"score\": %lu\n", results.at(i).score);
+        printf("    }%s\n", i == 1 ? "" : ",");
+    }
+    printf("]\n");
+}
+
+void searchInternal(std::function<void(const std::vector<Result>&)> nextStep) {
     if (copying.items.empty())
         error_exit(
                 "%s",
@@ -27,14 +93,6 @@ void search() {
 
     std::vector<std::string> queries;
     std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(queries), [](const auto& item) { return item.string(); });
-
-    struct Result {
-        std::string preview;
-        std::string clipboard;
-        unsigned long entry = 0;
-        unsigned long score = 0;
-        size_t hash;
-    };
 
     std::vector<Clipboard> targets;
     std::vector<Result> results;
@@ -65,12 +123,12 @@ void search() {
             } else if (std::regex_match(content, std::regex(query))) { // then check if the content regex matches the query
                 result.score = 800;
                 result.preview = "\033[1m" + content + "\033[22m";
-            } else if (size_t distance; content.size() < 1000 && (distance = levenshteinDistance(content, query)) < 25) { // then do a fuzzy search of the content for the query
-                result.score = 700 - (distance * 20);
-                result.preview = "\033[1m" + content + "\033[22m";
             } else if (std::smatch sm; std::regex_search(content, sm, std::regex(query))) { // then do a regex search of the content for the query
-                result.score = 600;
+                result.score = 700;
                 result.preview = content.substr(0, sm.position(0)) + "\033[1m" + sm.str(0) + "\033[22m" + content.substr(sm.position(0) + sm.length(0));
+            } else if (size_t distance; content.size() < 1000 && (distance = levenshteinDistance(content, query)) < 25) { // then do a fuzzy search of the content for the query
+                result.score = 600 - (distance * 20);
+                result.preview = "\033[1m" + content + "\033[22m";
             }
         } catch (const std::regex_error& e) {
             error_exit(
@@ -131,49 +189,15 @@ void search() {
 
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.score < two.score; });
 
-    auto available = thisTerminalSize();
+    nextStep(results);
+}
 
-    auto longestClipboardLength = (*std::max_element(targets.begin(), targets.end(), [](const auto& a, const auto& b) { return a.name().size() < b.name().size(); })).name().size();
+void search() {
+    searchInternal(displaySearchResults);
+}
 
-    auto longestEntryLength = numberLength((*std::max_element(results.begin(), results.end(), [](const auto& a, const auto& b) { return a.entry < b.entry; })).entry);
-
-    stopIndicator();
-
-    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
-    Message search_result_message = "[info][bold]Your search results[nobold]";
-    fprintf(stderr, "%s", search_result_message().data());
-    fprintf(stderr, "%s", formatMessage(" [noinverse]━").data());
-    auto usedSpace = (search_result_message.columnLength() - 2) + 9;
-    if (usedSpace > available.columns) available.columns = usedSpace;
-    int columns = available.columns - usedSpace;
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]\n").data());
-
-    for (const auto& result : results) {
-        fprintf(stderr,
-                formatMessage("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [bold]%*s%lu[nobold]│ [blank]").data(),
-                available.columns,
-                longestClipboardLength - result.clipboard.length(),
-                "",
-                result.clipboard.data(),
-                longestEntryLength - numberLength(result.entry),
-                "",
-                result.entry);
-        std::string preview = result.preview;
-        std::erase(preview, '\n');
-        auto widthRemaining = available.columns - (longestClipboardLength + longestEntryLength);
-        if (preview.length() > widthRemaining) {
-            preview = preview.substr(0, widthRemaining - 3);
-            preview += "...";
-        }
-        fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), preview.data());
-    }
-
-    fprintf(stderr, "%s", formatMessage("[info]┗━━▌").data());
-    Message search_legend_message = "[bold]Clipboard[nobold]│ [bold]Entry[nobold]│[help] Result[info]";
-    int cols = available.columns - (search_legend_message.columnLength() + 6);
-    std::string bar2 = "▐" + repeatString("━", cols);
-    fprintf(stderr, "%s", (search_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
+void searchJSON() {
+    searchInternal(displaySearchJSON);
 }
 
 } // namespace PerformAction

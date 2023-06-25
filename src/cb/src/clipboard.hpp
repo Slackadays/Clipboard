@@ -310,10 +310,7 @@ private:
 public:
     Message(const auto& message) : internal_message(std::move(message)) {}
     std::string operator()() const { return std::move(formatMessage(internal_message)); }
-    size_t columnLength() const {
-        std::string temp = std::regex_replace(std::string(internal_message), std::regex("[\\r\\n]|\\[[a-z]+\\]|\\\033\\[\\d+m"), "");
-        return temp.size() - std::count_if(temp.begin(), temp.end(), [](auto c) { return (c & 0xC0) == 0x80; }); // remove UTF-8 multibyte characters
-    }
+    operator std::string_view() const { return internal_message; }
 };
 
 std::string formatNumbers(const auto& num) {
@@ -330,6 +327,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+size_t columnLength(const std::string_view& message);
 std::string generatedEndbar();
 std::string repeatString(const std::string_view& character, const size_t& length);
 unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
@@ -460,4 +458,5 @@ void statusJSON();
 void history();
 void historyJSON();
 void search();
+void searchJSON();
 } // namespace PerformAction

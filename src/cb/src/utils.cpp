@@ -221,6 +221,11 @@ std::string JSONescape(const std::string_view& input) {
     return temp;
 }
 
+size_t columnLength(const std::string_view& message) {
+    std::string temp(std::regex_replace(std::string(message), std::regex("[\\r\\n]|\\[[a-z]+\\]|\\\033\\[\\d+m"), ""));
+    return temp.size() - std::count_if(temp.begin(), temp.end(), [](auto c) { return (c & 0xC0) == 0x80; }); // remove UTF-8 multibyte characters
+}
+
 std::string fileContents(const fs::path& path) {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
     int fd = open(path.string().data(), O_RDONLY);
@@ -566,10 +571,10 @@ IOType getIOType() {
     if (action_is_one_of(Cut, Copy, Add)) {
         if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
         if (!is_tty.in && copying.items.empty()) return Pipe;
-    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History)) {
+    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History, Search)) {
         if (!is_tty.out) return Pipe;
         return Text;
-    } else if (action_is_one_of(Remove, Note, Ignore, Swap, Load, Import, Export, Search)) {
+    } else if (action_is_one_of(Remove, Note, Ignore, Swap, Load, Import, Export)) {
         if (!is_tty.in && copying.items.empty()) return Pipe;
         return Text;
     }
@@ -730,6 +735,8 @@ void performAction() {
             statusJSON();
         else if (action == History)
             historyJSON();
+        else if (action == Search)
+            searchJSON();
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
@@ -780,9 +787,9 @@ std::string getMIMEType() {
 void showFailures() {
     if (copying.failedItems.size() <= 0) return;
     TerminalSize available(thisTerminalSize());
-    available.rows -= clipboard_failed_many_message.columnLength() / available.columns;
+    available.rows -= columnLength(clipboard_failed_many_message) / available.columns;
 
-    if (copying.failedItems.size() > available.rows) available.rows -= and_more_fails_message.columnLength() / available.columns;
+    if (copying.failedItems.size() > available.rows) available.rows -= columnLength(and_more_fails_message) / available.columns;
 
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());

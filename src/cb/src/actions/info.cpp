@@ -33,7 +33,7 @@ void info() {
     fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
     fprintf(stderr, clipboard_name_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatMessage(" [noinverse][info]━").data());
-    int columns = thisTerminalSize().columns - ((clipboard_name_message.columnLength() - 2) + clipboard_name.length() + 7);
+    int columns = thisTerminalSize().columns - ((columnLength(clipboard_name_message) - 2) + clipboard_name.length() + 7);
     for (int i = 0; i < columns; i++)
         fprintf(stderr, "━");
     fprintf(stderr, "%s", formatMessage("┓[blank]\n").data());
