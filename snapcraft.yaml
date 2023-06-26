@@ -30,7 +30,7 @@ parts:
     plugin: dump
     source: ./build/
     organize:
-      "*.so": usr/local/bin/
+      "*.so": /usr/local/lib/
 apps:
   cb:
     command: usr/local/bin/cb
