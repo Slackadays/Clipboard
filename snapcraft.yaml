@@ -11,7 +11,7 @@ parts:
   cb:
     plugin: cmake
     cmake-parameters:
-      - -DCMAKE_BUILD_TYPE=Debug
+      - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_LIBDIR=bin
     source-type: git
     source: https://github.com/Slackadays/Clipboard
