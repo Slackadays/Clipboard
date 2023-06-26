@@ -221,6 +221,15 @@ std::string JSONescape(const std::string_view& input) {
     return temp;
 }
 
+bool envVarIsTrue(const std::string_view& name) {
+    auto temp = getenv(name.data());
+    if (temp == nullptr) return false;
+    std::string result(temp);
+    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) { return std::tolower(c); });
+    if (result == "1" || result == "true" || result == "yes" || result == "y" || result == "on" || result == "enabled") return true;
+    return false;
+}
+
 size_t columnLength(const std::string_view& message) {
     std::string temp(std::regex_replace(std::string(message), std::regex("[\\r\\n]|\\[[a-z]+\\]|\\\033\\[\\d+m"), ""));
     return temp.size() - std::count_if(temp.begin(), temp.end(), [](auto c) { return (c & 0xC0) == 0x80; }); // remove UTF-8 multibyte characters
@@ -348,7 +357,7 @@ void makeTerminalNormal() {
 }
 
 bool userIsARobot() {
-    return !is_tty.err || !is_tty.in || !is_tty.out || getenv("CI");
+    return !is_tty.err || !is_tty.in || !is_tty.out || envVarIsTrue("CI");
 }
 
 bool isAWriteAction() {
@@ -464,9 +473,9 @@ void setClipboardAttributes() {
 }
 
 void setupVariables(int& argc, char* argv[]) {
-    is_tty.in = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdin));
-    is_tty.out = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdout));
-    is_tty.err = getenv("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stderr));
+    is_tty.in = envVarIsTrue("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdin));
+    is_tty.out = envVarIsTrue("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdout));
+    is_tty.err = envVarIsTrue("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stderr));
 
 #if defined(_WIN64) || defined(_WIN32)
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); // Windows terminal color compatibility
@@ -487,11 +496,11 @@ void setupVariables(int& argc, char* argv[]) {
 
     no_color = (NO_COLOR || CLICOLOR) && !FORCE_COLOR && !CLICOLOR_FORCE;
 
-    output_silent = getenv("CLIPBOARD_SILENT") ? true : false;
+    output_silent = envVarIsTrue("CLIPBOARD_SILENT");
 
-    progress_silent = getenv("CLIPBOARD_NOPROGRESS") ? true : false;
+    progress_silent = envVarIsTrue("CLIPBOARD_NOPROGRESS");
 
-    if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(std::string(setting));
+    if (auto setting = getenv("CLIPBOARD_THEME"); setting != nullptr) setTheme(setting);
 
     if (auto size = getenv("CLIPBOARD_HISTORY"); size != nullptr) maximumHistorySize = size;
 

@@ -327,6 +327,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+bool envVarIsTrue(const std::string_view& name);
 size_t columnLength(const std::string_view& message);
 std::string generatedEndbar();
 std::string repeatString(const std::string_view& character, const size_t& length);
@@ -380,7 +381,7 @@ std::string pipedInContent(bool count = true);
 void showFailures();
 void showSuccesses();
 [[nodiscard]] CopyPolicy userDecision(const std::string& item);
-void setTheme(const std::string& theme);
+void setTheme(const std::string_view& theme);
 std::vector<std::string> regexSplit(const std::string& content, const std::regex& regex);
 
 extern Message help_message;

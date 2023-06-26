@@ -1325,7 +1325,7 @@ $ cb --bachata
 
 ### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=25px />
 
-<details><summary> &ensp; <b><code>CI</code></b> &emsp; Set this to anything to make CB overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</summary>
+<details><summary> &ensp; <b><code>CI</code></b> &emsp; Set this to "true" or "1" to make CB overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</summary>
 
 <br>
 
@@ -1458,7 +1458,7 @@ Note: By default, CB uses the user's home directory to generate the persistent d
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to anything to make CB always use persistent clipboards.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to "true" or "1" to make CB always use persistent clipboards.</summary>
 
 <br>
 
@@ -1474,7 +1474,7 @@ $ cb copy Foo Bar Baz
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_NOAUDIO</code></b> &emsp; Set this to anything to disable audio coming from CB.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_NOAUDIO</code></b> &emsp; Set this to "true" or "1" to disable audio coming from CB.</summary>
 
 <br>
 
@@ -1489,7 +1489,7 @@ $ cb ffksdjfdj
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_NOGUI</code></b> &emsp; Set this to anything to disable integration with GUI clipboards.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_NOGUI</code></b> &emsp; Set this to "true" or "1" to disable integration with GUI clipboards.</summary>
 
 <br>
 
@@ -1505,7 +1505,7 @@ $ cb show
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_NOPROGRESS</code></b> &emsp; Set this to anything to disable only progress messages from CB.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_NOPROGRESS</code></b> &emsp; Set this to "true" or "1" to disable only progress messages from CB.</summary>
 
 <br>
 
@@ -1524,7 +1524,7 @@ $ fzf | cb
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_NOREMOTE</code></b> &emsp; Set this to anything to disable remote clipboard sharing.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_NOREMOTE</code></b> &emsp; Set this to "true" or "1" to disable remote clipboard sharing.</summary>
 
 <br>
 
@@ -1537,7 +1537,7 @@ $ export CLIPBOARD_NOREMOTE=1
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_SILENT</code></b> &emsp; Set this to anything to disable progress and confirmation messages from CB.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_SILENT</code></b> &emsp; Set this to "true" or "1" to disable progress and confirmation messages from CB.</summary>
 
 <br>
 
@@ -1573,7 +1573,7 @@ $ cb show
 
 <br>
 
-<details><summary> &ensp; <b><code>FORCE_COLOR</code></b> &emsp; Set this to anything to make CB always show color regardless of what you set <code>NO_COLOR</code> to.</summary>
+<details><summary> &ensp; <b><code>FORCE_COLOR</code></b> &emsp; Set this to "true" or "1" to make CB always show color regardless of what you set <code>NO_COLOR</code> to.</summary>
 
 <br>
 
@@ -1597,7 +1597,7 @@ $ CLICOLOR_FORCE=1 cb copy "There are almost no bachateros where I live right no
 
 <br>
 
-<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to anything to make CB not show any colors.</summary>
+<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to "true" or "1" to make CB not show any colors.</summary>
 
 <br>
 

@@ -50,7 +50,7 @@ Set this environment variable to make Clipboard overwrite existing items without
 
 ### **CLIPBOARD_ALWAYS_PERSIST**
 
-Set this to anything to make CB always use persistent clipboards.
+Set this to "true" or "1" to make CB always use persistent clipboards.
 
 ### **CLIPBOARD_EDITOR**
 
@@ -74,7 +74,7 @@ Set this to the directory that only CB will use to hold the items you cut or cop
 
 ### **CLIPBOARD_NOAUDIO**
 
-Set this to anything to disable audio coming from CB.
+Set this to "true" or "1" to disable audio coming from CB.
 
 ### **CLIPBOARD_NOGUI**
 
@@ -82,15 +82,15 @@ Set this environment variable to disable GUI clipboard integration.
 
 ### **CLIPBOARD_NOPROGRESS**
 
-Set this to anything to disable only progress messages from CB.
+Set this to "true" or "1" to disable only progress messages from CB.
 
 ### **CLIPBOARD_NOREMOTE**
 
-Set this to anything to disable remote clipboard sharing.
+Set this to "true" or "1" to disable remote clipboard sharing.
 
 ### **CLIPBOARD_SILENT**
 
-Set this to anything to disable progress and confirmation messages from CB.
+Set this to "true" or "1" to disable progress and confirmation messages from CB.
 
 ### **CLIPBOARD_THEME**
 

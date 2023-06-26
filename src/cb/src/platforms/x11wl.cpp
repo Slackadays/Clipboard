@@ -33,10 +33,10 @@ using getClipboard_t = void* (*)(void*);
 using setClipboard_t = bool (*)(void*);
 
 static void x11wlClipboardFailure(const char* object) {
-    if (auto required = getenv("CLIPBOARD_REQUIREX11"); object == objectX11 && required && !strcmp(required, "1")) {
+    if (auto required = envVarIsTrue("CLIPBOARD_REQUIREX11"); object == objectX11 && required) {
         indicator.detach();
         exit(EXIT_FAILURE);
-    } else if (auto required = getenv("CLIPBOARD_REQUIREWAYLAND"); object == objectWayland && required && !strcmp(required, "1")) {
+    } else if (auto required = envVarIsTrue("CLIPBOARD_REQUIREWAYLAND"); object == objectWayland && required) {
         indicator.detach();
         exit(EXIT_FAILURE);
     }
@@ -108,8 +108,8 @@ ClipboardContent getGUIClipboard(const std::string& requested_mime) {
 
 void writeToGUIClipboard(const ClipboardContent& clipboard) {
     try {
-        auto force_x11 = getenv("CLIPBOARD_REQUIREX11");
-        if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard) || (force_x11 && !strcmp(force_x11, "1"))) {
+        auto force_x11 = envVarIsTrue("CLIPBOARD_REQUIREX11");
+        if (!dynamicSetGUIClipboard(objectWayland, symbolSetWaylandClipboard, clipboard) || (force_x11)) {
             debugStream << "Trying X11 clipboard now" << std::endl;
             if (!dynamicSetGUIClipboard(objectX11, symbolSetX11Clipboard, clipboard)) debugStream << "Setting X11 clipboard failed" << std::endl;
         }

@@ -97,19 +97,3 @@ std::string urlEncode(std::string_view value) {
 
     return result.str();
 }
-
-bool isEnvTrueish(const char* name) {
-    static std::set<std::string_view> trueIshValues {"1"sv, "TRUE"sv, "ON"sv, "Y"sv, "YES"sv};
-
-    auto rawValue = std::getenv(name);
-    if (rawValue == nullptr) {
-        return false;
-    }
-
-    std::string value {rawValue};
-    for (auto&& c : value) {
-        c = std::toupper(c);
-    }
-
-    return trueIshValues.contains(value);
-}

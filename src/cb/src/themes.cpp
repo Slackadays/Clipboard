@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
 
-void setTheme(const std::string& theme) {
+void setTheme(const std::string_view& theme) {
     if (theme == "light") {
         colors = {
                 {{"[error]", "\033[38;5;196m"},

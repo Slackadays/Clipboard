@@ -106,7 +106,7 @@ std::string urlEncode(std::string_view);
  * Checks if an environment variable is defined and has a true-ish value.
  * True-ish values include "1", "ON", "Y", "TRUE", and so on.
  */
-bool isEnvTrueish(const char*);
+bool envVarIsTrue(const std::string_view& name);
 
 /**
  * Keeps calling a function until it returns a value, using an exponential backoff scheme

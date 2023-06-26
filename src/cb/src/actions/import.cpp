@@ -34,7 +34,7 @@ void importClipboards() {
             copying.failedItems.emplace_back(entry.path().filename().string(), std::make_error_code(std::errc::not_a_directory));
         else {
             try {
-                auto target = (isPersistent(entry.path().filename().string()) || getenv("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary) / entry.path().filename();
+                auto target = (isPersistent(entry.path().filename().string()) || envVarIsTrue("CLIPBOARD_ALWAYS_PERSIST") ? global_path.persistent : global_path.temporary) / entry.path().filename();
                 if (fs::exists(target)) {
                     using enum CopyPolicy;
                     switch (copying.policy) {

@@ -18,7 +18,7 @@ Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& cli
     this_name = clipboard_name;
     this_entry = clipboard_entry;
 
-    is_persistent = isPersistent(this_name) || getenv("CLIPBOARD_ALWAYS_PERSIST");
+    is_persistent = isPersistent(this_name) || envVarIsTrue("CLIPBOARD_ALWAYS_PERSIST");
 
     root = (is_persistent ? global_path.persistent : global_path.temporary) / this_name;
 

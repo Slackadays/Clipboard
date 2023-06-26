@@ -196,8 +196,8 @@ void syncWithExternalClipboards(bool force) {
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
         || force) { // exclude Status because it does this manually
         ClipboardContent content;
-        if (!getenv("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
-        if (content.type() == Empty && !getenv("CLIPBOARD_NOGUI")) content = getGUIClipboard(preferred_mime);
+        if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
+        if (content.type() == Empty && !envVarIsTrue("CLIPBOARD_NOGUI")) content = getGUIClipboard(preferred_mime);
         if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
             copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
@@ -254,7 +254,7 @@ void writeToRemoteClipboard(const ClipboardContent& content) {
 void updateExternalClipboards(bool force) {
     if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name) || force) { // only update GUI clipboard on write operations
         auto thisContent = thisClipboard();
-        if (!getenv("CLIPBOARD_NOGUI")) writeToGUIClipboard(thisContent);
-        if (!getenv("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
+        if (!envVarIsTrue("CLIPBOARD_NOGUI")) writeToGUIClipboard(thisContent);
+        if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
     }
 }
