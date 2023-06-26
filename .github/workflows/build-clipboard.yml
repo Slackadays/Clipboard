@@ -104,22 +104,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: snapcore/action-build@v1
 
-      - name: Run a script
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y snapd snap
-
-          sudo snap install snapcraft --classic
-          sudo lxd init --auto
-          sudo usermod -a -G lxd $USER
-
-          sg lxd -c 'snapcraft'
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-snap-amd64
           path: |
-            *.snap
+            ${{ steps.snapcraft.outputs.snap }}
   macos-arm64-amd64:
     runs-on: macos-latest
 
