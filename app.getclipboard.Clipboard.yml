@@ -9,6 +9,7 @@ finish-args:
   - --socket=wayland
   - --filesystem=host
   - --filesystem=xdg-run/Clipboard
+  - --socket=pulseaudio
 modules:
   - name: cb
     buildsystem: cmake-ninja
