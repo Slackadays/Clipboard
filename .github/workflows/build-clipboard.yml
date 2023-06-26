@@ -111,6 +111,7 @@ jobs:
           sudo apt-get install -y snapd snap
 
           sudo snap install lxd
+          sudo snap install snapcraft --classic
           sudo lxd init --auto
           sudo usermod -a -G lxd $USER
           newgrp lxd
