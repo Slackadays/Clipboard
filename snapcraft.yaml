@@ -15,6 +15,7 @@ parts:
       - -DCMAKE_INSTALL_LIBDIR=bin
     source-type: git
     source: https://github.com/Slackadays/Clipboard
+    source-branch: "0.8.0"
     build-packages:
       - g++
       - make
@@ -27,11 +28,6 @@ parts:
       - libasound2-dev
       - libx11-dev
       - libwayland-dev
-  libraries:
-    plugin: dump
-    source: ./build/
-    organize:
-      "*.so": /lib/
 apps:
   cb:
     command: usr/local/bin/cb

@@ -81,6 +81,7 @@ elseif(X11WL)
     "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
   )
   target_link_options(cb PRIVATE -z origin) # set the rpath to $ORIGIN
+  
   target_link_libraries(cb ${CMAKE_DL_LIBS})
 endif()
 
