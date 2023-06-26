@@ -194,6 +194,19 @@ scoop install clipboard
 
 <br>
 
+**Snap** (You can also get our nightly Snap builds under **GitHub Downloads**)
+```sh
+sudo snap install clipboard
+# After installing, do "alias cb='snap run clipboard.cb'" to use CB easily.
+# Then, add that command to your terminal profile (like .bashrc) to make it work every time.
+```
+
+<a href="https://snapcraft.io/clipboard">
+  <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-black.svg" align="right"/>
+</a>
+
+<br>
+
 **Void Linux**
 ```sh
 sudo xbps-install -S clipboard
@@ -207,18 +220,22 @@ First, get the latest revision of the Clipboard Project [from GitHub Actions](ht
 
 Then, unpack what you just downloaded to a nice place anywhere on your system.
 
-If you downloaded the Flatpak, now do `flatpak install what-you-downloaded.flatpak`.
+If you downloaded the Flatpak, now do `flatpak install what-you-downloaded.flatpak`. Or if you downloaded the Snap, now do `sudo snap install --dangerous what_you_downloaded.snap`.
 
 Finally, add CB to your PATH (so that you can run it anywhere) by doing one of the following:
 
 ```sh
-# For all platforms except Windows and Flatpak
+# For all platforms except Windows, Flatpak, and Snap
 $ export PATH=$PATH:/where/you/unpacked/cb
 # Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
 # To get the current path (in case you don't know it), do the "pwd" command.
 
 # For Flatpak
 $ alias cb='flatpak run app.getclipboard.Clipboard'
+# Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
+
+# For Snap
+$ alias cb='snap run clipboard.cb'
 # Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
 
 # For Windows PowerShell
