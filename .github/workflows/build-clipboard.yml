@@ -108,14 +108,14 @@ jobs:
       - name: Run a script
         run: |
           sudo apt-get update
-          sudo apt-get install -y snapcraft
+          sudo apt-get install -y snapd snap
 
           sudo snap install lxd
           sudo lxd init --auto
           sudo usermod -a -G lxd $USER
           newgrp lxd
 
-          snapcraft
+          sg lxd -c 'snapcraft'
       - uses: actions/upload-artifact@v3
         with:
           name: clipboard-snap-amd64
