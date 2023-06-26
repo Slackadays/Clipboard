@@ -110,9 +110,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y snapcraft
 
+          sudo lxd init --auto
           sudo usermod -a -G lxd $USER
           newgrp lxd
-          sudo lxd init --auto
 
           snapcraft
       - uses: actions/upload-artifact@v3
