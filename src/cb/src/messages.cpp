@@ -100,7 +100,7 @@ Message help_message = "[info]┃ This is the Clipboard Project %s (commit %s), 
                        "redistribute it under certain conditions.[blank]\n";
 Message check_clipboard_status_message = "[info][bold]All of your clipboards with content[nobold]";
 Message clipboard_item_one_contents_message = "[info]┃ Here is the [bold]%i[nobold] item in clipboard [bold]%s[nobold]: [blank]\n";
-Message clipboard_item_many_contents_message = "[info]Here are the items in clipboard [bold][help]%s[nobold]";
+Message clipboard_item_many_contents_message = "[inverse][bold][info] Here are the items in clipboard [bold][help] %s [nobold][noinverse]";
 Message clipboard_text_contents_message = "[info]┃ Here are the first [bold]%i[nobold] bytes in clipboard [bold]%s[nobold]: [blank]";
 Message no_clipboard_contents_message = "[info]┃ There is currently nothing in the clipboard.[blank]\n";
 Message clipboard_action_prompt = "[help]┃ Add [bold]cut, copy, [nobold]or[bold] paste[nobold] to the end, "
@@ -188,8 +188,8 @@ void setLanguageES() {
                    "to redistribute it under certain conditions.[blank]\n";
     no_valid_action_message = "[error][inverse] ✘ [noinverse] No especificaste ninguna acción válida o se te olvidó. [help]⬤ Inténta usar o añadir [bold]cortar, "
                               "copiar o pegar[nobold] en su lugar, como [bold]%s copiar.[blank]\n";
-    clipboard_item_many_contents_message = "[info]Aquí están las cosas primeras del "
-                                           "portapapeles [bold][help]%s[nobold][info]";
+    clipboard_item_many_contents_message = "[inverse][bold][info] Aquí están las cosas primeras del "
+                                           "portapapeles [bold][help] %s[nobold] [noinverse]";
     no_clipboard_contents_message = "[info]┃ No hay nada en CB en este momento.[blank]\n";
     clipboard_action_prompt = "[help]Añade [bold]cortar, copiar [nobold]o[bold] pegar[nobold] al final, como "
                               "[bold]%s copiar[nobold] para comenzar, o si necesitas ayuda, haz "
@@ -316,7 +316,7 @@ void setLanguageTR() {
                    "[info]┃ Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
                    "koşullar altında yeniden dağıtabilirsiniz.[blank]\n";
     check_clipboard_status_message = "[info][bold]Pano içeriği şunlardır[nobold]";
-    clipboard_item_many_contents_message = "[help][bold]%s[nobold][info] panoda bulunan";
+    clipboard_item_many_contents_message = "[inverse][help][bold] %s [info] panoda bulunan[nobold] [noinverse]";
     no_clipboard_contents_message = "[info]┃ Panoda hiçbir şey yok.[blank]\n";
     clipboard_action_prompt = "[help]Başlamak için sonuna [bold]kes, kopyala, [nobold]veya[bold] yapistir[nobold] ekleyin, "
                               "[bold]%s kopyala[nobold] gibi, veya yardıma ihtiyacın olursa yardım ekranını göstermek için "

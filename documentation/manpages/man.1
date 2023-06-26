@@ -2,87 +2,142 @@
 .\"
 .TH "" "" "" "" ""
 .hy
-.SH clipboard(1) \[en] cut, copy, and paste in the terminal
+.SH cb(1) \[en] cut, copy, and paste anything in the terminal
 .SS SYNOPSIS
 .PP
-\f[B]clipboard\f[R] [\[en]fast-copy|-fc]
-([\[en]]copy|[-]cp])|([\[en]]cut|[-]ct)|([\[en]]paste|[-p])([\[en]]copy|[-]cp)[(num)|_(id)]
-(files)
+\f[B]cb\f[R] [--](add|copy|cut)[(num)|_(id)] (file) files
 .PP
-\f[B]clipboard\f[R]
-([\[en]]show|[-]sh])|([\[en]]clear|[-]clr])[(num)|_(id)]
+(stdout|stderr) | \f[B]cb\f[R] [--](add|copy|cut)[(num)|_(id)]
 .PP
-(stdout/stderr) | \f[B]clipboard\f[R] [[\[en]]copy|[-]cp][(num)|_(id)]
+\f[B]cb\f[R] [--](remove|ignore|paste)[(num)|_(id)] (regex) [regexes]
 .PP
-\f[B]clipboard\f[R] [[\[en]]paste|[-]p][(num)|_(id)] | (stdin)
+(regex) | \f[B]cb\f[R] [--](remove|ignore|paste)[(num)|_(id)]
 .PP
-\f[B]clipboard\f[R] [[\[en]]paste|[-]p][(num)|_(id)] > (file)
+\f[B]cb\f[R] [--](paste)[(num)|_(id)] (regex) [regexes] | (stdin)
+.PP
+\f[B]cb\f[R]
+[--](clear|edit|export|history|help|status|show|info)[(num)|_(id)]
+.PP
+\f[B]cb\f[R] [--](load|swap)[(num)|_(id)] (clipboard) [clipboards]
+.PP
+\f[B]cb\f[R] [--](note|search)[(num)|_(id)] (text)
 .SS DESCRIPTION
 .PP
-\f[B]clipboard\f[R] lets you cut, copy, and paste files and piped data
-in the terminal.
-It lacks dependencies on any GUI clipboard system, although they can be
-enabled if you want.
-If available, you can substitute \f[B]cb\f[R] for \f[B]clipboard\f[R] as
-a shortcut.
-.PP
-Input a number into \f[B](id)\f[R] to select which clipboard you want to
-use.
-.SS FILES
-.PP
-\f[B]clipboard\f[R] stores its temporary data in the \f[B]Clipboard\f[R]
-subdirectory in a system-provided temporary folder or in the
-\f[B].clipboard\f[R] subdirectory in the user\[cq]s home folder.
-There may be a symlink \f[B]cb\f[R] in the same directory where you
-installed \f[B]clipboard\f[R].
-.SS ENVIRONMENT VARIABLES
-.SS \f[B]CI\f[R]
-.PP
-Set this environment variable to make CB overwrite existing items
-without a user prompt when pasting.
-This variable is intended for Continuous Integration scripts where a
-live human is not present to make decisions.
-.SS \f[B]FORCE_COLOR\f[R]
-.PP
-Set this environment variable to make CB always show color
-regardless of what you set \f[B]NO_COLOR\f[R] to.
-.SS \f[B]TMPDIR\f[R]
-.PP
-Set this environment variable to the directory that CB (and other
-programs) will use to hold the items you cut or copy into temporary
-clipboards.
-.SS \f[B]CLIPBOARD_TMPDIR\f[R]
-.PP
-Set this environment variable to the directory that only CB will
-use to hold the items you cut or copy into a temporary directory.
-.SS \f[B]CLIPBOARD_PERSISTDIR\f[R]
-.PP
-Set this environment variable to the directory that only CB will
-use to hold the items you cut or copy into a persistent directory.
-.SS \f[B]CLIPBOARD_ALWAYS_PERSIST\f[R]
-.PP
-Set this environment variable to make CB always use persistent
-clipboards.
-.SS \f[B]CLIPBOARD_NOGUI\f[R]
-.PP
-Set this environment variable to disable GUI clipboard integration.
-.SS \f[B]NO_COLOR\f[R]
-.PP
-Set this environment variable to make CB not show any colors.
-.SS \f[B]--fast-copy\f[R], \f[B]-fc\f[R]
-.PP
-Add this flag to use links when copying, cutting, or pasting.
-If you modify the items that you used with this flag, then the items you
-paste will have the same changes.
+\f[B]cb\f[R] is the ultimate clipboard manager for the terminal.
+You can cut, copy, and paste anything, anytime, anywhere with unlimited
+capacity, clipboards, and history.
+\f[B]cb\f[R] doesn\[cq]t require a GUI clipboard system, but it does
+work with many, including X11, Wayland, Windows, macOS, Haiku, and OSC
+52.
 .SS EXAMPLES
 .IP
 .nf
 \f[C]
-clipboard copy SomeFile.iso foobarDirectory
-clipboard cut5 MyDirectory
-cb cut69 bar.conf AnotherDirectory baz.txt
+cb copy FooFile
+cb cut5 FooFile MyDirectory
+cb info
+cb remove \[dq]Foo.*\[dq]
+cb paste
+cb copy \[dq]Some example text\[dq]
+cb | cat
+cat FooFile | cb
+cb ignore \[dq]My[a-z]+\[dq]
+cb edit
 \f[R]
 .fi
+.SS FILES
+.PP
+\f[B]cb\f[R] stores its temporary data in the \f[B]Clipboard\f[R]
+subdirectory in a system-provided temporary folder or in the
+\f[B].clipboard\f[R] subdirectory in the user\[cq]s home folder.
+\f[B]cb\f[R] is also XDG-compliant, prioritizing the relevant XDG
+directories over the defaults if available.
+.SS ENVIRONMENT VARIABLES
+.SS \f[B]CI\f[R]
+.PP
+Set this environment variable to make Clipboard overwrite existing items
+without a user prompt when pasting.
+This variable is intended for Continuous Integration scripts where a
+live human is not present to make decisions.
+.SS \f[B]CLIPBOARD_ALWAYS_PERSIST\f[R]
+.PP
+Set this to anything to make CB always use persistent clipboards.
+.SS \f[B]CLIPBOARD_EDITOR\f[R]
+.PP
+Set this to the editor you want to use for the Edit action.
+.SS \f[B]CLIPBOARD_HISTORY\f[R]
+.PP
+Set this to the maximum history size you want to keep, like 1000,
+50.67gb, or 100w.
+.SS \f[B]CLIPBOARD_LOCALE\f[R]
+.PP
+Set this to the locale that only CB will use for its commands and
+output, like en_US.UTF-8 or es_DO.UTF-8.
+.SS \f[B]CLIPBOARD_TMPDIR\f[R]
+.PP
+Set this to the directory that only CB will use to hold the items you
+cut or copy into a temporary directory.
+.SS \f[B]CLIPBOARD_PERSISTDIR\f[R]
+.PP
+Set this to the directory that only CB will use to hold the items you
+cut or copy into a persistent directory.
+.SS \f[B]CLIPBOARD_NOAUDIO\f[R]
+.PP
+Set this to anything to disable audio coming from CB.
+.SS \f[B]CLIPBOARD_NOGUI\f[R]
+.PP
+Set this environment variable to disable GUI clipboard integration.
+.SS \f[B]CLIPBOARD_NOPROGRESS\f[R]
+.PP
+Set this to anything to disable only progress messages from CB.
+.SS \f[B]CLIPBOARD_NOREMOTE\f[R]
+.PP
+Set this to anything to disable remote clipboard sharing.
+.SS \f[B]CLIPBOARD_SILENT\f[R]
+.PP
+Set this to anything to disable progress and confirmation messages from
+CB.
+.SS \f[B]CLIPBOARD_THEME\f[R]
+.PP
+Set this to the color theme that CB will use.
+Choose between light, darkhighcontrast, lighthighcontrast, amber, and
+green (the default is dark).
+.SS \f[B]FORCE_COLOR\f[R]
+.PP
+Set this environment variable to make Clipboard always show color
+regardless of what you set \f[B]NO_COLOR\f[R] to.
+.SS \f[B]NO_COLOR\f[R]
+.PP
+Set this environment variable to make Clipboard not show any colors.
+.SS FLAGS
+.SS \f[B]--all\f[R], \f[B]-a\f[R]
+.PP
+Add this when clearing to clear all clipboards at once, or when
+searching to search all clipboards.
+.SS \f[B]--clipboard (clipboard)\f[R], \f[B]-c (clipboard)\f[R]
+.PP
+Add this to choose which clipboard you want to use.
+.SS \f[B]--entry (entry)\f[R], \f[B]-e\f[R]
+.PP
+Add this to choose which history entry you want to use.
+.SS \f[B]--fast-copy\f[R],\f[B]-fc\f[R]
+.PP
+Add this to use links when copying, cutting, pasting, or loading.
+If you modify the items that you used with this flag, then the items you
+paste will have the same changes.
+.SS \f[B]--mime\f[R], \f[B]-m\f[R]
+.PP
+Add this to request a specific content MIME type from GUI clipboard
+systems.
+.SS \f[B]--noconfirmation\f[R], \f[B]-nc\f[R]
+.PP
+Add this to disable confirmation messages from CB.
+.SS \f[B]--no-progress\f[R], \f[B]-np\f[R]
+.PP
+Add this to disable progress messages from CB.
+.SS \f[B]--bachata\f[R]
+.PP
+Add this for something special!
 .SS FULL DOCUMENTATION
 .PP
 Full documentation is available at
@@ -96,4 +151,4 @@ Report all bugs to \f[B]https://github.com/Slackadays/Clipboard\f[R] or
 \f[B]https://discord.gg/J6asnc3pEG\f[R].
 .SS COPYRIGHT
 .PP
-Copyright (c) 2022 Jackson Huff.
+Copyright (c) 2023 Jackson Huff.

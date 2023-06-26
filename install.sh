@@ -78,6 +78,13 @@ elif command -v flatpak > /dev/null 2>&1
 then
     flatpak install flathub app.getclipboard.Clipboard
     verify
+elif command -v snap > /dev/null 2>&1
+then
+    if can_use_sudo
+    then
+        sudo snap install clipboard
+        verify
+    fi
 elif command -v nix-env > /dev/null 2>&1
 then
     nix-env -iA nixpkgs.clipboard-jh

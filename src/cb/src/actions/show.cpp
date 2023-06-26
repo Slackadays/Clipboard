@@ -36,10 +36,10 @@ void show() {
     }
 
     auto available = thisTerminalSize();
-    fprintf(stderr, "%s", formatMessage("[info]┏━▌ ").data());
+    fprintf(stderr, "%s", formatMessage("[info]┏━━").data());
     fprintf(stderr, clipboard_item_many_contents_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatMessage("[info] ▐").data());
-    auto usedSpace = (columnLength(clipboard_item_many_contents_message) - 2) + clipboard_name.length() + 7;
+    fprintf(stderr, "%s", formatMessage("[info]━").data());
+    auto usedSpace = (columnLength(clipboard_item_many_contents_message) - 2) + clipboard_name.length() + 5;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
     for (int i = 0; i < columns; i++)
@@ -56,12 +56,12 @@ void show() {
         fprintf(stderr, formatMessage("\n[info]\033[%zuG┃\r┃ [help]%s[blank]").data(), available.columns, stylizedEntry.data());
     }
 
-    fprintf(stderr, "%s", formatMessage("[info]\n┗━▌ ").data());
-    Message status_legend_message = "\033[1mFiles\033[22m, \033[4mDirectories\033[24m";
-    usedSpace = columnLength(status_legend_message) + 7;
+    fprintf(stderr, "%s", formatMessage("[info]\n┗━▌").data());
+    Message status_legend_message = "[help]\033[1mFiles\033[22m, \033[4mDirectories\033[24m[info]";
+    usedSpace = columnLength(status_legend_message) + 5;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
-    std::string bar2 = " ▐" + repeatString("━", cols);
+    std::string bar2 = "▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
     fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
 }

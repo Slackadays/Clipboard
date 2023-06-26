@@ -1,27 +1,46 @@
-clipboard(1) -- cut, copy, and paste in the terminal
+cb(1) -- cut, copy, and paste anything in the terminal
 =====
 
 ## SYNOPSIS
 
-**clipboard** [--fast-copy|-fc] ([--]copy|[-]cp])|([--]cut|[-]ct)|([--]paste|[-p])([--]copy|[-]cp)[(num)|_(id)] (files)
+**cb** \[\-\-](add|copy|cut)[(num)|_(id)] (file) [files]
 
-**clipboard** ([--]show|[-]sh])|([--]clear|[-]clr])[(num)|_(id)]
+(stdout|stderr) | **cb** \[\-\-](add|copy|cut)[(num)|_(id)]
 
-(stdout/stderr) | **clipboard** [[--]copy|[-]cp][(num)|_(id)]
+**cb** \[\-\-](remove|ignore|paste)[(num)|_(id)] (regex) [regexes]
 
-**clipboard** [[--]paste|[-]p][(num)|_(id)] | (stdin)
+(regex) | **cb** \[\-\-](remove|ignore|paste)[(num)|_(id)]
 
-**clipboard** [[--]paste|[-]p][(num)|_(id)] > (file)
+**cb** \[\-\-](paste)[(num)|_(id)] (regex) [regexes] | (stdin)
+
+**cb** \[\-\-](clear|edit|export|history|help|status|show|info)[(num)|_(id)]
+
+**cb** \[\-\-](load|swap)[(num)|_(id)] (clipboard) [clipboards]
+
+**cb** \[\-\-](note|search)[(num)|_(id)] (text)
 
 ## DESCRIPTION
 
-**clipboard** lets you cut, copy, and paste files and piped data in the terminal. It lacks dependencies on any GUI clipboard system, although they can be enabled if you want. If available, you can substitute **cb** for **clipboard** as a shortcut.
+**cb** is the ultimate clipboard manager for the terminal. You can cut, copy, and paste anything, anytime, anywhere with unlimited capacity, clipboards, and history. **cb** doesn't require a GUI clipboard system, but it does work with many, including X11, Wayland, Windows, macOS, Haiku, and OSC 52.
 
-Input a number into **(id)** to select which clipboard you want to use. 
+## EXAMPLES
+
+```
+cb copy FooFile
+cb cut5 FooFile MyDirectory
+cb info
+cb remove "Foo.*"
+cb paste
+cb copy "Some example text"
+cb | cat
+cat FooFile | cb
+cb ignore "My[a-z]+"
+cb edit
+```
 
 ## FILES
 
-**clipboard** stores its temporary data in the **Clipboard** subdirectory in a system-provided temporary folder or in the **.clipboard** subdirectory in the user's home folder. There may be a symlink **cb** in the same directory where you installed **clipboard**.
+**cb** stores its temporary data in the **Clipboard** subdirectory in a system-provided temporary folder or in the **.clipboard** subdirectory in the user's home folder. **cb** is also XDG-compliant, prioritizing the relevant XDG directories over the defaults if available.
 
 ## ENVIRONMENT VARIABLES
 
@@ -29,45 +48,95 @@ Input a number into **(id)** to select which clipboard you want to use.
 
 Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
-### **FORCE_COLOR**
+### **CLIPBOARD_ALWAYS_PERSIST**
 
-Set this environment variable to make Clipboard always show color regardless of what you set **NO_COLOR** to.
+Set this to anything to make CB always use persistent clipboards.
 
-### **TMPDIR**
+### **CLIPBOARD_EDITOR**
 
-Set this environment variable to the directory that Clipboard (and other programs) will use to hold the items you cut or copy into temporary clipboards.
+Set this to the editor you want to use for the Edit action.
+
+### **CLIPBOARD_HISTORY**
+
+Set this to the maximum history size you want to keep, like 1000, 50.67gb, or 100w.
+
+### **CLIPBOARD_LOCALE**
+
+Set this to the locale that only CB will use for its commands and output, like en_US.UTF-8 or es_DO.UTF-8.
 
 ### **CLIPBOARD_TMPDIR**
 
-Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a temporary directory.
+Set this to the directory that only CB will use to hold the items you cut or copy into a temporary directory.
 
 ### **CLIPBOARD_PERSISTDIR** 
 
-Set this environment variable to the directory that only Clipboard will use to hold the items you cut or copy into a persistent directory.
+Set this to the directory that only CB will use to hold the items you cut or copy into a persistent directory.
 
-### **CLIPBOARD_ALWAYS_PERSIST**
+### **CLIPBOARD_NOAUDIO**
 
-Set this environment variable to make Clipboard always use persistent clipboards.
+Set this to anything to disable audio coming from CB.
 
 ### **CLIPBOARD_NOGUI**
 
 Set this environment variable to disable GUI clipboard integration.
 
+### **CLIPBOARD_NOPROGRESS**
+
+Set this to anything to disable only progress messages from CB.
+
+### **CLIPBOARD_NOREMOTE**
+
+Set this to anything to disable remote clipboard sharing.
+
+### **CLIPBOARD_SILENT**
+
+Set this to anything to disable progress and confirmation messages from CB.
+
+### **CLIPBOARD_THEME**
+
+Set this to the color theme that CB will use. Choose between light, darkhighcontrast, lighthighcontrast, amber, and green (the default is dark).
+
+### **FORCE_COLOR**
+
+Set this environment variable to make Clipboard always show color regardless of what you set **NO_COLOR** to.
+
 ### **NO_COLOR**
 
 Set this environment variable to make Clipboard not show any colors.
 
-### **\-\-fast-copy**, **-fc**
+## FLAGS
 
-Add this flag to use links when copying, cutting, or pasting. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+### **\-\-all**, **-a**
 
-## EXAMPLES
+Add this when clearing to clear all clipboards at once, or when searching to search all clipboards.
 
-```
-clipboard copy SomeFile.iso foobarDirectory
-clipboard cut5 MyDirectory
-cb cut69 bar.conf AnotherDirectory baz.txt
-```
+### **\-\-clipboard (clipboard)**, **-c (clipboard)**
+
+Add this to choose which clipboard you want to use.
+
+### **\-\-entry (entry)**, **-e**
+
+Add this to choose which history entry you want to use.
+
+### **\-\-fast-copy**,**-fc**
+
+Add this to use links when copying, cutting, pasting, or loading. If you modify the items that you used with this flag, then the items you paste will have the same changes.
+
+### **\-\-mime**, **-m**
+
+Add this to request a specific content MIME type from GUI clipboard systems.
+
+## **\-\-noconfirmation**, **-nc**
+
+Add this to disable confirmation messages from CB.
+
+## **\-\-no-progress**, **-np**
+
+Add this to disable progress messages from CB.
+
+## **\-\-bachata**
+
+Add this for something special!
 
 ## FULL DOCUMENTATION
 
@@ -83,4 +152,4 @@ Report all bugs to __https://github.com/Slackadays/Clipboard__ or __https://disc
 
 ## COPYRIGHT
 
-Copyright (c) 2022 Jackson Huff.
+Copyright (c) 2023 Jackson Huff.
