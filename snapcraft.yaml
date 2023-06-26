@@ -1,0 +1,37 @@
+name: clipboard
+version: "0.8.0"
+summary: The ultimate clipboard manager for the terminal
+description: |
+  The Clipboard Project is one of the most advanced clipboard managers ever.
+  Cut, copy, and paste anything, anytime, anywhere with unlimited capacity, clipboards, and history.
+  It's feature packed and easy to use by anybody.
+confinement: devmode
+base: core22
+parts:
+  cb:
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_BUILD_TYPE=Release
+    source-type: git
+    source: https://github.com/Slackadays/Clipboard
+    source-tag: "0.8.0"
+    build-packages:
+      - g++
+      - make
+      - cmake
+      - libasound2-dev
+      - libx11-dev
+      - libwayland-dev
+      - wayland-protocols
+    stage-packages:
+      - libasound2-dev
+      - libx11-dev
+      - libwayland-dev
+  libraries:
+    plugin: dump
+    source: ./build/
+    organize:
+      "*.so": /lib/
+apps:
+  cb:
+    command: usr/local/bin/cb

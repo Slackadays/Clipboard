@@ -99,6 +99,23 @@ jobs:
           name: clipboard-flatpak-amd64
           path: |
             clipboard-flatpak-amd64.flatpak
+  snap-amd64:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a script
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y snapcraft
+
+          snapcraft
+      - uses: actions/upload-artifact@v3
+        with:
+          name: clipboard-snap-amd64
+          path: |
+            *.snap
   macos-arm64-amd64:
     runs-on: macos-latest
 

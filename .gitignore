@@ -8,6 +8,7 @@ CMakeFiles/
 src/tests/test_*
 
 *.flatpak
+*.snap
 
 build/*
 
