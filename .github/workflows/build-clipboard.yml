@@ -110,7 +110,7 @@ jobs:
         with:
           name: clipboard-snap-amd64
           path: |
-            ${{ steps.snapcraft.outputs.snap }}
+            *.snap
   macos-arm64-amd64:
     runs-on: macos-latest
 
