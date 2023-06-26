@@ -30,10 +30,10 @@ parts:
     plugin: dump
     source: ./build/
     organize:
-      "*.so": /lib/
+      "*.so": usr/local/bin/
 apps:
   cb:
-    command: cb
+    command: usr/local/bin/cb
     plugs:
       - alsa
       - x11
