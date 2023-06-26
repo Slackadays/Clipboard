@@ -110,8 +110,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y snapd snap
 
-          sudo snap install lxd
           sudo snap install snapcraft --classic
+          lxd init --auto
           sudo usermod -a -G lxd $USER
 
           sg lxd -c 'snapcraft'
