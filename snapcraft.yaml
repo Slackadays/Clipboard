@@ -14,7 +14,6 @@ parts:
       - -DCMAKE_BUILD_TYPE=Release
     source-type: git
     source: https://github.com/Slackadays/Clipboard
-    source-tag: "0.8.0"
     build-packages:
       - g++
       - make
