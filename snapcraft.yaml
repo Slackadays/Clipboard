@@ -11,7 +11,7 @@ parts:
   cb:
     plugin: cmake
     cmake-parameters:
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE=Debug
     source-type: git
     source: https://github.com/Slackadays/Clipboard
     build-packages:
