@@ -19,3 +19,5 @@ build-dir/*
 documentation/website/public/
 
 gmon.out
+
+/temp/*
