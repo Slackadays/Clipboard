@@ -12,6 +12,7 @@ parts:
     plugin: cmake
     cmake-parameters:
       - -DCMAKE_BUILD_TYPE=Debug
+      - -DCMAKE_INSTALL_LIBDIR=bin
     source-type: git
     source: https://github.com/Slackadays/Clipboard
     build-packages:
@@ -30,7 +31,7 @@ parts:
     plugin: dump
     source: ./build/
     organize:
-      "*.so": /usr/local/lib/
+      "*.so": /lib/
 apps:
   cb:
     command: usr/local/bin/cb
