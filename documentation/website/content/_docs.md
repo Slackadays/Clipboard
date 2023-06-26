@@ -1219,7 +1219,7 @@ $ CLICOLOR_FORCE=1 cb copy "There are almost no bachateros where I live right no
 
 <br>
 
-<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to "true" or "1" to make CB not show any colors.</summary>
+<details><summary> &ensp; <b><code>NO_COLOR</code></b> &emsp; Set this to anything to make CB not show any colors.</summary>
 
 <br>
 
