@@ -5,7 +5,7 @@ description: |
   The Clipboard Project is one of the most advanced clipboard managers ever.
   Cut, copy, and paste anything, anytime, anywhere with unlimited capacity, clipboards, and history.
   It's feature packed and easy to use by anybody.
-confinement: classic
+confinement: strict
 base: core22
 parts:
   cb:
