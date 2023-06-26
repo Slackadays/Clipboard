@@ -65,6 +65,12 @@ elseif(X11WL)
   set_property(
     TARGET cb
     APPEND
+    PROPERTY INSTALL_RPATH
+    "$ORIGIN"
+  )
+  set_property(
+    TARGET cb
+    APPEND
     PROPERTY BUILD_RPATH
     "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
   )
