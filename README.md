@@ -197,7 +197,7 @@ scoop install clipboard
 **Snap** (You can also get our nightly Snap builds under **GitHub Downloads**)
 ```sh
 sudo snap install clipboard
-# After installing, do "alias cb='snap run clipboard.cb'" to use CB easily.
+# After installing, do "alias cb='snap run clipboard'" to use CB easily.
 # Then, add that command to your terminal profile (like .bashrc) to make it work every time.
 ```
 
@@ -235,7 +235,7 @@ $ alias cb='flatpak run app.getclipboard.Clipboard'
 # Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
 
 # For Snap
-$ alias cb='snap run clipboard.cb'
+$ alias cb='snap run clipboard'
 # Add this to your terminal startup file like .bashrc or the equivalent so that it works every time.
 
 # For Windows PowerShell

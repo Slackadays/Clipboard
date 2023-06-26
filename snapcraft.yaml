@@ -8,7 +8,7 @@ description: |
 confinement: strict
 base: core22
 parts:
-  cb:
+  clipboard:
     plugin: cmake
     cmake-parameters:
       - -DCMAKE_BUILD_TYPE=Release
@@ -29,7 +29,7 @@ parts:
       - libx11-dev
       - libwayland-dev
 apps:
-  cb:
+  clipboard:
     command: usr/local/bin/cb
     plugs:
       - alsa
