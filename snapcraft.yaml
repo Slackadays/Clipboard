@@ -15,7 +15,7 @@ parts:
       - -DCMAKE_INSTALL_LIBDIR=bin
     source-type: git
     source: https://github.com/Slackadays/Clipboard
-    source-branch: "0.8.0"
+    source-branch: main
     build-packages:
       - g++
       - make
