@@ -36,7 +36,7 @@ ClipboardContent getRemoteClipboard() {
         printf("\033]52;c;?\007");
         fflush(stdout);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(80));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 #if defined(_WIN32) || defined(_WIN64)
         DWORD bytesAvailable = 0;

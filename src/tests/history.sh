@@ -14,6 +14,12 @@ cb copy "Some text 4"
 
 cb copy "Some text 5"
 
+if [ "$(uname)" = "Darwin" ] || [ "$(uname)" = "FreeBSD" ] || [ "$(uname)" = "OpenBSD" ] || [ "$(uname)" = "NetBSD" ]
+then
+    echo "⏭️ Skipping test on BSD platform due to AIO redirection bug"
+    exit 0
+fi
+
 message="$(cb history 2>&1)"
 
 content_is_shown "$message" "Some text 1"
