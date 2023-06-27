@@ -25,10 +25,13 @@
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-#include <aio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#endif
+
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) && !defined(__OpenBSD__)
+#include <aio.h>
 #endif
 
 namespace PerformAction {
@@ -107,13 +110,13 @@ void history() {
 #endif
     }
 
-/*#if defined(__linux__)                       \
-    struct io_uring_params params;             \
-    memset(&params, 0, sizeof(params));        \
-    int ring_fd = io_uring_setup(16, &params); \
-                                               \
-                                               \
-#el*/ #if defined (__unix__) || defined(__APPLE__) || defined(__linux__)
+/*#if defined(__linux__)                         \
+    struct io_uring_params params;               \
+    memset(&params, 0, sizeof(params));          \
+    int ring_fd = io_uring_setup(16, &params);   \
+                                               \ \
+                                               \ \
+#el*/ #if defined (__unix__) || defined(__APPLE__) || defined(__linux__) && !defined(__OpenBSD__)
     int flags = fcntl(STDERR_FILENO, F_GETFL, 0);
     fcntl(STDERR_FILENO, F_SETFL, flags | O_APPEND);
     struct aiocb aio;
@@ -129,11 +132,11 @@ void history() {
         path.setEntry(entry);
 
         if (batchedMessage.size() > 65536) {
-/*#if defined(__linux__)                      \
-            // use io_uring for async writing \
-                                              \
-                                              \
-#el*/ #if defined (__unix__) || defined(__APPLE__) || defined(__linux__)
+/*#if defined(__linux__)                        \
+            // use io_uring for async writing   \
+                                              \ \
+                                              \ \
+#el*/ #if defined (__unix__) || defined(__APPLE__) || defined(__linux__) && !defined(__OpenBSD__)
             memset(&aio, 0, sizeof(struct aiocb));
             aio.aio_fildes = STDERR_FILENO;
             aio.aio_buf = static_cast<void*>(batchedMessage.data());
@@ -189,7 +192,7 @@ void history() {
         }
     }
 
-#if defined(__unix__) || defined(__APPLE__) || defined(__linux__)
+#if defined(__unix__) || defined(__APPLE__) || defined(__linux__) && !defined(__OpenBSD__)
     memset(&aio, 0, sizeof(struct aiocb));
     aio.aio_fildes = STDERR_FILENO;
     aio.aio_buf = static_cast<void*>(batchedMessage.data());
