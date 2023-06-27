@@ -521,14 +521,15 @@ void setupTerminal() {
 
 template <typename T>
 [[nodiscard]] auto flagIsPresent(const std::string_view& flag, const std::string_view& shortcut = "") {
-    for (const auto& entry : arguments) {
-        if (entry == flag || entry == (std::string(shortcut).append(flag))) {
+    for (const auto& arg : arguments) {
+        if (arg == "--") break;
+        if (arg == flag || arg == (std::string(shortcut).append(flag))) {
             if constexpr (std::is_same_v<T, std::string>) {
-                std::string temp(*arguments.erase(std::find(arguments.begin(), arguments.end(), entry)));
+                std::string temp(*arguments.erase(std::find(arguments.begin(), arguments.end(), arg)));
                 arguments.erase(std::find(arguments.begin(), arguments.end(), temp));
                 return temp;
             } else {
-                arguments.erase(std::find(arguments.begin(), arguments.end(), entry));
+                arguments.erase(std::find(arguments.begin(), arguments.end(), arg));
                 return true;
             }
         }
@@ -630,7 +631,6 @@ void setFlags() {
         printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), formatMessage(actionsList).data());
         exit(EXIT_SUCCESS);
     }
-    if (auto pos = std::find_if(arguments.begin(), arguments.end(), [](const auto& entry) { return entry == "--"; }); pos != arguments.end()) arguments.erase(pos);
 }
 
 void verifyAction() {
@@ -803,7 +803,7 @@ void showFailures() {
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
     for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-        printf(formatMessage("[error][inverse] ✘ [noinverse] [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+        printf(formatMessage("[error]┃ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
         if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
     }
     printf("%s", fix_problem_message().data());

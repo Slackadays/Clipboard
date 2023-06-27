@@ -34,6 +34,8 @@ int main(int argc, char* argv[]) {
 
         action = getAction();
 
+        if (auto pos = std::find_if(arguments.begin(), arguments.end(), [](const auto& arg) { return arg == "--"; }); pos != arguments.end()) arguments.erase(pos);
+
         copying.items.assign(arguments.begin(), arguments.end());
 
         io_type = getIOType();
