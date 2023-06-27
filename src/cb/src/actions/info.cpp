@@ -45,7 +45,7 @@ void info() {
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
     fprintf(stderr, formatMessage("[info]%s┃ Created [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
-#elif defined(__WIN32__) || defined(__WIN64__)
+#elif defined(_WIN32) || defined(_WIN64)
     fprintf(stderr, formatMessage("[info]┃ Created [help]n/a[blank]\n").data());
 #endif
 
@@ -59,7 +59,7 @@ void info() {
     time = std::ctime(&latest);
     std::erase(time, '\n');
     fprintf(stderr, formatMessage("[info]%s┃ Last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
-#elif defined(__WIN32__) || defined(__WIN64__)
+#elif defined(_WIN32) || defined(_WIN64)
     fprintf(stderr, formatMessage("[info]┃ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
 
@@ -68,7 +68,7 @@ void info() {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
     struct passwd* pw = getpwuid(info.st_uid);
     fprintf(stderr, formatMessage("[info]%s┃ Owned by [help]%s[blank]\n").data(), generatedEndbar().data(), pw->pw_name);
-#elif defined(__WIN32__) || defined(__WIN64__)
+#elif defined(_WIN32) || defined(_WIN64)
     fprintf(stderr, formatMessage("[info]┃ Owned by [help]n/a[blank]\n").data());
 #endif
 
@@ -140,7 +140,7 @@ void infoJSON() {
     std::string time(std::ctime(&info.st_ctime));
     std::erase(time, '\n');
     printf("    \"created\": \"%s\",\n", time.data());
-#elif defined(__WIN32__) || defined(__WIN64__)
+#elif defined(_WIN32) || defined(_WIN64)
     printf("    \"created\": \"n/a\",\n");
 #endif
 
@@ -154,7 +154,7 @@ void infoJSON() {
     time = std::ctime(&latest);
     std::erase(time, '\n');
     printf("    \"lastChanged\": \"%s\",\n", time.data());
-#elif defined(__WIN32__) || defined(__WIN64__)
+#elif defined(_WIN32) || defined(_WIN64)
     printf("    \"lastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
 #endif
 
@@ -163,7 +163,7 @@ void infoJSON() {
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     struct passwd* pw = getpwuid(getuid());
     printf("    \"owner\": \"%s\",\n", pw->pw_name);
-#elif defined(__WIN32__) || defined(__WIN64__)
+#elif defined(_WIN32) || defined(_WIN64)
     printf("    \"owner\": \"n/a\",\n");
 #endif
 
