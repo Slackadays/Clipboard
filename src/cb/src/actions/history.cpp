@@ -123,12 +123,12 @@ void history() {
 
     std::string availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
-    batchedMessage.reserve(50200);
+    batchedMessage.reserve(70000);
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
 
-        if (batchedMessage.size() > 50000) {
+        if (batchedMessage.size() > 65536) {
 /*#if defined(__linux__)                      \
             // use io_uring for async writing \
                                               \
