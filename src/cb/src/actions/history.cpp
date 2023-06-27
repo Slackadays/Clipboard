@@ -30,7 +30,11 @@
 #include <sys/types.h>
 #endif
 
-#if (defined(__linux__) || defined(__unix__) || defined(__APPLE__)) && !defined(__OpenBSD__)
+#if (defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__posix__)) && !defined(__OpenBSD__)
+#define USE_AIO 1
+#endif
+
+#if defined(USE_AIO)
 #include <aio.h>
 #endif
 
@@ -116,7 +120,8 @@ void history() {
     int ring_fd = io_uring_setup(16, &params);   \
                                                \ \
                                                \ \
-#el*/ #if defined (__unix__) || defined(__APPLE__) || defined(__linux__) && !defined(__OpenBSD__)
+#el*/                                            \
+#if defined (USE_AIO)
     int flags = fcntl(STDERR_FILENO, F_GETFL, 0);
     fcntl(STDERR_FILENO, F_SETFL, flags | O_APPEND);
     struct aiocb aio;
@@ -136,7 +141,8 @@ void history() {
             // use io_uring for async writing   \
                                               \ \
                                               \ \
-#el*/ #if defined (__unix__) || defined(__APPLE__) || defined(__linux__) && !defined(__OpenBSD__)
+#el*/                                           \
+#if defined (USE_AIO)
             memset(&aio, 0, sizeof(struct aiocb));
             aio.aio_fildes = STDERR_FILENO;
             aio.aio_buf = static_cast<void*>(batchedMessage.data());
@@ -192,7 +198,7 @@ void history() {
         }
     }
 
-#if defined(__unix__) || defined(__APPLE__) || defined(__linux__) && !defined(__OpenBSD__)
+#if defined(USE_AIO)
     memset(&aio, 0, sizeof(struct aiocb));
     aio.aio_fildes = STDERR_FILENO;
     aio.aio_buf = static_cast<void*>(batchedMessage.data());
