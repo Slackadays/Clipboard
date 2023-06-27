@@ -30,7 +30,7 @@
 #include <sys/types.h>
 #endif
 
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) && !defined(__OpenBSD__)
+#if (defined(__linux__) || defined(__unix__) || defined(__APPLE__)) && !defined(__OpenBSD__)
 #include <aio.h>
 #endif
 
