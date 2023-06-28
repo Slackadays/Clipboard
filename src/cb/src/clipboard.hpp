@@ -327,6 +327,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+unsigned int suitableThreadAmount();
 bool envVarIsTrue(const std::string_view& name);
 size_t columnLength(const std::string_view& message);
 std::string generatedEndbar();

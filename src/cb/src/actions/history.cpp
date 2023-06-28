@@ -13,6 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
+#include <latch>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <fcntl.h>
@@ -78,38 +79,67 @@ void history() {
 
     std::vector<std::string> dates(path.entryIndex.size());
 
-    size_t longestDateLength = 0;
+    std::atomic<size_t> atomicLongestDateLength = 0;
 
     auto now = std::chrono::system_clock::now();
 
-    struct stat dateInfo;
-    std::string agoMessage;
-    agoMessage.reserve(16);
+    auto totalThreads = suitableThreadAmount();
+    // auto totalThreads = 9;
+    if (path.entryIndex.size() < totalThreads) totalThreads = path.entryIndex.size();
 
-    for (auto entry = 0; entry < path.entryIndex.size(); entry++) {
+    auto entriesPerThread = path.entryIndex.size() / totalThreads;
+
+    std::latch dateLatch(totalThreads);
+    std::vector<std::thread> threads(totalThreads);
+
+    auto dateWorker = [&](const unsigned long& start, const unsigned long& end) {
+        struct stat dateInfo;
+        std::string agoMessage;
+        agoMessage.reserve(16);
+
+        for (auto entry = start; entry < end; entry++) {
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-        stat(path.entryPathFor(entry).string().data(), &dateInfo);
-        auto timeSince = now - std::chrono::system_clock::from_time_t(dateInfo.st_mtime);
-        // format time like 1y 2d 3h 4m 5s
-        auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
-        auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
-        auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - days);
-        auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - days - hours);
-        auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - days - hours - minutes);
-        if (years.count() > 0) agoMessage += std::to_string(years.count()) + "y ";
-        if (days.count() > 0) agoMessage += std::to_string(days.count()) + "d ";
-        if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";
-        if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
-        agoMessage += std::to_string(seconds.count()) + "s";
-        dates[entry] = agoMessage;
+            stat(path.entryPathFor(entry).string().data(), &dateInfo);
+            auto timeSince = now - std::chrono::system_clock::from_time_t(dateInfo.st_mtime);
+            // format time like 1y 2d 3h 4m 5s
+            auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
+            auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
+            auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - days);
+            auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - days - hours);
+            auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - days - hours - minutes);
+            if (years.count() > 0) agoMessage += std::to_string(years.count()) + "y ";
+            if (days.count() > 0) agoMessage += std::to_string(days.count()) + "d ";
+            if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";
+            if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
+            agoMessage += std::to_string(seconds.count()) + "s";
+            dates[entry] = agoMessage;
 
-        if (agoMessage.length() > longestDateLength) longestDateLength = agoMessage.length();
-        agoMessage.clear();
+            if (agoMessage.length() > atomicLongestDateLength.load(std::memory_order_relaxed)) atomicLongestDateLength.store(agoMessage.length(), std::memory_order_relaxed);
+            agoMessage.clear();
 #else
-        dates[entry] = "n/a";
-        longestDateLength = 3;
+            dates[entry] = "n/a";
+            atomicLongestDateLength.store(3, std::memory_order_relaxed);
 #endif
+        }
+        dateLatch.count_down();
+    };
+
+    for (size_t thread = 0; thread < totalThreads; thread++) {
+        auto start = thread * entriesPerThread;
+        auto end = start + entriesPerThread;
+        if (thread == totalThreads - 1) end = path.entryIndex.size();
+        threads[thread] = std::thread(dateWorker, start, end);
     }
+
+    dateLatch.wait();
+
+    for (auto& thread : threads)
+        thread.join();
+
+    // std::cout << "processing dates took " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - now).count() << "ms" << std::endl;
+    // exit(0);
+
+    size_t longestDateLength = atomicLongestDateLength.load(std::memory_order_relaxed);
 
     /*#if defined(__linux__)
         io_uring ring;
