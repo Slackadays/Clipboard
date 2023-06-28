@@ -22,7 +22,7 @@ Don't just take my word for it!
 
 - Copy and paste text, files, directories, binary data, your goat, _anything_
 - Infinite numbers of clipboards with unlimited capacity AND history each,
-- Actually blazingly fast :rocket: performance because I'm sick of slow software,
+- Really kickass :rocket: performance because I'm sick of slow software,
 - Seamless integration with your [existing clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, and Türkçe,
 - A superbly scriptable API to automate your workflows in a cinch, 
