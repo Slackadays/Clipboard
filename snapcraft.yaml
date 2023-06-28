@@ -21,11 +21,13 @@ parts:
       - make
       - cmake
       - libasound2-dev
+      - liburing-dev
       - libx11-dev
       - libwayland-dev
       - wayland-protocols
     stage-packages:
       - libasound2-dev
+      - liburing-dev
       - libx11-dev
       - libwayland-dev
 apps:
