@@ -137,14 +137,14 @@ void history() {
         path.setEntry(entry);
 
         if (batchedMessage.size() - offset > batchInterval) {
-/*#if defined(__linux__)                                                                                 \
-            auto sqe = io_uring_get_sqe(&ring);                                                          \
-            auto rawByteAtOffset = batchedMessage.data() + offset;                                       \
-            io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0); \
-                                                                                                         \
-            SQEsSubmitted += io_uring_submit(&ring);                                                     \
-            offset = batchedMessage.size();                                                              \
-#el*/                                                                                                    \
+/*#if defined(__linux__)                                                                                   \
+            auto sqe = io_uring_get_sqe(&ring);                                                            \
+            auto rawByteAtOffset = batchedMessage.data() + offset;                                         \
+            io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);   \
+                                                                                                         \ \
+            SQEsSubmitted += io_uring_submit(&ring);                                                       \
+            offset = batchedMessage.size();                                                                \
+#el*/                                                                                                      \
 #if defined (USE_AIO)
             auto aio = std::make_shared<aiocb>();
             auto rawByteAtOffset = batchedMessage.data() + offset;
@@ -205,15 +205,15 @@ void history() {
         }
     }
 
-/*#if defined(__linux__)                                                                         \
-    auto sqe = io_uring_get_sqe(&ring);                                                          \
-    auto rawByteAtOffset = batchedMessage.data() + offset;                                       \
-    io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0); \
-                                                                                                 \
-    // block until all writes are done                                                           \
-    io_uring_submit_and_wait(&ring, SQEsSubmitted + 1);                                          \
-    io_uring_queue_exit(&ring);                                                                  \
-#el*/                                                                                            \
+/*#if defined(__linux__)                                                                           \
+    auto sqe = io_uring_get_sqe(&ring);                                                            \
+    auto rawByteAtOffset = batchedMessage.data() + offset;                                         \
+    io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);   \
+                                                                                                 \ \
+    // block until all writes are done                                                             \
+    io_uring_submit_and_wait(&ring, SQEsSubmitted + 1);                                            \
+    io_uring_queue_exit(&ring);                                                                    \
+#el*/                                                                                              \
 #if defined (USE_AIO)
     auto rawByteAtOffset = batchedMessage.data() + offset;
     auto aio = std::make_shared<aiocb>();
