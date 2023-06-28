@@ -43,13 +43,6 @@ endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   find_package(ALSA REQUIRED)
-  find_path(LIBURING_INCLUDE_DIR liburing.h)
-  if (LIBURING_INCLUDE_DIR)
-    message(STATUS "Building the Clipboard Project with io_uring support")
-    set(HAVE_LIBURING TRUE)
-  else()
-    message(FATAL_ERROR "Could not find liburing")
-  endif()
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
