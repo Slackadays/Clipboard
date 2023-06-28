@@ -130,7 +130,7 @@ void history() {
 
     std::string availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
-    batchedMessage.reserve(static_cast<float>(batchInterval) * 1.5);
+    batchedMessage.reserve(batchInterval + 200);
     size_t offset = 0;
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
@@ -139,26 +139,20 @@ void history() {
         if (batchedMessage.size() - offset > batchInterval) {
 #if defined(__linux__)
             auto sqe = io_uring_get_sqe(&ring);
-
             auto rawByteAtOffset = batchedMessage.data() + offset;
-
             io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);
 
             SQEsSubmitted += io_uring_submit(&ring);
-
             offset = batchedMessage.size();
 #elif defined(USE_AIO)
             auto aio = std::make_shared<aiocb>();
-
             auto rawByteAtOffset = batchedMessage.data() + offset;
-
             aio->aio_fildes = STDERR_FILENO;
             aio->aio_buf = static_cast<void*>(rawByteAtOffset);
             aio->aio_nbytes = batchedMessage.size() - offset;
             aio_write(aio.get());
 
             offset = batchedMessage.size();
-
             batchedAIOs.emplace_back(aio);
 #else
             fputs(batchedMessage.data(), stderr);
@@ -212,24 +206,19 @@ void history() {
 
 #if defined(__linux__)
     auto sqe = io_uring_get_sqe(&ring);
-
     auto rawByteAtOffset = batchedMessage.data() + offset;
-
     io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);
 
     // block until all writes are done
     io_uring_submit_and_wait(&ring, SQEsSubmitted + 1);
-
     io_uring_queue_exit(&ring);
 #elif defined(USE_AIO)
     auto rawByteAtOffset = batchedMessage.data() + offset;
-
     auto aio = std::make_shared<aiocb>();
     aio->aio_fildes = STDERR_FILENO;
     aio->aio_buf = static_cast<void*>(rawByteAtOffset);
     aio->aio_nbytes = batchedMessage.size() - offset;
     aio_write(aio.get());
-
     batchedAIOs.emplace_back(aio);
 
     for (const auto& aio : batchedAIOs) {
