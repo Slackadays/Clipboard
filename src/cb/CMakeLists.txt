@@ -95,7 +95,7 @@ endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   # link liburing
-  target_link_libraries(cb uring)
+  #target_link_libraries(cb uring)
 endif()
 
 if(ALSA_FOUND)
