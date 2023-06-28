@@ -93,6 +93,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" 
   target_sources(cb PRIVATE src/platforms/bsd.cpp)
 endif()
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  # link liburing
+  target_link_libraries(cb uring)
+endif()
+
 if(ALSA_FOUND)
   target_sources(cb PRIVATE src/platforms/linux.cpp)
   target_link_libraries(cb asound)

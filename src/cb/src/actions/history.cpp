@@ -21,7 +21,8 @@
 #endif
 
 #if defined(__linux__)
-#include <linux/io_uring.h>
+#include <liburing.h>
+int SQEsSubmitted = 0;
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
@@ -32,9 +33,6 @@
 
 #if (defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__posix__)) && !defined(__OpenBSD__)
 #define USE_AIO 1
-#endif
-
-#if defined(USE_AIO)
 #include <aio.h>
 #endif
 
@@ -78,8 +76,7 @@ void history() {
     int columns = available.columns - usedSpace;
     fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]").data());
 
-    std::vector<std::string> dates;
-    dates.reserve(path.entryIndex.size());
+    std::vector<std::string> dates(path.entryIndex.size());
 
     size_t longestDateLength = 0;
 
@@ -104,54 +101,69 @@ void history() {
         if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";
         if (minutes.count() > 0) agoMessage += std::to_string(minutes.count()) + "m ";
         agoMessage += std::to_string(seconds.count()) + "s";
-        dates.emplace_back(agoMessage);
+        dates[entry] = agoMessage;
 
         if (agoMessage.length() > longestDateLength) longestDateLength = agoMessage.length();
         agoMessage.clear();
 #else
-        dates.push_back("n/a");
+        dates[entry] = "n/a";
         longestDateLength = 3;
 #endif
     }
 
-/*#if defined(__linux__)                         \
-    struct io_uring_params params;               \
-    memset(&params, 0, sizeof(params));          \
-    int ring_fd = io_uring_setup(16, &params);   \
-                                               \ \
-                                               \ \
-#el*/                                            \
-#if defined (USE_AIO)
-    int flags = fcntl(STDERR_FILENO, F_GETFL, 0);
-    fcntl(STDERR_FILENO, F_SETFL, flags | O_APPEND);
-    struct aiocb aio;
+#if defined(__linux__)
+    io_uring ring;
+    io_uring_queue_init(128, &ring, IORING_SETUP_SQPOLL);
+#endif
+
+#if defined(USE_AIO)
+    std::vector<std::shared_ptr<aiocb>> batchedAIOs;
+#endif
+
+#if defined(__linux__) || defined(USE_AIO)
+    constexpr size_t batchInterval = 1024 * 1024;
+#else
+    constexpr size_t batchInterval = 65536;
 #endif
 
     auto longestEntryLength = numberLength(path.entryIndex.size() - 1);
 
     std::string availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
-    batchedMessage.reserve(70000);
+    batchedMessage.reserve(static_cast<float>(batchInterval) * 1.5);
+    size_t offset = 0;
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
 
-        if (batchedMessage.size() > 65536) {
-/*#if defined(__linux__)                        \
-            // use io_uring for async writing   \
-                                              \ \
-                                              \ \
-#el*/                                           \
-#if defined (USE_AIO)
-            memset(&aio, 0, sizeof(struct aiocb));
-            aio.aio_fildes = STDERR_FILENO;
-            aio.aio_buf = static_cast<void*>(batchedMessage.data());
-            aio.aio_nbytes = batchedMessage.size();
-            aio_write(&aio);
+        if (batchedMessage.size() - offset > batchInterval) {
+#if defined(__linux__)
+            auto sqe = io_uring_get_sqe(&ring);
+
+            auto rawByteAtOffset = batchedMessage.data() + offset;
+
+            io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);
+
+            SQEsSubmitted += io_uring_submit(&ring);
+
+            offset = batchedMessage.size();
+#elif defined(USE_AIO)
+            auto aio = std::make_shared<aiocb>();
+
+            auto rawByteAtOffset = batchedMessage.data() + offset;
+
+            aio->aio_fildes = STDERR_FILENO;
+            aio->aio_buf = static_cast<void*>(rawByteAtOffset);
+            aio->aio_nbytes = batchedMessage.size() - offset;
+            aio_write(aio.get());
+
+            offset = batchedMessage.size();
+
+            batchedAIOs.emplace_back(aio);
 #else
             fputs(batchedMessage.data(), stderr);
-#endif
             batchedMessage.clear();
+#endif
         }
 
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
@@ -198,15 +210,32 @@ void history() {
         }
     }
 
-#if defined(USE_AIO)
-    memset(&aio, 0, sizeof(struct aiocb));
-    aio.aio_fildes = STDERR_FILENO;
-    aio.aio_buf = static_cast<void*>(batchedMessage.data());
-    aio.aio_nbytes = batchedMessage.size();
-    aio_write(&aio);
+#if defined(__linux__)
+    auto sqe = io_uring_get_sqe(&ring);
 
-    struct aiocb* aio_list[1] = {&aio};
-    aio_suspend(aio_list, 1, nullptr);
+    auto rawByteAtOffset = batchedMessage.data() + offset;
+
+    io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);
+
+    // block until all writes are done
+    io_uring_submit_and_wait(&ring, SQEsSubmitted + 1);
+
+    io_uring_queue_exit(&ring);
+#elif defined(USE_AIO)
+    auto rawByteAtOffset = batchedMessage.data() + offset;
+
+    auto aio = std::make_shared<aiocb>();
+    aio->aio_fildes = STDERR_FILENO;
+    aio->aio_buf = static_cast<void*>(rawByteAtOffset);
+    aio->aio_nbytes = batchedMessage.size() - offset;
+    aio_write(aio.get());
+
+    batchedAIOs.emplace_back(aio);
+
+    for (const auto& aio : batchedAIOs) {
+        const std::array<const aiocb*, 1> aio_list = {aio.get()};
+        aio_suspend(aio_list.data(), aio_list.size(), nullptr);
+    }
 #else
     fputs(batchedMessage.data(), stderr);
 #endif
