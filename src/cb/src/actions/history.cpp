@@ -57,7 +57,7 @@ void moveHistory() {
         successful_entries++;
     }
     stopIndicator();
-    fprintf(stderr, formatMessage("[success][inverse] ✔ [noinverse] Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
+    fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Queued up [bold]%lu[blank][success] entries[blank]\n").data(), successful_entries);
     if (clipboard_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }
 
@@ -68,14 +68,14 @@ void history() {
     }
     stopIndicator();
     auto available = thisTerminalSize();
-    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
+    fprintf(stderr, "%s", formatColors("[info]┏━━[inverse] ").data());
     Message clipboard_history_message = "[bold]Entry history for clipboard [help] %s[nobold]";
     fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatMessage(" [noinverse][info]━").data());
+    fprintf(stderr, "%s", formatColors(" [noinverse][info]━").data());
     auto usedSpace = (columnLength(clipboard_history_message) - 2) + clipboard_name.length() + 7;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatColors("┓[blank]").data());
 
     std::vector<std::string> dates(path.entryIndex.size());
 
@@ -194,7 +194,7 @@ void history() {
 
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
-        batchedMessage += formatMessage(
+        batchedMessage += formatColors(
                 "\n[info]\033[" + availableColumnsAsString + "G┃\r┃ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold][info]│ [bold]"
                 + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold][info]│ "
         );
@@ -205,7 +205,7 @@ void history() {
                 content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
             else
                 std::erase(content, '\n');
-            batchedMessage += formatMessage("[help]" + content.substr(0, widthRemaining) + "[blank]");
+            batchedMessage += formatColors("[help]" + content.substr(0, widthRemaining) + "[blank]");
             continue;
         }
 
@@ -218,7 +218,7 @@ void history() {
 
             if (!first) {
                 if (entryWidth <= widthRemaining - 2) {
-                    batchedMessage += formatMessage("[help], [blank]");
+                    batchedMessage += formatColors("[help], [blank]");
                     widthRemaining -= 2;
                 }
             }
@@ -229,7 +229,7 @@ void history() {
                     stylizedEntry = "\033[4m" + filename + "\033[24m";
                 else
                     stylizedEntry = "\033[1m" + filename + "\033[22m";
-                batchedMessage += formatMessage("[help]" + stylizedEntry + "[blank]");
+                batchedMessage += formatColors("[help]" + stylizedEntry + "[blank]");
                 widthRemaining -= entryWidth;
                 first = false;
             }
@@ -262,14 +262,14 @@ void history() {
     fputs(batchedMessage.data(), stderr);
 #endif
 
-    fputs(formatMessage("[info]\n┗━━▌").data(), stderr);
+    fputs(formatColors("[info]\n┗━━▌").data(), stderr);
     Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
     usedSpace = columnLength(status_legend_message) + 6;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
     std::string bar2 = "▐" + repeatString("━", cols);
     fputs((status_legend_message() + bar2).data(), stderr);
-    fputs(formatMessage("┛[blank]\n").data(), stderr);
+    fputs(formatColors("┛[blank]\n").data(), stderr);
 }
 
 void historyJSON() {

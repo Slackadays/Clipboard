@@ -159,14 +159,20 @@ unsigned long levenshteinDistance(const std::string_view& one, const std::string
     return matrix.at(one.size()).at(two.size());
 };
 
-std::string formatMessage(const std::string_view& str, bool colorful) {
+std::string formatColors(const std::string_view& str, bool colorful) {
     std::string temp(str); // a string to do scratch work on
-    auto replaceThis = [&](const std::string_view& str, const std::string_view& with) {
-        for (size_t i = 0; (i = temp.find(str, i)) != std::string::npos; i += with.length())
-            temp.replace(i, str.length(), with);
-    };
-    for (const auto& key : colors) // iterate over all the possible colors to replace
-        replaceThis(key.first, colorful ? key.second : "");
+    for (size_t i = 0; (i = temp.find('[', i)) != std::string::npos; i++) {
+        if (temp[i + 1] == '[') continue;
+        auto j = temp.find(']', i);
+        if (j == std::string::npos) break;
+        const std::string_view result = temp.substr(i, j - i + 1);
+        for (const auto& key : colors) {
+            if (key.first == result) {
+                temp.replace(i, result.length(), colorful ? key.second : "");
+                break;
+            }
+        }
+    }
     return temp;
 }
 
@@ -390,7 +396,7 @@ bool needsANewEntry() {
     std::string decision;
     while (true) {
         std::getline(std::cin, decision);
-        fprintf(stderr, "%s", formatMessage("[blank]").data());
+        fprintf(stderr, "%s", formatColors("[blank]").data());
 
         if (decision == "y" || decision == "yes")
             return ReplaceOnce;
@@ -424,7 +430,7 @@ void setupHandlers() {
     });
 
     signal(SIGINT, [](int) {
-        fprintf(stderr, "%s", formatMessage("[blank]").data());
+        fprintf(stderr, "%s", formatColors("[blank]").data());
         if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
             // message, directly to standard error. Note: There is no standard C++ interface for this, so this requires
@@ -605,10 +611,10 @@ void setFlags() {
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
     if (flagIsPresent<bool>("--bachata")) {
-        printf("%s", formatMessage("[info]Here's some nice bachata music from Aventura! [help]https://www.youtube.com/watch?v=RxIM2bMBhCo\n[blank]").data());
-        printf("%s", formatMessage("[info]How about some in English? [help]https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
-        printf("%s", formatMessage("[info]Here's one from Romeo, the head of Aventura: [help]https://www.youtube.com/watch?v=yjdHGmRKz08\n[blank]").data());
-        printf("%s", formatMessage("[info]This one isn't bachata but it is from Aventura: [help]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
+        printf("%s", formatColors("[info]Here's some nice bachata music from Aventura! [help]https://www.youtube.com/watch?v=RxIM2bMBhCo\n[blank]").data());
+        printf("%s", formatColors("[info]How about some in English? [help]https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
+        printf("%s", formatColors("[info]Here's one from Romeo, the head of Aventura: [help]https://www.youtube.com/watch?v=yjdHGmRKz08\n[blank]").data());
+        printf("%s", formatColors("[info]This one isn't bachata but it is from Aventura: [help]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
@@ -634,7 +640,7 @@ void setFlags() {
                     .append(action_descriptions[static_cast<Action>(i)])
                     .append("[blank]\n");
         }
-        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), formatMessage(actionsList).data());
+        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), formatColors(actionsList).data());
         exit(EXIT_SUCCESS);
     }
 }
@@ -809,7 +815,7 @@ void showFailures() {
     available.rows -= 3;
     printf(copying.failedItems.size() > 1 ? clipboard_failed_many_message().data() : clipboard_failed_one_message().data(), actions[action].data());
     for (size_t i = 0; i < std::min(available.rows, copying.failedItems.size()); i++) {
-        printf(formatMessage("[error]┃ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
+        printf(formatColors("[error]┃ [bold]%s[blank][error]: %s[blank]\n").data(), copying.failedItems.at(i).first.data(), copying.failedItems.at(i).second.message().data());
         if (i == available.rows - 1 && copying.failedItems.size() > available.rows) printf(and_more_fails_message().data(), int(copying.failedItems.size() - available.rows));
     }
     printf("%s", fix_problem_message().data());

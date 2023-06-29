@@ -233,7 +233,7 @@ public:
 };
 
 std::string JSONescape(const std::string_view& input);
-std::string formatMessage(const std::string_view& str, bool colorful = !no_color);
+std::string formatColors(const std::string_view& str, bool colorful = !no_color);
 
 class Clipboard {
     fs::path root;
@@ -309,7 +309,7 @@ private:
 
 public:
     Message(const auto& message) : internal_message(std::move(message)) {}
-    std::string operator()() const { return std::move(formatMessage(internal_message)); }
+    std::string operator()() const { return std::move(formatColors(internal_message)); }
     operator std::string_view() const { return internal_message; }
 };
 

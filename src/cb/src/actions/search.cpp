@@ -33,18 +33,18 @@ void displaySearchResults(const std::vector<Result>& results) {
 
     stopIndicator();
 
-    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
+    fprintf(stderr, "%s", formatColors("[info]┏━━[inverse] ").data());
     Message search_result_message = "[info][bold]Your search results[nobold]";
     fprintf(stderr, "%s", search_result_message().data());
-    fprintf(stderr, "%s", formatMessage(" [noinverse]━").data());
+    fprintf(stderr, "%s", formatColors(" [noinverse]━").data());
     auto usedSpace = (columnLength(search_result_message) - 2) + 9;
     if (usedSpace > available.columns) available.columns = usedSpace;
     int columns = available.columns - usedSpace;
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]\n").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatColors("┓[blank]\n").data());
 
     for (const auto& result : results) {
         fprintf(stderr,
-                formatMessage("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [bold]%*s%lu[nobold]│ [blank]").data(),
+                formatColors("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [bold]%*s%lu[nobold]│ [blank]").data(),
                 available.columns,
                 longestClipboardLength - result.clipboard.length(),
                 "",
@@ -58,15 +58,15 @@ void displaySearchResults(const std::vector<Result>& results) {
         if (preview.length() > widthRemaining) {
             preview = preview.substr(0, widthRemaining - (preview.length() - columnLength(preview)));
         }
-        fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), preview.data());
+        fprintf(stderr, formatColors("[help]%s[blank]\n").data(), preview.data());
     }
 
-    fprintf(stderr, "%s", formatMessage("[info]┗━━▌").data());
+    fprintf(stderr, "%s", formatColors("[info]┗━━▌").data());
     Message search_legend_message = "[bold]Clipboard[nobold]│ [bold]Entry[nobold]│[help] Result[info]";
     int cols = available.columns - (columnLength(search_legend_message) + 6);
     std::string bar2 = "▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (search_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
+    fprintf(stderr, "%s", formatColors("┛[blank]\n").data());
 }
 
 void displaySearchJSON(const std::vector<Result>& results) {
@@ -86,7 +86,7 @@ void searchInternal(std::function<void(const std::vector<Result>&)> nextStep) {
     if (copying.items.empty())
         error_exit(
                 "%s",
-                formatMessage(
+                formatColors(
                         "[error][inverse] ✘ [noinverse] You need to enter something to search for. [help]⬤ Try entering a search term after the action, like [bold]cb search Foobar[nobold].[blank]\n"
                 )
         );
@@ -132,8 +132,8 @@ void searchInternal(std::function<void(const std::vector<Result>&)> nextStep) {
             }
         } catch (const std::regex_error& e) {
             error_exit(
-                    formatMessage("[error][inverse] ✘ [noinverse] CB couldn't process your query as regex. (Specific error: %s) [help]⬤ Try entering a valid regex instead, like [bold]cb search "
-                                  "\"Foobar.*\"[nobold].[blank]\n"),
+                    formatColors("[error][inverse] ✘ [noinverse] CB couldn't process your query as regex. (Specific error: %s) [help]⬤ Try entering a valid regex instead, like [bold]cb search "
+                                 "\"Foobar.*\"[nobold].[blank]\n"),
                     std::string(e.what())
             );
         }
@@ -182,7 +182,7 @@ void searchInternal(std::function<void(const std::vector<Result>&)> nextStep) {
     }
 
     if (results.empty())
-        error_exit("%s", formatMessage("[error][inverse] ✘ [noinverse] CB couldn't find anything matching your query.[blank] [help]⬤ Try searching for something else instead.[blank]\n"));
+        error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] CB couldn't find anything matching your query.[blank] [help]⬤ Try searching for something else instead.[blank]\n"));
 
     std::sort(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash < two.hash; });
     results.erase(std::unique(results.begin(), results.end(), [](const Result& one, const Result& two) { return one.hash == two.hash; }), results.end());

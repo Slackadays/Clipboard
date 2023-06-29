@@ -41,17 +41,17 @@ void status() {
 
     stopIndicator();
 
-    fprintf(stderr, "%s", formatMessage("[info]┏━━[inverse] ").data());
+    fprintf(stderr, "%s", formatColors("[info]┏━━[inverse] ").data());
     fprintf(stderr, "%s", check_clipboard_status_message().data());
-    fprintf(stderr, "%s", formatMessage(" [noinverse]━").data());
+    fprintf(stderr, "%s", formatColors(" [noinverse]━").data());
     int columns = available.columns - (columnLength(check_clipboard_status_message) + 7);
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatMessage("┓[blank]\n").data());
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatColors("┓[blank]\n").data());
 
     for (auto& clipboard : clipboards_with_contents) {
         clipboard.getLock();
 
         int widthRemaining = available.columns - (clipboard.name().length() + 5 + longestClipboardLength);
-        fprintf(stderr, formatMessage("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
+        fprintf(stderr, formatColors("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
         if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));
@@ -59,7 +59,7 @@ void status() {
                 content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
             else
                 std::erase(content, '\n');
-            fprintf(stderr, formatMessage("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+            fprintf(stderr, formatColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
             continue;
         }
 
@@ -70,7 +70,7 @@ void status() {
 
             if (!first) {
                 if (entryWidth <= widthRemaining - 2) {
-                    fprintf(stderr, "%s", formatMessage("[help], [blank]").data());
+                    fprintf(stderr, "%s", formatColors("[help], [blank]").data());
                     widthRemaining -= 2;
                 }
             }
@@ -81,7 +81,7 @@ void status() {
                     stylizedEntry = "\033[4m" + entry.path().filename().string() + "\033[24m";
                 else
                     stylizedEntry = "\033[1m" + entry.path().filename().string() + "\033[22m";
-                fprintf(stderr, formatMessage("[help]%s[blank]").data(), stylizedEntry.data());
+                fprintf(stderr, formatColors("[help]%s[blank]").data(), stylizedEntry.data());
                 widthRemaining -= entryWidth;
                 first = false;
             }
@@ -89,12 +89,12 @@ void status() {
         clipboard.releaseLock();
         fprintf(stderr, "\n");
     }
-    fprintf(stderr, "%s", formatMessage("[info]┗━━▌").data());
+    fprintf(stderr, "%s", formatColors("[info]┗━━▌").data());
     Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
     int cols = available.columns - (columnLength(status_legend_message) + 6);
     std::string bar2 = "▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());
-    fprintf(stderr, "%s", formatMessage("┛[blank]\n").data());
+    fprintf(stderr, "%s", formatColors("┛[blank]\n").data());
 }
 
 void statusJSON() {

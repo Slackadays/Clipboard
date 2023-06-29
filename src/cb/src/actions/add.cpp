@@ -20,8 +20,8 @@ void addFiles() {
     if (path.holdsRawDataInCurrentEntry())
         error_exit(
                 "%s",
-                formatMessage("[error][inverse] ✘ [noinverse] You can't add items to text. [blank][help] ⬤ Try copying text first, or add "
-                              "text instead.[blank]\n")
+                formatColors("[error][inverse] ✘ [noinverse] You can't add items to text. [blank][help] ⬤ Try copying text first, or add "
+                             "text instead.[blank]\n")
         );
     for (const auto& f : copying.items)
         copyItem(f);
@@ -38,8 +38,8 @@ void addData() {
     } else if (!fs::is_empty(path.data)) {
         error_exit(
                 "%s",
-                formatMessage("[error][inverse] ✘ [noinverse] You can't add text to items. [blank][help] ⬤ Try copying text first, or add a "
-                              "file instead.[blank]\n")
+                formatColors("[error][inverse] ✘ [noinverse] You can't add text to items. [blank][help] ⬤ Try copying text first, or add a "
+                             "file instead.[blank]\n")
         );
     } else {
         if (io_type == IOType::Pipe)
