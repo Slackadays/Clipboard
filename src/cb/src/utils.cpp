@@ -318,7 +318,7 @@ size_t writeToFile(const fs::path& path, const std::string& content, bool append
 unsigned int suitableThreadAmount() {
     auto maxThreads = std::thread::hardware_concurrency();
     if (maxThreads < 4) return 1;
-    return static_cast<float>(maxThreads) * 0.8;
+    return static_cast<float>(maxThreads) * 0.9;
 }
 
 unsigned long numberLength(const unsigned long& number) {

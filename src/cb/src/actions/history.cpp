@@ -84,7 +84,6 @@ void history() {
     auto now = std::chrono::system_clock::now();
 
     auto totalThreads = suitableThreadAmount();
-    // auto totalThreads = 9;
     if (path.entryIndex.size() < totalThreads) totalThreads = path.entryIndex.size();
 
     auto entriesPerThread = path.entryIndex.size() / totalThreads;
@@ -158,9 +157,11 @@ void history() {
 
     auto longestEntryLength = numberLength(path.entryIndex.size() - 1);
 
-    std::string availableColumnsAsString = std::to_string(available.columns);
+    auto availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
-    batchedMessage.reserve(batchInterval + 200);
+    // reserve enough contiguous memory for the entire batch, where the size is number of entries * line length, plus extra formatting characters
+    // this prevents reallocations and thus helps prevent invalidation of the data pointer
+    batchedMessage.reserve(path.entryIndex.size() * (available.columns + 32));
     size_t offset = 0;
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
