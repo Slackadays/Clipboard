@@ -161,7 +161,7 @@ void history() {
     std::string batchedMessage;
     // reserve enough contiguous memory for the entire batch, where the size is number of entries * line length, plus extra formatting characters
     // this prevents reallocations and thus helps prevent invalidation of the data pointer
-    batchedMessage.reserve(path.entryIndex.size() * (available.columns + 32));
+    batchedMessage.reserve(path.entryIndex.size() * (available.columns + 64));
     size_t offset = 0;
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
