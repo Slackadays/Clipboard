@@ -48,9 +48,9 @@ cb edit
 
 Set this environment variable to make Clipboard overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.
 
-### **CLIPBOARD_ALWAYS_PERSIST**
+### **CLIPBOARD_CUSTOMPERSIST**
 
-Set this to "true" or "1" to make CB always use persistent clipboards.
+Set this to the clipboards you want to make persistent, using regex.
 
 ### **CLIPBOARD_EDITOR**
 

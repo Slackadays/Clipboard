@@ -97,7 +97,16 @@ struct Copying {
 };
 extern Copying copying;
 
+std::vector<std::string> regexSplit(const std::string& content, const std::regex& regex);
+
 bool isPersistent(const auto& clipboard) {
+    static auto temp = getenv("CLIPBOARD_CUSTOMPERSIST");
+    if (temp != nullptr) {
+        std::string custom_persist(temp);
+        auto patterns = regexSplit(custom_persist, std::regex(" "));
+        for (const auto& pattern : patterns)
+            if (std::regex_match(clipboard, std::regex(pattern))) return true;
+    }
     return clipboard.find_first_of("_") != std::string::npos;
 }
 
@@ -383,7 +392,6 @@ void showFailures();
 void showSuccesses();
 [[nodiscard]] CopyPolicy userDecision(const std::string& item);
 void setTheme(const std::string_view& theme);
-std::vector<std::string> regexSplit(const std::string& content, const std::regex& regex);
 
 extern Message help_message;
 extern Message check_clipboard_status_message;

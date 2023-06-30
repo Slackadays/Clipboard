@@ -1080,16 +1080,23 @@ Note: By default, CB uses the user's home directory to generate the persistent d
 
 <br>
 
-<details><summary> &ensp; <b><code>CLIPBOARD_ALWAYS_PERSIST</code></b> &emsp; Set this to "true" or "1" to make CB always use persistent clipboards.</summary>
+<details><summary> &ensp; <b><code>CLIPBOARD_CUSTOMPERSIST</code></b> &emsp; Set this to the clipboards you want to make persistent, using regex.</summary>
 
 <br>
 
 Make everything you copy persistent.
 
 ```sh
-$ export CLIPBOARD_ALWAYS_PERSIST=1
+$ export CLIPBOARD_CUSTOMPERSIST=".*"
 $ cb copy Foo Bar Baz
 # This puts everything in the persistent directory but still with the clipboard name "0"
+```
+
+Make some clipboards persistent.
+
+```sh
+$ export CLIPBOARD_CUSTOMPERSIST=5
+$ cb copy5 Foo Bar Baz
 ```
 
 </details>
