@@ -159,7 +159,7 @@ extern std::string clipboard_name;
 
 extern unsigned long clipboard_entry;
 
-extern std::string clipboard_postfix;
+extern std::string clipboard_suffix;
 
 extern std::string locale;
 
