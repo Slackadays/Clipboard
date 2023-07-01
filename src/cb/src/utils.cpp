@@ -82,6 +82,8 @@ std::vector<std::string> arguments;
 
 std::string clipboard_invocation;
 
+std::string clipboard_postfix;
+
 std::string clipboard_name = "0";
 
 unsigned long clipboard_entry = 0;
@@ -475,6 +477,7 @@ void setClipboardAttributes() {
     std::string temp = arguments.at(0);
     if (temp.find_first_of("_0123456789") == std::string::npos) return;
     clipboard_name = temp.substr(temp.find_first_of("_0123456789"));
+    clipboard_postfix = clipboard_name;
     try {
         if (temp.find_last_of("-") != std::string::npos) {
             clipboard_entry = std::stoul(temp.substr(temp.find_last_of("-") + 1));
@@ -575,7 +578,7 @@ Action getAction() {
         clipboard_state = ClipboardState::Error;
         stopIndicator();
         if (lowest_distance <= 2)
-            printf(no_valid_action_with_candidate_message().data(), arguments.at(0).data(), clipboard_invocation.data(), lowest_distance_candidate.data());
+            printf(no_valid_action_with_candidate_message().data(), arguments.at(0).data(), clipboard_invocation.data(), lowest_distance_candidate.data(), clipboard_postfix.data());
         else
             printf(no_valid_action_message().data(), arguments.at(0).data(), clipboard_invocation.data());
         exit(EXIT_FAILURE);

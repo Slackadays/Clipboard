@@ -110,7 +110,7 @@ Message no_valid_action_message = "[error][inverse] ✘ [noinverse] You did not 
                                   "to include one. [help]⬤ Try using or adding [bold]cut, copy, [nobold]or "
                                   "[bold]paste[nobold] instead, like [bold]%s copy,[nobold] or do the [bold]help[nobold] action for a complete list of them.[blank]\n";
 Message no_valid_action_with_candidate_message = "[error][inverse] ✘ [noinverse] You did not specify a valid action ([bold]\"%s\"[blank][error]), or you forgot "
-                                                 "to include one. [help]⬤ Did you mean [bold]%s %s[nobold] instead?[blank]\n";
+                                                 "to include one. [help]⬤ Did you mean [bold]%s %s%s[nobold] instead?[blank]\n";
 Message choose_action_items_message = "[error][inverse] ✘ [noinverse] You need to choose something to %s.[help] ⬤ Try adding the items you want "
                                       "to %s to the end, like [bold]%s %s contacts.txt myprogram.cpp[blank]\n";
 Message fix_redirection_action_message = "[error][inverse] ✘ [noinverse] You can't use the [bold]%s[blank][error] action with redirection here. [help]⬤ Try removing "
