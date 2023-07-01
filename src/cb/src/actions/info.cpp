@@ -79,7 +79,7 @@ void info() {
 
     if (path.holdsRawDataInCurrentEntry()) {
         fprintf(stderr, formatColors("[info]%s┃ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::file_size(path.data.raw)).data());
-        fprintf(stderr, formatColors("[info]%s┃ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        fprintf(stderr, formatColors("[info]%s┃ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw)).value_or("text/plain").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -174,7 +174,7 @@ void infoJSON() {
 
     if (path.holdsRawDataInCurrentEntry()) {
         printf("    \"contentBytes\": %zu,\n", fs::file_size(path.data.raw));
-        printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("(Unknown)").data());
+        printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("text/plain").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
