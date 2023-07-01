@@ -53,6 +53,8 @@ jobs:
             sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-updates main multiverse universe" | sudo tee -a /etc/apt/sources.list
             sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-security main multiverse universe" | sudo tee -a /etc/apt/sources.list
             sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
+            echo "remove archive ubuntu for ports";
+            sudo sed -ibak '/\/archive.ubuntu.com/d' /etc/apt/sources.list;
           fi
           
           # This limits apt to only looking or amd64 and i386 from Azure, see https://github.com/actions/virtual-environments/issues/1961
