@@ -55,8 +55,8 @@ void setupIndicator() {
     int step = 0;
 
     auto poll_focus = [&] {
-        if (!readyToPollFocus) {
-            if (std::chrono::steady_clock::now() - start > std::chrono::milliseconds(500))
+        if (!readyToPollFocus) { // add a time duration check because on some slow systems over SSH, the reporting characters show up in the terminal
+            if (std::chrono::steady_clock::now() - start > std::chrono::milliseconds(50))
                 readyToPollFocus = true;
             else
                 return;
