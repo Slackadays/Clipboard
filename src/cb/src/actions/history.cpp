@@ -88,7 +88,6 @@ void history() {
 
     auto entriesPerThread = path.entryIndex.size() / totalThreads;
 
-    std::latch dateLatch(totalThreads);
     std::vector<std::thread> threads(totalThreads);
 
     auto dateWorker = [&](const unsigned long& start, const unsigned long& end) {
@@ -120,7 +119,6 @@ void history() {
             atomicLongestDateLength.store(3, std::memory_order_relaxed);
 #endif
         }
-        dateLatch.count_down();
     };
 
     for (size_t thread = 0; thread < totalThreads; thread++) {
@@ -129,8 +127,6 @@ void history() {
         if (thread == totalThreads - 1) end = path.entryIndex.size();
         threads[thread] = std::thread(dateWorker, start, end);
     }
-
-    dateLatch.wait();
 
     for (auto& thread : threads)
         thread.join();
@@ -196,7 +192,7 @@ void history() {
 
         batchedMessage += formatColors(
                 "\n[info]\033[" + availableColumnsAsString + "G┃\r┃ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold][info]│ [bold]"
-                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold][info]│ "
+                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold][info]│[help] "
         );
 
         if (path.holdsRawDataInCurrentEntry()) {
@@ -205,7 +201,7 @@ void history() {
                 content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
             else
                 std::erase(content, '\n');
-            batchedMessage += formatColors("[help]" + content.substr(0, widthRemaining) + "[blank]");
+            batchedMessage += content.substr(0, widthRemaining);
             continue;
         }
 
@@ -218,18 +214,16 @@ void history() {
 
             if (!first) {
                 if (entryWidth <= widthRemaining - 2) {
-                    batchedMessage += formatColors("[help], [blank]");
+                    batchedMessage += ", ";
                     widthRemaining -= 2;
                 }
             }
 
             if (entryWidth <= widthRemaining) {
-                std::string stylizedEntry;
                 if (entry.is_directory())
-                    stylizedEntry = "\033[4m" + filename + "\033[24m";
+                    batchedMessage += "\033[4m" + filename + "\033[24m";
                 else
-                    stylizedEntry = "\033[1m" + filename + "\033[22m";
-                batchedMessage += formatColors("[help]" + stylizedEntry + "[blank]");
+                    batchedMessage += "\033[1m" + filename + "\033[22m";
                 widthRemaining -= entryWidth;
                 first = false;
             }
