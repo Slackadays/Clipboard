@@ -41,9 +41,7 @@ void setupIndicator() {
 
     makeTerminalRaw();
 
-    fprintf(stderr, "\033[?25l");          // hide the cursor
-    if (is_tty.out) printf("\033[?1004h"); // enable focus tracking
-    fflush(stdout);
+    fprintf(stderr, "\033[?25l"); // hide the cursor
     fflush(stderr);
 
     int columns = thisTerminalSize().columns;
@@ -52,9 +50,19 @@ void setupIndicator() {
 
     auto start = std::chrono::steady_clock::now();
 
+    bool readyToPollFocus = false;
+
     int step = 0;
 
     auto poll_focus = [&] {
+        if (!readyToPollFocus) {
+            if (std::chrono::steady_clock::now() - start > std::chrono::milliseconds(500))
+                readyToPollFocus = true;
+            else
+                return;
+            printf("\033[?1004h"); // enable focus tracking
+            fflush(stdout);
+        }
         std::array<char, 32> buf;
 #if defined(_WIN32) || defined(_WIN64)
         DWORD bytesAvailable = 0;
@@ -85,6 +93,9 @@ void setupIndicator() {
 
     while (clipboard_state == ClipboardState::Setup && progress_state == IndicatorState::Active) {
         display_progress("%?", "Setting up");
+
+        if (is_tty.out) poll_focus();
+
         step == 79 ? step = 0 : step++;
     }
 
