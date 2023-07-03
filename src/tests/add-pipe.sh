@@ -8,4 +8,4 @@ printf "Foobar" | cb add
 
 assert_equals "FoobarFoobar" "$(cb paste)" # add paste to work around gha bug
 
-assert_fails cb add foo bar baz
+cb add foo bar baz

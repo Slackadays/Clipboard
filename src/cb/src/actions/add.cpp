@@ -33,7 +33,10 @@ void addData() {
         if (io_type == IOType::Pipe)
             content = pipedInContent();
         else
-            content = copying.items.at(0).string();
+            for (size_t i = 0; i < copying.items.size(); i++) {
+                content += copying.items.at(i).string();
+                if (i != copying.items.size() - 1) content += " ";
+            }
         successes.bytes += writeToFile(path.data.raw, content, true);
     } else if (!fs::is_empty(path.data)) {
         error_exit(
@@ -45,7 +48,10 @@ void addData() {
         if (io_type == IOType::Pipe)
             pipeIn();
         else if (io_type == IOType::Text)
-            successes.bytes += writeToFile(path.data.raw, copying.items.at(0).string());
+            for (size_t i = 0; i < copying.items.size(); i++) {
+                successes.bytes += writeToFile(path.data.raw, copying.items.at(i).string());
+                if (i != copying.items.size() - 1) successes.bytes += writeToFile(path.data.raw, " ");
+            }
     }
 }
 

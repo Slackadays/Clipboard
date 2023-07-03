@@ -11,4 +11,6 @@ unset CLIPBOARD_FORCETTY
 
 assert_equals "FoobarBaz" "$(cb paste)"
 
-assert_fails cb add foo bar baz
+touch foofile
+
+assert_fails cb add foofile bar baz

@@ -594,7 +594,7 @@ IOType getIOType() {
     using enum Action;
     using enum IOType;
     if (action_is_one_of(Cut, Copy, Add)) {
-        if (copying.items.size() == 1 && !fs::exists(copying.items.at(0))) return Text;
+        if (copying.items.size() >= 1 && std::all_of(copying.items.begin(), copying.items.end(), [](const auto& item) { return !fs::exists(item); })) return Text;
         if (!is_tty.in && copying.items.empty()) return Pipe;
     } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History, Search)) {
         if (!is_tty.out) return Pipe;
@@ -634,11 +634,11 @@ void setFlags() {
         std::string actionsList;
         for (int i = 0; i < actions.size(); i++) {
             actionsList.append("[progress]┃ ")
-                    .append(repeatString(" ", longestAction - actions.at(i).size()))
                     .append(actions.at(i))
                     .append(", ")
-                    .append(repeatString(" ", longestActionShortcut - action_shortcuts[static_cast<Action>(i)].size()))
+                    .append(repeatString(" ", longestAction - actions.at(i).size()))
                     .append(action_shortcuts[static_cast<Action>(i)])
+                    .append(repeatString(" ", longestActionShortcut - action_shortcuts[static_cast<Action>(i)].size()))
                     .append("│ [help]")
                     .append(action_descriptions[static_cast<Action>(i)])
                     .append("[blank]\n");

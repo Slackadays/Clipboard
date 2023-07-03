@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
         (fs::create_directories(global_path.temporary), fs::create_directories(global_path.persistent));
 
-        deduplicate(copying.items);
+        if (io_type != IOType::Text) deduplicate(copying.items);
 
         checkItemSize(totalItemSize());
 

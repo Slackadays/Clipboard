@@ -73,4 +73,4 @@ cb --fast-copy paste
 
 items_match TurnYourClipboardUp.png ../TurnYourClipboardUp.png
 
-assert_fails cb copy foo bar baz
+assert_fails cb copy testfile foo bar baz

@@ -5,8 +5,6 @@ export CLIPBOARD_FORCETTY=1
 
 cb note "Foobar"
 
-assert_fails cb note "Foobar" "Baz"
-
 unset CLIPBOARD_FORCETTY
 
 #skip anything in CI if it isn't Linux
@@ -24,3 +22,7 @@ content_is_shown "$(CLIPBOARD_FORCETTY=1 cb note)" "Foobar"
 cb note ""
 
 assert_equals "" "$(cb note)"
+
+cb note "Foobar" "Baz"
+
+assert_equals "Foobar Baz" "$(cb note)"

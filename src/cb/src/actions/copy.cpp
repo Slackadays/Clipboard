@@ -49,7 +49,10 @@ void copy() {
 }
 
 void copyText() {
-    copying.buffer = copying.items.at(0).string();
+    for (size_t i = 0; i < copying.items.size(); i++) {
+        copying.buffer += copying.items.at(i).string();
+        if (i != copying.items.size() - 1) copying.buffer += " ";
+    }
     writeToFile(path.data.raw, copying.buffer);
 
     if (!output_silent) {

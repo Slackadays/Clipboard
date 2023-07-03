@@ -17,24 +17,29 @@
 namespace PerformAction {
 
 void noteText() {
-    if (copying.items.size() == 1) {
+    if (copying.items.size() >= 1) {
         if (copying.items.at(0).string() == "") {
             fs::remove(path.metadata.notes);
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed note\n").data());
+            fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed note[blank]\n").data());
         } else {
-            writeToFile(path.metadata.notes, copying.items.at(0).string());
+            fs::remove(path.metadata.notes);
+            for (size_t i = 0; i < copying.items.size(); i++) {
+                writeToFile(path.metadata.notes, copying.items.at(i).string(), true);
+                if (i != copying.items.size() - 1) writeToFile(path.metadata.notes, " ", true);
+            }
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"\n").data(), copying.items.at(0).string().data());
+            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"[blank]\n").data(), fileContents(path.metadata.notes).data());
         }
     } else if (copying.items.empty()) {
         if (fs::is_regular_file(path.metadata.notes)) {
             std::string content(fileContents(path.metadata.notes));
-            if (is_tty.out)
-                printf(formatColors("[info]┃ Note for this clipboard: %s\n").data(), content.data());
-            else
+            if (is_tty.out) {
+                stopIndicator();
+                printf(formatColors("[info]┃ Note for this clipboard: %s[blank]\n").data(), content.data());
+            } else
                 printf(formatColors("%s").data(), content.data());
         } else {
             fprintf(stderr, "%s", formatColors("[info]┃ There is no note for this clipboard.[blank]\n").data());
@@ -48,7 +53,7 @@ void notePipe() {
     writeToFile(path.metadata.notes, content);
     if (output_silent) return;
     stopIndicator();
-    fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"\n").data(), content.data());
+    fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"[blank]\n").data(), content.data());
     exit(EXIT_SUCCESS);
 }
 
