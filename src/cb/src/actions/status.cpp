@@ -56,7 +56,7 @@ void status() {
         if (clipboard.holdsRawDataInCurrentEntry()) {
             std::string content(fileContents(clipboard.data.raw));
             if (auto type = inferMIMEType(content); type.has_value())
-                content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
+                content = "\033[7m\033[1m " + std::string(type.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
             else
                 std::erase(content, '\n');
             fprintf(stderr, formatColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
@@ -90,7 +90,7 @@ void status() {
         fprintf(stderr, "\n");
     }
     fprintf(stderr, "%s", formatColors("[info]┗━━▌").data());
-    Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
+    Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1m Data \033[22m\033[27m[info]";
     int cols = available.columns - (columnLength(status_legend_message) + 6);
     std::string bar2 = "▐" + repeatString("━", cols);
     fprintf(stderr, "%s", (status_legend_message() + bar2).data());

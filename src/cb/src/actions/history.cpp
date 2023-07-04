@@ -199,7 +199,7 @@ void history() {
             std::string content(fileContents(path.data.raw));
             if (content.empty()) continue; // don't use holdsRawDataInCurrentEntry because we are reading anyway, so we can save on a syscall
             if (auto type = inferMIMEType(content); type.has_value())
-                content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
+                content = "\033[7m\033[1m " + std::string(type.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
             else
                 std::erase(content, '\n');
             batchedMessage += content.substr(0, widthRemaining);
@@ -258,7 +258,7 @@ void history() {
 #endif
 
     fputs(formatColors("[info]\n┗━━▌").data(), stderr);
-    Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1mData\033[22m\033[27m[info]";
+    Message status_legend_message = "[help]Text, \033[1mFiles\033[22m, \033[4mDirectories\033[24m, \033[7m\033[1m Data \033[22m\033[27m[info]";
     usedSpace = columnLength(status_legend_message) + 6;
     if (usedSpace > available.columns) available.columns = usedSpace;
     auto cols = available.columns - usedSpace;
