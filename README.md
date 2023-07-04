@@ -96,7 +96,7 @@ Don't just take my word for it!
         <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)&color=brightgreen">
     </a>
     <a href="https://discord.gg/J6asnc3pEG"><img src="documentation/readme-assets/join-our-discord.svg" alt="Discord Chat"></a>
-    <img src="https://img.shields.io/github/license/slackadays/clipboard?label=OPEN%20SOURCE&logo=gnu&style=for-the-badge&labelColor=rgb(55,55,55)">
+    <img src="https://img.shields.io/github/license/slackadays/clipboard?label=FREE%20%26%20OPEN%20SOURCE&logo=gnu&style=for-the-badge&labelColor=rgb(55,55,55)">
 </p>
 
 <br>
