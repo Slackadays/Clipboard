@@ -195,8 +195,9 @@ void history() {
                 + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold][info]│[help] "
         );
 
-        if (path.holdsRawDataInCurrentEntry()) {
+        if (fs::exists(path.data.raw)) {
             std::string content(fileContents(path.data.raw));
+            if (content.empty()) continue; // don't use holdsRawDataInCurrentEntry because we are reading anyway, so we can save on a syscall
             if (auto type = inferMIMEType(content); type.has_value())
                 content = "\033[7m\033[1m" + std::string(type.value()) + ", " + formatBytes(content.length()) + "\033[22m\033[27m";
             else
