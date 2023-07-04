@@ -83,26 +83,19 @@ Don't just take my word for it!
 ![CB Demo Video](documentation/readme-assets/ClipboardDemo.gif)
 
 <p align="center" id="dummy">
-    <a href="https://discord.gg/J6asnc3pEG">
-        <img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge&logo=discord&labelColor=rgb(55,55,55)&color=blueviolet" alt="Discord Support">
-    </a>
     <a href="https://github.com/Slackadays/Clipboard/actions">
         <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/build-clipboard.yml?branch=main&label=BUILDS&style=for-the-badge&logo=githubactions&labelColor=rgb(55,55,55)">
         <img src="https://img.shields.io/github/actions/workflow/status/slackadays/Clipboard/lint-clipboard.yml?branch=main&label=CHECKS&style=for-the-badge&labelColor=rgb(55,55,55)">
-        <img src="https://img.shields.io/github/actions/workflow/status/Slackadays/Clipboard/test-clipboard.yml?branch=main&label=TESTS&style=for-the-badge&labelColor=rgb(55,55,55)">
     </a>
     <a href="https://app.codecov.io/gh/Slackadays/Clipboard">
         <img src="https://img.shields.io/codecov/c/github/slackadays/Clipboard/main?style=for-the-badge&label=COVERAGE&token=RO7KDOZ6Q2&logo=codecov&labelColor=rgb(55,55,55)">
     </a>
-    <br>
     <a href="https://github.com/Slackadays/Clipboard/releases">
-        <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest%20release&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)&color=brightgreen">
-    </a>
-    <a href="https://twitter.com/GetClipboard">
-        <img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter">
+        <img src="https://img.shields.io/github/v/release/slackadays/clipboard?label=latest&style=for-the-badge&logo=github&labelColor=rgb(55,55,55)&color=brightgreen">
     </a>
     <img src="https://img.shields.io/github/downloads/Slackadays/Clipboard/total?style=for-the-badge&labelColor=rgb(55,55,55)&logo=github">
-    <img src="https://img.shields.io/github/license/slackadays/clipboard?label=OPEN%20SOURCE&style=for-the-badge&labelColor=rgb(55,55,55)">
+    <br>
+    <a href="https://discord.gg/J6asnc3pEG"><img src="documentation/readme-assets/join-our-discord.svg" alt="Discord Chat"></a>
 </p>
 
 <br>
@@ -1636,8 +1629,9 @@ We're here for you! Check out [the Clipboard Project Wiki](https://github.com/Sl
 <p align="center">
     <a href="https://github.com/Slackadays/Clipboard/wiki"><img src="https://img.shields.io/badge/Docs-Wiki-green?style=for-the-badge&labelColor=rgb(55,55,55)" alt="CB Wiki">
     <a href="https://github.com/Slackadays/Clipboard/discussions"><img src="https://img.shields.io/badge/Questions%3F-Ask%20Away-red?style=for-the-badge&labelColor=rgb(55,55,55)" alt="Questions? Ask Away!"></a>
-    <a href="https://discord.gg/J6asnc3pEG"><img src="https://img.shields.io/badge/CHAT-DISCORD-blue?style=for-the-badge&logo=discord&labelColor=rgb(55,55,55)&color=blueviolet" alt="Discord Chat"></a>
     <a href="https://twitter.com/GetClipboard"><img src="https://img.shields.io/badge/FOLLOW-%40GETCLIPBOARD-blue?logo=twitter&style=for-the-badge&labelColor=rgb(55,55,55)" alt="Follow us on Twitter"></a>
+    <br>
+    <a href="https://discord.gg/J6asnc3pEG"><img src="documentation/readme-assets/join-our-discord.svg" alt="Discord Chat"></a>
 </p>
 
 <br>
