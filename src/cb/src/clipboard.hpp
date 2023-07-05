@@ -68,7 +68,7 @@ extern GlobalFilepaths global_path;
 struct Constants {
     std::string_view clipboard_version = CLIPBOARD_VERSION;
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
-    std::string_view data_file_name = "rawdata.clipboard";
+    std::string_view data_file_name = "internal_rawdata.clipboard";
     std::string_view default_clipboard_name = "0";
     unsigned long default_clipboard_entry = 0;
     std::string_view temporary_directory_name = "Clipboard";

@@ -30,11 +30,11 @@ message="$(cb export 2>&1)"
 
 content_is_shown "$message" "4"
 
-item_exists Exported_Clipboards/0/data/"$entryfor0"/rawdata.clipboard "Some text"
+item_exists Exported_Clipboards/0/data/"$entryfor0"/internal_rawdata.clipboard "Some text"
 
-item_exists Exported_Clipboards/2/data/"$entryfor2"/rawdata.clipboard "$(cat ../TurnYourClipboardUp.png)"
+item_exists Exported_Clipboards/2/data/"$entryfor2"/internal_rawdata.clipboard "$(cat ../TurnYourClipboardUp.png)"
 
-item_exists Exported_Clipboards/3/data/"$entryfor3"/rawdata.clipboard "$(cat ../"Exosphere 2.0.mp3")"
+item_exists Exported_Clipboards/3/data/"$entryfor3"/internal_rawdata.clipboard "$(cat ../"Exosphere 2.0.mp3")"
 
 item_exists Exported_Clipboards/4/data/"$entryfor4"/testfile
 

@@ -20,6 +20,8 @@ cd "$BASEDIR" || exit 1
 
 clear_tempdirs
 
+export CLIPBOARD_NOAUDIO=1
+
 run_all_tests() {
     sh export.sh
     sh history.sh

@@ -4,7 +4,7 @@ start_test "Copy piped data"
 
 echo "Foobar" | cb
 
-item_is_in_cb 0 rawdata.clipboard
+item_is_in_cb 0 internal_rawdata.clipboard
 
 export CLIPBOARD_FORCETTY=1
 

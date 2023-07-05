@@ -5,8 +5,8 @@ start_test "Clear user provided text"
 
 cb copy "Foobar"
 
-item_is_in_cb 0 rawdata.clipboard
+item_is_in_cb 0 internal_rawdata.clipboard
 
 cb clear
 
-item_is_not_in_cb 0 rawdata.clipboard
+item_is_not_in_cb 0 internal_rawdata.clipboard
