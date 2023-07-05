@@ -5,11 +5,7 @@ To keep quality high and the PRs flowing smoothly, we have three very simple rul
 
 ### Use The Existing Code Style
 
-All code PRs must follow a similar code style to that of the existing code, unless the PR is about the code style itself.
-
-### All Tests Must Pass
-
-This might seem obvious, but all PRs must pass all the automated tests that we've set up to ensure a quality experience, unless the PR is about the tests themselves.
+All code PRs must follow a similar code style to that of the existing code, unless the PR is about the code style itself. Try the `clang-format.sh` and `clang-format.ps1` scripts to use our code style in one step!
 
 ### Must Be Feature-Complete
 
