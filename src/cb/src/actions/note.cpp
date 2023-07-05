@@ -42,6 +42,7 @@ void noteText() {
             } else
                 printf(formatColors("%s").data(), content.data());
         } else {
+            stopIndicator();
             fprintf(stderr, "%s", formatColors("[info]┃ There is no note for this clipboard.[blank]\n").data());
         }
     } else
