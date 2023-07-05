@@ -347,6 +347,8 @@ unsigned long levenshteinDistance(const std::string_view& one, const std::string
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES();
+void setLanguageDE();
+void setLanguageFR();
 void setupHandlers();
 void setupTerminal();
 bool isAClearingAction();

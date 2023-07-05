@@ -470,6 +470,12 @@ void setLocale() {
         setLanguagePT();
     else if (locale.substr(0, 2) == "tr")
         setLanguageTR();
+    else if (locale.substr(0, 2) == "fr")
+        // setLanguageFR();
+        return;
+    else if (locale.substr(0, 2) == "de")
+        // setLanguageDE();
+        return;
 }
 
 void setClipboardAttributes() {

@@ -27,6 +27,8 @@ add_executable(cb
   src/locales/es_co.cpp
   src/locales/pt_br.cpp
   src/locales/tr_tr.cpp
+  src/locales/de_de.cpp
+  src/locales/fr_fr.cpp
 )
 
 enable_lto(cb)
