@@ -22,11 +22,11 @@ void setLanguageFR() {
     actions[Paste] = "coller";
     actions[Clear] = "effacer";
     actions[Show] = "afficher";
-    actions[Edit] = "éditer";
+    actions[Edit] = "editer";
     actions[Add] = "ajouter";
     actions[Remove] = "supprimer";
     actions[Note] = "noter";
-    actions[Swap] = "échanger";
+    actions[Swap] = "echanger";
     actions[Status] = "statut";
     actions[Info] = "information";
     actions[Load] = "charger";
