@@ -62,7 +62,7 @@ void setLanguageFR() {
     doing_action[Show] = "Affichage";
     doing_action[Edit] = "Edition";
     doing_action[Add] = "Ajout";
-    doing_action[Remove] = "Suppresion";
+    doing_action[Remove] = "Suppression";
     doing_action[Note] = "En train de noter";
     doing_action[Swap] = "Echange";
     doing_action[Status] = "Vérification du statut";
