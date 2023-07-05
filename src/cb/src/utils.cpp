@@ -471,8 +471,7 @@ void setLocale() {
     else if (locale.substr(0, 2) == "tr")
         setLanguageTR();
     else if (locale.substr(0, 2) == "fr")
-        // setLanguageFR();
-        return;
+        setLanguageFR();
     else if (locale.substr(0, 2) == "de")
         // setLanguageDE();
         return;
