@@ -16,8 +16,8 @@
 
 namespace PerformAction {
 
-void copyItem(const fs::path& f) {
-    auto actuallyCopyItem = [&](const bool use_regular_copy = copying.use_safe_copy) {
+void copyItem(const fs::path& f, const bool use_regular_copy) {
+    auto actuallyCopyItem = [&] {
         if (fs::is_directory(f)) {
             auto target = f.filename().empty() ? f.parent_path().filename() : f.filename();
             fs::create_directories(path.data / target);
@@ -31,12 +31,8 @@ void copyItem(const fs::path& f) {
     try {
         actuallyCopyItem();
     } catch (const fs::filesystem_error& e) {
-        if (!copying.use_safe_copy && e.code() == std::errc::cross_device_link) {
-            try {
-                actuallyCopyItem(true);
-            } catch (const fs::filesystem_error& e) {
-                copying.failedItems.emplace_back(f.string(), e.code());
-            }
+        if (!use_regular_copy && e.code() == std::errc::cross_device_link) {
+            copyItem(f, true);
         } else {
             copying.failedItems.emplace_back(f.string(), e.code());
         }

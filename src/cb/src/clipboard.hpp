@@ -338,6 +338,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+void fixMissingItems();
 unsigned int suitableThreadAmount();
 bool envVarIsTrue(const std::string_view& name);
 size_t columnLength(const std::string_view& message);
@@ -442,7 +443,7 @@ extern const bool GUIClipboardSupportsCut;
 extern bool playAsyncSoundEffect(const std::valarray<short>& samples);
 
 namespace PerformAction {
-void copyItem(const fs::path& f);
+void copyItem(const fs::path& f, const bool use_regular_copy = copying.use_safe_copy);
 void copy();
 void copyText();
 void paste();

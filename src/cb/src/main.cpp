@@ -46,6 +46,8 @@ int main(int argc, char* argv[]) {
 
         syncWithExternalClipboards();
 
+        fixMissingItems();
+
         ignoreItemsPreemptively(copying.items);
 
         checkForNoItems();
