@@ -31,7 +31,7 @@ void setLanguageTR() {
     actions[Info] = "bilgi";
     actions[Load] = "yukle";
     actions[Import] = "aktar";
-    actions[Export] = "disari aktar";
+    actions[Export] = "daktar";
     actions[History] = "gecmis";
     actions[Ignore] = "yoksay";
     actions[Search] = "ara";
