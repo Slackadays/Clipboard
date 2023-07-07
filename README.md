@@ -21,8 +21,8 @@ Don't just take my word for it!
 <img src="documentation/readme-assets/Features.png" alt="Just let the features speak for themselves." height=35px>
 
 - Copy and paste text, files, directories, binary data, your goat, _anything_
-- Infinite numbers of clipboards with unlimited capacity AND history each,
-- Seriously kickass performance 🥾🤯 because I'm sick of slow software,
+- Infinite numbers of clipboards with unlimited capacity **and** history each,
+- Seriously kickASS performance 🥾🤯 because I'm sick of slow software,
 - Seamless integration with your [existing clipboard systems](https://github.com/Slackadays/Clipboard/wiki/GUI-Clipboard-Compat),
 - Support for your favorite languages like español, português, Türkçe, and Français,
 - A superbly scriptable API to automate your workflows in a cinch, 
