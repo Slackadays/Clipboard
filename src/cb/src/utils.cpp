@@ -248,10 +248,12 @@ std::string fileContents(const fs::path& path) {
     int fd = open(path.string().data(), O_RDONLY);
     if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
     std::string contents;
-#if defined(__linux__)
+#if defined(__linux__) || defined(__FreeBSD__)
     std::array<char, 65536> buffer;
-#else
+#elif defined(__APPLE__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__)
     std::array<char, 16384> buffer;
+#else
+    std::array<char, PIPE_BUF> buffer;
 #endif
     ssize_t bytes_read;
     errno = 0;
