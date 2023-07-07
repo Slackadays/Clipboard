@@ -42,9 +42,11 @@ print(cpp_code)
 now, fill in the right MIME type in "return", and you're done */
 
 std::optional<std::string_view> inferMIMEType(const std::string_view& content) {
-    auto header_is = [&](const std::string_view& pattern, const unsigned int offset = 0) {
+    auto header_is = [&](const std::string_view& pattern, const size_t offset = 0) {
         if (content.size() < (pattern.size() + offset)) return false;
-        return content.substr(0 + offset, pattern.size() + offset) == pattern;
+        for (size_t i = 0; i < pattern.size(); i++) // DON'T use a substr comparison because the stdlib uses a 3-way comparison (super slow)
+            if (content[i + offset] != pattern[i]) return false;
+        return true;
     };
 
     // jpeg xl
