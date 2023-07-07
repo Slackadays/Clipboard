@@ -248,10 +248,10 @@ std::string fileContents(const fs::path& path) {
     int fd = open(path.string().data(), O_RDONLY);
     if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
     std::string contents;
-#if defined(__APPLE__)
-    std::array<char, 16384> buffer; // smaller pipe size on macOS
-#else
+#if defined(__linux__)
     std::array<char, 65536> buffer;
+#else
+    std::array<char, 16384> buffer;
 #endif
     ssize_t bytes_read;
     errno = 0;
