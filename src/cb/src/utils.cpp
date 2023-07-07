@@ -248,10 +248,17 @@ std::string fileContents(const fs::path& path) {
     int fd = open(path.string().data(), O_RDONLY);
     if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
     std::string contents;
+#if defined(__APPLE__)
+    std::array<char, 16384> buffer; // smaller pipe size on macOS
+#else
     std::array<char, 65536> buffer;
+#endif
     ssize_t bytes_read;
-    while ((bytes_read = read(fd, buffer.data(), buffer.size())) > 0)
+    errno = 0;
+    while ((bytes_read = read(fd, buffer.data(), buffer.size())) > 0) {
         contents.append(buffer.data(), bytes_read);
+        if (bytes_read < buffer.size() && errno == 0) break; // check if we reached EOF early and not due to an error
+    }
     close(fd);
     return contents;
 #else
