@@ -482,8 +482,8 @@ void setLocale() {
     else if (locale.substr(0, 2) == "fr")
         setLanguageFR();
     else if (locale.substr(0, 2) == "de")
-        // setLanguageDE();
-        return;
+        setLanguageDE();
+    return;
 }
 
 void setClipboardAttributes() {
@@ -643,16 +643,16 @@ void setFlags() {
             clipboard_entry = std::stoul(flag);
         } catch (...) {}
     if (flagIsPresent<bool>("-h") || flagIsPresent<bool>("help", "--")) {
-        auto longestAction = std::max_element(actions.begin(), actions.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
-        auto longestActionShortcut = std::max_element(action_shortcuts.begin(), action_shortcuts.end(), [](const auto& a, const auto& b) { return a.size() < b.size(); })->size();
+        auto longestAction = columnLength(*(std::max_element(actions.begin(), actions.end(), [](const auto& a, const auto& b) { return columnLength(a) < columnLength(b); })));
+        auto longestActionShortcut = columnLength(*std::max_element(action_shortcuts.begin(), action_shortcuts.end(), [](const auto& a, const auto& b) { return columnLength(a) < columnLength(b); }));
         std::string actionsList;
         for (int i = 0; i < actions.size(); i++) {
             actionsList.append("[progress]┃ ")
                     .append(actions.at(i))
                     .append(", ")
-                    .append(repeatString(" ", longestAction - actions.at(i).size()))
+                    .append(repeatString(" ", longestAction - columnLength(actions.at(i))))
                     .append(action_shortcuts[static_cast<Action>(i)])
-                    .append(repeatString(" ", longestActionShortcut - action_shortcuts[static_cast<Action>(i)].size()))
+                    .append(repeatString(" ", longestActionShortcut - columnLength(action_shortcuts[static_cast<Action>(i)])))
                     .append("│ [help]")
                     .append(action_descriptions[static_cast<Action>(i)])
                     .append("[blank]\n");
