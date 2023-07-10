@@ -150,7 +150,7 @@ flatpak install app.getclipboard.Clipboard
 # Then, add that command to your terminal profile (like .bashrc) to make it work every time.
 ```
 
-<img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.svg' align="right"/>
+<a href="https://flathub.org/apps/app.getclipboard.Clipboard"><img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.svg' align="right"/></a>
 
 <br>
 
