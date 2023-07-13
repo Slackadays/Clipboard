@@ -20,7 +20,7 @@ void noteText() {
     if (copying.items.size() >= 1) {
         if (copying.items.at(0).string() == "") {
             fs::remove(path.metadata.notes);
-            if (output_silent) return;
+            if (output_silent || confirmation_silent) return;
             stopIndicator();
             fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed note[blank]\n").data());
         } else {
@@ -29,7 +29,7 @@ void noteText() {
                 writeToFile(path.metadata.notes, copying.items.at(i).string(), true);
                 if (i != copying.items.size() - 1) writeToFile(path.metadata.notes, " ", true);
             }
-            if (output_silent) return;
+            if (output_silent || confirmation_silent) return;
             stopIndicator();
             fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"[blank]\n").data(), fileContents(path.metadata.notes).value().data());
         }
@@ -52,7 +52,7 @@ void noteText() {
 void notePipe() {
     std::string content(pipedInContent());
     writeToFile(path.metadata.notes, content);
-    if (output_silent) return;
+    if (output_silent || confirmation_silent) return;
     stopIndicator();
     fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"[blank]\n").data(), content.data());
     exit(EXIT_SUCCESS);

@@ -51,7 +51,7 @@ void copyText() {
     }
     writeToFile(path.data.raw, copying.buffer);
 
-    if (!output_silent) {
+    if (!output_silent && !confirmation_silent) {
         stopIndicator();
         printf(formatColors("[success][inverse] ✔ [noinverse] %s text \"[bold]%s[blank][success]\"[blank]\n").data(), did_action[action].data(), copying.buffer.data());
     }

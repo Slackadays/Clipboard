@@ -58,7 +58,8 @@ void swap() {
 
     stopIndicator();
 
-    fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Swapped clipboard %s with %s[blank]\n").data(), clipboard_name.data(), destination_name.data());
+    if (!output_silent && !confirmation_silent)
+        fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Swapped clipboard %s with %s[blank]\n").data(), clipboard_name.data(), destination_name.data());
 
     if (destination_name == constants.default_clipboard_name) updateExternalClipboards(true);
 }

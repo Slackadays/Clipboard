@@ -50,7 +50,7 @@ void clear() {
         fs::remove(path.metadata.notes);
         fs::remove(path.metadata.ignore);
         stopIndicator();
-        fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Cleared clipboard[blank]\n").data());
+        if (!output_silent && !confirmation_silent) fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Cleared clipboard[blank]\n").data());
     }
 }
 

@@ -126,7 +126,7 @@ Add this to use links when copying, cutting, pasting, or loading. If you modify 
 
 Add this to request a specific content MIME type from GUI clipboard systems.
 
-## **\-\-noconfirmation**, **-nc**
+## **\-\-no-confirmation**, **-nc**
 
 Add this to disable confirmation messages from CB.
 

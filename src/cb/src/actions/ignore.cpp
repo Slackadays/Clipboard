@@ -46,7 +46,7 @@ void ignoreRegex() {
 
     if (regexes.size() == 1 && (regexes.at(0) == "" || regexes.at(0) == "\n")) {
         fs::remove(path.metadata.ignore);
-        if (output_silent) return;
+        if (output_silent || confirmation_silent) return;
         stopIndicator();
         fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed ignore patterns\n").data());
         exit(EXIT_SUCCESS);

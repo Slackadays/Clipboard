@@ -885,7 +885,7 @@ void showFailures() {
 }
 
 void showSuccesses() {
-    if (output_silent || !is_tty.err) return;
+    if (output_silent || confirmation_silent || !is_tty.err) return;
     if (successes.bytes > 0 && is_tty.err) {
         fprintf(stderr, byte_success_message().data(), did_action[action].data(), formatBytes(successes.bytes.load()).data());
     } else if ((successes.files == 1 && successes.directories == 0) || (successes.files == 0 && successes.directories == 1)) {
