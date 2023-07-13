@@ -166,7 +166,7 @@ std::string formatColors(const std::string_view& str, bool colorful) {
     for (size_t i = 0; (i = temp.find('[', i)) != std::string::npos; i++) {
         auto j = temp.find(']', i);
         if (j == std::string::npos) break;
-        const std::string_view result = temp.substr(i, j - i + 1);
+        auto result = temp.substr(i, j - i + 1);
         for (const auto& key : colors) {
             if (key.first == result) {
                 temp.replace(i, result.length(), colorful ? key.second : "");
