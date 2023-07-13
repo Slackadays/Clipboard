@@ -18,6 +18,7 @@
 void dummy_handler(const char* file, int line, const char* function, int err, const char* fmt, ...) {}
 
 bool playAsyncSoundEffect(const std::valarray<short>& samples) {
+#if defined(USE_ALSA)
     if (fork()) return true;
 
     snd_lib_error_set_handler(dummy_handler); // suppress errors in console
@@ -42,4 +43,7 @@ bool playAsyncSoundEffect(const std::valarray<short>& samples) {
     snd_pcm_close(device);
 
     std::_Exit(EXIT_SUCCESS);
+#else
+    return false;
+#endif
 }
