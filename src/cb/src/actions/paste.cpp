@@ -30,7 +30,7 @@ void paste() {
         auto target = [&] {
             if (path.holdsRawDataInCurrentEntry())
                 return (fs::current_path() / ("clipboard" + clipboard_name + "-" + std::to_string(clipboard_entry)))
-                        .replace_extension(inferFileExtension(fileContents(path.data.raw)).value_or(".txt"));
+                        .replace_extension(inferFileExtension(fileContents(path.data.raw).value()).value_or(".txt"));
             else
                 return fs::current_path() / entry.path().filename();
         }();

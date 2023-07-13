@@ -24,7 +24,7 @@ void removeRegex() {
         std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
 
     if (path.holdsRawDataInCurrentEntry()) {
-        std::string content(fileContents(path.data.raw));
+        std::string content(fileContents(path.data.raw).value());
         size_t oldLength = content.size();
 
         for (const auto& pattern : regexes)

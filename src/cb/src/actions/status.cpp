@@ -54,7 +54,7 @@ void status() {
         fprintf(stderr, formatColors("[info]\033[%ldG┃\r┃ [bold]%*s%s[nobold]│ [blank]").data(), available.columns, longestClipboardLength - clipboard.name().length(), "", clipboard.name().data());
 
         if (clipboard.holdsRawDataInCurrentEntry()) {
-            std::string content(fileContents(clipboard.data.raw));
+            std::string content(fileContents(clipboard.data.raw).value());
             if (auto type = inferMIMEType(content); type.has_value())
                 content = "\033[7m\033[1m " + std::string(type.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
             else
@@ -107,7 +107,7 @@ void statusJSON() {
         printf("    \"%s\": ", clipboard.name().data());
 
         if (clipboard.holdsRawDataInCurrentEntry()) {
-            std::string content(fileContents(clipboard.data.raw));
+            std::string content(fileContents(clipboard.data.raw).value());
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
                 printf("        \"dataType\": \"%s\",\n", type.value().data());

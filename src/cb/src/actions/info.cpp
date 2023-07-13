@@ -79,7 +79,7 @@ void info() {
 
     if (path.holdsRawDataInCurrentEntry()) {
         fprintf(stderr, formatColors("[info]%s┃ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::file_size(path.data.raw)).data());
-        fprintf(stderr, formatColors("[info]%s┃ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw)).value_or("text/plain").data());
+        fprintf(stderr, formatColors("[info]%s┃ Content type: [help]%s[blank]\n").data(), generatedEndbar().data(), inferMIMEType(fileContents(path.data.raw).value()).value_or("text/plain").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -103,11 +103,11 @@ void info() {
     fprintf(stderr, formatColors("[info]%s┃ Locked by another process? [help]%s[blank]\n").data(), generatedEndbar().data(), path.isLocked() ? "Yes" : "No");
 
     if (path.isLocked()) {
-        fprintf(stderr, formatColors("[info]%s┃ Locked by process with pid [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.lock).data());
+        fprintf(stderr, formatColors("[info]%s┃ Locked by process with pid [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.lock).value().data());
     }
 
     if (fs::exists(path.metadata.notes))
-        fprintf(stderr, formatColors("[info]%s┃ Note: [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.notes).data());
+        fprintf(stderr, formatColors("[info]%s┃ Note: [help]%s[blank]\n").data(), generatedEndbar().data(), fileContents(path.metadata.notes).value().data());
     else
         fprintf(stderr, formatColors("[info]%s┃ There is no note for this clipboard.[blank]\n").data(), generatedEndbar().data());
 
@@ -174,7 +174,7 @@ void infoJSON() {
 
     if (path.holdsRawDataInCurrentEntry()) {
         printf("    \"contentBytes\": %zu,\n", fs::file_size(path.data.raw));
-        printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw)).value_or("text/plain").data());
+        printf("    \"contentType\": \"%s\",\n", inferMIMEType(fileContents(path.data.raw).value()).value_or("text/plain").data());
     } else {
         size_t files = 0;
         size_t directories = 0;
@@ -195,10 +195,10 @@ void infoJSON() {
     printf("    \"contentCut\": %s,\n", fs::exists(path.metadata.originals) ? "true" : "false");
 
     printf("    \"locked\": %s,\n", path.isLocked() ? "true" : "false");
-    if (path.isLocked()) printf("    \"lockedBy\": \"%s\",\n", fileContents(path.metadata.lock).data());
+    if (path.isLocked()) printf("    \"lockedBy\": \"%s\",\n", fileContents(path.metadata.lock).value().data());
 
     if (fs::exists(path.metadata.notes))
-        printf("    \"note\": \"%s\"\n", std::regex_replace(fileContents(path.metadata.notes), std::regex("\""), "\\\"").data());
+        printf("    \"note\": \"%s\"\n", std::regex_replace(fileContents(path.metadata.notes).value(), std::regex("\""), "\\\"").data());
     else
         printf("    \"note\": \"\"\n");
 

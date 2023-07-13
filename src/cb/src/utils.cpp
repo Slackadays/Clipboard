@@ -243,10 +243,11 @@ size_t columnLength(const std::string_view& message) {
     return temp.size() - std::count_if(temp.begin(), temp.end(), [](auto c) { return (c & 0xC0) == 0x80; }); // remove UTF-8 multibyte characters
 }
 
-std::string fileContents(const fs::path& path) {
+std::optional<std::string> fileContents(const fs::path& path) {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-    int fd = open(path.string().data(), O_RDONLY);
-    if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
+    int fd = open(path.string().data(), O_RDONLY | O_LARGEFILE);
+    // if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
+    if (fd == -1) return std::nullopt;
     std::string contents;
 #if defined(__linux__) || defined(__FreeBSD__)
     std::array<char, 65536> buffer;
@@ -266,6 +267,7 @@ std::string fileContents(const fs::path& path) {
 #else
     std::stringstream buffer;
     buffer << std::ifstream(path, std::ios::binary).rdbuf();
+    if (buffer.fail()) return std::nullopt;
     return buffer.str();
 #endif
 }

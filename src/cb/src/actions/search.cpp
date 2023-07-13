@@ -157,7 +157,7 @@ void searchInternal(std::function<void(const std::vector<Result>&)> nextStep) {
             clipboard.setEntry(entry);
             if (clipboard.holdsRawDataInCurrentEntry()) {
                 for (const auto& query : queries) {
-                    if (auto rating = contentMatchRating(fileContents(clipboard.data.raw), query); rating.has_value()) {
+                    if (auto rating = contentMatchRating(fileContents(clipboard.data.raw).value(), query); rating.has_value()) {
                         rating->clipboard = clipboard.name();
                         rating->entry = entry;
                         rating->hash = combineHashes(hashString(clipboard.name()), hashULong(entry));

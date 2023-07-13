@@ -195,8 +195,8 @@ void history() {
                 + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold]│[help] "
         );
 
-        if (fs::exists(path.data.raw)) {
-            auto content(fileContents(path.data.raw));
+        if (auto temp(fileContents(path.data.raw)); temp.has_value()) {
+            auto content = std::move(temp.value());
             if (content.empty()) continue; // don't use holdsRawDataInCurrentEntry because we are reading anyway, so we can save on a syscall
             if (auto MIMEtype = inferMIMEType(content); MIMEtype.has_value())
                 content = "\033[7m\033[1m " + std::string(MIMEtype.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
@@ -274,7 +274,7 @@ void historyJSON() {
         printf("        \"date\": %zu,\n", static_cast<size_t>(fs::last_write_time(path.data).time_since_epoch().count()));
         printf("        \"content\": ");
         if (path.holdsRawDataInCurrentEntry()) {
-            std::string content(fileContents(path.data.raw));
+            std::string content(fileContents(path.data.raw).value());
             if (auto type = inferMIMEType(content); type.has_value()) {
                 printf("{\n");
                 printf("            \"dataType\": \"%s\",\n", type.value().data());

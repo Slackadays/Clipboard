@@ -103,7 +103,7 @@ ClipboardContent getRemoteClipboard() {
 }
 
 void convertFromGUIClipboard(const std::string& text) {
-    if (fs::exists(path.data.raw) && (fileContents(path.data.raw) == text || text.size() == 4096 && fileContents(path.data.raw).size() > 4096))
+    if (fs::exists(path.data.raw) && (fileContents(path.data.raw).value() == text || text.size() == 4096 && fileContents(path.data.raw).value().size() > 4096))
         return; // check if 4096b long because remote clipboard is up to 4096b long
     auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
@@ -130,7 +130,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
         if (!fs::is_directory(path) && fs::file_size(path) != fs::file_size(::path.data / filename)) return true;
 
         // check if the file contents are different if it's not a directory
-        if (!fs::is_directory(path) && fileContents(path) != fileContents(::path.data / filename)) return true;
+        if (!fs::is_directory(path) && fileContents(path).value() != fileContents(::path.data / filename)) return true;
 
         return false;
     });
@@ -178,7 +178,7 @@ ClipboardContent thisClipboard() {
 
     if (!copying.buffer.empty()) return {copying.buffer, copying.mime};
 
-    if (default_cb.holdsRawDataInCurrentEntry()) return {fileContents(default_cb.data.raw), std::string(inferMIMEType(fileContents(default_cb.data.raw)).value_or("text/plain"))};
+    if (default_cb.holdsRawDataInCurrentEntry()) return {fileContents(default_cb.data.raw).value(), std::string(inferMIMEType(fileContents(default_cb.data.raw).value()).value_or("text/plain"))};
 
     if (!copying.items.empty()) {
         std::vector<fs::path> paths;

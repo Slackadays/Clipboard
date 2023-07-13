@@ -30,7 +30,7 @@ void pipeIn() {
 
 void pipeOut() {
     for (const auto& entry : fs::recursive_directory_iterator(path.data)) {
-        std::string content(fileContents(entry.path()));
+        std::string content(fileContents(entry.path()).value());
 #if !defined(_WIN32) && !defined(_WIN64)
         int len = write(fileno(stdout), content.data(), content.size());
         if (len < 0) throw std::runtime_error("write() failed");

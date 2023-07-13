@@ -105,10 +105,12 @@ std::vector<std::regex> Clipboard::ignoreRegexes() {
 void Clipboard::applyIgnoreRegexes() {
     if (!holdsIgnoreRegexes()) return;
     auto regexes = ignoreRegexes();
-    if (holdsRawDataInCurrentEntry())
+    if (holdsRawDataInCurrentEntry()) {
+        auto content = fileContents(data.raw).value();
         for (const auto& regex : regexes)
-            writeToFile(data.raw, std::regex_replace(fileContents(data.raw), regex, ""));
-    else
+            content = std::regex_replace(content, regex, "");
+        writeToFile(data.raw, content);
+    } else
         for (const auto& regex : regexes)
             for (const auto& entry : fs::directory_iterator(data))
                 if (std::regex_match(entry.path().filename().string(), regex)) fs::remove_all(entry.path());
@@ -123,7 +125,7 @@ bool Clipboard::isUnused() {
 
 void Clipboard::getLock() {
     if (isLocked()) {
-        auto pid = std::stoi(fileContents(metadata.lock));
+        auto pid = std::stoi(fileContents(metadata.lock).value());
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
         if (getpgrp() == getpgid(pid)) return; // if we're in the same process group, we're probably in a self-referencing pipe like cb | cb
 #elif defined(_WIN32) || defined(_WIN64)

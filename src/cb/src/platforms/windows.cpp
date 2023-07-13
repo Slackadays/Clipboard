@@ -116,7 +116,7 @@ std::string getWindowsClipboardDataPipe(void* clipboardPointer) {
 }
 
 void setWindowsClipboardDataPipe() {
-    std::string utf8Data(fileContents(path.data.raw));
+    std::string utf8Data(fileContents(path.data.raw).value());
 
     auto utf16Len = MultiByteToWideChar(CP_UTF8, 0, utf8Data.data(), utf8Data.size(), nullptr, 0);
     if (utf16Len <= 0) {

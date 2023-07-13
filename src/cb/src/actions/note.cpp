@@ -31,11 +31,11 @@ void noteText() {
             }
             if (output_silent) return;
             stopIndicator();
-            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"[blank]\n").data(), fileContents(path.metadata.notes).data());
+            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved note \"%s\"[blank]\n").data(), fileContents(path.metadata.notes).value().data());
         }
     } else if (copying.items.empty()) {
         if (fs::is_regular_file(path.metadata.notes)) {
-            std::string content(fileContents(path.metadata.notes));
+            std::string content(fileContents(path.metadata.notes).value());
             if (is_tty.out) {
                 stopIndicator();
                 printf(formatColors("[info]┃ Note for this clipboard: %s[blank]\n").data(), content.data());

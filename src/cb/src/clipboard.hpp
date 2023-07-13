@@ -139,7 +139,7 @@ static size_t totalDirectorySize(const fs::path& directory) {
     return size;
 }
 
-std::string fileContents(const fs::path& path);
+std::optional<std::string> fileContents(const fs::path& path);
 std::vector<std::string> fileLines(const fs::path& path);
 
 bool stopIndicator(bool change_condition_variable = true);
