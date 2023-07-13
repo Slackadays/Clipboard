@@ -245,8 +245,7 @@ size_t columnLength(const std::string_view& message) {
 
 std::optional<std::string> fileContents(const fs::path& path) {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-    int fd = open(path.string().data(), O_RDONLY | O_LARGEFILE);
-    // if (fd == -1) throw std::runtime_error("Could not open file " + path.string() + ": " + std::strerror(errno));
+    int fd = open(path.string().data(), O_RDONLY);
     if (fd == -1) return std::nullopt;
     std::string contents;
 #if defined(__linux__) || defined(__FreeBSD__)
@@ -266,8 +265,9 @@ std::optional<std::string> fileContents(const fs::path& path) {
     return contents;
 #else
     std::stringstream buffer;
-    buffer << std::ifstream(path, std::ios::binary).rdbuf();
-    if (buffer.fail()) return std::nullopt;
+    std::ifstream file(path, std::ios::binary);
+    if (!file.is_open()) return std::nullopt;
+    buffer << file.rdbuf();
     return buffer.str();
 #endif
 }
@@ -806,6 +806,8 @@ void performAction() {
             ignoreRegex();
         else if (action == Status)
             statusJSON();
+        else if (action == Load)
+            load();
         else if (action == History)
             historyJSON();
         else if (action == Search)
