@@ -782,11 +782,16 @@ void performAction() {
     using enum IOType;
     using enum Action;
     using namespace PerformAction;
+    auto complainAboutMissingAction = [&](const std::string_view& io_type_name) {
+        error_exit(formatColors("[error][inverse] ✘ [noinverse] Error! CB is trying to do an action that doesn't exist yet: action name %s, IO type %s[blank]\n"), actions[action], io_type_name);
+    };
     if (io_type == File) {
         if (action == Copy || action == Cut)
             copy();
         else if (action == Add)
             addFiles();
+        else
+            complainAboutMissingAction("file");
     } else if (io_type == Pipe) {
         if (action == Copy || action == Cut)
             pipeIn();
@@ -812,6 +817,8 @@ void performAction() {
             historyJSON();
         else if (action == Search)
             searchJSON();
+        else
+            complainAboutMissingAction("pipe");
     } else if (io_type == Text) {
         if (action == Copy || action == Cut)
             copyText();
@@ -847,6 +854,8 @@ void performAction() {
             history();
         else if (action == Search)
             search();
+        else
+            complainAboutMissingAction("text");
     }
 }
 
