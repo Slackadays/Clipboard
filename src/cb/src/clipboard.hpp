@@ -338,7 +338,6 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
-void setupResources();
 void fixMissingItems();
 unsigned int suitableThreadAmount();
 bool envVarIsTrue(const std::string_view& name);

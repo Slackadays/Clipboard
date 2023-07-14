@@ -22,8 +22,6 @@ int main(int argc, char* argv[]) {
 
         setupTerminal();
 
-        setupResources();
-
         setLocale();
 
         setClipboardAttributes();
