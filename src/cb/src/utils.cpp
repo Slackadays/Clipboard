@@ -165,12 +165,21 @@ std::string formatColors(const std::string_view& str, bool colorful) {
     std::string temp(str);
     for (size_t i = 0; i < temp.size(); i++) {
         if (temp[i] != '[') continue;
+
         auto j = temp.find(']', i + 1);
         if (j == std::string::npos) break;
-        auto result = temp.substr(i, j - i + 1);
+
+        auto matches = [&](const std::string_view& key) {
+            if (key.size() != j - i + 1) return false;
+            for (size_t k = 1; k < key.size() - 1; k++) { // only compare the middle part
+                if (key[k] != temp[i + k]) return false;
+            }
+            return true;
+        };
+
         for (const auto& key : colors) {
-            if (key.first == result) {
-                temp.replace(i, result.length(), colorful ? key.second : "");
+            if (matches(key.first)) {
+                temp.replace(i, key.first.length(), colorful ? key.second : "");
                 if (!colorful) i--; // because i may be at the start of the next color
                 break;
             }
