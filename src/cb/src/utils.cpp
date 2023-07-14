@@ -49,6 +49,7 @@
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/resource.h>
 #include <termios.h>
 #include <unistd.h>
 #endif
@@ -59,6 +60,7 @@ Forker forker {};
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
 struct termios tnormal;
+struct rlimit fdlimits;
 #elif defined(_WIN32) || defined(_WIN64)
 DWORD dwNormalMode = 0;
 #endif
@@ -261,7 +263,8 @@ std::optional<std::string> fileContents(const fs::path& path) {
         contents.append(buffer.data(), bytes_read);
         if (bytes_read < buffer.size() && errno == 0) break; // check if we reached EOF early and not due to an error
     }
-    close(fd);
+    // close if we're getting close to the rlimit
+    if (fd >= fdlimits.rlim_max / 2) close(fd);
     return contents;
 #else
     std::stringstream buffer;
@@ -547,6 +550,14 @@ void setupTerminal() {
     tcgetattr(STDIN_FILENO, &tnormal);
 #elif defined(_WIN64) || defined(_WIN32)
     GetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), &dwNormalMode);
+#endif
+}
+
+void setupResources() {
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+    getrlimit(RLIMIT_NOFILE, &fdlimits);
+    fdlimits.rlim_cur = fdlimits.rlim_max;
+    setrlimit(RLIMIT_NOFILE, &fdlimits);
 #endif
 }
 
