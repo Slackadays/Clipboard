@@ -163,8 +163,9 @@ unsigned long levenshteinDistance(const std::string_view& one, const std::string
 
 std::string formatColors(const std::string_view& str, bool colorful) {
     std::string temp(str);
-    for (size_t i = 0; (i = temp.find('[', i)) != std::string::npos; i++) {
-        auto j = temp.find(']', i);
+    for (size_t i = 0; i < temp.size(); i++) {
+        if (temp[i] != '[') continue;
+        auto j = temp.find(']', i + 1);
         if (j == std::string::npos) break;
         auto result = temp.substr(i, j - i + 1);
         for (const auto& key : colors) {
