@@ -82,7 +82,7 @@ Message help_message = "[info]┃ This is the Clipboard Project %s (commit %s), 
                        "[info][bold]┃ Examples[blank]\n"
                        "[progress]┃ cb ct Nuclear_Launch_Codes.txt contactsfolder[blank] [help](This cuts the following items into the "
                        "default clipboard, 0.)[blank]\n"
-                       "[progress]┃ clipboard cp1 dogfood.conf[blank] [help](This copies the following items into clipboard 1.)[blank]\n"
+                       "[progress]┃ cb cp1 dogfood.conf[blank] [help](This copies the following items into clipboard 1.)[blank]\n"
                        "[progress]┃ cb p1[blank] [help](This pastes clipboard 1.)[blank]\n"
                        "[progress]┃ cb sh4[blank] [help](This shows the contents of clipboard 4.)[blank]\n"
                        "[progress]┃ cb clr[blank] [help](This clears the contents of the default clipboard.)[blank]\n"
