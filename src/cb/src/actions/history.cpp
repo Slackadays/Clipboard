@@ -66,17 +66,6 @@ void history() {
         moveHistory();
         return;
     }
-    stopIndicator();
-    auto available = thisTerminalSize();
-    fprintf(stderr, "%s", formatColors("[info]┏━━[inverse] ").data());
-    Message clipboard_history_message = "[bold]Entry history for clipboard [help] %s[nobold]";
-    fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
-    fprintf(stderr, "%s", formatColors(" [noinverse][info]━").data());
-    auto usedSpace = (columnLength(clipboard_history_message) - 2) + clipboard_name.length() + 7;
-    if (usedSpace > available.columns) available.columns = usedSpace;
-    int columns = available.columns - usedSpace;
-    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatColors("┓[blank]").data());
-
     std::vector<std::string> dates(path.entryIndex.size());
 
     std::atomic<size_t> atomicLongestDateLength = 0;
@@ -128,13 +117,11 @@ void history() {
         threads[thread] = std::thread(dateWorker, start, end);
     }
 
-    for (auto& thread : threads)
-        thread.join();
+    // for (auto& thread : threads)
+    //     thread.join();
 
     // std::cout << "processing dates took " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - now).count() << "ms" << std::endl;
     // exit(0);
-
-    size_t longestDateLength = atomicLongestDateLength.load(std::memory_order_relaxed);
 
     /*#if defined(__linux__)
         io_uring ring;
@@ -153,12 +140,28 @@ void history() {
 
     auto longestEntryLength = numberLength(path.entryIndex.size() - 1);
 
+    stopIndicator();
+    auto available = thisTerminalSize();
+    fprintf(stderr, "%s", formatColors("[info]┏━━[inverse] ").data());
+    Message clipboard_history_message = "[bold]Entry history for clipboard [help] %s[nobold]";
+    fprintf(stderr, clipboard_history_message().data(), clipboard_name.data());
+    fprintf(stderr, "%s", formatColors(" [noinverse][info]━").data());
+    auto usedSpace = (columnLength(clipboard_history_message) - 2) + clipboard_name.length() + 7;
+    if (usedSpace > available.columns) available.columns = usedSpace;
+    int columns = available.columns - usedSpace;
+    fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatColors("┓[blank]").data());
+
     auto availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
     // reserve enough contiguous memory for the entire batch, where the size is number of entries * line length, plus extra formatting characters
     // this prevents reallocations and thus helps prevent invalidation of the data pointer
     batchedMessage.reserve(path.entryIndex.size() * (available.columns + 64));
     size_t offset = 0;
+
+    for (auto& thread : threads)
+        thread.join();
+
+    size_t longestDateLength = atomicLongestDateLength.load(std::memory_order_relaxed);
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
