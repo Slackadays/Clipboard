@@ -98,7 +98,7 @@ Message help_message = "[info]┃ This is the Clipboard Project %s (commit %s), 
                        "[info]┃ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                        "[info]┃ This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                        "redistribute it under certain conditions.[blank]\n";
-Message check_clipboard_status_message = "[info][bold]All of your clipboards with content[nobold]";
+Message check_clipboard_status_message = "[info][bold]All your clipboards with content[nobold]";
 Message clipboard_item_one_contents_message = "[info]┃ Here is the [bold]%i[nobold] item in clipboard [bold]%s[nobold]: [blank]\n";
 Message clipboard_item_many_contents_message = "[inverse][bold][info] Here are the items in clipboard [bold][help] %s [nobold][noinverse]";
 Message clipboard_text_contents_message = "[info]┃ Here are the first [bold]%i[nobold] bytes in clipboard [bold]%s[nobold]: [blank]";
