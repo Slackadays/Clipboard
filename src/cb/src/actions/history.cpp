@@ -23,10 +23,10 @@
 #define STDERR_FILENO 2
 #endif
 
-/*#if defined(__linux__)
+#if defined(__linuxx__)
 #include <liburing.h>
 int SQEsSubmitted = 0;
-#endif*/
+#endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <fcntl.h>
@@ -125,10 +125,10 @@ void history() {
     // std::cout << "processing dates took " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - now).count() << "ms" << std::endl;
     // exit(0);
 
-    /*#if defined(__linux__)
-        io_uring ring;
-        io_uring_queue_init(128, &ring, IORING_SETUP_SQPOLL);
-    #endif*/
+#if defined(__linuxx__)
+    io_uring ring;
+    io_uring_queue_init(128, &ring, IORING_SETUP_SQPOLL);
+#endif
 
 #if defined(USE_AIO)
     std::vector<std::shared_ptr<aiocb>> batchedAIOs;
@@ -173,15 +173,14 @@ void history() {
         path.setEntry(entry);
 
         if (batchedMessage.size() - offset > batchInterval) {
-/*#if defined(__linux__)                                                                                   \
-            auto sqe = io_uring_get_sqe(&ring);                                                            \
-            auto rawByteAtOffset = batchedMessage.data() + offset;                                         \
-            io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);   \
-                                                                                                         \ \
-            SQEsSubmitted += io_uring_submit(&ring);                                                       \
-            offset = batchedMessage.size();                                                                \
-#el*/                                                                                                      \
-#if defined (USE_AIO)
+#if defined(__linuxx__)
+            auto sqe = io_uring_get_sqe(&ring);
+            auto rawByteAtOffset = batchedMessage.data() + offset;
+            io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);
+
+            SQEsSubmitted += io_uring_submit(&ring);
+            offset = batchedMessage.size();
+#elif defined(USE_AIO)
             auto aio = std::make_shared<aiocb>();
             auto rawByteAtOffset = batchedMessage.data() + offset;
             aio->aio_fildes = STDERR_FILENO;
@@ -237,16 +236,15 @@ void history() {
         }
     }
 
-/*#if defined(__linux__)                                                                           \
-    auto sqe = io_uring_get_sqe(&ring);                                                            \
-    auto rawByteAtOffset = batchedMessage.data() + offset;                                         \
-    io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);   \
-                                                                                                 \ \
-    // block until all writes are done                                                             \
-    io_uring_submit_and_wait(&ring, SQEsSubmitted + 1);                                            \
-    io_uring_queue_exit(&ring);                                                                    \
-#el*/                                                                                              \
-#if defined (USE_AIO)
+#if defined(__linuxx__)
+    auto sqe = io_uring_get_sqe(&ring);
+    auto rawByteAtOffset = batchedMessage.data() + offset;
+    io_uring_prep_write(sqe, STDERR_FILENO, rawByteAtOffset, batchedMessage.size() - offset, 0);
+
+    // block until all writes are done
+    io_uring_submit_and_wait(&ring, SQEsSubmitted + 1);
+    io_uring_queue_exit(&ring);
+#elif defined(USE_AIO)
     auto rawByteAtOffset = batchedMessage.data() + offset;
     auto aio = std::make_shared<aiocb>();
     aio->aio_fildes = STDERR_FILENO;
