@@ -20,6 +20,7 @@
 #include <format>
 #include <io.h>
 #define write _write
+#define STDERR_FILENO 2
 #endif
 
 /*#if defined(__linux__)
