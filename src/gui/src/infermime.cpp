@@ -45,7 +45,8 @@ std::optional<std::string_view> inferMIMEType(const std::string_view& content) {
     auto header_is = [&](const std::string_view& pattern, const size_t offset = 0) {
         if (content.size() < (pattern.size() + offset)) return false;
         for (size_t i = 0; i < pattern.size(); i++) // DON'T use a substr comparison because the stdlib uses a 3-way comparison (super slow)
-            if (content[i + offset] != pattern[i]) return false;
+            if (content[i + offset] != pattern[i]) [[likely]] return false; // more likely to be false than true because there can only be one match out of hundreds
+            else [[unlikely]] continue;
         return true;
     };
 
