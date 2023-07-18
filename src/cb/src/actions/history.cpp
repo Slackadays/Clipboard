@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <format>
 #include <io.h>
+#define write _write
 #endif
 
 /*#if defined(__linux__)
@@ -151,12 +152,16 @@ void history() {
     int columns = available.columns - usedSpace;
     fprintf(stderr, "%s%s", repeatString("━", columns).data(), formatColors("┓[blank]").data());
 
-    auto availableColumnsAsString = std::to_string(available.columns);
     std::string batchedMessage;
     // reserve enough contiguous memory for the entire batch, where the size is number of entries * line length, plus extra formatting characters
     // this prevents reallocations and thus helps prevent invalidation of the data pointer
     batchedMessage.reserve(path.entryIndex.size() * (available.columns + 64));
     size_t offset = 0;
+
+    std::array<std::string, 3> preformattedMessageParts = {
+            formatColors("\n[info]\033[" + std::to_string(available.columns) + "G┃\r┃ [bold]"),
+            formatColors("[nobold]│ [bold]"),
+            formatColors("[nobold]│[help] ")};
 
     for (auto& thread : threads)
         thread.join();
@@ -186,17 +191,15 @@ void history() {
             offset = batchedMessage.size();
             batchedAIOs.emplace_back(aio);
 #else
-            fputs(batchedMessage.data(), stderr);
+            auto ret = write(STDERR_FILENO, batchedMessage.data(), batchedMessage.size());
             batchedMessage.clear();
 #endif
         }
 
         int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
 
-        batchedMessage += formatColors(
-                "\n[info]\033[" + availableColumnsAsString + "G┃\r┃ [bold]" + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + "[nobold]│ [bold]"
-                + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + "[nobold]│[help] "
-        );
+        batchedMessage += preformattedMessageParts[0] + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + preformattedMessageParts[1]
+                          + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + preformattedMessageParts[2];
 
         if (auto temp(fileContents(path.data.raw)); temp.has_value()) {
             auto content = std::move(temp.value());
@@ -256,7 +259,7 @@ void history() {
         aio_suspend(aio_list.data(), aio_list.size(), nullptr);
     }
 #else
-    fputs(batchedMessage.data(), stderr);
+    auto ret = write(STDERR_FILENO, batchedMessage.data(), batchedMessage.size());
 #endif
 
     fputs(formatColors("[info]\n┗━━▌").data(), stderr);
