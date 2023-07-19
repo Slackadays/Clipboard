@@ -23,6 +23,8 @@ add_executable(cb
   src/actions/show.cpp
   src/actions/status.cpp
   src/actions/swap.cpp
+  src/actions/undo.cpp
+  src/actions/redo.cpp
   src/locales/en_us.cpp
   src/locales/es_co.cpp
   src/locales/pt_br.cpp

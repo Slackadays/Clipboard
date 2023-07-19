@@ -267,8 +267,14 @@ size_t columnLength(const std::string_view& message) {
 
 std::optional<std::string> fileContents(const fs::path& path) {
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    errno = 0;
     int fd = open(path.string().data(), O_RDONLY);
-    if (fd == -1) return std::nullopt;
+    if (fd == -1) {
+        if (errno == ENOENT)
+            return std::nullopt;
+        else
+            throw std::runtime_error("Couldn't open file " + path.string() + ": " + std::strerror(errno));
+    }
     std::string contents;
 #if defined(__linux__) || defined(__FreeBSD__)
     std::array<char, 65536> buffer;
@@ -597,7 +603,7 @@ template <typename T>
 Action getAction() {
     using enum Action;
     if (arguments.size() >= 1) {
-        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search}) {
+        for (const auto& entry : {Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo}) {
             if (flagIsPresent<bool>(actions[entry], "--") || flagIsPresent<bool>(action_shortcuts[entry], "--") || flagIsPresent<bool>(actions.original(entry), "--")
                 || flagIsPresent<bool>(action_shortcuts.original(entry), "--")) {
                 return entry;

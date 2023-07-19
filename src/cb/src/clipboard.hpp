@@ -203,7 +203,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo };
 
 extern Action action;
 
@@ -224,11 +224,11 @@ public:
     T& original(const Action& index) { return internal_original.value()[static_cast<unsigned int>(index)]; }
 };
 
-extern EnumArray<std::string_view, 18> actions;
-extern EnumArray<std::string_view, 18> action_shortcuts;
-extern EnumArray<std::string_view, 18> doing_action;
-extern EnumArray<std::string_view, 18> did_action;
-extern EnumArray<std::string_view, 18> action_descriptions;
+extern EnumArray<std::string_view, 20> actions;
+extern EnumArray<std::string_view, 20> action_shortcuts;
+extern EnumArray<std::string_view, 20> doing_action;
+extern EnumArray<std::string_view, 20> did_action;
+extern EnumArray<std::string_view, 20> action_descriptions;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 10> colors;
 

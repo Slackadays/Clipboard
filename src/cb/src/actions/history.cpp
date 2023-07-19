@@ -159,7 +159,7 @@ void history() {
     batchedMessage.reserve(path.entryIndex.size() * (available.columns + 64));
     size_t offset = 0;
 
-    std::array<std::string, 3> preformattedMessageParts = {
+    const std::array preformattedMessageParts = {
             formatColors("\n[info]\033[" + std::to_string(available.columns) + "G┃\r┃ [bold]"),
             formatColors("[nobold]│ [bold]"),
             formatColors("[nobold]│[help] ")};
