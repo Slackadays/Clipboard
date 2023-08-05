@@ -44,7 +44,12 @@ int main(int argc, char* argv[]) {
 
         if (action != Action::Info) path.getLock();
 
+#if defined(_WIN32) || defined(_WIN64)
         syncWithExternalClipboards();
+#else
+        syncWithRemoteClipboard();
+        setupGUIClipboardDaemon();
+#endif
 
         fixMissingItems();
 
@@ -68,7 +73,11 @@ int main(int argc, char* argv[]) {
 
         copying.mime = getMIMEType();
 
+#if defined(_WIN32) || defined(_WIN64)
         updateExternalClipboards();
+#else
+        updateRemoteClipboard();
+#endif
 
         if (!copying.failedItems.empty()) clipboard_state = ClipboardState::Error;
 

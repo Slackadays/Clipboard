@@ -258,3 +258,14 @@ void updateExternalClipboards(bool force) {
         if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
     }
 }
+
+void updateRemoteClipboard(bool force) {
+    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name) || force) { // only update GUI clipboard on write operations
+        auto thisContent = thisClipboard();
+        if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
+    }
+}
+
+void setupGUIClipboardDaemon() {
+    
+}
