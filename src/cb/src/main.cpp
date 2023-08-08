@@ -42,13 +42,13 @@ int main(int argc, char* argv[]) {
 
         verifyAction();
 
-        if (action != Action::Info) path.getLock();
-
 #if defined(_WIN32) || defined(_WIN64)
+        if (action != Action::Info) path.getLock();
         syncWithExternalClipboards();
 #else
-        syncWithRemoteClipboard();
         setupGUIClipboardDaemon();
+        syncWithRemoteClipboard();
+        if (action != Action::Info) path.getLock();
 #endif
 
         fixMissingItems();

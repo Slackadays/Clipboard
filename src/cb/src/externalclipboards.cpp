@@ -191,6 +191,23 @@ ClipboardContent thisClipboard() {
     return {};
 }
 
+void syncWithRemoteClipboard(bool force) {
+    using enum ClipboardContentType;
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
+        || force) { // exclude Status because it does this manually
+        ClipboardContent content;
+        if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        } else if (content.type() == Paths) {
+            convertFromGUIClipboard(content.paths());
+            copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
+        }
+        available_mimes = content.availableTypes();
+    }
+}
+
 void syncWithExternalClipboards(bool force) {
     using enum ClipboardContentType;
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
@@ -267,5 +284,40 @@ void updateRemoteClipboard(bool force) {
 }
 
 void setupGUIClipboardDaemon() {
-    
+    if (envVarIsTrue("CLIPBOARD_NOGUI")) return;
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+    auto pid = fork();
+    if (pid > 0) return;
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    if (setsid() < 0) {
+        perror("setsid");
+        exit(EXIT_FAILURE);
+    }
+    if (chdir("/") < 0) {
+        perror("chdir");
+        exit(EXIT_FAILURE);
+    }
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+#if defined(__linux__)
+    // check if there is already a cb process with ppid 1 by going through all processes
+
+    for (const auto& entry : fs::directory_iterator("/proc")) {}
+#endif
+#elif defined(_WIN32) | defined(_WIN64)
+
+#endif
+    using enum ClipboardContentType;
+
+    while (true) {
+        ClipboardContent content = {};
+
+        content = getGUIClipboard("");
+    }
 }

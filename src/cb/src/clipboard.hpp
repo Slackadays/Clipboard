@@ -340,7 +340,8 @@ std::string formatBytes(const auto& bytes) {
 
 void updateRemoteClipboard(bool force = false);
 void setupGUIClipboardDaemon();
-void syncWithRemoteClipboard();
+void syncWithRemoteClipboard(bool force = false);
+void syncWithGUIClipboard(bool force = false);
 void fixMissingItems();
 unsigned int suitableThreadAmount();
 bool envVarIsTrue(const std::string_view& name);
