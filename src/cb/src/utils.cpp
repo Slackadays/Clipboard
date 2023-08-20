@@ -584,7 +584,9 @@ template <typename T>
         if (arg == "--") break;
         if (arg == flag || arg == (std::string(shortcut).append(flag))) {
             if constexpr (std::is_same_v<T, std::string>) {
-                std::string temp(*arguments.erase(std::find(arguments.begin(), arguments.end(), arg)));
+                auto potentialArg = arguments.erase(std::find(arguments.begin(), arguments.end(), arg));
+                if (potentialArg == arguments.end()) return std::string();
+                std::string temp(*potentialArg);
                 arguments.erase(std::find(arguments.begin(), arguments.end(), temp));
                 return temp;
             } else {
