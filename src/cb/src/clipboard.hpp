@@ -384,7 +384,7 @@ void showClipboardContents();
 void setupAction(int& argc, char* argv[]);
 void checkForNoItems();
 void startIndicator();
-void setupIndicator();
+void indicatorThread();
 void deduplicateItems();
 unsigned long long totalItemSize();
 void checkItemSize();

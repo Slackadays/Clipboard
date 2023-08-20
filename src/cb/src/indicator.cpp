@@ -34,7 +34,7 @@ bool stopIndicator(bool change_condition_variable) {
     return true;
 }
 
-void setupIndicator() {
+void indicatorThread() {
     if (!is_tty.err || output_silent || progress_silent) return;
 
     bool hasFocus = true;
@@ -76,6 +76,10 @@ void setupIndicator() {
     };
 
     auto display_progress = [&](const auto& formattedNum, const std::string_view& actionText = doing_action[action]) {
+        if (std::chrono::steady_clock::now() - start < std::chrono::milliseconds(500)) {
+            cv.wait_for(lock, std::chrono::milliseconds(17), [&] { return progress_state != IndicatorState::Active; });
+            return;
+        }
         std::string progressBar;
         if (step < 40) {
             progressBar += repeatString("█", step);
@@ -168,5 +172,5 @@ void setupIndicator() {
 void startIndicator() { // If cancelled, leave cancelled
     IndicatorState expect = IndicatorState::Done;
     progress_state.compare_exchange_strong(expect, IndicatorState::Active);
-    indicator = std::thread(setupIndicator);
+    indicator = std::thread(indicatorThread);
 }
