@@ -51,16 +51,16 @@ void info() {
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     time_t latest = 0;
-    for (const auto& entry : fs::recursive_directory_iterator(path)) {
+    for (const auto& entry : fs::recursive_directory_iterator(path.data)) {
         struct stat info;
         stat(entry.path().string().data(), &info);
         if (info.st_ctime > latest) latest = info.st_ctime;
     }
     time = std::ctime(&latest);
     std::erase(time, '\n');
-    fprintf(stderr, formatColors("[info]%s┃ Last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
+    fprintf(stderr, formatColors("[info]%s┃ Contents last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
 #elif defined(_WIN32) || defined(_WIN64)
-    fprintf(stderr, formatColors("[info]┃ Last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
+    fprintf(stderr, formatColors("[info]┃ Contents last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
 
     fprintf(stderr, formatColors("[info]%s┃ Stored in [help]%s[blank]\n").data(), generatedEndbar().data(), path.string().data());
@@ -146,16 +146,16 @@ void infoJSON() {
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
     time_t latest = 0;
-    for (const auto& entry : fs::recursive_directory_iterator(path)) {
+    for (const auto& entry : fs::recursive_directory_iterator(path.data)) {
         struct stat info;
         stat(entry.path().string().data(), &info);
         if (info.st_ctime > latest) latest = info.st_ctime;
     }
     time = std::ctime(&latest);
     std::erase(time, '\n');
-    printf("    \"lastChanged\": \"%s\",\n", time.data());
+    printf("    \"contentsLastChanged\": \"%s\",\n", time.data());
 #elif defined(_WIN32) || defined(_WIN64)
-    printf("    \"lastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
+    printf("    \"contentsLastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
 #endif
 
     printf("    \"path\": \"%s\",\n", JSONescape(path.string()).data());
