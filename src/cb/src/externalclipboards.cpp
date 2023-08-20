@@ -22,6 +22,10 @@
 #include "platforms/windows.hpp"
 #endif
 
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#include <unistd.h>
+#endif
+
 bool isARemoteSession() {
     if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION")) return true;
     return false;
@@ -196,15 +200,10 @@ void syncWithRemoteClipboard(bool force) {
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
         || force) { // exclude Status because it does this manually
         ClipboardContent content;
-        if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
-        if (content.type() == Text) {
-            convertFromGUIClipboard(content.text());
-            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
-        } else if (content.type() == Paths) {
-            convertFromGUIClipboard(content.paths());
-            copying.mime = !content.mime().empty() ? content.mime() : "text/uri-list";
-        }
-        available_mimes = content.availableTypes();
+        if (envVarIsTrue("CLIPBOARD_NOREMOTE")) return;
+        content = getRemoteClipboard();
+        convertFromGUIClipboard(content.text());
+        copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
     }
 }
 
@@ -306,9 +305,19 @@ void setupGUIClipboardDaemon() {
     close(STDERR_FILENO);
 
 #if defined(__linux__)
-    // check if there is already a cb process with ppid 1 by going through all processes
+    // check if there is already a cb daemon by checking /proc for a process which has an exe symlink entry that points to a binary called "cb" and which does not have stdin or stdout file descriptors
 
-    for (const auto& entry : fs::directory_iterator("/proc")) {}
+    for (const auto& entry : fs::directory_iterator("/proc")) {
+        if (!entry.is_directory()) continue;
+        auto exe = entry.path() / "exe";
+        if (!fs::exists(exe)) continue;
+        auto exeTarget = fs::read_symlink(exe);
+        if (exeTarget.filename() != "cb") continue;
+        auto fd = entry.path() / "fd";
+        if (fs::exists(fd / "0") || fs::exists(fd / "1") || fs::exists(fd / "2")) continue;
+        // found a cb daemon
+        exit(EXIT_SUCCESS);
+    }
 #endif
 #elif defined(_WIN32) | defined(_WIN64)
 

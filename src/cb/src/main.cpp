@@ -42,13 +42,13 @@ int main(int argc, char* argv[]) {
 
         verifyAction();
 
-#if defined(_WIN32) || defined(_WIN64)
-        if (action != Action::Info) path.getLock();
-        syncWithExternalClipboards();
-#else
+#if defined(__linux__)
         setupGUIClipboardDaemon();
         syncWithRemoteClipboard();
         if (action != Action::Info) path.getLock();
+#else
+        if (action != Action::Info) path.getLock();
+        syncWithExternalClipboards();
 #endif
 
         fixMissingItems();
@@ -73,10 +73,10 @@ int main(int argc, char* argv[]) {
 
         copying.mime = getMIMEType();
 
-#if defined(_WIN32) || defined(_WIN64)
-        updateExternalClipboards();
-#else
+#if defined(__linux__)
         updateRemoteClipboard();
+#else
+        updateExternalClipboards();
 #endif
 
         if (!copying.failedItems.empty()) clipboard_state = ClipboardState::Error;
