@@ -338,6 +338,7 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+void verifyClipboardName();
 void updateRemoteClipboard(bool force = false);
 void setupGUIClipboardDaemon();
 void syncWithRemoteClipboard(bool force = false);

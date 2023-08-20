@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
 
         startIndicator();
 
+        verifyClipboardName();
+
         setFilepaths();
 
         action = getAction();

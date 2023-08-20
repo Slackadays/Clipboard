@@ -531,6 +531,32 @@ void setClipboardAttributes() {
     arguments.at(0) = arguments.at(0).substr(0, arguments.at(0).find_first_of("_0123456789"));
 }
 
+void verifyClipboardName() {
+#if defined(_WIN32) || defined(_WIN64)
+    constexpr std::array forbiddenFilenameCharacters{ '<', '>', ':', '"', '/', '\\', '|', '?', '*' };
+#elif defined(__APPLE__)
+    constexpr std::array forbiddenFilenameCharacters{ '/', ':' };
+#elif defined(__linux__) || defined(__FreeBSD__) || defined(__unix__)
+    constexpr std::array forbiddenFilenameCharacters{ '/' };
+#else
+    constexpr std::array forbiddenFilenameCharacters{};
+#endif
+
+#if defined(_WIN32) || defined(_WIN64)
+    for (const auto& forbiddenFilename : { "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4",
+                                           "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2",
+                                           "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" }) {
+        if (clipboard_name == forbiddenFilename) {
+            error_exit(formatColors("[error][inverse] ✘ [noinverse] The clipboard name you chose (\"[bold]%s[blank][error]\") won't work on this system possibly due to special characters. [help]⬤ Try choosing a different one instead.\n[blank]"), clipboard_name);
+        }
+    }
+#endif
+
+    if (std::find_first_of(clipboard_name.begin(), clipboard_name.end(), forbiddenFilenameCharacters.begin(), forbiddenFilenameCharacters.end()) != clipboard_name.end()) {
+        error_exit(formatColors("[error][inverse] ✘ [noinverse] The clipboard name you chose (\"[bold]%s[blank][error]\") won't work on this system possibly due to special characters. [help]⬤ Try choosing a different one instead.\n[blank]"), clipboard_name);
+    }
+}
+
 void setupVariables(int& argc, char* argv[]) {
     is_tty.in = envVarIsTrue("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdin));
     is_tty.out = envVarIsTrue("CLIPBOARD_FORCETTY") ? true : isatty(fileno(stdout));
