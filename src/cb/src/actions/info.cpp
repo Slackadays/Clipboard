@@ -58,9 +58,9 @@ void info() {
     }
     time = std::ctime(&latest);
     std::erase(time, '\n');
-    fprintf(stderr, formatColors("[info]%s┃ Contents last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
+    fprintf(stderr, formatColors("[info]%s┃ Content last changed [help]%s[blank]\n").data(), generatedEndbar().data(), time.data());
 #elif defined(_WIN32) || defined(_WIN64)
-    fprintf(stderr, formatColors("[info]┃ Contents last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
+    fprintf(stderr, formatColors("[info]┃ Content last changed [help]%s[blank]\n").data(), std::format("{}", fs::last_write_time(path)).data());
 #endif
 
     fprintf(stderr, formatColors("[info]%s┃ Stored in [help]%s[blank]\n").data(), generatedEndbar().data(), path.string().data());
@@ -153,9 +153,9 @@ void infoJSON() {
     }
     time = std::ctime(&latest);
     std::erase(time, '\n');
-    printf("    \"contentsLastChanged\": \"%s\",\n", time.data());
+    printf("    \"contentLastChanged\": \"%s\",\n", time.data());
 #elif defined(_WIN32) || defined(_WIN64)
-    printf("    \"contentsLastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
+    printf("    \"contentLastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
 #endif
 
     printf("    \"path\": \"%s\",\n", JSONescape(path.string()).data());
