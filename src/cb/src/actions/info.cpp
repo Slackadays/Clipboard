@@ -158,7 +158,7 @@ void infoJSON() {
     printf("    \"lastChanged\": \"%s\",\n", std::format("{}", fs::last_write_time(path)).data());
 #endif
 
-    printf("    \"path\": \"%s\",\n", path.string().data());
+    printf("    \"path\": \"%s\",\n", JSONescape(path.string()).data());
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
     struct passwd* pw = getpwuid(getuid());
@@ -198,15 +198,15 @@ void infoJSON() {
     if (path.isLocked()) printf("    \"lockedBy\": \"%s\",\n", fileContents(path.metadata.lock).value().data());
 
     if (fs::exists(path.metadata.notes))
-        printf("    \"note\": \"%s\"\n", std::regex_replace(fileContents(path.metadata.notes).value(), std::regex("\""), "\\\"").data());
+        printf("    \"note\": \"%s\",\n", JSONescape(fileContents(path.metadata.notes).value()).data());
     else
-        printf("    \"note\": \"\"\n");
+        printf("    \"note\": null,\n");
 
     if (path.holdsIgnoreRegexes()) {
         printf("    \"ignoreRegexes\": [");
         auto regexes = fileLines(path.metadata.ignore);
         for (const auto& regex : regexes)
-            printf("\"%s\"%s", std::regex_replace(regex, std::regex("\""), "\\\"").data(), regex != regexes.back() ? ", " : "");
+            printf("\"%s\"%s", JSONescape(regex).data(), regex != regexes.back() ? ", " : "");
         printf("]\n");
     } else {
         printf("    \"ignoreRegexes\": []\n");

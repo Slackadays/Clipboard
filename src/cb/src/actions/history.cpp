@@ -284,7 +284,7 @@ void historyJSON() {
                 printf("{\n");
                 printf("            \"dataType\": \"%s\",\n", type.value().data());
                 printf("            \"dataSize\": %zd,\n", content.length());
-                printf("            \"path\": \"%s\"\n", path.data.raw.string().data());
+                printf("            \"path\": \"%s\"\n", JSONescape(path.data.raw.string()).data());
                 printf("        }");
             } else {
                 printf("\"%s\"", JSONescape(content).data());
@@ -294,8 +294,8 @@ void historyJSON() {
             std::vector<fs::path> itemsInPath(fs::directory_iterator(path.data), fs::directory_iterator());
             for (const auto& entry : itemsInPath) {
                 printf("            {\n");
-                printf("                \"filename\": \"%s\",\n", entry.filename().string().data());
-                printf("                \"path\": \"%s\",\n", entry.string().data());
+                printf("                \"filename\": \"%s\",\n", JSONescape(entry.filename().string()).data());
+                printf("                \"path\": \"%s\",\n", JSONescape(entry.string()).data());
                 printf("                \"isDirectory\": %s\n", fs::is_directory(entry) ? "true" : "false");
                 printf("            }%s\n", entry == itemsInPath.back() ? "" : ",");
             }

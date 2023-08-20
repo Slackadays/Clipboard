@@ -240,6 +240,7 @@ std::string JSONescape(const std::string_view& input) {
         default:
             if (temp[i] < 32) {
                 std::stringstream ss;
+                ss.imbue(std::locale::classic()); // disable locale formatting for numbers, so 1000 doesn't become 1,000
                 ss << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (int)temp[i];
                 temp.replace(i, 1, ss.str());
                 i += 5;

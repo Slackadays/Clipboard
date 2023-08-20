@@ -202,8 +202,10 @@ void syncWithRemoteClipboard(bool force) {
         ClipboardContent content;
         if (envVarIsTrue("CLIPBOARD_NOREMOTE")) return;
         content = getRemoteClipboard();
-        convertFromGUIClipboard(content.text());
-        copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        }
     }
 }
 
