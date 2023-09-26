@@ -75,5 +75,17 @@ void setTheme(const std::string_view& theme) {
                  {"[inverse]", "\033[7m"},
                  {"[noinverse]", "\033[27m"},
                  {"[blank]", "\033[0m"}}};
+    } else if (theme == "ansi") {
+        colors = {
+                {{"[error]", "\033[38;5;1m"},
+                 {"[success]", "\033[38;5;2m"},
+                 {"[progress]", "\033[38;5;3m"},
+                 {"[info]", "\033[38;5;4m"},
+                 {"[help]", "\033[38;5;5m"},
+                 {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
+                 {"[inverse]", "\033[7m"},
+                 {"[noinverse]", "\033[27m"},
+                 {"[blank]", "\033[0m"}}};
     }
 }
