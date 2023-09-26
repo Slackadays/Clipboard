@@ -17,6 +17,8 @@ CLIPBOARD_THEME=lighthighcontrast cb copy testfile testdir
 
 CLIPBOARD_THEME=darkhighcontrast cb copy testfile testdir
 
+CLIPBOARD_THEME=ansi cb copy testfile testdir
+
 NO_COLOR=1 cb copy testfile testdir
 
 NO_COLOR=1 FORCE_COLOR=1 cb copy testfile testdir
