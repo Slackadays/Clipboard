@@ -209,6 +209,23 @@ void syncWithRemoteClipboard(bool force) {
     }
 }
 
+void syncWithGUIClipboard(bool force) {
+    using enum ClipboardContentType;
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
+        || force) { // exclude Status because it does this manually
+        ClipboardContent content;
+        if (envVarIsTrue("CLIPBOARD_NOGUI")) return;
+        content = getGUIClipboard(preferred_mime);
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        } else if (content.type() == Paths) {
+            convertFromGUIClipboard(content.paths());
+            copying.mime = "text/uri-list";
+        }
+    }
+}
+
 void syncWithExternalClipboards(bool force) {
     using enum ClipboardContentType;
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
@@ -277,13 +294,6 @@ void updateExternalClipboards(bool force) {
     }
 }
 
-void updateRemoteClipboard(bool force) {
-    if ((isAWriteAction() && clipboard_name == constants.default_clipboard_name) || force) { // only update GUI clipboard on write operations
-        auto thisContent = thisClipboard();
-        if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
-    }
-}
-
 void setupGUIClipboardDaemon() {
     if (envVarIsTrue("CLIPBOARD_NOGUI")) return;
 
@@ -309,26 +319,33 @@ void setupGUIClipboardDaemon() {
 #if defined(__linux__)
     // check if there is already a cb daemon by checking /proc for a process which has an exe symlink entry that points to a binary called "cb" and which does not have stdin or stdout file descriptors
 
-    for (const auto& entry : fs::directory_iterator("/proc")) {
-        if (!entry.is_directory()) continue;
-        auto exe = entry.path() / "exe";
-        if (!fs::exists(exe)) continue;
-        auto exeTarget = fs::read_symlink(exe);
-        if (exeTarget.filename() != "cb") continue;
-        auto fd = entry.path() / "fd";
-        if (fs::exists(fd / "0") || fs::exists(fd / "1") || fs::exists(fd / "2")) continue;
-        // found a cb daemon
-        exit(EXIT_SUCCESS);
-    }
+    try {
+        for (const auto& entry : fs::directory_iterator("/proc")) {
+            if (!entry.is_directory()) continue;
+            auto exe = entry.path() / "exe";
+            if (!fs::exists(exe)) continue;
+            auto exeTarget = fs::read_symlink(exe);
+            if (exeTarget.filename() != "cb") continue;
+            auto fd = entry.path() / "fd";
+            if (fs::exists(fd / "0") || fs::exists(fd / "1") || fs::exists(fd / "2")) continue;
+            // found a cb daemon
+            exit(EXIT_SUCCESS);
+        }
+    } catch (...) {}
+
+    // std::cerr << "Starting cb daemon" << std::endl;
 #endif
 #elif defined(_WIN32) | defined(_WIN64)
 
 #endif
-    using enum ClipboardContentType;
+    path = Clipboard(std::string(constants.default_clipboard_name));
 
-    while (true) {
-        ClipboardContent content = {};
-
-        content = getGUIClipboard("");
+    while (fs::exists(path)) {
+        path.getLock();
+        syncWithGUIClipboard(true);
+        path.releaseLock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
+
+    exit(EXIT_SUCCESS);
 }

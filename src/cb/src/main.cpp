@@ -75,11 +75,7 @@ int main(int argc, char* argv[]) {
 
         copying.mime = getMIMEType();
 
-#if defined(__linux__)
-        updateRemoteClipboard();
-#else
         updateExternalClipboards();
-#endif
 
         if (!copying.failedItems.empty()) clipboard_state = ClipboardState::Error;
 

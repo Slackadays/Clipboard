@@ -339,7 +339,6 @@ std::string formatBytes(const auto& bytes) {
 }
 
 void verifyClipboardName();
-void updateRemoteClipboard(bool force = false);
 void setupGUIClipboardDaemon();
 void syncWithRemoteClipboard(bool force = false);
 void syncWithGUIClipboard(bool force = false);
