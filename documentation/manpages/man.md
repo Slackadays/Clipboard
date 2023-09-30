@@ -94,7 +94,8 @@ Set this to "true" or "1" to disable progress and confirmation messages from CB.
 
 ### **CLIPBOARD_THEME**
 
-Set this to the color theme that CB will use. Choose between light, darkhighcontrast, lighthighcontrast, amber, and green (the default is dark).
+Set this to the color theme that CB will use. Choose between light, darkhighcontrast, lighthighcontrast, amber, green, and
+ ansi (the default is dark).
 
 ### **FORCE_COLOR**
 
