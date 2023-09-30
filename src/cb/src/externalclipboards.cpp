@@ -22,6 +22,10 @@
 #include "platforms/windows.hpp"
 #endif
 
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#include <unistd.h>
+#endif
+
 bool isARemoteSession() {
     if (getenv("SSH_CLIENT") || getenv("SSH_TTY") || getenv("SSH_CONNECTION")) return true;
     return false;
@@ -191,6 +195,37 @@ ClipboardContent thisClipboard() {
     return {};
 }
 
+void syncWithRemoteClipboard(bool force) {
+    using enum ClipboardContentType;
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
+        || force) { // exclude Status because it does this manually
+        ClipboardContent content;
+        if (envVarIsTrue("CLIPBOARD_NOREMOTE")) return;
+        content = getRemoteClipboard();
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        }
+    }
+}
+
+void syncWithGUIClipboard(bool force) {
+    using enum ClipboardContentType;
+    if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
+        || force) { // exclude Status because it does this manually
+        ClipboardContent content;
+        if (envVarIsTrue("CLIPBOARD_NOGUI")) return;
+        content = getGUIClipboard(preferred_mime);
+        if (content.type() == Text) {
+            convertFromGUIClipboard(content.text());
+            copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
+        } else if (content.type() == Paths) {
+            convertFromGUIClipboard(content.paths());
+            copying.mime = "text/uri-list";
+        }
+    }
+}
+
 void syncWithExternalClipboards(bool force) {
     using enum ClipboardContentType;
     if ((!isAClearingAction() && clipboard_name == constants.default_clipboard_name && clipboard_entry == constants.default_clipboard_entry && action != Action::Status)
@@ -257,4 +292,60 @@ void updateExternalClipboards(bool force) {
         if (!envVarIsTrue("CLIPBOARD_NOGUI")) writeToGUIClipboard(thisContent);
         if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) writeToRemoteClipboard(thisContent);
     }
+}
+
+void setupGUIClipboardDaemon() {
+    if (envVarIsTrue("CLIPBOARD_NOGUI")) return;
+
+#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+    auto pid = fork();
+    if (pid > 0) return;
+    if (pid < 0) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    if (setsid() < 0) {
+        perror("setsid");
+        exit(EXIT_FAILURE);
+    }
+    if (chdir("/") < 0) {
+        perror("chdir");
+        exit(EXIT_FAILURE);
+    }
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+#if defined(__linux__)
+    // check if there is already a cb daemon by checking /proc for a process which has an exe symlink entry that points to a binary called "cb" and which does not have stdin or stdout file descriptors
+
+    try {
+        for (const auto& entry : fs::directory_iterator("/proc")) {
+            if (!entry.is_directory()) continue;
+            auto exe = entry.path() / "exe";
+            if (!fs::exists(exe)) continue;
+            auto exeTarget = fs::read_symlink(exe);
+            if (exeTarget.filename() != "cb") continue;
+            auto fd = entry.path() / "fd";
+            if (fs::exists(fd / "0") || fs::exists(fd / "1") || fs::exists(fd / "2")) continue;
+            // found a cb daemon
+            exit(EXIT_SUCCESS);
+        }
+    } catch (...) {}
+
+    // std::cerr << "Starting cb daemon" << std::endl;
+#endif
+#elif defined(_WIN32) | defined(_WIN64)
+
+#endif
+    path = Clipboard(std::string(constants.default_clipboard_name));
+
+    while (fs::exists(path)) {
+        path.getLock();
+        syncWithGUIClipboard(true);
+        path.releaseLock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    }
+
+    exit(EXIT_SUCCESS);
 }

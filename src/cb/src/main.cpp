@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
 
         startIndicator();
 
+        verifyClipboardName();
+
         setFilepaths();
 
         action = getAction();
@@ -42,9 +44,14 @@ int main(int argc, char* argv[]) {
 
         verifyAction();
 
+#if defined(__linux__)
+        setupGUIClipboardDaemon();
+        syncWithRemoteClipboard();
         if (action != Action::Info) path.getLock();
-
+#else
+        if (action != Action::Info) path.getLock();
         syncWithExternalClipboards();
+#endif
 
         fixMissingItems();
 

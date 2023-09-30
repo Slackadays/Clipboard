@@ -338,6 +338,10 @@ std::string formatBytes(const auto& bytes) {
     return formatNumbers(bytes / (1024.0 * 1024.0 * 1024.0)) + "GB";
 }
 
+void verifyClipboardName();
+void setupGUIClipboardDaemon();
+void syncWithRemoteClipboard(bool force = false);
+void syncWithGUIClipboard(bool force = false);
 void fixMissingItems();
 unsigned int suitableThreadAmount();
 bool envVarIsTrue(const std::string_view& name);
@@ -379,7 +383,7 @@ void showClipboardContents();
 void setupAction(int& argc, char* argv[]);
 void checkForNoItems();
 void startIndicator();
-void setupIndicator();
+void indicatorThread();
 void deduplicateItems();
 unsigned long long totalItemSize();
 void checkItemSize();

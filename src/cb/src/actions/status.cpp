@@ -60,6 +60,7 @@ void status() {
             else
                 std::erase(content, '\n');
             fprintf(stderr, formatColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
+            clipboard.releaseLock();
             continue;
         }
 

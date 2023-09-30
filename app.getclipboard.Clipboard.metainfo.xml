@@ -26,7 +26,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>An example of using Clipboard</caption>
-      <image type="source" width="1906" height="1010">https://raw.githubusercontent.com/Slackadays/Clipboard/0.8.1/documentation/readme-assets/CBDemo.png</image>
+      <image type="source" width="1906" height="1010">https://raw.githubusercontent.com/Slackadays/Clipboard/0.8.2/documentation/readme-assets/CBDemo.png</image>
     </screenshot>
   </screenshots>
   
@@ -44,6 +44,7 @@
   <url type="contribute">https://github.com/Slackadays/Clipboard/blob/main/.github/CONTRIBUTING.md</url>
 
   <releases>
+    <release version="0.8.2" date="2023-09-30" />
     <release version="0.8.1" date="2023-07-08" />
     <release version="0.8.0" date="2023-06-03" />
     <release version="0.7.1" date="2023-05-10" />
