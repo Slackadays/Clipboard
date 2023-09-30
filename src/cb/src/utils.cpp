@@ -698,6 +698,7 @@ void setFlags() {
         printf("%s", formatColors("[info]How about some in English? [help]https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
         printf("%s", formatColors("[info]Here's one from Romeo, the head of Aventura: [help]https://www.youtube.com/watch?v=yjdHGmRKz08\n[blank]").data());
         printf("%s", formatColors("[info]This one isn't bachata but it is from Aventura: [help]https://youtu.be/Lg_Pn45gyMs\n[blank]").data());
+        printf("%s", formatColors("[info]How about this from Antony Santos, AKA El Mayimbe or El Bachatú?: [help]https://www.youtube.com/watch?v=gDYhGBy6304\n[blank]").data());
         exit(EXIT_SUCCESS);
     }
     if (auto flag = flagIsPresent<std::string>("-c"); flag != "") clipboard_name = flag;
