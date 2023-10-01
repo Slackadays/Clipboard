@@ -57,6 +57,8 @@ jobs:
             sudo sed -ibak '/\/archive.ubuntu.com/d' /etc/apt/sources.list;
             echo "remove security ubuntu for ports";
             sudo sed -ibak '/\/security.ubuntu.com/d' /etc/apt/sources.list;
+            echo "remove security ubuntu from apt mirrors";
+            sudo sed -ibak '/\/security.ubuntu.com/d' /etc/apt/apt-mirrors.txt;
             echo "show the final result for /etc/apt/sources.list";
             cat /etc/apt/sources.list;
           fi
