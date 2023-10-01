@@ -55,17 +55,13 @@ jobs:
             sudo echo "deb [arch=${{ matrix.arch.os }}] http://ports.ubuntu.com/ $(lsb_release -sc)-backports main multiverse universe" | sudo tee -a /etc/apt/sources.list
             echo "remove archive ubuntu for ports";
             sudo sed -ibak '/\/archive.ubuntu.com/d' /etc/apt/sources.list;
-            echo "remove security ubuntu from apt mirrors";
-            sudo sed -ibak '/\/security.ubuntu.com/d' /etc/apt/apt-mirrors.txt;
-            echo "remove archive ubuntu from apt mirrors";
-            sudo sed -ibak '/\/archive.ubuntu.com/d' /etc/apt/apt-mirrors.txt;
           fi
           
           # This limits apt to only looking or amd64 and i386 from Azure, see https://github.com/actions/virtual-environments/issues/1961
           sudo sed -i'' -E 's/^deb http:\/\/(azure.archive|security).ubuntu.com/deb [arch=amd64,i386] http:\/\/\1.ubuntu.com/' /etc/apt/sources.list
 
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
-          sudo apt-get update
+          sudo apt-get update || true
           sudo apt-get install -y \
             "${GPP_PACKAGE}" \
             "libx11-dev:${{ matrix.arch.os }}" \
