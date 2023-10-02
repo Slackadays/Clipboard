@@ -1,9 +1,23 @@
 #!/bin/sh
 set -eu
 
+flatpak_package="app.getclipboard.Clipboard"
+
 unsupported() {
     printf "\033[31mSorry, but this installer script doesn't support %s.\n\033[0m" "$1"
     printf '\033[32m💡 However, you can still install CB using the other methods in the readme!\n\033[0m'
+}
+
+verify_flatpak(){
+    if flatpak list | grep -q "$flatpak_package"; then
+        printf "\033[32mClipboard installed successfully!\n\033[0m"
+        printf "\033[0mAdd this alias to your terminal profile (like .bashrc) to make it work every time:\n\033[0m"
+        printf '\033[33malias cb="flatpak run %s"\n\033[0m' "$flatpak_package"
+        exit 0
+    else
+        printf "\033[31mCouldn't install CB\n\033[0m"
+        exit 1
+    fi
 }
 
 verify() {
@@ -76,8 +90,14 @@ then
     verify
 elif command -v flatpak > /dev/null 2>&1
 then
-    flatpak install flathub app.getclipboard.Clipboard
-    verify
+    if can_use_sudo
+    then
+      sudo flatpak install flathub "$flatpak_package"
+    else
+      flatpak install flathub "$flatpak_package"
+    fi
+
+    verify_flatpak
 elif command -v snap > /dev/null 2>&1
 then
     if can_use_sudo
