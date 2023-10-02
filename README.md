@@ -1643,6 +1643,8 @@ We're here for you! Check out [the Clipboard Project Wiki](https://github.com/Sl
 Say thank you to all our beautiful contributors who have helped make the Clipboard Project incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
  Want to join the club? We're always accepting [new contributions](https://github.com/Slackadays/Clipboard/blob/main/.github/CONTRIBUTING.md) too.
 
+Special thanks to [MacStadium](https://www.macstadium.com/) for sponsoring the Clipboard Project by providing a Mac Mini for macOS development!
+
 And if you're feeling generous, feel free to give us a :star:! We appreciate every single one - including yours.
     
 <br>
