@@ -24,9 +24,11 @@ void show() {
 
     stopIndicator();
 
+    auto available = thisTerminalSize();
+
     if (path.holdsRawDataInCurrentEntry()) {
         std::string content(fileContents(path.data.raw).value());
-        std::erase(content, '\n');
+        content = makeControlCharactersVisible(content, available.columns);
         fprintf(stderr, clipboard_text_contents_message().data(), std::min(static_cast<size_t>(250), content.size()), clipboard_name.data());
         fprintf(stderr, formatColors("[bold][info]%s\n[blank]").data(), content.substr(0, 250).data());
         if (content.size() > 250) {
@@ -35,7 +37,6 @@ void show() {
         return;
     }
 
-    auto available = thisTerminalSize();
     fprintf(stderr, "%s", formatColors("[info]┏━━").data());
     fprintf(stderr, clipboard_item_many_contents_message().data(), clipboard_name.data());
     fprintf(stderr, "%s", formatColors("[info]━").data());

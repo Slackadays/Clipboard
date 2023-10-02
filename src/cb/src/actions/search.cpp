@@ -53,7 +53,7 @@ void displaySearchResults(const std::vector<Result>& results) {
                 "",
                 result.entry);
         std::string preview = result.preview;
-        std::erase(preview, '\n');
+        preview = makeControlCharactersVisible(preview, available.columns);
         auto widthRemaining = available.columns - (longestClipboardLength + longestEntryLength + 7);
         if (preview.length() > widthRemaining) {
             preview = preview.substr(0, widthRemaining - (preview.length() - columnLength(preview)));

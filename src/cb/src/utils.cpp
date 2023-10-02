@@ -200,6 +200,31 @@ std::string formatColors(const std::string_view& oldStr, bool colorful) {
     return newStr;
 }
 
+std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t len) {
+    std::string newStr;
+    newStr.reserve(oldStr.size());
+
+    if (len == 0) len = oldStr.size();
+
+    // format characters such as \n and \r such that they appear as \n and \r surrounded by lightening terminal colors
+    const std::array<std::pair<char, std::string_view>, 8> replacementCharacters {
+            {{'\n', "\\n"}, {'\r', "\\r"}, {'\a', "\\a"}, {'\b', "\\b"}, {'\f', "\\f"}, {'\t', "\\t"}, {'\v', "\\v"}, {'\0', "\\0"}}};
+
+    for (size_t i = 0; i < len - 1 && i < oldStr.size(); i++) {
+        bool matched = false;
+        for (const auto& [character, replacement] : replacementCharacters) {
+            if (oldStr[i] == character) {
+                newStr += "\033[2m" + std::string(replacement) + "\033[22m";
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) newStr += oldStr[i];
+    }
+
+    return newStr;
+}
+
 std::string JSONescape(const std::string_view& input) {
     std::string temp(input);
 

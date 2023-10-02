@@ -13,6 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #pragma once
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <chrono>
@@ -348,6 +349,7 @@ bool envVarIsTrue(const std::string_view& name);
 size_t columnLength(const std::string_view& message);
 std::string generatedEndbar();
 std::string repeatString(const std::string_view& character, const size_t& length);
+std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t len = 0);
 unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
 void setLanguagePT();
 void setLanguageTR();
