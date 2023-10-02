@@ -338,13 +338,12 @@ void setupGUIClipboardDaemon() {
 #elif defined(_WIN32) | defined(_WIN64)
 
 #endif
-    path = Clipboard(std::string(constants.default_clipboard_name));
-
     while (fs::exists(path)) {
         path.getLock();
         syncWithGUIClipboard(true);
         path.releaseLock();
         std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        path = Clipboard(std::string(constants.default_clipboard_name));
     }
 
     exit(EXIT_SUCCESS);
