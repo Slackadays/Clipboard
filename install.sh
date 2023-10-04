@@ -53,15 +53,18 @@ compile() {
 }
 
 can_use_sudo() {
-    # return 0 if sudo isn't available
-    if ! command -v sudo > /dev/null 2>&1
-    then
-        return 0
+    prompt=$(sudo -nv 2>&1)
+    if sudo -nv > /dev/null 2>&1; then
+      # exit code of sudo-command is 0
+      return 0
+    elif echo "$prompt" | grep -q '^sudo:'; then
+      return 0
+    else
+      return 1
     fi
-    # check if we are a sudoer, return 1 if we are
-    sudo -n true 2> /dev/null
-    return $?
 }
+
+printf "\033[32mSearching for a package manager...\n\033[0m"
 
 if command -v apk > /dev/null 2>&1
 then
