@@ -95,9 +95,9 @@ elif command -v flatpak > /dev/null 2>&1
 then
     if can_use_sudo
     then
-      sudo flatpak install flathub "$flatpak_package"
+      sudo flatpak install flathub "$flatpak_package" -y
     else
-      flatpak install flathub "$flatpak_package"
+      flatpak install flathub "$flatpak_package" -y
     fi
 
     verify_flatpak
@@ -105,7 +105,7 @@ elif command -v snap > /dev/null 2>&1
 then
     if can_use_sudo
     then
-        sudo snap install clipboard
+        sudo snap install clipboard -y
         verify
     fi
 elif command -v nix-env > /dev/null 2>&1
