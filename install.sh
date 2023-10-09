@@ -105,7 +105,7 @@ elif command -v snap > /dev/null 2>&1
 then
     if can_use_sudo
     then
-        sudo snap install clipboard -y
+        sudo snap install clipboard
         verify
     fi
 elif command -v nix-env > /dev/null 2>&1
