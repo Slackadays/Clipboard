@@ -95,9 +95,9 @@ elif command -v flatpak > /dev/null 2>&1
 then
     if can_use_sudo
     then
-      sudo flatpak install flathub "$flatpak_package"
+      sudo flatpak install flathub "$flatpak_package" -y
     else
-      flatpak install flathub "$flatpak_package"
+      flatpak install flathub "$flatpak_package" -y
     fi
 
     verify_flatpak
