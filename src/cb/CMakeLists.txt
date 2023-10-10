@@ -1,6 +1,5 @@
 add_executable(cb
   src/clipboard.cpp
-  src/utils.cpp
   src/main.cpp
   src/themes.cpp
   src/indicator.cpp
@@ -31,6 +30,10 @@ add_executable(cb
   src/locales/tr_tr.cpp
   src/locales/de_de.cpp
   src/locales/fr_fr.cpp
+  src/utils/utils.cpp
+  src/utils/formatting.cpp
+  src/utils/files.cpp
+  src/utils/distance.cpp
 )
 
 enable_lto(cb)

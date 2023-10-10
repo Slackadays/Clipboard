@@ -33,12 +33,19 @@
 #include <io.h>
 #include <shlobj.h>
 #include <windows.h>
+#define isatty _isatty
+#define fileno _fileno
+#include "platforms/windows.hpp"
 #endif
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 #include <cstring>
 #include <dirent.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <termios.h>
+#include <unistd.h>
 #endif
 
 #include <clipboard/fork.hpp>
