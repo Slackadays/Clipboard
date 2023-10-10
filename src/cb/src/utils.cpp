@@ -165,7 +165,7 @@ std::string formatColors(const std::string_view& oldStr, bool colorful) {
     std::string newStr;
     newStr.reserve(oldStr.size());
     for (size_t i = 0, lastAddedi = 0; i < oldStr.size(); i++) {
-        while (i < oldStr.size() && oldStr[i] != '[')
+        while (i < oldStr.size() && oldStr.at(i) != '[')
             i++;
 
         newStr += oldStr.substr(lastAddedi, i - lastAddedi);
