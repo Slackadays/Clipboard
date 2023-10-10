@@ -165,14 +165,16 @@ std::string formatColors(const std::string_view& oldStr, bool colorful) {
     std::string newStr;
     newStr.reserve(oldStr.size());
     for (size_t i = 0, lastAddedi = 0; i < oldStr.size(); i++) {
-        while (i < oldStr.size() && oldStr.at(i) != '[')
+        while (i < oldStr.size() && oldStr[i] != '[')
             i++;
 
         newStr += oldStr.substr(lastAddedi, i - lastAddedi);
 
+        if (i == oldStr.size()) break;
+
         auto j = oldStr.find(']', i + 1);
         if (j == std::string::npos) {
-            newStr += oldStr[i]; // no match, so just add the bracket
+            newStr += '['; // no match, so just add the bracket
             break;
         }
 
