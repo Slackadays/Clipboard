@@ -204,7 +204,7 @@ sudo snap install clipboard
 
 **Void Linux**
 ```sh
-sudo xbps-install -S clipboard
+sudo xbps-install -S Clipboard
 ```
 
 <br>
