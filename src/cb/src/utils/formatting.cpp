@@ -168,7 +168,7 @@ TerminalSize thisTerminalSize() {
     ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
     temp = TerminalSize(w.ws_row, w.ws_col);
 #endif
-    if (temp.rows >= 5 && temp.columns >= 10) return temp;
+    if (temp.rows >= 5 || temp.columns >= 5) return temp;
     return TerminalSize(80, 24);
 }
 

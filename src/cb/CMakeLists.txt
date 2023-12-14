@@ -6,6 +6,7 @@ add_executable(cb
   src/externalclipboards.cpp
   src/actions/add.cpp
   src/actions/clear.cpp
+  src/actions/config.cpp
   src/actions/copy.cpp
   src/actions/edit.cpp
   src/actions/export.cpp
@@ -26,6 +27,7 @@ add_executable(cb
   src/actions/redo.cpp
   src/locales/en_us.cpp
   src/locales/es_co.cpp
+  src/locales/es_do.cpp
   src/locales/pt_br.cpp
   src/locales/tr_tr.cpp
   src/locales/de_de.cpp

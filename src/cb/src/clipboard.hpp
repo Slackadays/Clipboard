@@ -211,7 +211,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo, Config };
 
 extern Action action;
 
@@ -232,11 +232,11 @@ public:
     T& original(const Action& index) { return internal_original.value()[static_cast<unsigned int>(index)]; }
 };
 
-extern EnumArray<std::string_view, 20> actions;
-extern EnumArray<std::string_view, 20> action_shortcuts;
-extern EnumArray<std::string_view, 20> doing_action;
-extern EnumArray<std::string_view, 20> did_action;
-extern EnumArray<std::string_view, 20> action_descriptions;
+extern EnumArray<std::string_view, 21> actions;
+extern EnumArray<std::string_view, 21> action_shortcuts;
+extern EnumArray<std::string_view, 21> doing_action;
+extern EnumArray<std::string_view, 21> did_action;
+extern EnumArray<std::string_view, 21> action_descriptions;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 10> colors;
 
@@ -360,7 +360,8 @@ std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t 
 unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
 void setLanguagePT();
 void setLanguageTR();
-void setLanguageES();
+void setLanguageES_CO();
+void setLanguageES_DO();
 void setLanguageDE();
 void setLanguageFR();
 void setupHandlers();
@@ -487,4 +488,5 @@ void history();
 void historyJSON();
 void search();
 void searchJSON();
+void config();
 } // namespace PerformAction
