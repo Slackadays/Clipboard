@@ -312,32 +312,44 @@ void setupGUIClipboardDaemon() {
         perror("chdir");
         exit(EXIT_FAILURE);
     }
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
 
 #if defined(__linux__)
     // check if there is already a cb daemon by checking /proc for a process which has an exe symlink entry that points to a binary called "cb" and which does not have stdin or stdout file descriptors
+    // that point to a tty
 
-    try {
-        for (const auto& entry : fs::directory_iterator("/proc")) {
-            if (!entry.is_directory()) continue;
+    for (const auto& entry : fs::directory_iterator("/proc")) {
+        try {
+            if (!fs::is_directory(entry)) continue;
             auto exe = entry.path() / "exe";
             if (!fs::exists(exe)) continue;
             auto exeTarget = fs::read_symlink(exe);
             if (exeTarget.filename() != "cb") continue;
             auto fd = entry.path() / "fd";
-            if (fs::exists(fd / "0") || fs::exists(fd / "1") || fs::exists(fd / "2")) continue;
-            // found a cb daemon
-            exit(EXIT_SUCCESS);
-        }
-    } catch (...) {}
 
-    // std::cerr << "Starting cb daemon" << std::endl;
+            auto pointsToFilesystemObject = [](const fs::path& path) {
+                auto target = fs::read_symlink(path);
+                if (fs::is_directory(target) || fs::is_regular_file(target)) return true;
+                return false;
+            };
+
+            if (fs::exists(fd / "0") && !pointsToFilesystemObject(fd / "0")) continue;
+            if (fs::exists(fd / "1") && !pointsToFilesystemObject(fd / "1")) continue;
+            if (fs::exists(fd / "2") && !pointsToFilesystemObject(fd / "2")) continue;
+
+            // found a cb daemon
+            _exit(EXIT_SUCCESS);
+        } catch (...) {}
+    }
 #endif
+
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
 #elif defined(_WIN32) | defined(_WIN64)
 
 #endif
+
     while (fs::exists(path)) {
         path.getLock();
         syncWithGUIClipboard(true);
