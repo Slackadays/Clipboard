@@ -80,7 +80,7 @@ struct Constants {
     std::string_view default_clipboard_name = "0";
     unsigned long default_clipboard_entry = 0;
     std::string_view temporary_directory_name = "Clipboard";
-    std::string_view persistent_directory_name = ".clipboard";
+    std::string_view persistent_directory_name = ".local/state/clipboard";
     std::string_view original_files_name = "originals";
     std::string_view notes_name = "notes";
     std::string_view mime_name = "mime";
