@@ -450,11 +450,13 @@ extern Message one_clipboard_success_message;
 extern Message many_clipboards_success_message;
 extern Message clipboard_name_message;
 extern Message internal_error_message;
+extern Message cb_config_message;
 
 extern ClipboardContent getGUIClipboard(const std::string& requested_mime);
 extern void writeToGUIClipboard(const ClipboardContent& clipboard);
 extern const bool GUIClipboardSupportsCut;
 extern bool playAsyncSoundEffect(const std::valarray<short>& samples);
+extern std::optional<std::string> findUsableEditor();
 
 namespace PerformAction {
 void copyItem(const fs::path& f, const bool use_regular_copy = copying.use_safe_copy);

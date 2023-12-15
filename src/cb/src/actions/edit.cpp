@@ -25,34 +25,7 @@ void edit() {
             std::ofstream temp(path.data.raw);
     }
 
-    auto preferredEditor = []() -> std::optional<std::string> {
-        if (!copying.items.empty()) return copying.items.at(0).string();
-        if (auto editor = getenv("CLIPBOARD_EDITOR"); editor != nullptr) return editor;
-        if (auto editor = getenv("EDITOR"); editor != nullptr) return editor;
-        if (auto editor = getenv("VISUAL"); editor != nullptr) return editor;
-        return std::nullopt;
-    };
-
-    auto fallbackEditor = []() -> std::optional<std::string> {
-        constexpr std::array fallbacks {"nano", "vim", "nvim", "micro", "code", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
-
-        std::string pathContent(getenv("PATH"));
-        std::vector<fs::path> paths;
-
-        // split paths by : or ; (: for posix, ; for windows)
-        auto strings = regexSplit(pathContent, std::regex("[:;]"));
-        std::transform(strings.begin(), strings.end(), std::back_inserter(paths), [](const std::string& path) { return fs::path(path); });
-
-        for (const auto& path : paths)
-            for (const auto& fallback : fallbacks)
-                if (fs::exists(path / fallback)) return fallback;
-
-        return std::nullopt;
-    };
-
-    auto editor = preferredEditor();
-
-    if (!editor) editor = fallbackEditor();
+    auto editor = findUsableEditor();
 
     if (!editor) error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] CB couldn't find a suitable editor to use. [help]⬤ Try setting the CLIPBOARD_EDITOR environment variable.[blank]\n"));
 

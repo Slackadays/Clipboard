@@ -119,3 +119,4 @@ Message many_clipboards_success_message = "[success][inverse] ✔ [noinverse] %s
 Message clipboard_name_message = "[info][bold]Info for clipboard [help] %s[nobold]";
 Message internal_error_message = "[error][inverse] ✘ [noinverse] Internal error: %s\n┃ This might be a bug, or you might be lacking "
                                  "permissions on this system.[blank]\n";
+Message cb_config_message = "[info][bold]CB configuration[nobold]";
