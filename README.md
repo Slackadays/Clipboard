@@ -1098,6 +1098,23 @@ $ cb status | cat
 
 <br>
 
+<details><summary> &ensp; <b>Check Your Configuration</b> &emsp; <code>cb [[--]config|cfg]</code></summary>
+
+<br>
+
+Check your configuration of CB.
+```sh
+$ cb config
+$ cb --config
+$ cb cfg
+$ cb --cfg
+# These all work great!
+```
+
+</details>
+
+<br>
+
 ### <img src="documentation/readme-assets/TipsAndTricks.png" alt="Tips And Tricks" height=25px />
 
 Need to paste a funky symbol somewhere a lot? Copy it to a persistent clipboard.

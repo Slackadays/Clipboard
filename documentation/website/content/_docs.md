@@ -738,6 +738,23 @@ $ cb status | cat
 
 <br>
 
+<details><summary> &ensp; <b>Check Your Configuration</b> &emsp; <code>cb [[--]config|cfg]</code></summary>
+
+<br>
+
+Check your configuration of CB.
+```sh
+$ cb config
+$ cb --config
+$ cb cfg
+$ cb --cfg
+# These all work great!
+```
+
+</details>
+
+<br>
+
 <br>
 
 # Action Tips and Tricks

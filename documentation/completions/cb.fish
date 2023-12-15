@@ -1,4 +1,4 @@
-set -l commands cut copy paste clear show edit add remove note swap status info load import export history ignore search help
+set -l commands cut copy paste clear show edit add remove note swap status info load import export history ignore search config help
 
 complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a cut -d 'cut something'
 complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a copy -d 'copy something'
@@ -18,4 +18,5 @@ complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a export -d 'e
 complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a history -d 'show clipboard history'
 complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a ignore -d 'ignore content'
 complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a search -d 'search clipboard content'
+complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a config -d 'show CB config'
 complete -c cb -f -n "not __fish_seen_subcommand_from $commands" -a help -d 'show help for CB'

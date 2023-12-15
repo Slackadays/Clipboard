@@ -19,6 +19,7 @@ actions=(
     "history:show clipboard history"
     "ignore:ignore content"
     "search:search clipboard content"
+    "config:show CB config"
     "help:show help for CB"
 )
 # only put up to one action in front of the cb command

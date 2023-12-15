@@ -13,7 +13,7 @@ cb(1) -- cut, copy, and paste anything in the terminal
 
 **cb** \[\-\-](paste)[(num)|_(id)] (regex) [regexes] | (stdin)
 
-**cb** \[\-\-](clear|edit|export|history|help|status|show|info)[(num)|_(id)]
+**cb** \[\-\-](clear|edit|export|history|help|status|show|info|config)[(num)|_(id)]
 
 **cb** \[\-\-](load|swap)[(num)|_(id)] (clipboard) [clipboards]
 
