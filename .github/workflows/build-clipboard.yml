@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      - uses: lhotari/action-upterm@v1
       - name: Run a script
         run: |
           GPP_PACKAGE="g++-${{ matrix.gcc }}-${{ matrix.arch.gcc }}"
@@ -78,7 +78,7 @@ jobs:
             "-DCMAKE_BUILD_TYPE=Release"
           
           cmake --build . -j 4
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-linux-${{ matrix.arch.os }}
           path: build/output
@@ -97,7 +97,7 @@ jobs:
           flatpak install --user --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
           flatpak-builder --repo=repo --force-clean build-dir app.getclipboard.Clipboard.yml
           flatpak build-bundle repo clipboard-flatpak-amd64.flatpak app.getclipboard.Clipboard
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-flatpak-amd64
           path: |
@@ -109,7 +109,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: snapcore/action-build@v1
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-snap-amd64
           path: |
@@ -125,7 +125,7 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . -j 3
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-macos-arm64-amd64
           path: build/output
@@ -140,7 +140,7 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release -j 3
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-windows-amd64
           path: build/output
@@ -155,7 +155,7 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=ARM64
           cmake --build . --config Release -j 3
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-windows-arm64
           path: build/output
@@ -177,7 +177,7 @@ jobs:
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang15 -DCMAKE_CXX_COMPILER=clang++15 -DNO_X11=1
             cmake --build . -j 2
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-freebsd-amd64
           path: build/output
@@ -199,7 +199,7 @@ jobs:
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
             cmake --build . -j 2
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-openbsd-amd64
           path: build/output
@@ -221,7 +221,7 @@ jobs:
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
             cmake --build . -j 2
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-openbsd-arm64
           path: build/output
@@ -243,7 +243,7 @@ jobs:
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
             cmake --build . -j 2
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: clipboard-netbsd-amd64
           path: build/output
