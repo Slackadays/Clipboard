@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: lhotari/action-upterm@v1
+      #- uses: lhotari/action-upterm@v1
       - name: Run a script
         run: |
           GPP_PACKAGE="g++-${{ matrix.gcc }}-${{ matrix.arch.gcc }}"
@@ -61,8 +61,8 @@ jobs:
           sudo sed -i'' -E 's/^deb http:\/\/(azure.archive|security).ubuntu.com/deb [arch=amd64,i386] http:\/\/\1.ubuntu.com/' /etc/apt/sources.list
 
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
-          sudo apt-get update || true
-          sudo apt-get install -y \
+          sudo apt update || true
+          sudo apt install -y \
             "${GPP_PACKAGE}" \
             "libx11-dev:${{ matrix.arch.os }}" \
             "libwayland-dev:${{ matrix.arch.os }}" \
@@ -90,8 +90,8 @@ jobs:
 
       - name: Run a script
         run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak-builder flatpak
+          sudo apt update
+          sudo apt install -y flatpak-builder flatpak
 
           flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install --user --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
