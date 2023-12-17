@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: lhotari/action-upterm@v1
+      #- uses: lhotari/action-upterm@v1
       - name: Run a script
         run: |
           GPP_PACKAGE="g++-${{ matrix.gcc }}-${{ matrix.arch.gcc }}"
@@ -60,8 +60,12 @@ jobs:
           # This limits apt to only looking or amd64 and i386 from Azure, see https://github.com/actions/virtual-environments/issues/1961
           sudo sed -i'' -E 's/^deb http:\/\/(azure.archive|security).ubuntu.com/deb [arch=amd64,i386] http:\/\/\1.ubuntu.com/' /etc/apt/sources.list
 
-          sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt update || true
+
+          sudo dpkg --add-architecture "${{ matrix.arch.os }}"
+
+          sudo apt update || true
+
           sudo apt install -y "${GPP_PACKAGE}"
           sudo apt install -y "libx11-dev:${{ matrix.arch.os }}"
           sudo apt install -y "libwayland-dev:${{ matrix.arch.os }}"
