@@ -67,7 +67,7 @@ jobs:
           sudo apt install -y "libwayland-dev:${{ matrix.arch.os }}"
           sudo apt install -y "wayland-protocols:${{ matrix.arch.os }}"
           sudo apt install -y "libasound-dev:${{ matrix.arch.os }}"
-          sudo apt install -y "liburing-dev:${{ matrix.arch.os }
+          sudo apt install -y "liburing-dev:${{ matrix.arch.os }}"
           
           cd build
           
