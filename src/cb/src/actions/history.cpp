@@ -113,7 +113,7 @@ void history() {
         }
     };
 
-    for (size_t thread = 0; thread < totalThreads; thread++) {
+    for (unsigned long thread = 0; thread < totalThreads; thread++) {
         auto start = thread * entriesPerThread;
         auto end = start + entriesPerThread;
         if (thread == totalThreads - 1) end = path.entryIndex.size();

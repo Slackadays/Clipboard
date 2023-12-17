@@ -30,6 +30,9 @@
 #include <valarray>
 #include <vector>
 
+#include <clipboard/fork.hpp>
+#include <clipboard/gui.hpp>
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <io.h>
 #include <shlobj.h>
@@ -48,9 +51,6 @@
 #include <termios.h>
 #include <unistd.h>
 #endif
-
-#include <clipboard/fork.hpp>
-#include <clipboard/gui.hpp>
 
 namespace fs = std::filesystem;
 
