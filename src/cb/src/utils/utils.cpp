@@ -495,8 +495,15 @@ void setFilepaths() {
                                                          : fs::temp_directory_path())
                             / constants.temporary_directory_name;
 
-    global_path.persistent =
-            (getenv("CLIPBOARD_PERSISTDIR") ? getenv("CLIPBOARD_PERSISTDIR") : (getenv("XDG_STATE_HOME") ? getenv("XDG_STATE_HOME") : global_path.home)) / constants.persistent_directory_name;
+    if (getenv("CLIPBOARD_PERSISTDIR")) {
+        global_path.persistent = getenv("CLIPBOARD_PERSISTDIR");
+    } else {
+        if (getenv("XDG_STATE_HOME")) {
+            global_path.persistent = getenv("XDG_STATE_HOME") / fs::path("clipboard");
+        } else {
+            global_path.persistent = global_path.home / constants.persistent_directory_name;
+        }
+    }
 
     path = Clipboard(clipboard_name, clipboard_entry);
 }
