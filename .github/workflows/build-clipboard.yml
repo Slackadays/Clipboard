@@ -62,13 +62,12 @@ jobs:
 
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt update || true
-          sudo apt install -y \
-            "${GPP_PACKAGE}" \
-            "libx11-dev:${{ matrix.arch.os }}" \
-            "libwayland-dev:${{ matrix.arch.os }}" \
-            "wayland-protocols:${{ matrix.arch.os }}" \
-            "libasound-dev:${{ matrix.arch.os }}" \
-            "liburing-dev:${{ matrix.arch.os }}"
+          sudo apt install -y "${GPP_PACKAGE}"
+          sudo apt install -y "libx11-dev:${{ matrix.arch.os }}"
+          sudo apt install -y "libwayland-dev:${{ matrix.arch.os }}"
+          sudo apt install -y "wayland-protocols:${{ matrix.arch.os }}"
+          sudo apt install -y "libasound-dev:${{ matrix.arch.os }}"
+          sudo apt install -y "liburing-dev:${{ matrix.arch.os }
           
           cd build
           
