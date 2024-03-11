@@ -14,6 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
+#include <openssl/sha.h>
 
 namespace PerformAction {
 
@@ -80,8 +81,74 @@ void ignoreRegex() {
         if (pattern != regexes.back()) fprintf(stderr, ", ");
     }
     fprintf(stderr, "%s", formatColors("[blank]\n").data());
-    path.applyIgnoreRegexes();
+    path.applyIgnoreRules();
     exit(EXIT_SUCCESS);
+}
+
+void ignoreSecret() {
+    std::vector<std::string> secrets;
+    if (io_type == IOType::Pipe)
+        secrets.emplace_back(pipedInContent());
+    else
+        std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(secrets), [](const auto& item) { return item.string(); });
+
+    if (secrets.empty()) {
+        if (fs::exists(path.metadata.ignore_secret) && !fs::is_empty(path.metadata.ignore_secret)) {
+            std::vector<std::string> ignoreSecrets(fileLines(path.metadata.ignore_secret));
+
+            if (is_tty.out) {
+                stopIndicator();
+                fprintf(stderr, "%s", formatColors("[info]┃ Ignore secrets for this clipboard: [help]").data());
+                for (const auto& secret : ignoreSecrets)
+                    fprintf(stderr, "%s%s", secret.data(), secret != ignoreSecrets.back() ? ", " : "");
+                fprintf(stderr, "%s", formatColors("[blank]\n").data());
+            } else {
+                for (const auto& secret : ignoreSecrets)
+                    printf("%s%s", secret.data(), secret != ignoreSecrets.back() ? ", " : "");
+            }
+        } else {
+            stopIndicator();
+            fprintf(stderr, "%s", formatColors("[info]┃ There are no ignore secrets for this clipboard.[blank]\n").data());
+        }
+        return;
+    }
+
+    if (secrets.size() == 1 && (secrets.at(0) == "" || secrets.at(0) == "\n")) {
+        fs::remove(path.metadata.ignore_secret);
+        if (output_silent || confirmation_silent) return;
+        stopIndicator();
+        fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed ignore secrets\n").data());
+        exit(EXIT_SUCCESS);
+    }
+
+    std::string writeToFileContent;
+    for (const auto& secret : secrets) {
+        std::array<unsigned char, SHA512_DIGEST_LENGTH> hash;
+        SHA512(reinterpret_cast<const unsigned char*>(secret.data()), secret.size(), hash.data());
+        std::stringstream ss;
+        for (const auto& byte : hash)
+            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+        writeToFileContent += ss.str() + "\n";
+    }
+
+    writeToFile(path.metadata.ignore_secret, writeToFileContent);
+
+    stopIndicator();
+    fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Saved ignore secrets [bold]").data());
+    for (const auto& secret : secrets) {
+        fprintf(stderr, "%s", secret.data());
+        if (secret != secrets.back()) fprintf(stderr, ", ");
+    }
+    fprintf(stderr, "%s", formatColors("[blank]\n").data());
+    path.applyIgnoreRules();
+    exit(EXIT_SUCCESS);
+}
+
+void ignore() {
+    if (secret_selection)
+        ignoreSecret();
+    else
+        ignoreRegex();
 }
 
 } // namespace PerformAction

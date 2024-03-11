@@ -16,6 +16,7 @@
 #include "clipboard.hpp"
 #include <climits>
 #include <fstream>
+#include <openssl/sha.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #define STDIN_FILENO 0
@@ -113,6 +114,15 @@ void convertFromGUIClipboard(const std::string& text) {
     auto regexes = path.ignoreRegexes();
     for (const auto& regex : regexes)
         if (std::regex_match(text, regex)) return;
+    auto secrets = path.ignoreSecrets();
+    std::array<unsigned char, SHA512_DIGEST_LENGTH> hash;
+    for (const auto& secret : secrets) {
+        SHA512(reinterpret_cast<const unsigned char*>(text.data()), text.size(), hash.data());
+        std::stringstream ss;
+        for (const auto& byte : hash)
+            ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+        if (ss.str() == secret) return;
+    }
     path.makeNewEntry();
     writeToFile(path.data.raw, text);
 }

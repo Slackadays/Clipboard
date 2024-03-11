@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 
         performAction();
 
-        if (isAWriteAction()) path.applyIgnoreRegexes();
+        if (isAWriteAction()) path.applyIgnoreRules();
 
         copying.mime = getMIMEType();
 

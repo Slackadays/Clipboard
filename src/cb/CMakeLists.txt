@@ -121,6 +121,9 @@ set(THREADS_PREFER_PTHREAD_FLAG True)
 find_package(Threads REQUIRED)
 target_link_libraries(cb Threads::Threads)
 
+find_package(OpenSSL REQUIRED)
+target_link_libraries(cb OpenSSL::Crypto)
+
 install(TARGETS cb DESTINATION bin)
 
 if(X11WL OR APPLE)

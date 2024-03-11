@@ -14,6 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
+#include <openssl/sha.h>
 
 Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& clipboard_entry) {
     this_name = clipboard_name;
@@ -44,6 +45,7 @@ Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& cli
     metadata.originals = metadata / constants.original_files_name;
     metadata.lock = metadata / constants.lock_name;
     metadata.ignore = metadata / constants.ignore_regex_name;
+    metadata.ignore_secret = metadata / constants.ignore_secret_name;
 
     fs::create_directories(data);
     fs::create_directories(metadata);
@@ -95,6 +97,10 @@ bool Clipboard::holdsIgnoreRegexes() {
     return fs::exists(metadata.ignore) && !fs::is_empty(metadata.ignore);
 }
 
+bool Clipboard::holdsIgnoreSecrets() {
+    return fs::exists(metadata.ignore_secret) && !fs::is_empty(metadata.ignore_secret);
+}
+
 std::vector<std::regex> Clipboard::ignoreRegexes() {
     std::vector<std::regex> regexes;
     if (!holdsIgnoreRegexes()) return regexes;
@@ -103,18 +109,44 @@ std::vector<std::regex> Clipboard::ignoreRegexes() {
     return regexes;
 }
 
-void Clipboard::applyIgnoreRegexes() {
-    if (!holdsIgnoreRegexes()) return;
-    auto regexes = ignoreRegexes();
-    if (holdsRawDataInCurrentEntry()) {
+std::vector<std::string> Clipboard::ignoreSecrets() {
+    std::vector<std::string> secrets;
+    if (!holdsIgnoreSecrets()) return secrets;
+    for (const auto& line : fileLines(metadata.ignore_secret))
+        secrets.emplace_back(line);
+    return secrets;
+}
+
+void Clipboard::applyIgnoreRules() {
+    if (holdsIgnoreRegexes()) {
+        auto regexes = ignoreRegexes();
+        if (holdsRawDataInCurrentEntry()) {
+            auto content = fileContents(data.raw).value();
+            for (const auto& regex : regexes)
+                content = std::regex_replace(content, regex, "");
+            writeToFile(data.raw, content);
+        } else
+            for (const auto& regex : regexes)
+                for (const auto& entry : fs::directory_iterator(data))
+                    if (std::regex_match(entry.path().filename().string(), regex)) fs::remove_all(entry.path());
+    }
+
+    if (holdsIgnoreSecrets()) {
+        auto secrets = ignoreSecrets();
+        if (!holdsRawDataInCurrentEntry()) return;
         auto content = fileContents(data.raw).value();
-        for (const auto& regex : regexes)
-            content = std::regex_replace(content, regex, "");
-        writeToFile(data.raw, content);
-    } else
-        for (const auto& regex : regexes)
-            for (const auto& entry : fs::directory_iterator(data))
-                if (std::regex_match(entry.path().filename().string(), regex)) fs::remove_all(entry.path());
+        std::array<unsigned char, SHA512_DIGEST_LENGTH> hash;
+        for (const auto& secret : secrets) {
+            SHA512(reinterpret_cast<const unsigned char*>(content.data()), content.size(), hash.data());
+            std::stringstream ss;
+            for (const auto& byte : hash)
+                ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+            if (ss.str() == secret) {
+                writeToFile(data.raw, "");
+                break;
+            }
+        }
+    }
 }
 
 bool Clipboard::isUnused() {

@@ -29,6 +29,7 @@
 #include <iterator>
 #include <locale>
 #include <mutex>
+#include <openssl/sha.h>
 #include <optional>
 #include <regex>
 #include <sstream>
@@ -51,6 +52,7 @@ bool progress_silent = false;
 bool confirmation_silent = false;
 bool no_color = false;
 bool all_option = false;
+bool secret_selection = false;
 
 std::string maximumHistorySize;
 
@@ -160,11 +162,26 @@ unsigned long numberLength(const unsigned long& number) {
 }
 
 void ignoreItemsPreemptively(std::vector<fs::path>& items) {
-    if (!path.holdsIgnoreRegexes() || copying.items.empty() || action == Action::Ignore || io_type == IOType::Pipe) return;
-    auto regexes = path.ignoreRegexes();
-    for (const auto& regex : regexes)
-        for (const auto& item : items)
-            if (std::regex_match(item.string(), regex)) items.erase(std::find(items.begin(), items.end(), item));
+    if (copying.items.empty() || action == Action::Ignore || io_type == IOType::Pipe) return;
+    if (path.holdsIgnoreRegexes()) {
+        auto regexes = path.ignoreRegexes();
+        for (const auto& regex : regexes)
+            for (const auto& item : items)
+                if (std::regex_match(item.string(), regex)) items.erase(std::find(items.begin(), items.end(), item));
+    }
+    if (path.holdsIgnoreSecrets()) {
+        auto secrets = path.ignoreSecrets();
+        std::array<unsigned char, SHA512_DIGEST_LENGTH> hash;
+        for (const auto& secret : secrets) {
+            for (const auto& item : items) {
+                SHA512(reinterpret_cast<const unsigned char*>(item.string().data()), item.string().size(), hash.data());
+                std::stringstream ss;
+                for (const auto& byte : hash)
+                    ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+                if (ss.str() == secret) items.erase(std::find(items.begin(), items.end(), item));
+            }
+        }
+    }
 }
 
 bool userIsARobot() {
@@ -444,6 +461,7 @@ void setFlags() {
     if (auto flag = flagIsPresent<std::string>("-m"); flag != "") preferred_mime = flag;
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
+    if (flagIsPresent<bool>("--secret") || flagIsPresent<bool>("-s")) secret_selection = true;
     if (flagIsPresent<bool>("--bachata")) {
         printf("%s", formatColors("[info]Here's some nice bachata music from Aventura! [help]https://www.youtube.com/watch?v=RxIM2bMBhCo\n[blank]").data());
         printf("%s", formatColors("[info]How about some in English? [help]https://www.youtube.com/watch?v=jnD8Av4Dl4o\n[blank]").data());
@@ -631,7 +649,7 @@ void performAction() {
         else if (action == Remove)
             removeRegex();
         else if (action == Ignore)
-            ignoreRegex();
+            ignore();
         else if (action == Status)
             statusJSON();
         else if (action == Load)
@@ -654,7 +672,7 @@ void performAction() {
         else if (action == Info)
             info();
         else if (action == Ignore)
-            ignoreRegex();
+            ignore();
         else if (action == Import)
             importClipboards();
         else if (action == Export)

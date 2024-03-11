@@ -52,7 +52,7 @@ void load() {
                 }
             }
 
-            destination.applyIgnoreRegexes();
+            destination.applyIgnoreRules();
 
             successes.clipboards++;
         } catch (const fs::filesystem_error& e) {

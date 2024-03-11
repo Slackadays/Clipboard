@@ -90,6 +90,7 @@ struct Constants {
     std::string_view metadata_directory = "metadata";
     std::string_view import_export_directory = "Exported_Clipboards";
     std::string_view ignore_regex_name = "ignore";
+    std::string_view ignore_secret_name = "ignore.secret";
 };
 constexpr Constants constants;
 
@@ -177,6 +178,7 @@ extern bool progress_silent;
 extern bool confirmation_silent;
 extern bool no_color;
 extern bool all_option;
+extern bool secret_selection;
 
 extern std::string preferred_mime;
 extern std::vector<std::string> available_mimes;
@@ -284,6 +286,7 @@ public:
         fs::path originals;
         fs::path lock;
         fs::path ignore;
+        fs::path ignore_secret;
         operator fs::path() { return root; }
         operator fs::path() const { return root; }
         auto operator=(const auto& other) { return root = other; }
@@ -302,8 +305,10 @@ public:
     bool holdsRawDataInCurrentEntry() const;
     bool holdsDataInCurrentEntry();
     bool holdsIgnoreRegexes();
+    bool holdsIgnoreSecrets();
     std::vector<std::regex> ignoreRegexes();
-    void applyIgnoreRegexes();
+    std::vector<std::string> ignoreSecrets();
+    void applyIgnoreRules();
     bool isUnused();
     bool isLocked() { return fs::exists(metadata.lock); }
     void getLock();
@@ -485,7 +490,9 @@ void swap();
 void importClipboards();
 void exportClipboards();
 void infoJSON();
+void ignore();
 void ignoreRegex();
+void ignoreSecret();
 void statusJSON();
 void history();
 void historyJSON();
