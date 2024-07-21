@@ -40,7 +40,7 @@ Don't just take my word for it!
 
 <i>Thanks for your work! This is by-far <b>one of my favourite projects</b> on GitHub!</i>
 
-\- MiguelGuthridge on GitHub.com
+\- MaddyGuthridge on GitHub.com
 
 <br>
 
