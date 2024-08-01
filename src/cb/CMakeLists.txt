@@ -52,8 +52,7 @@ if(WIN32)
 elseif(APPLE)
   enable_language(OBJC)
   target_sources(cb PRIVATE
-    src/platforms/macos.m
-    src/platforms/macos.cpp
+    src/platforms/macos.mm
   )
   target_link_libraries(cb "-framework AppKit")
   target_compile_options(cb PRIVATE -fobjc-arc)
