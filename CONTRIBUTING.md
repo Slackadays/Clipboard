@@ -5,9 +5,9 @@ Thanks for your interest in contributing to Clipboard! We welcome all types of c
 ## Guidelines for your valuable contributions
 
 1. Attribution
-Please properly attribute your contributors. When submitting your Pull Request please include:
+Please properly attribute your contributors. When submitting your pull request, please include:
 - Detailed explanations of your changes
-- References to relavent issues or discussions
+- References to relevant issues or discussions
 - Clear attributions to other authors if your changes incorporate their work
 
 2. Separate Pull Requests
