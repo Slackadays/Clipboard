@@ -381,7 +381,7 @@ void setupVariables(int& argc, char* argv[]) {
 
     arguments.assign(argv + 1, argv + argc);
 
-    if (argv[0][0] != nullptr)
+    if (argv[0][0])
         clipboard_invocation = argv[0];
     else
         clipboard_invocation = "cb";

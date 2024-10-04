@@ -98,7 +98,7 @@ void ignoreSecret() {
 
             if (is_tty.out) {
                 stopIndicator();
-                fprintf(stderr, "%s", formatColors("[info]┃ Ignore secrets for this clipboard: [help]").data());
+                fprintf(stderr, "%s", formatColors("[info]┃ Secret hashes (SHA512) to ignore for this clipboard: [help]").data());
                 for (const auto& secret : ignoreSecrets)
                     fprintf(stderr, "%s%s", secret.data(), secret != ignoreSecrets.back() ? ", " : "");
                 fprintf(stderr, "%s", formatColors("[blank]\n").data());
@@ -108,16 +108,25 @@ void ignoreSecret() {
             }
         } else {
             stopIndicator();
-            fprintf(stderr, "%s", formatColors("[info]┃ There are no ignore secrets for this clipboard.[blank]\n").data());
+            fprintf(stderr, "%s", formatColors("[info]┃ There are no secrets to ignore for this clipboard.[blank]\n").data());
         }
         return;
     }
 
     if (secrets.size() == 1 && (secrets.at(0) == "" || secrets.at(0) == "\n")) {
+        if (!userIsARobot()) {
+            stopIndicator();
+            fprintf(stderr, "%s", formatColors("[progress]⬤ Are you sure you want to remove all secrets to ignore? [help]This action is irreversible. [bold][y(es)/n(o)] ").data());
+            std::string decision;
+            std::getline(std::cin, decision);
+            fprintf(stderr, "%s", formatColors("[blank]").data());
+            if (decision.substr(0, 1) != "y" && decision.substr(0, 1) != "Y") return;
+            startIndicator();
+        }
         fs::remove(path.metadata.ignore_secret);
         if (output_silent || confirmation_silent) return;
         stopIndicator();
-        fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed ignore secrets\n").data());
+        fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed secrets to ignore[blank]\n").data());
         exit(EXIT_SUCCESS);
     }
 
