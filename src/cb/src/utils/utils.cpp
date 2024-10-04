@@ -261,7 +261,9 @@ void setupHandlers() {
 
     signal(SIGINT, exitCleanly);
     signal(SIGTERM, exitCleanly);
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
     signal(SIGQUIT, exitCleanly);
+#endif
 
     forker.atFork([]() {
         // As the indicator thread still exists in memory in the forked process,

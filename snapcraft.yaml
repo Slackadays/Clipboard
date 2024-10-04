@@ -25,6 +25,7 @@ parts:
       - libx11-dev
       - libwayland-dev
       - wayland-protocols
+      - libssl-dev
     stage-packages:
       - libasound2-dev
       - liburing-dev
