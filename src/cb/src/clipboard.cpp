@@ -1,5 +1,5 @@
 /*  The Clipboard Project - Cut, copy, and paste anything, anytime, anywhere, all from the terminal.
-    Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
+    Copyright (C) 2024 Jackson Huff and other contributors on GitHub.com
     SPDX-License-Identifier: GPL-3.0-or-later
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ void Clipboard::getLock() {
             if (kill(pid, 0) == -1) break;
 #endif
             if (!isLocked()) break;
-            std::this_thread::sleep_for(std::chrono::milliseconds(250));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
     writeToFile(metadata.lock, std::to_string(thisPID()));

@@ -1,5 +1,5 @@
 /*  The Clipboard Project - Cut, copy, and paste anything, anytime, anywhere, all from the terminal.
-    Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
+    Copyright (C) 2024 Jackson Huff and other contributors on GitHub.com
     SPDX-License-Identifier: GPL-3.0-or-later
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -310,7 +310,17 @@ public:
     std::vector<std::string> ignoreSecrets();
     void applyIgnoreRules();
     bool isUnused();
-    bool isLocked() { return fs::exists(metadata.lock); }
+    bool isLocked() {
+        if (!fs::is_regular_file(metadata.lock)) {
+            if (fs::exists(metadata.lock)) // Handle the case where the lock file is not a regular file
+                fs::remove(metadata.lock);
+            return false;
+        }
+        // auto pid = std::stoi(fileContents(metadata.lock).value());
+        // Check if the PID
+
+        return true;
+    }
     void getLock();
     void releaseLock() { fs::remove(metadata.lock); }
     std::string name() const { return this_name; }

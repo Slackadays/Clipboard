@@ -245,7 +245,7 @@ void setupHandlers() {
 #endif
     });
 
-    signal(SIGINT, [](int) {
+    auto exitCleanly = [](int) {
         fprintf(stderr, "%s", formatColors("[blank]").data());
         if (!stopIndicator(false)) {
             // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
@@ -257,7 +257,11 @@ void setupHandlers() {
             indicator.join();
             exit(EXIT_FAILURE);
         }
-    });
+    };
+
+    signal(SIGINT, exitCleanly);
+    signal(SIGTERM, exitCleanly);
+    signal(SIGQUIT, exitCleanly);
 
     forker.atFork([]() {
         // As the indicator thread still exists in memory in the forked process,
@@ -377,7 +381,10 @@ void setupVariables(int& argc, char* argv[]) {
 
     arguments.assign(argv + 1, argv + argc);
 
-    clipboard_invocation = argv[0];
+    if (argv[0][0] != nullptr)
+        clipboard_invocation = argv[0];
+    else
+        clipboard_invocation = "cb";
 }
 
 template <typename T>
