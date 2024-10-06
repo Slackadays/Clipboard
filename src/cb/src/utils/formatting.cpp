@@ -125,10 +125,10 @@ std::string JSONescape(const std::string_view& input) {
             i++;
             break;
         default:
-            if (temp[i] < 32) {
+            if (static_cast<unsigned int>(temp[i]) < 32) {
                 std::stringstream ss;
                 ss.imbue(std::locale::classic()); // disable locale formatting for numbers, so 1000 doesn't become 1,000
-                ss << "\\u" << std::hex << std::setw(4) << std::setfill('0') << (int)temp[i];
+                ss << "\\u" << std::hex << std::setw(4) << std::setfill('0') << static_cast<unsigned int>(temp[i]);
                 temp.replace(i, 1, ss.str());
                 i += 5;
             }
