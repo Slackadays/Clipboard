@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Clipboard LANGUAGES CXX C VERSION 0.9.0)
+project(Clipboard LANGUAGES CXX C VERSION 0.9.1)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
