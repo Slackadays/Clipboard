@@ -416,7 +416,7 @@ void checkItemSize();
 TerminalSize thisTerminalSize();
 void clearData(bool force_clear);
 void copyFiles();
-void removeOldFiles();
+void removeOldFiles(const std::vector<std::string>& exclusions = {});
 bool userIsARobot();
 void pasteFiles();
 void clearClipboard();

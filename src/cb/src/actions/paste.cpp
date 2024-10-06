@@ -19,6 +19,7 @@ namespace PerformAction {
 
 void paste() {
     std::vector<std::regex> regexes;
+    std::vector<std::string> cutExclusions;
     if (!copying.items.empty()) {
         std::transform(copying.items.begin(), copying.items.end(), std::back_inserter(regexes), [](const auto& item) { return std::regex(item.string()); });
     }
@@ -50,6 +51,7 @@ void paste() {
                 using enum CopyPolicy;
                 switch (copying.policy) {
                 case SkipAll:
+                    cutExclusions.emplace_back(entry.path().filename().string());
                     break;
                 case ReplaceAll:
                     pasteItem();
@@ -60,6 +62,8 @@ void paste() {
                     startIndicator();
                     if (copying.policy == ReplaceOnce || copying.policy == ReplaceAll) {
                         pasteItem();
+                    } else {
+                        cutExclusions.emplace_back(entry.path().filename().string());
                     }
                     break;
                 }
@@ -78,7 +82,7 @@ void paste() {
             }
         }
     }
-    removeOldFiles();
+    removeOldFiles(cutExclusions);
 }
 
 } // namespace PerformAction

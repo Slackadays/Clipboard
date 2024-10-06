@@ -613,11 +613,12 @@ void checkItemSize(unsigned long long total_item_size) {
     }
 }
 
-void removeOldFiles() {
+void removeOldFiles(const std::vector<std::string>& exclusions) {
     if (!fs::is_regular_file(path.metadata.originals)) return;
     std::ifstream files(path.metadata.originals);
     std::string line;
     while (std::getline(files, line)) {
+        if (auto res = std::find(exclusions.begin(), exclusions.end(), fs::path(line).filename().string()); res != exclusions.end()) continue;
         try {
             fs::remove_all(line);
         } catch (const fs::filesystem_error& e) {
