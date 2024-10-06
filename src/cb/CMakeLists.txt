@@ -25,6 +25,7 @@ add_executable(cb
   src/actions/swap.cpp
   src/actions/undo.cpp
   src/actions/redo.cpp
+  src/actions/script.cpp
   src/locales/en_us.cpp
   src/locales/es_co.cpp
   src/locales/es_do.cpp
