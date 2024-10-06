@@ -15,18 +15,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
 
-EnumArray<std::string_view, 22> actions = {"cut",  "copy", "paste",  "clear",  "show",    "edit",   "add",    "remove", "note", "swap",  "status",
+EnumArray<std::string_view, 22> actions = {"cut",  "copy", "paste",  "clear",  "show",    "edit",   "add",    "remove", "note", "swap",   "status",
                                            "info", "load", "import", "export", "history", "ignore", "search", "undo",   "redo", "config", "script"};
 
 EnumArray<std::string_view, 22> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig", "sr", "u", "r", "cfg", "sc"};
 
-EnumArray<std::string_view, 22> doing_action = {"Cutting",   "Copying",         "Pasting",  "Clearing",        "Showing",      "Editing", "Adding",
-                                                "Removing",  "Noting",          "Swapping", "Checking status", "Showing info", "Loading", "Importing",
-                                                "Exporting", "Getting history", "Ignoring", "Searching",       "Undoing",      "Redoing", "Checking Configuration", "Setting script"};
+EnumArray<std::string_view, 22> doing_action = {"Cutting",       "Copying",         "Pasting",  "Clearing",        "Showing",      "Editing", "Adding",
+                                                "Removing",      "Noting",          "Swapping", "Checking status", "Showing info", "Loading", "Importing",
+                                                "Exporting",     "Getting history", "Ignoring", "Searching",       "Undoing",      "Redoing", "Checking Configuration",
+                                                "Setting script"};
 
-EnumArray<std::string_view, 22> did_action = {"Cut",      "Copied",      "Pasted",  "Cleared",        "Showed",      "Edited", "Added",
-                                              "Removed",  "Noted",       "Swapped", "Checked status", "Showed info", "Loaded", "Imported",
-                                              "Exported", "Got history", "Ignored", "Searched",       "Undid",       "Redid",  "Checked Configuration", "Set script"};
+EnumArray<std::string_view, 22> did_action = {"Cut",       "Copied",      "Pasted",  "Cleared",        "Showed",      "Edited", "Added",
+                                              "Removed",   "Noted",       "Swapped", "Checked status", "Showed info", "Loaded", "Imported",
+                                              "Exported",  "Got history", "Ignored", "Searched",       "Undid",       "Redid",  "Checked Configuration",
+                                              "Set script"};
 
 EnumArray<std::string_view, 22> action_descriptions = {
         "Cut items into a clipboard.",

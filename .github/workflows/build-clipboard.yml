@@ -73,7 +73,7 @@ jobs:
           sudo apt install -y "libasound-dev:${{ matrix.arch.os }}"
           sudo apt install -y "liburing-dev:${{ matrix.arch.os }}"
           sudo apt install -y "libssl-dev:${{ matrix.arch.os }}"
-          sudo apt install -y "openssl-dev:${{ matrix.arch.os }}"
+          sudo apt install -y "openssl:${{ matrix.arch.os }}"
           
           cd build
           
