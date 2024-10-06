@@ -1323,6 +1323,28 @@ $ fzf | cb -np
 
 <br>
 
+<details><summary> &ensp; <b><code>--secret</code></b> &emsp; Add this when ignoring content to ignore a secret (or secrets) instead. </summary>
+
+<br>
+
+Ignore a password.
+```sh
+$ cb ignore --secret MyVerySecurePassword
+$ cb ignore --secret # This will show the SHA512 hash of MyVerySecurePassword
+$ cb ignore --secret MyVerySecurePassword2 "someOTHER secret1 banana"
+$ cb ignore --secret # Now it will show the SHA512 hashes of MyVerySecurePassword2 and someOTHER secret1 banana
+```
+
+Clear all your passwords.
+```sh
+$ cb ignore --secret ""
+# WARNING: Once you clear all secrets, there is no going back.
+```
+
+</details>
+
+<br>
+
 <details><summary> &ensp; <b><code>--bachata</code></b> &emsp; Add this for something special! </summary>
 
 <br>
