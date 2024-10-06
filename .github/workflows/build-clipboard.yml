@@ -77,11 +77,12 @@ jobs:
           
           cd build
           
+          export PKG_CONFIG_PATH="/usr/lib/${{ matrix.arch.gcc }}"
+
           cmake .. \
             "-DCMAKE_CXX_COMPILER=${{ matrix.arch.gcc }}-g++-${{ matrix.gcc }}" \
             "-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc-${{ matrix.gcc }}" \
             "-DCMAKE_BUILD_TYPE=Release"
-            "-DOPENSSL_ROOT_DIR=/usr/lib/${{ matrix.arch.gcc }}"
           
           cmake --build . -j 4
       - uses: actions/upload-artifact@v4
