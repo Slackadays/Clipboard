@@ -201,7 +201,13 @@ then
     fi
 elif [ "$(uname)" = "Darwin" ]
 then
-    curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64-amd64.zip -o clipboard-macos.zip
+    if [ "$(uname -m)" = "x86_64" ]
+    then
+        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-amd64.zip -o clipboard-macos.zip
+    elif [ "$(uname -m)" = "arm64" ]
+    then
+        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64.zip -o clipboard-macos.zip
+    fi
     unzip clipboard-macos.zip
     rm clipboard-macos.zip
     sudo mv bin/cb "$install_path/bin/cb"

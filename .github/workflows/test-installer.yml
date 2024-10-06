@@ -23,7 +23,7 @@ jobs:
           export CLIPBOARD_TMPDIR=/tmp
           stty rows 80 cols 120
           bash src/tests/suite.sh
-  macos-arm64-amd64:
+  macos-arm64:
     runs-on: macos-latest
 
     steps:

@@ -73,6 +73,7 @@ jobs:
           sudo apt install -y "libasound-dev:${{ matrix.arch.os }}"
           sudo apt install -y "liburing-dev:${{ matrix.arch.os }}"
           sudo apt install -y "libssl-dev:${{ matrix.arch.os }}"
+          sudo apt install -y "openssl-dev:${{ matrix.arch.os }}"
           
           cd build
           
@@ -118,7 +119,7 @@ jobs:
           name: clipboard-snap-amd64
           path: |
             *.snap
-  macos-arm64-amd64:
+  macos-arm64:
     runs-on: macos-latest
 
     steps:
@@ -131,7 +132,22 @@ jobs:
           cmake --build . -j 3
       - uses: actions/upload-artifact@v4
         with:
-          name: clipboard-macos-arm64-amd64
+          name: clipboard-macos-arm64
+          path: build/output
+  macos-amd64:
+    runs-on: macos-13
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a script
+        run: |
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . -j 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clipboard-macos-amd64
           path: build/output
   windows-amd64:
     runs-on: windows-latest
@@ -156,6 +172,7 @@ jobs:
 
       - name: Run a script
         run: |
+          vcpkg install openssl:arm64-windows
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=ARM64
           cmake --build . --config Release -j 3
