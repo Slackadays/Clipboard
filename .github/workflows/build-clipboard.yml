@@ -77,7 +77,7 @@ jobs:
           
           cd build
           
-          export PKG_CONFIG_PATH="/usr/lib/${{ matrix.arch.gcc }}"
+          ls /usr/lib/${{ matrix.arch.gcc }}
 
           cmake .. \
             "-DCMAKE_CXX_COMPILER=${{ matrix.arch.gcc }}-g++-${{ matrix.gcc }}" \
