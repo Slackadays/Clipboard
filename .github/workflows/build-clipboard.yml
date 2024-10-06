@@ -76,14 +76,12 @@ jobs:
           sudo apt install -y "openssl:${{ matrix.arch.os }}"
           
           cd build
-          
-          ls /usr/lib/${{ matrix.arch.gcc }}
 
           cmake .. \
             "-DCMAKE_CXX_COMPILER=${{ matrix.arch.gcc }}-g++-${{ matrix.gcc }}" \
             "-DCMAKE_C_COMPILER=${{ matrix.arch.gcc }}-gcc-${{ matrix.gcc }}" \
-            "-DCMAKE_BUILD_TYPE=Release"
-            "-DOPENSSL_CRYPTO_LIBRARY=/usr/lib/${{ matrix.arch.gcc }}" \
+            "-DCMAKE_BUILD_TYPE=Release" \
+            "-DOPENSSL_CRYPTO_LIBRARY=/usr/lib/${{ matrix.arch.gcc }}"
           
           cmake --build . -j 4
       - uses: actions/upload-artifact@v4
