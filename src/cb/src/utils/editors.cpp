@@ -25,7 +25,8 @@ std::optional<std::string> findUsableEditor() {
     };
 
     auto fallbackEditor = []() -> std::optional<std::string> {
-        constexpr std::array fallbacks {"nano", "vim", "nvim", "micro", "code", "gedit", "vi", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
+        constexpr std::array fallbacks {"nano", "vim", "nvim", "micro", "code", "gedit", "vi", "emacs", "subl", "sublime", "atom", "gedit", "kate", "mousepad", "leafpad", "pluma", "geany",
+        "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
 
         std::string pathContent(getenv("PATH"));
         std::vector<fs::path> paths;
