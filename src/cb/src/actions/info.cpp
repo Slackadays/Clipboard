@@ -74,9 +74,15 @@ void info() {
 #endif
 
     fprintf(stderr, formatColors("[info]%s┃ Persistent? [help]%s[blank]\n").data(), generatedEndbar().data(), path.is_persistent ? "Yes" : "No");
-    fprintf(stderr, formatColors("[info]%s┃ Total entries: [help]%zu[blank]\n").data(), generatedEndbar().data(), path.totalEntries());
-    fprintf(stderr, formatColors("[info]%s┃ Total clipboard size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalDirectorySize(path)).data());
-    fprintf(stderr, formatColors("[info]%s┃ Total space remaining: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::space(path).available).data());
+
+    auto totalEntries = path.totalEntries();
+    auto totalSize = totalDirectorySize(path);
+    auto spaceAvailable = fs::space(path).available;
+
+    fprintf(stderr, formatColors("[info]%s┃ Total entries: [help]%zu[blank]\n").data(), generatedEndbar().data(), totalEntries);
+    fprintf(stderr, formatColors("[info]%s┃ Total clipboard size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(totalSize).data());
+    fprintf(stderr, formatColors("[info]%s┃ Total space remaining: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(spaceAvailable).data());
+    fprintf(stderr, formatColors("[info]%s┃ Approx. entries remaining: [help]%s[blank]\n").data(), generatedEndbar().data(), formatNumbers(spaceAvailable / (totalSize / totalEntries)).data());
 
     if (path.holdsRawDataInCurrentEntry()) {
         fprintf(stderr, formatColors("[info]%s┃ Content size: [help]%s[blank]\n").data(), generatedEndbar().data(), formatBytes(fs::file_size(path.data.raw)).data());
@@ -168,10 +174,15 @@ void infoJSON() {
     printf("    \"owner\": \"n/a\",\n");
 #endif
 
+    auto totalEntries = path.totalEntries();
+    auto totalSize = totalDirectorySize(path);
+    auto spaceAvailable = fs::space(path).available;
+
     printf("    \"isPersistent\": %s,\n", path.is_persistent ? "true" : "false");
-    printf("    \"totalEntries\": %zu,\n", path.totalEntries());
-    printf("    \"totalBytesUsed\": %zu,\n", totalDirectorySize(path));
-    printf("    \"totalBytesRemaining\": %zu,\n", fs::space(path).available);
+    printf("    \"totalEntries\": %zu,\n", totalEntries);
+    printf("    \"totalBytesUsed\": %zu,\n", totalSize);
+    printf("    \"totalBytesRemaining\": %zu,\n", spaceAvailable);
+    printf("    \"approxEntriesRemaining\": %zu,\n", spaceAvailable / (totalSize / totalEntries));
 
     if (path.holdsRawDataInCurrentEntry()) {
         printf("    \"contentBytes\": %zu,\n", fs::file_size(path.data.raw));
