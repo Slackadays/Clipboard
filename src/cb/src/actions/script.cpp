@@ -16,6 +16,8 @@
 #include "../clipboard.hpp"
 
 namespace PerformAction {
-void script() {}
+void script() {
+    
+}
 
 } // namespace PerformAction

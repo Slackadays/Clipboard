@@ -41,11 +41,13 @@ Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& cli
     data.raw = data / constants.data_file_name;
 
     metadata = root / constants.metadata_directory;
-    metadata.notes = metadata / constants.notes_name;
-    metadata.originals = metadata / constants.original_files_name;
-    metadata.lock = metadata / constants.lock_name;
     metadata.ignore = metadata / constants.ignore_regex_name;
     metadata.ignore_secret = metadata / constants.ignore_secret_name;
+    metadata.lock = metadata / constants.lock_name;
+    metadata.notes = metadata / constants.notes_name;
+    metadata.originals = metadata / constants.original_files_name;
+    metadata.script = metadata / constants.script_name;
+    
 
     fs::create_directories(data);
     fs::create_directories(metadata);

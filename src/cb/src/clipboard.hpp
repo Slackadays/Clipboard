@@ -80,17 +80,18 @@ struct Constants {
     std::string_view data_file_name = "rawdata.clipboard";
     std::string_view default_clipboard_name = "0";
     unsigned long default_clipboard_entry = 0;
-    std::string_view temporary_directory_name = "Clipboard";
     std::string_view persistent_directory_name = ".local/state/clipboard";
     std::string_view original_files_name = "originals";
     std::string_view notes_name = "notes";
     std::string_view mime_name = "mime";
+    std::string_view ignore_regex_name = "ignore";
+    std::string_view ignore_secret_name = "ignore.secret";
     std::string_view lock_name = "lock";
+    std::string_view script_name = "script";
     std::string_view data_directory = "data";
     std::string_view metadata_directory = "metadata";
     std::string_view import_export_directory = "Exported_Clipboards";
-    std::string_view ignore_regex_name = "ignore";
-    std::string_view ignore_secret_name = "ignore.secret";
+    std::string_view temporary_directory_name = "Clipboard";
 };
 constexpr Constants constants;
 
@@ -282,11 +283,12 @@ public:
         fs::path root;
 
     public:
-        fs::path notes;
-        fs::path originals;
-        fs::path lock;
         fs::path ignore;
         fs::path ignore_secret;
+        fs::path lock;
+        fs::path notes;
+        fs::path originals;
+        fs::path scripts;
         operator fs::path() { return root; }
         operator fs::path() const { return root; }
         auto operator=(const auto& other) { return root = other; }
