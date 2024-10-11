@@ -88,5 +88,28 @@ void setTheme(const std::string_view& theme) {
                  {"[inverse]", "\033[7m"},
                  {"[noinverse]", "\033[27m"},
                  {"[blank]", "\033[0m"}}};
+    } else {
+        std::unordered_map<std::string, std::string> customColors;
+        std::istringstream stream(theme.data());
+        std::string token;
+        while (std::getline(stream, token, ',')) {
+            auto pos = token.find('=');
+            if (pos == std::string::npos) continue;
+            std::string key = token.substr(0, pos);
+            std::string value = token.substr(pos + 1);
+            customColors[key] = value;
+        }
+
+        colors = {
+                {{"[error]", "\033[38;2;" + customColors["error"] + "m"},
+                 {"[success]", "\033[38;2;" + customColors["success"] + "m"},
+                 {"[progress]", "\033[38;2;" + customColors["progress"] + "m"},
+                 {"[info]", "\033[38;2;" + customColors["info"] + "m"},
+                 {"[help]", "\033[38;2;" + customColors["help"] + "m"},
+                 {"[bold]", "\033[1m"},
+                 {"[nobold]", "\033[22m"},
+                 {"[inverse]", "\033[7m"},
+                 {"[noinverse]", "\033[27m"},
+                 {"[blank]", "\033[0m"}}};
     }
 }

@@ -242,7 +242,7 @@ extern EnumArray<std::string_view, 23> doing_action;
 extern EnumArray<std::string_view, 23> did_action;
 extern EnumArray<std::string_view, 23> action_descriptions;
 
-extern std::array<std::pair<std::string_view, std::string_view>, 10> colors;
+extern std::array<std::pair<std::string_view, std::string>, 10> colors;
 
 bool action_is_one_of(auto... options) {
     return ((action == options) || ...);
