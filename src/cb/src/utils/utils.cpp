@@ -450,10 +450,10 @@ Action getAction() {
 IOType getIOType() {
     using enum Action;
     using enum IOType;
-    if (action_is_one_of(Cut, Copy, Add)) {
+    if (action_is_one_of(Cut, Copy, Add, Script)) {
         if (copying.items.size() >= 1 && std::all_of(copying.items.begin(), copying.items.end(), [](const auto& item) { return !fs::exists(item); })) return Text;
         if (!is_tty.in && copying.items.empty()) return Pipe;
-    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History, Search, Config)) {
+    } else if (action_is_one_of(Paste, Show, Clear, Edit, Status, Info, History, Search, Config, Share)) {
         if (!is_tty.out) return Pipe;
         return Text;
     } else if (action_is_one_of(Remove, Note, Ignore, Swap, Load, Import, Export)) {
@@ -641,6 +641,8 @@ void performAction() {
             copy();
         else if (action == Add)
             addFiles();
+        else if (action == Script)
+            script();
         else
             complainAboutMissingAction("file");
     } else if (io_type == Pipe) {
@@ -668,6 +670,8 @@ void performAction() {
             historyJSON();
         else if (action == Search)
             searchJSON();
+        else if (action == Script)
+            script();
         else
             complainAboutMissingAction("pipe");
     } else if (io_type == Text) {
@@ -707,6 +711,8 @@ void performAction() {
             search();
         else if (action == Config)
             config();
+        else if (action == Script)
+            script();
         else
             complainAboutMissingAction("text");
     }

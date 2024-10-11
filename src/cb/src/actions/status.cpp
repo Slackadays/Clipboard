@@ -59,7 +59,8 @@ void status() {
             if (auto type = inferMIMEType(content); type.has_value())
                 content = "\033[7m\033[1m " + std::string(type.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
             else
-                content = makeControlCharactersVisible(content, available.columns);
+                content = removeExcessWhitespace(content, available.columns * 2);
+            content = makeControlCharactersVisible(content, available.columns);
             fprintf(stderr, formatColors("[help]%s[blank]\n").data(), content.substr(0, widthRemaining).data());
             clipboard.releaseLock();
             continue;

@@ -17,7 +17,27 @@
 
 namespace PerformAction {
 void script() {
-    
+    if (io_type == IOType::File) {
+        if (copying.items.size() > 1) {
+            error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] You can only set one script file to run. [help]⬤ Try providing a single script file instead.[blank]\n"));
+        }
+        if (copying.items.empty()) {
+            error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] You need to provide a script file to run. [help]⬤ Try providing a script file instead.[blank]\n"));
+        }
+        if (copying.items.at(0).string() == "") {
+            fs::remove(path.metadata.script);
+            if (output_silent || confirmation_silent) return;
+            stopIndicator();
+            fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed script[blank]\n").data());
+        } else {
+            fs::remove(path.metadata.script);
+            fs::copy(copying.items.at(0), path.metadata.script);
+            if (output_silent || confirmation_silent) return;
+            stopIndicator();
+            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved script \"%s\"[blank]\n").data(), fileContents(path.metadata.script).value().data());
+        }
+    } else if (io_type == IOType::Text) {
+    }
 }
 
 } // namespace PerformAction

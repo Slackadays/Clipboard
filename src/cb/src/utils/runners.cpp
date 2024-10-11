@@ -1,5 +1,5 @@
 /*  The Clipboard Project - Cut, copy, and paste anything, anytime, anywhere, all from the terminal.
-    Copyright (C) 2023 Jackson Huff and other contributors on GitHub.com
+    Copyright (C) 2024 Jackson Huff and other contributors on GitHub.com
     SPDX-License-Identifier: GPL-3.0-or-later
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,19 +15,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
 
-std::optional<std::string> findUsableEditor() {
-    auto preferredEditor = []() -> std::optional<std::string> {
-        if (!copying.items.empty()) return copying.items.at(0).string();
-        if (auto editor = getenv("CLIPBOARD_EDITOR"); editor != nullptr) return editor;
-        if (auto editor = getenv("EDITOR"); editor != nullptr) return editor;
-        if (auto editor = getenv("VISUAL"); editor != nullptr) return editor;
+std::optional<std::string> findUsableScriptRunner() {
+    auto preferredScriptRunner = []() -> std::optional<std::string> {
+        if (auto runner = getenv("CLIPBOARD_SCRIPT_RUNNER"); runner != nullptr) return runner;
         return std::nullopt;
     };
 
-    auto fallbackEditor = []() -> std::optional<std::string> {
-        constexpr std::array fallbacks {"nano",  "vim",  "nvim",     "micro",   "code",  "gedit", "vi",          "emacs",         "subl",        "sublime", "atom",
-                                        "gedit", "kate", "mousepad", "leafpad", "pluma", "geany", "notepad.exe", "notepad++.exe", "wordpad.exe", "word.exe"};
-
+    auto fallbackScriptRunner = []() -> std::optional<std::string> {
+#if defined(_WIN32) || defined(_WIN64)
+        constexpr std::array fallbacks {"cmd.exe", "powershell.exe", "wsl.exe", "bash.exe", "sh.exe", "zsh.exe", "fish.exe", "pwsh.exe"};
+#else
+        constexpr std::array fallbacks {"bash", "sh", "zsh", "ksh", "csh", "tcsh", "dash", "fish"};
+#endif
         std::string pathContent(getenv("PATH"));
         std::vector<fs::path> paths;
 
@@ -42,9 +41,9 @@ std::optional<std::string> findUsableEditor() {
         return std::nullopt;
     };
 
-    auto editor = preferredEditor();
+    auto runner = preferredScriptRunner();
 
-    if (!editor) editor = fallbackEditor();
+    if (!runner) runner = fallbackScriptRunner();
 
-    return editor;
+    return runner;
 }

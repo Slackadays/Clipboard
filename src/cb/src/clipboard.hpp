@@ -215,7 +215,7 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo, Config, Script };
+enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo, Config, Script, Share };
 
 extern Action action;
 
@@ -236,11 +236,11 @@ public:
     T& original(const Action& index) { return internal_original.value()[static_cast<unsigned int>(index)]; }
 };
 
-extern EnumArray<std::string_view, 22> actions;
-extern EnumArray<std::string_view, 22> action_shortcuts;
-extern EnumArray<std::string_view, 22> doing_action;
-extern EnumArray<std::string_view, 22> did_action;
-extern EnumArray<std::string_view, 22> action_descriptions;
+extern EnumArray<std::string_view, 23> actions;
+extern EnumArray<std::string_view, 23> action_shortcuts;
+extern EnumArray<std::string_view, 23> doing_action;
+extern EnumArray<std::string_view, 23> did_action;
+extern EnumArray<std::string_view, 23> action_descriptions;
 
 extern std::array<std::pair<std::string_view, std::string_view>, 10> colors;
 
@@ -288,7 +288,7 @@ public:
         fs::path lock;
         fs::path notes;
         fs::path originals;
-        fs::path scripts;
+        fs::path script;
         operator fs::path() { return root; }
         operator fs::path() const { return root; }
         auto operator=(const auto& other) { return root = other; }
@@ -375,6 +375,7 @@ size_t columnLength(const std::string_view& message);
 std::string generatedEndbar();
 std::string repeatString(const std::string_view& character, const size_t& length);
 std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t len = 0);
+std::string removeExcessWhitespace(const std::string_view& str, size_t len = 0);
 unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
 void setLanguagePT();
 void setLanguageTR();
@@ -475,6 +476,7 @@ extern void writeToGUIClipboard(const ClipboardContent& clipboard);
 extern const bool GUIClipboardSupportsCut;
 extern bool playAsyncSoundEffect(const std::valarray<short>& samples);
 extern std::optional<std::string> findUsableEditor();
+extern std::optional<std::string> findUsableScriptRunner();
 
 namespace PerformAction {
 void copyItem(const fs::path& f, const bool use_regular_copy = copying.use_safe_copy);
@@ -511,4 +513,6 @@ void historyJSON();
 void search();
 void searchJSON();
 void config();
+void script();
+void share();
 } // namespace PerformAction

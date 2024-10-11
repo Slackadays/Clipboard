@@ -54,6 +54,7 @@ void displaySearchResults(const std::vector<Result>& results) {
                 "",
                 result.entry);
         std::string preview = result.preview;
+        preview = removeExcessWhitespace(preview, available.columns * 2);
         preview = makeControlCharactersVisible(preview, available.columns);
         auto widthRemaining = available.columns - (longestClipboardLength + longestEntryLength + 7);
         if (preview.length() > widthRemaining) {

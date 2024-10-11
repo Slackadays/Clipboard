@@ -31,6 +31,9 @@ void config() {
     // Clipbord editor
     fprintf(stderr, formatColors("[info]%s┃ Content editor: [help]%s[blank]\n").data(), generatedEndbar().data(), findUsableEditor() ? findUsableEditor().value().data() : "None");
 
+    // Clipboard script runner
+    fprintf(stderr, formatColors("[info]%s┃ Script runner: [help]%s[blank]\n").data(), generatedEndbar().data(), getenv("CLIPBOARD_SCRIPT_RUNNER") ? getenv("CLIPBOARD_SCRIPT_RUNNER") : "default");
+
     // Max history size
     fprintf(stderr, formatColors("[info]%s┃ Max history size: [help]%s[blank]\n").data(), generatedEndbar().data(), !maximumHistorySize.empty() ? maximumHistorySize.data() : "unlimited");
 

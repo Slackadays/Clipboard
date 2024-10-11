@@ -87,6 +87,26 @@ std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t 
     return newStr;
 }
 
+std::string removeExcessWhitespace(const std::string_view& oldStr, size_t len) {
+    std::string newStr;
+    newStr.reserve(oldStr.size());
+
+    // Remove all whitespace that isn't a single space (2+ spaces, and tabs)
+    for (size_t i = 0; i < len && i < oldStr.size(); i++) {
+        if (oldStr[i] == ' ') {
+            newStr += ' ';
+            while (i + 1 < len && i + 1 < oldStr.size() && oldStr[i + 1] == ' ')
+                i++;
+        } else if (oldStr[i] == '\t') {
+            newStr += ' ';
+        } else {
+            newStr += oldStr[i];
+        }
+    }
+
+    return newStr;
+}
+
 std::string JSONescape(const std::string_view& input) {
     std::string temp(input);
 

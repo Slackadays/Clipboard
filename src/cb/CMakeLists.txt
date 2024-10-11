@@ -26,6 +26,7 @@ add_executable(cb
   src/actions/undo.cpp
   src/actions/redo.cpp
   src/actions/script.cpp
+  src/actions/share.cpp
   src/locales/en_us.cpp
   src/locales/es_co.cpp
   src/locales/es_do.cpp
@@ -34,6 +35,7 @@ add_executable(cb
   src/locales/de_de.cpp
   src/locales/fr_fr.cpp
   src/utils/editors.cpp
+  src/utils/runners.cpp
   src/utils/utils.cpp
   src/utils/formatting.cpp
   src/utils/files.cpp

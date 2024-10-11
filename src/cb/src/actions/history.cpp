@@ -208,7 +208,8 @@ void history() {
             if (auto MIMEtype = inferMIMEType(content); MIMEtype.has_value())
                 content = "\033[7m\033[1m " + std::string(MIMEtype.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
             else
-                content = makeControlCharactersVisible(content, available.columns);
+                content = removeExcessWhitespace(content, available.columns * 2);
+            content = makeControlCharactersVisible(content, available.columns);
             batchedMessage += content.substr(0, widthRemaining);
             continue;
         }
