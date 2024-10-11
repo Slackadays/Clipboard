@@ -78,8 +78,6 @@ struct Constants {
     std::string_view clipboard_version = CLIPBOARD_VERSION;
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
     std::string_view data_file_name = "rawdata.clipboard";
-    std::string_view default_clipboard_name = "0";
-    unsigned long default_clipboard_entry = 0;
     std::string_view persistent_directory_name = ".local/state/clipboard";
     std::string_view original_files_name = "originals";
     std::string_view notes_name = "notes";
@@ -92,6 +90,11 @@ struct Constants {
     std::string_view metadata_directory = "metadata";
     std::string_view import_export_directory = "Exported_Clipboards";
     std::string_view temporary_directory_name = "Clipboard";
+    std::string_view default_clipboard_name = "0";
+    std::string_view storage_protocol_version_name = "version";
+
+    unsigned long default_clipboard_entry = 0;
+    std::string_view storage_protocol_version = "1";
 };
 constexpr Constants constants;
 
@@ -289,6 +292,7 @@ public:
         fs::path notes;
         fs::path originals;
         fs::path script;
+        fs::path version;
         operator fs::path() { return root; }
         operator fs::path() const { return root; }
         auto operator=(const auto& other) { return root = other; }
