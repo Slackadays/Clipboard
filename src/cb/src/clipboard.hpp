@@ -42,7 +42,12 @@
 #include "platforms/windows.hpp"
 #endif
 
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__HAIKU__) || defined(__FreeBSD__) \
+        || defined(__posix__)
+#define UNIX_OR_UNIX_LIKE
+#endif
+
+#if defined(UNIX_OR_UNIX_LIKE)
 #include <cstring>
 #include <dirent.h>
 #include <fcntl.h>
@@ -127,30 +132,9 @@ bool isPersistent(const auto& clipboard) {
 static auto thisPID() {
 #if defined(_WIN32) || defined(_WIN64)
     return GetCurrentProcessId();
-#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#elif defined(UNIX_OR_UNIX_LIKE)
     return getpid();
 #endif
-}
-
-static size_t directoryOverhead(const fs::path& directory) {
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
-    struct stat info;
-    if (stat(directory.string().data(), &info) != 0) return 0;
-    return info.st_size;
-#else
-    return 0;
-#endif
-}
-
-static size_t totalDirectorySize(const fs::path& directory) {
-    size_t size = directoryOverhead(directory);
-    for (const auto& entry : fs::recursive_directory_iterator(directory))
-        try {
-            size += entry.is_directory() ? directoryOverhead(entry) : entry.file_size();
-        } catch (const fs::filesystem_error& e) {
-            if (e.code() != std::errc::no_such_file_or_directory) throw e;
-        }
-    return size;
 }
 
 std::optional<std::string> fileContents(const fs::path& path);
@@ -434,6 +418,8 @@ void showFailures();
 void showSuccesses();
 [[nodiscard]] CopyPolicy userDecision(const std::string& item);
 void setTheme(const std::string_view& theme);
+size_t totalDirectorySize(const fs::path& directory);
+size_t directoryOverhead(const fs::path& directory);
 
 extern Message help_message;
 extern Message check_clipboard_status_message;

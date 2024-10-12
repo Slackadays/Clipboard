@@ -40,6 +40,7 @@ add_executable(cb
   src/utils/formatting.cpp
   src/utils/files.cpp
   src/utils/distance.cpp
+  src/utils/directorysize.cpp
 )
 
 enable_lto(cb)

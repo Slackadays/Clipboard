@@ -24,7 +24,7 @@
 #include "platforms/windows.hpp"
 #endif
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
 #include <unistd.h>
 #endif
 
@@ -308,7 +308,7 @@ void updateExternalClipboards(bool force) {
 void setupGUIClipboardDaemon() {
     if (envVarIsTrue("CLIPBOARD_NOGUI")) return;
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
     auto pid = fork();
     if (pid > 0) return;
     if (pid < 0) {

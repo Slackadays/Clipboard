@@ -29,13 +29,13 @@
 int SQEsSubmitted = 0;
 #endif
 
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(UNIX_OR_UNIX_LIKE)
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
 
-#if (defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__posix__)) && !defined(__OpenBSD__)
+#if (defined(UNIX_OR_UNIX_LIKE)) && !defined(__OpenBSD__)
 #define USE_AIO 1
 #include <aio.h>
 #endif
@@ -88,7 +88,7 @@ void history() {
         agoMessage.reserve(16);
 
         for (auto entry = start; entry < end; entry++) {
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
             stat(path.entryPathFor(entry).string().data(), &dateInfo);
             auto timeSince = now - std::chrono::system_clock::from_time_t(dateInfo.st_mtime);
             // format time like 1y 2d 3h 4m 5s

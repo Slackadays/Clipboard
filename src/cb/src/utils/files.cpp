@@ -17,7 +17,7 @@
 #include <fstream>
 
 std::optional<std::string> fileContents(const fs::path& path) {
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(UNIX_OR_UNIX_LIKE)
     errno = 0;
     int fd = open(path.string().data(), O_RDONLY);
     if (fd == -1) {

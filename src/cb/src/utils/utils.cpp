@@ -237,7 +237,7 @@ void setupHandlers() {
             FlushFileBuffers(CreateFileA(global_path.temporary.string().data(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL));
             FlushFileBuffers(CreateFileA(global_path.persistent.string().data(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL));
         }
-#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+#elif defined(UNIX_OR_UNIX_LIKE)
         if (isAWriteAction()) {
             fsync(open(global_path.temporary.string().data(), O_RDONLY));
             fsync(open(global_path.persistent.string().data(), O_RDONLY));
@@ -261,7 +261,7 @@ void setupHandlers() {
 
     signal(SIGINT, exitCleanly);
     signal(SIGTERM, exitCleanly);
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
     signal(SIGQUIT, exitCleanly);
 #endif
 
@@ -319,7 +319,7 @@ void verifyClipboardName() {
     constexpr std::array forbiddenFilenameCharacters {'<', '>', ':', '"', '/', '\\', '|', '?', '*'};
 #elif defined(__APPLE__)
     constexpr std::array forbiddenFilenameCharacters {'/', ':'};
-#elif defined(__linux__) || defined(__FreeBSD__) || defined(__unix__)
+#elif defined(__linux__) || defined(__unix__)
     constexpr std::array forbiddenFilenameCharacters {'/'};
 #else
     constexpr std::array forbiddenFilenameCharacters {};

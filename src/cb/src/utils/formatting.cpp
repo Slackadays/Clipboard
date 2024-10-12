@@ -15,7 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
 struct termios tnormal;
 #elif defined(_WIN32) || defined(_WIN64)
 DWORD dwNormalMode = 0;
@@ -184,7 +184,7 @@ TerminalSize thisTerminalSize() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     temp = TerminalSize(csbi.srWindow.Bottom - csbi.srWindow.Top + 1, csbi.srWindow.Right - csbi.srWindow.Left + 1);
-#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#elif defined(UNIX_OR_UNIX_LIKE)
     struct winsize w;
     ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
     temp = TerminalSize(w.ws_row, w.ws_col);
@@ -194,7 +194,7 @@ TerminalSize thisTerminalSize() {
 }
 
 void makeTerminalRaw() {
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
     struct termios tnew = tnormal;
     tnew.c_lflag &= ~(ICANON);
     tnew.c_lflag &= ~(ECHO);
@@ -206,7 +206,7 @@ void makeTerminalRaw() {
 }
 
 void makeTerminalNormal() {
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
     tcsetattr(STDIN_FILENO, TCSANOW, &tnormal);
 #elif defined(_WIN32) || defined(_WIN64)
     SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), dwNormalMode);
@@ -214,7 +214,7 @@ void makeTerminalNormal() {
 }
 
 void setupTerminal() {
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
     tcgetattr(STDIN_FILENO, &tnormal);
 #elif defined(_WIN64) || defined(_WIN32)
     GetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), &dwNormalMode);

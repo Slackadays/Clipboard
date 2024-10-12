@@ -60,7 +60,7 @@ std::deque<unsigned long> Clipboard::generatedEntryIndex() {
     std::deque<unsigned long> pathNames;
     fs::path entriesDir = root / constants.data_directory;
     fs::create_directories(entriesDir);
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(UNIX_OR_UNIX_LIKE)
     auto dirptr = opendir(entriesDir.string().data());
     char* endptr = nullptr;
     errno = 0;
@@ -163,7 +163,7 @@ bool Clipboard::isUnused() {
 void Clipboard::getLock() {
     if (isLocked()) {
         auto pid = std::stoi(fileContents(metadata.lock).value());
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(UNIX_OR_UNIX_LIKE)
         if (getpgrp() == getpgid(pid)) return; // if we're in the same process group, we're probably in a self-referencing pipe like cb | cb
 #elif defined(_WIN32) || defined(_WIN64)
         if (GetCurrentProcessId() == pid) return;
@@ -171,7 +171,7 @@ void Clipboard::getLock() {
         while (true) {
 #if defined(_WIN32) || defined(_WIN64)
             if (WaitForSingleObject(OpenProcess(SYNCHRONIZE, FALSE, pid), 0) == WAIT_OBJECT_0) break;
-#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#elif defined(UNIX_OR_UNIX_LIKE)
             if (kill(pid, 0) == -1) break;
 #endif
             if (!isLocked()) break;
@@ -271,7 +271,7 @@ void Clipboard::trimHistoryEntries() {
 
     if (maximumSeconds > 0) {
         auto now = std::chrono::system_clock::now();
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(UNIX_OR_UNIX_LIKE)
         struct stat info;
         auto lastModified = [&](const fs::path path) {
             if (stat(path.string().data(), &info) != 0) return now;

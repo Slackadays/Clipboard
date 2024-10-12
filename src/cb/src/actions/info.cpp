@@ -21,7 +21,7 @@
 #include <io.h>
 #endif
 
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#if defined(UNIX_OR_UNIX_LIKE)
 #include <pwd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -40,7 +40,7 @@ void info() {
     fprintf(stderr, "%s", formatColors("┓[blank]\n").data());
 
     // creation date
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
+#if defined(UNIX_OR_UNIX_LIKE)
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
@@ -50,7 +50,7 @@ void info() {
     fprintf(stderr, formatColors("[info]┃ Created [help]n/a[blank]\n").data());
 #endif
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
+#if defined(UNIX_OR_UNIX_LIKE)
     time_t latest = 0;
     for (const auto& entry : fs::recursive_directory_iterator(path.data)) {
         struct stat info;
@@ -66,7 +66,7 @@ void info() {
 
     fprintf(stderr, formatColors("[info]%s┃ Stored in [help]%s[blank]\n").data(), generatedEndbar().data(), path.string().data());
 
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__FreeBSD__)
+#if defined(UNIX_OR_UNIX_LIKE)
     struct passwd* pw = getpwuid(info.st_uid);
     fprintf(stderr, formatColors("[info]%s┃ Owned by [help]%s[blank]\n").data(), generatedEndbar().data(), pw->pw_name);
 #elif defined(_WIN32) || defined(_WIN64)
@@ -141,7 +141,7 @@ void infoJSON() {
 
     printf("    \"name\": \"%s\",\n", clipboard_name.data());
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
+#if defined(UNIX_OR_UNIX_LIKE)
     struct stat info;
     stat(path.string().data(), &info);
     std::string time(std::ctime(&info.st_ctime));
@@ -151,7 +151,7 @@ void infoJSON() {
     printf("    \"created\": \"n/a\",\n");
 #endif
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__)
+#if defined(UNIX_OR_UNIX_LIKE)
     time_t latest = 0;
     for (const auto& entry : fs::recursive_directory_iterator(path.data)) {
         struct stat info;
@@ -167,7 +167,7 @@ void infoJSON() {
 
     printf("    \"path\": \"%s\",\n", JSONescape(path.string()).data());
 
-#if defined(__linux__) || defined(__APPLE__) || defined(__unix__) || defined(__FreeBSD__)
+#if defined(UNIX_OR_UNIX_LIKE)
     struct passwd* pw = getpwuid(getuid());
     printf("    \"owner\": \"%s\",\n", pw->pw_name);
 #elif defined(_WIN32) || defined(_WIN64)
