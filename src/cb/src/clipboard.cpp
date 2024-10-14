@@ -14,6 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "clipboard.hpp"
+#include <charconv>
 #include <openssl/sha.h>
 
 Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& clipboard_entry) {
@@ -62,13 +63,12 @@ std::deque<unsigned long> Clipboard::generatedEntryIndex() {
     fs::create_directories(entriesDir);
 #if defined(UNIX_OR_UNIX_LIKE)
     auto dirptr = opendir(entriesDir.string().data());
-    char* endptr = nullptr;
     errno = 0;
-    for (auto* dir = readdir(dirptr); dir != nullptr; dir = readdir(dirptr), errno = 0)
-        if (auto num = strtoul(dir->d_name, &endptr, 10); errno == 0 && endptr != dir->d_name) [[likely]]
-            pathNames.emplace_back(num);
-        else [[unlikely]]
-            continue;
+    for (auto* dir = readdir(dirptr); dir != nullptr; dir = readdir(dirptr), errno = 0) {
+        pathNames.emplace_back(0);
+        if (auto [ptr, ec] = std::from_chars(dir->d_name, dir->d_name + strlen(dir->d_name), pathNames.back()); ec != std::errc()) [[unlikely]]
+            pathNames.pop_back();
+    }
 #else
     for (const auto& entry : fs::directory_iterator(entriesDir))
         try {
