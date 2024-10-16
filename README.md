@@ -141,22 +141,22 @@ apk add clipboard
 **AUR** (Use your favorite AUR helper such as `yay`. You can also get `clipboard-bin` and `clipboard-git`)
 ```sh
 yay -S clipboard
+
+yay -S clipboard-bin
+
+yay -S clipboard-git
 ```
 
 <br>
 
-**Conda-forge** (Windows/MacOS/Linux - you need install any conda package manager such as conda, mamba or pixi)
+**Conda-forge** (Use any Conda package manager such as conda, mamba, or pixi)
 ```sh
-# conda
 conda install -c conda-forge cb-clipboard
 
-# mamba
 mamba install -c conda-forge cb-clipboard
 
-# micromamba
 micromamba install -c conda-forge cb-clipboard
 
-# pixi(global installation)
 pixi global install cb-clipboard
 ```
 
