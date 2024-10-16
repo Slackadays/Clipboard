@@ -20,9 +20,17 @@ void script() {
     if (io_type == IOType::File) {
         if (copying.items.size() > 1) {
             error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] You can only set one script file to run. [help]⬤ Try providing a single script file instead.[blank]\n"));
+            return;
         }
         if (copying.items.empty()) {
-            error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] You need to provide a script file to run. [help]⬤ Try providing a script file instead.[blank]\n"));
+            stopIndicator();
+            if (fs::is_regular_file(path.metadata.script)) {
+                fprintf(stderr, formatColors("[info]┃ The current script is: [help]%s[blank]\n").data(), fileContents(path.metadata.script).value().data());
+            } else {
+
+                fprintf(stderr, "%s", formatColors("[error][inverse] ✘ [noinverse] No script is currently set. [help]⬤ Try providing a script file to set one.[blank]\n").data());
+            }
+            return;
         }
         if (copying.items.at(0).string() == "") {
             fs::remove(path.metadata.script);
