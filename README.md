@@ -145,6 +145,23 @@ yay -S clipboard
 
 <br>
 
+**Conda-forge** (Windows/MacOS/Linux - you need install any conda package manager such as conda, mamba or pixi)
+```sh
+# conda
+conda install -c conda-forge cb-clipboard
+
+# mamba
+mamba install -c conda-forge cb-clipboard
+
+# micromamba
+micromamba install -c conda-forge cb-clipboard
+
+# pixi(global installation)
+pixi global install cb-clipboard
+```
+
+<br>
+
 **Flatpak Flathub** (You can also get our nightly Flatpak builds under **GitHub Downloads**)
 ```sh
 flatpak install app.getclipboard.Clipboard
