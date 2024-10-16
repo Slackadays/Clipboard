@@ -420,6 +420,7 @@ void showSuccesses();
 void setTheme(const std::string_view& theme);
 size_t totalDirectorySize(const fs::path& directory);
 size_t directoryOverhead(const fs::path& directory);
+void runClipboardScript();
 
 extern Message help_message;
 extern Message check_clipboard_status_message;

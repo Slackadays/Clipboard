@@ -70,7 +70,11 @@ int main(int argc, char* argv[]) {
 
         checkItemSize(totalItemSize());
 
+        runClipboardScript();
+
         performAction();
+
+        runClipboardScript();
 
         if (isAWriteAction()) path.applyIgnoreRules();
 
