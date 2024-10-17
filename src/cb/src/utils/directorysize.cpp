@@ -29,7 +29,7 @@ size_t directoryOverhead(const fs::path& directory) {
 #endif
 }
 
-size_t size = 0;
+thread_local size_t size = 0; // thread_local because multiple threads could call ftwHandler
 
 #if defined(UNIX_OR_UNIX_LIKE)
 int ftwHandler(const char* fpath, const struct stat* sb, int typeflag) {

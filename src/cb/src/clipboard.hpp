@@ -339,7 +339,7 @@ public:
 };
 
 std::string formatNumbers(const auto& num) {
-    static std::stringstream ss;
+    thread_local static std::stringstream ss;
     ss.str(std::string());
     ss << std::fixed << std::setprecision(2) << num;
     return ss.str();
@@ -467,7 +467,6 @@ extern void writeToGUIClipboard(const ClipboardContent& clipboard);
 extern const bool GUIClipboardSupportsCut;
 extern bool playAsyncSoundEffect(const std::valarray<short>& samples);
 extern std::optional<std::string> findUsableEditor();
-extern std::optional<std::string> findUsableScriptRunner();
 
 namespace PerformAction {
 void copyItem(const fs::path& f, const bool use_regular_copy = copying.use_safe_copy);

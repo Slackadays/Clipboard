@@ -35,7 +35,6 @@ add_executable(cb
   src/locales/de_de.cpp
   src/locales/fr_fr.cpp
   src/utils/editors.cpp
-  src/utils/runners.cpp
   src/utils/utils.cpp
   src/utils/formatting.cpp
   src/utils/files.cpp

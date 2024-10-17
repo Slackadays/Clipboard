@@ -70,8 +70,10 @@ void history() {
         return;
     }
     std::vector<std::string> dates(path.entryIndex.size());
+    std::vector<std::string> sizes(path.entryIndex.size());
 
     std::atomic<size_t> atomicLongestDateLength = 0;
+    std::atomic<size_t> atomicLongestSizeLength = 0;
 
     auto now = std::chrono::system_clock::now();
 
@@ -82,14 +84,15 @@ void history() {
 
     std::vector<std::thread> threads(totalThreads);
 
-    auto dateWorker = [&](const unsigned long& start, const unsigned long& end) {
+    auto dataWorker = [&](const unsigned long& start, const unsigned long& end) {
         struct stat dateInfo;
         std::string agoMessage;
         agoMessage.reserve(16);
 
         for (auto entry = start; entry < end; entry++) {
+            auto thisEntrysPath = path.entryPathFor(entry);
 #if defined(UNIX_OR_UNIX_LIKE)
-            stat(path.entryPathFor(entry).string().data(), &dateInfo);
+            stat(thisEntrysPath.string().data(), &dateInfo);
             auto timeSince = now - std::chrono::system_clock::from_time_t(dateInfo.st_mtime);
             // format time like 1y 2d 3h 4m 5s
             auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
@@ -110,6 +113,14 @@ void history() {
             dates[entry] = "n/a";
             atomicLongestDateLength.store(3, std::memory_order_relaxed);
 #endif
+
+            size_t size = 0;
+            if (auto temp(fileContents(thisEntrysPath / constants.data_file_name)); temp.has_value())
+                size = temp.value().length();
+            else
+                size = totalDirectorySize(thisEntrysPath);
+            sizes[entry] = formatBytes(size);
+            if (sizes[entry].length() > atomicLongestSizeLength.load(std::memory_order_relaxed)) atomicLongestSizeLength.store(sizes[entry].length(), std::memory_order_relaxed);
         }
     };
 
@@ -117,7 +128,7 @@ void history() {
         auto start = thread * entriesPerThread;
         auto end = start + entriesPerThread;
         if (thread == totalThreads - 1) end = path.entryIndex.size();
-        threads[thread] = std::thread(dateWorker, start, end);
+        threads[thread] = std::thread(dataWorker, start, end);
     }
 
     // for (auto& thread : threads)
@@ -169,6 +180,7 @@ void history() {
         thread.join();
 
     size_t longestDateLength = atomicLongestDateLength.load(std::memory_order_relaxed);
+    size_t longestSizeLength = atomicLongestSizeLength.load(std::memory_order_relaxed);
 
     for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
         path.setEntry(entry);
@@ -197,16 +209,17 @@ void history() {
 #endif
         }
 
-        int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + 7);
+        int widthRemaining = available.columns - (numberLength(entry) + longestEntryLength + longestDateLength + longestSizeLength + 7);
 
         batchedMessage += preformattedMessageParts[0] + std::string(longestEntryLength - numberLength(entry), ' ') + std::to_string(entry) + preformattedMessageParts[1]
-                          + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + preformattedMessageParts[2];
+                          + std::string(longestDateLength - dates.at(entry).length(), ' ') + dates.at(entry) + preformattedMessageParts[1]
+                          + std::string(longestSizeLength - sizes.at(entry).length(), ' ') + sizes.at(entry) + preformattedMessageParts[2];
 
         if (auto temp(fileContents(path.data.raw)); temp.has_value()) {
             auto content = std::move(temp.value());
             if (content.empty()) continue; // don't use holdsRawDataInCurrentEntry because we are reading anyway, so we can save on a syscall
             if (auto MIMEtype = inferMIMEType(content); MIMEtype.has_value())
-                content = "\033[7m\033[1m " + std::string(MIMEtype.value()) + ", " + formatBytes(content.length()) + " \033[22m\033[27m";
+                content = "\033[7m\033[1m " + std::string(MIMEtype.value()) + " \033[22m\033[27m";
             else
                 content = removeExcessWhitespace(content, available.columns * 2);
             content = makeControlCharactersVisible(content, available.columns);

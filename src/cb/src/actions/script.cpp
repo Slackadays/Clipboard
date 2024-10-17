@@ -28,7 +28,14 @@ void script() {
                 fprintf(stderr, formatColors("[info]┃ Here is this clipboard's current script: [help]%s[blank]\n").data(), fileContents(path.metadata.script).value().data());
             } else {
 
-                fprintf(stderr, formatColors("[error][inverse] ✘ [noinverse] There is currently no script set for this clipboard. [help]⬤ To set a script, add it to the end, like [bold]%s %s myscript.sh[nobold], or specify it as an argument, like [bold]%s %s \"echo Hello World!\".[blank]\n").data(), clipboard_invocation.data(), actions[action].data(), clipboard_invocation.data(), actions[action].data());
+                fprintf(stderr,
+                        formatColors("[error][inverse] ✘ [noinverse] There is currently no script set for this clipboard. [help]⬤ To set a script, add it to the end, like [bold]%s %s "
+                                     "myscript.sh[nobold], or specify it as an argument, like [bold]%s %s \"echo Hello World!\".[blank]\n")
+                                .data(),
+                        clipboard_invocation.data(),
+                        actions[action].data(),
+                        clipboard_invocation.data(),
+                        actions[action].data());
             }
             return;
         }
@@ -69,14 +76,17 @@ void runClipboardScript() {
     auto execute = [&](const std::string_view& timing) {
         // Set the CLIPBOARD_ACTION environment variable to the action that was performed
         int res = setenv("CLIPBOARD_ACTION", actions[action].data(), 1);
-        if (res != 0) throw std::runtime_error("Failed to set the CLIPBOARD_ACTION environment variable");
+        if (res != 0) fprintf(stderr, "%s", formatColors("[error][inverse] ✘ [noinverse] Failed to set the CLIPBOARD_ACTION environment variable[blank]\n").data());
 
         // Set the CLIPBOARD_SCRIPT_TIMING environment variable to "before" or "after" depending on the timing
         res = setenv("CLIPBOARD_SCRIPT_TIMING", timing.data(), 1);
-        if (res != 0) throw std::runtime_error("Failed to set the CLIPBOARD_SCRIPT_TIMING environment variable"); 
+        if (res != 0) fprintf(stderr, "%s", formatColors("[error][inverse] ✘ [noinverse] Failed to set the CLIPBOARD_SCRIPT_TIMING environment variable[blank]\n").data());
 
         res = system(path.metadata.script.string().c_str());
-        if (res != 0) throw std::runtime_error("Failed to run the clipboard script");
+        if (res != 0) {
+            res = WEXITSTATUS(res);
+            fprintf(stderr, formatColors("[error][inverse] ✘ [noinverse] Failed to run the clipboard script (returned exit code [bold]%d[nobold])[blank]\n").data(), res);
+        }
     };
 
     if (!secondRun)
