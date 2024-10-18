@@ -55,8 +55,12 @@ void script() {
             stopIndicator();
             fprintf(stderr, "%s", formatColors("[success][inverse] ✔ [noinverse] Removed script[blank]\n").data());
         } else {
+            for (size_t i = 0; i < copying.items.size(); i++) {
+                copying.buffer += copying.items.at(i).string();
+                if (i != copying.items.size() - 1) copying.buffer += " ";
+            }
             fs::remove(path.metadata.script);
-            writeToFile(path.metadata.script, copying.items.at(0).string());
+            writeToFile(path.metadata.script, copying.buffer);
             fs::permissions(path.metadata.script, fs::perms::owner_exec, fs::perm_options::add);
             if (output_silent || confirmation_silent) return;
             stopIndicator();
