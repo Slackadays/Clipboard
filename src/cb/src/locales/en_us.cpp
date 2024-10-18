@@ -18,7 +18,7 @@
 EnumArray<std::string_view, 23> actions = {"cut",  "copy",   "paste",  "clear",   "show",   "edit",   "add",  "remove", "note",   "swap",   "status", "info",
                                            "load", "import", "export", "history", "ignore", "search", "undo", "redo",   "config", "script", "share"};
 
-EnumArray<std::string_view, 23> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig", "sr", "u", "r", "cfg", "sc", "sh"};
+EnumArray<std::string_view, 23> action_shortcuts = {"ct", "cp", "p", "clr", "sh", "ed", "ad", "rm", "nt", "sw", "st", "in", "ld", "imp", "ex", "hs", "ig", "sr", "u", "r", "cfg", "sc", "sr"};
 
 EnumArray<std::string_view, 23> doing_action = {"Cutting",        "Copying",          "Pasting",  "Clearing",        "Showing",      "Editing", "Adding",
                                                 "Removing",       "Noting",           "Swapping", "Checking status", "Showing info", "Loading", "Importing",
