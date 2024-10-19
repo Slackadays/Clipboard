@@ -24,6 +24,7 @@ std::vector<Clipboard> clipboardsWithContent() {
     for (const auto& entry : fs::directory_iterator(global_path.persistent))
         if (auto cb = Clipboard(entry.path().filename().string()); cb.holdsDataInCurrentEntry()) clipboards.emplace_back(cb);
     std::sort(clipboards.begin(), clipboards.end(), [](const auto& a, const auto& b) { return a.name() < b.name(); });
+    clipboards.erase(std::unique(clipboards.begin(), clipboards.end(), [](const auto& a, const auto& b) { return a.name() == b.name(); }), clipboards.end());
     return clipboards;
 }
 
