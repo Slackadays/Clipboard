@@ -216,6 +216,11 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
         setWindowsClipboardDataPipe();
     } else if (clipboard.type() == ClipboardContentType::Paths) {
         setWindowsClipboardDataFiles();
+    } else {
+        // Write blank content
+        if (SetClipboardData(CF_UNICODETEXT, nullptr) == nullptr) {
+            onWindowsError("SetClipboardData");
+        }
     }
 
     if (CloseClipboard() == 0) {

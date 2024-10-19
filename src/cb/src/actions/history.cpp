@@ -97,9 +97,9 @@ void history() {
             // format time like 1y 2d 3h 4m 5s
             auto years = std::chrono::duration_cast<std::chrono::years>(timeSince);
             auto days = std::chrono::duration_cast<std::chrono::days>(timeSince - years);
-            auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - days);
-            auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - days - hours);
-            auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - days - hours - minutes);
+            auto hours = std::chrono::duration_cast<std::chrono::hours>(timeSince - years - days);
+            auto minutes = std::chrono::duration_cast<std::chrono::minutes>(timeSince - years - days - hours);
+            auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timeSince - years - days - hours - minutes);
             if (years.count() > 0) agoMessage += std::to_string(years.count()) + "y ";
             if (days.count() > 0) agoMessage += std::to_string(days.count()) + "d ";
             if (hours.count() > 0) agoMessage += std::to_string(hours.count()) + "h ";

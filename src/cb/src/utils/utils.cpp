@@ -621,12 +621,14 @@ void removeOldFiles(const std::vector<std::string>& exclusions) {
         if (auto res = std::find(exclusions.begin(), exclusions.end(), fs::path(line).filename().string()); res != exclusions.end()) continue;
         try {
             fs::remove_all(line);
+            fs::remove_all(path.data / fs::path(line).filename());
         } catch (const fs::filesystem_error& e) {
             copying.failedItems.emplace_back(line, e.code());
         }
     }
     files.close();
     if (copying.failedItems.empty()) fs::remove(path.metadata.originals);
+    updateExternalClipboards(true);
 }
 
 void performAction() {

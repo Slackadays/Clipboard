@@ -70,6 +70,9 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
             [fileArray addObject:[NSURL fileURLWithPath:@(path.c_str())]];
         }
         [[NSPasteboard generalPasteboard] writeObjects:fileArray];
+    } else {
+        // Write blank content
+        [[NSPasteboard generalPasteboard] setString:@"" forType:NSPasteboardTypeString];
     }
 }
 
