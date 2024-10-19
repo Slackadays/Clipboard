@@ -136,19 +136,31 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
 
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
-    auto filesHaveChanged = std::all_of(paths.begin(), paths.end(), [](auto& path) {
-        auto filename = path.filename().empty() ? path.parent_path().filename() : path.filename();
-        // check if the filename of the provided path does not exist in the temp directory
-        if (!fs::exists(::path.data / filename)) return true;
+    auto filesHaveChanged = std::all_of(
+                                    paths.begin(),
+                                    paths.end(),
+                                    [](auto& path) {
+                                        auto filename = path.filename().empty() ? path.parent_path().filename() : path.filename();
+                                        // check if the filename of the provided path does not exist in the temp directory
+                                        if (!fs::exists(::path.data / filename)) return true;
 
-        // check if the file sizes are different if it's not a directory
-        if (!fs::is_directory(path) && fs::file_size(path) != fs::file_size(::path.data / filename)) return true;
+                                        // check if the file sizes are different if it's not a directory
+                                        if (!fs::is_directory(path) && fs::file_size(path) != fs::file_size(::path.data / filename)) return true;
 
-        // check if the file contents are different if it's not a directory
-        if (!fs::is_directory(path) && fileContents(path).value() != fileContents(::path.data / filename)) return true;
+                                        // check if the file contents are different if it's not a directory
+                                        if (!fs::is_directory(path) && fileContents(path).value() != fileContents(::path.data / filename)) return true;
 
-        return false;
-    });
+                                        return false;
+                                    }
+                            )
+                            || std::any_of(
+                                    fs::directory_iterator(::path.data),
+                                    fs::directory_iterator {},
+                                    [&paths](auto& entry) { // Check if at there is at least one file already in the temp directory that is not in the clipboard
+                                        auto filename = entry.path().filename();
+                                        return std::none_of(paths.begin(), paths.end(), [&filename](auto& path) { return path.filename() == filename; });
+                                    }
+                            );
 
     auto eligibleForCopying = std::all_of(paths.begin(), paths.end(), [](auto& path) {
         if (!fs::exists(path)) return false;
