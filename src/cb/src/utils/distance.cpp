@@ -15,7 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
 
-unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two) {
+size_t levenshteinDistance(const std::string_view& one, const std::string_view& two) {
     if (one == two) return 0;
 
     if (one.empty()) return two.size();

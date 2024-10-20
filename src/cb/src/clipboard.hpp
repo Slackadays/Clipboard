@@ -364,7 +364,7 @@ std::string generatedEndbar();
 std::string repeatString(const std::string_view& character, const size_t& length);
 std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t len = 0);
 std::string removeExcessWhitespace(const std::string_view& str, size_t len = 0);
-unsigned long levenshteinDistance(const std::string_view& one, const std::string_view& two);
+size_t levenshteinDistance(const std::string_view& one, const std::string_view& two);
 void setLanguagePT();
 void setLanguageTR();
 void setLanguageES_CO();

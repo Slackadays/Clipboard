@@ -74,6 +74,11 @@ void script() {
 void runClipboardScript() {
     if (!fs::is_regular_file(path.metadata.script)) return;
 
+#if defined(_WIN32) || defined(_WIN64)
+    fprintf(stderr, "%s", formatColors("[error][inverse] ✘ [noinverse] Sorry, but clipboard scripts aren't supported on Windows yet.[blank]\n").data());
+#endif
+
+#if defined(UNIX_OR_UNIX_LIKE)
     static bool secondRun = false;
 
     fs::path currentPath = fs::current_path();
@@ -104,4 +109,5 @@ void runClipboardScript() {
     fs::current_path(currentPath);
 
     secondRun = true;
+#endif
 }
