@@ -91,6 +91,8 @@ std::string removeExcessWhitespace(const std::string_view& oldStr, size_t len) {
     std::string newStr;
     newStr.reserve(oldStr.size());
 
+    if (len == 0) len = oldStr.size();
+
     // Remove all whitespace that isn't a single space (2+ spaces, and tabs)
     for (size_t i = 0; i < len && i < oldStr.size(); i++) {
         if (oldStr[i] == ' ') {

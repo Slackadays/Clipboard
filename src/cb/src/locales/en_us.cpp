@@ -72,7 +72,7 @@ Message help_message = "[info]┃ This is the Clipboard Project %s (commit %s), 
                        "[info]┃ You can also get more help in our Discord server at [bold]https://discord.gg/J6asnc3pEG[blank]\n"
                        "[info][bold]┃ All Actions Available[blank]\n"
                        "%s"
-                       "[info]┃ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                       "[info]┃ Copyright (C) 2022-2024 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                        "[info]┃ This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
                        "redistribute it under certain conditions.[blank]\n";
 Message check_clipboard_status_message = "[info][bold]All your clipboards with content[nobold]";

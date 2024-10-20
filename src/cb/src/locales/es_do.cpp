@@ -127,7 +127,7 @@ void setLanguageES_DO() {
                    "-h[nobold], [bold]cb --help[nobold] o[bold] cb help[nobold].\n"
                    "[info][bold]┃ All Actions Available[blank]\n"
                    "%s"
-                   "[info]┃ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[info]┃ Copyright (C) 2022-2024 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]┃ This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome "
                    "to redistribute it under certain conditions.[blank]\n";
     no_valid_action_message = "[error][inverse] ✘ [noinverse] No especificaste ninguna acción válida o se te olvidó. [help]⬤ Inténta usar o añadir [bold]cortar, "

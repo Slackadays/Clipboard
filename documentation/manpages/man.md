@@ -153,4 +153,4 @@ Report all bugs to __https://github.com/Slackadays/Clipboard__ or __https://disc
 
 ## COPYRIGHT
 
-Copyright (c) 2023 Jackson Huff.
+Copyright (c) 2022-2024 Jackson Huff.

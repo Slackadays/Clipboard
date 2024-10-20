@@ -135,7 +135,7 @@ void setLanguageTR() {
                    "[info][bold]┃ All Actions Available[blank]\n"
                    "%s"
                    "[info]┃ Discord sunucumuzdan daha fazla yardım alabilirsiniz: [bold]https://discord.gg/J6asnc3pEG[blank]\n"
-                   "[info]┃ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[info]┃ Copyright (C) 2022-2024 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]┃                                 GPLv3 altında lisanslanmıştır.[blank]\n"
                    "[info]┃ Bu program KESİNLİKLE HİÇBİR GARANTİ ile birlikte gelir. Bu ücretsiz bir yazılımdır ve belirli "
                    "koşullar altında yeniden dağıtabilirsiniz.[blank]\n";

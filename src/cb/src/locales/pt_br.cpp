@@ -108,7 +108,7 @@ void setLanguagePT() {
                    "-h[nobold], [bold]cb --help[nobold] ou[bold] cb help[nobold].\n"
                    "[info][bold]┃ All Actions Available[blank]\n"
                    "%s"
-                   "[info]┃ Copyright (C) 2023 Jackson Huff. Licensed under the GPLv3.[blank]\n"
+                   "[info]┃ Copyright (C) 2022-2024 Jackson Huff. Licensed under the GPLv3.[blank]\n"
                    "[info]┃ Este programa vem com ABSOLUTAMENTE NENHUMA GARANTIA. Este é um software livre, e você é "
                    "bem-vindo a redistribuí-lo sob certas condições.[blank]\n";
     no_valid_action_message = "[error][inverse] ✘ [noinverse] Você não especificou uma ação válida (\"%s\"), ou esqueceu de incluí-la. [help]⬤ Tente utilizar "
