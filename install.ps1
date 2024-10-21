@@ -3,7 +3,7 @@ if (Test-Path $env:USERPROFILE\scoop) {
     exit
 }
 
-Invoke-WebRequest https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-windows-amd64.zip -OutFile clipboard-windows-amd64.zip
+Invoke-WebRequest https://github.com/Slackadays/Clipboard/releases/latest/download/clipboard-windows-amd64.zip -OutFile clipboard-windows-amd64.zip
 Expand-Archive clipboard-windows-amd64.zip -DestinationPath .\clipboard-windows-amd64
 
 New-Item -ItemType Directory -Force -Path "C:\Program Files\Clipboard"
