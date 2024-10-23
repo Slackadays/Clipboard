@@ -391,7 +391,7 @@ $ cb status
 
 Add a number to the end of your action to choose which temporary clipboard you want to use (the default is 0). Or, add `_` to use a persistent clipboard instead.
 
-<b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code>
+<h3><b>Copy</b> &emsp; <code>cb [--](copy|cp)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](copy|cp)][(num)|_(id)]</code></h3>
 
 Copy a file.
 ```sh
@@ -445,7 +445,7 @@ $ cb cp50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 <br>
 
-<b>Cut</b> &emsp; <code>cb [--](cut|ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](cut|ct)][(num)|_(id)]</code>
+<h3><b>Cut</b> &emsp; <code>cb [--](cut|ct)[(num)|_(id)] (file) [files]</code> or <code>(something) | cb [[--](cut|ct)][(num)|_(id)]</code></h3>
 
 Cut a file.
 ```sh
@@ -498,7 +498,7 @@ $ cb ct50 "Aventura/God's Project/04 Un Chi Chi.flac" BarDir BazDir
 
 <br>
 
-<b>Paste</b> &emsp; <code>cb [--](paste|p)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [[--](paste|p][(num)|_(id)] | (something)</code> or <code>cb [[--](paste|p)][(num)|_(id)] > (some file)</code>
+<h3><b>Paste</b> &emsp; <code>cb [--](paste|p)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [[--](paste|p][(num)|_(id)] | (something)</code> or <code>cb [[--](paste|p)][(num)|_(id)] > (some file)</code></h3>
 
 Start by copying or cutting something.
 ```sh
@@ -567,7 +567,7 @@ Note: If you paste after cutting, then CB will delete the raw data afterwards, e
 
 <br>
 
-<b>Add Contents</b> &emsp; <code>cb [--](add|ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [[--](add|ad)][(num)|_(id)]</code>
+<h3><b>Add Contents</b> &emsp; <code>cb [--](add|ad)[(num)|_(id)] (file|text) [files]</code> or <code>(something) | cb [[--](add|ad)][(num)|_(id)]</code></h3>
 
 Start by copying something.
 ```sh
@@ -607,7 +607,7 @@ $ echo " What's yours?" | cb add
 
 <br>
 
-<b>Remove Contents</b> &emsp; <code>cb [--](remove|rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [[--](remove|rm)][(num)|_(id)]</code>
+<h3><b>Remove Contents</b> &emsp; <code>cb [--](remove|rm)[(num)|_(id)] (regex) [regexes]</code> or <code>(some regex) | cb [[--](remove|rm)][(num)|_(id)]</code></h3>
 
 Start by copying something.
 ```sh
@@ -648,7 +648,7 @@ $ echo "music" | cb remove
 
 <br>
 
-<b>Show Contents</b> &emsp; <code>cb [--](show|sh)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [--](show|sh)[(num)|_(id)] [regex] [regexes] | (something)</code>
+<h3><b>Show Contents</b> &emsp; <code>cb [--](show|sh)[(num)|_(id)] [regex] [regexes]</code> or <code>cb [--](show|sh)[(num)|_(id)] [regex] [regexes] | (something)</code></h3>
 
 Start by copying something.
 ```sh
@@ -689,7 +689,7 @@ $ eval vlc $(cb sh)
 
 <br>
 
-<b>Clear Clipboard</b> &emsp; <code>cb [--](clear|clr)[(num)|_(id)]</code>
+<h3><b>Clear Clipboard</b> &emsp; <code>cb [--](clear|clr)[(num)|_(id)]</code></h3>
 
 Start by copying something.
 ```sh
@@ -707,7 +707,7 @@ $ cb --clr
 
 <br>
 
-<b>Edit Clipboard Content</b> &emsp; <code>cb [--](edit|ed)[(num)|_(id)] [editor]</code>
+<h3><b>Edit Clipboard Content</b> &emsp; <code>cb [--](edit|ed)[(num)|_(id)] [editor]</code></h3>
 
 Start by copying some text.
 ```sh
@@ -735,7 +735,7 @@ cb ed code
 
 ### <img src="documentation/readme-assets/MoveThingsAround.png" alt="Move Things Around" height=25px />
 
-<b>Load Contents</b> &emsp; <code>cb [--](load|ld)[(num)|_(id)] [clipboard] [clipboards]</code>
+<h3><b>Load Contents</b> &emsp; <code>cb [--](load|ld)[(num)|_(id)] [clipboard] [clipboards]</code></h3>
 
 Start by copying something.
 ```sh
@@ -764,7 +764,7 @@ Note: This is useful if you want to load content into GUI clipboard systems, as 
 
 <br>
 
-<b>Swap Contents</b> &emsp; <code>cb [--](swap|sw)[(num)|_(id)] [clipboard]</code>
+<h3><b>Swap Contents</b> &emsp; <code>cb [--](swap|sw)[(num)|_(id)] [clipboard]</code></h3>
 
 Start by copying something to two clipboards.
 ```sh
@@ -792,7 +792,7 @@ Note: If you don't provide a destination clipboard, then the Swap action will sw
 
 <br>
 
-<b>Import Clipboards</b> &emsp; <code>cb [--](import|imp) [source folder]</code>
+<h3><b>Import Clipboards</b> &emsp; <code>cb [--](import|imp) [source folder]</code></h3>
 
 Start by exporting a clipboard.
 ```sh
@@ -818,7 +818,7 @@ $ cb import MySavedClipboards
 
 <br>
 
-<b>Export Clipboards</b> &emsp; <code>cb [--](export|ex) [clipboard] [clipboards]</code>
+<h3><b>Export Clipboards</b> &emsp; <code>cb [--](export|ex) [clipboard] [clipboards]</code></h3>
 
 Start by copying something.
 ```sh
@@ -843,7 +843,7 @@ $ cb export 1 2 3
 
 <br>
 
-<b>Queue Clipboard History</b> &emsp; <code>cb [--](history|hs)[(num)|_(id)]</code>
+<h3><b>Queue Clipboard History</b> &emsp; <code>cb [--](history|hs)[(num)|_(id)]</code></h3>
 
 Start by copying several things.
 ```sh
@@ -863,7 +863,7 @@ $ cb --hs
 
 <br>
 
-<b>Get Older Clipboard Entries</b> &emsp; <code>cb [--](history|hs)[(num)|_(id)] (clipboard) [clipboards]</code>
+<h3><b>Get Older Clipboard Entries</b> &emsp; <code>cb [--](history|hs)[(num)|_(id)] (clipboard) [clipboards]</code></h3>
 
 Start by copying several things.
 ```sh
@@ -885,7 +885,7 @@ $ cb --hs 1 2
 
 ### <img src="documentation/readme-assets/SeeEverything.png" alt="See Everything" height=25px />
 
-<b>Set Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [[--](note|nt)][(num)|_(id)]</code>
+<h3><b>Set Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)] (text)</code> or <code>(something) | cb [[--](note|nt)][(num)|_(id)]</code></h3>
 
 Add a personal note to a clipboard.
 ```sh
@@ -908,7 +908,7 @@ $ cb note ""
 
 <br>
 
-<b>Show Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)]</code>
+<h3><b>Show Note</b> &emsp; <code>cb [--](note|nt)[(num)|_(id)]</code></h3>
 
 Start by adding a note to a clipboard.
 ```sh
@@ -925,7 +925,7 @@ $ cb --nt
 
 <br>
 
-<b>Set Ignore Rules</b> &emsp; <code>cb [--](ignore|ig)[(num)|_(id)] (regex) [regexes]</code> or <code>(regex) | cb [[--](ignore|ig)][(num)|_(id)]</code>
+<h3><b>Set Ignore Rules</b> &emsp; <code>cb [--](ignore|ig)[(num)|_(id)] (regex) [regexes]</code> or <code>(regex) | cb [[--](ignore|ig)][(num)|_(id)]</code></h3>
 
 Set some kinds of content to always ignore.
 ```sh
@@ -949,7 +949,7 @@ $ cb ignore ""
 
 <br>
 
-<b>Show Ignore Rules</b> &emsp; <code>cb [--](ignore|ig)[(num)|_(id)]</code>
+<h3><b>Show Ignore Rules</b> &emsp; <code>cb [--](ignore|ig)[(num)|_(id)]</code></h3>
 
 Start by adding some ignore regex rules to a clipboard.
 ```sh
@@ -966,7 +966,7 @@ $ cb --ig
 
 <br>
 
-<b>Show Detailed Info</b> &emsp; <code>cb [--](info|in)[(num)|_(id)]</code> or <code>cb [--](info|in)[(num)|_(id)] | (something)</code>
+<h3><b>Show Detailed Info</b> &emsp; <code>cb [--](info|in)[(num)|_(id)]</code> or <code>cb [--](info|in)[(num)|_(id)] | (something)</code></h3>
 
 Show helpful details for a clipboard.
 ```sh
@@ -985,7 +985,7 @@ $ cb info | jq
 
 <br>
 
-<b>Search Clipboard Contents</b> &emsp; <code>cb [--](search|sr)[(num)|_(id)] (query) [queries]</code>
+<h3><b>Search Clipboard Contents</b> &emsp; <code>cb [--](search|sr)[(num)|_(id)] (query) [queries]</code></h3>
 
 Start by copying several things.
 ```sh
@@ -1005,7 +1005,7 @@ $ cb --sr Baz
 
 <br>
 
-<b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code>
+<h3><b>Show Help Message</b> &emsp; <code>cb (-h|[--]help)</code></h3>
 
 Show the help message.
 ```sh
@@ -1017,7 +1017,7 @@ $ cb -h
 
 <br>
 
-<b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|st]</code> or <code>cb [--](status|st) | (something)</code>
+<h3><b>Check All Clipboards' Status</b> &emsp; <code>cb [[--]status|st]</code> or <code>cb [--](status|st) | (something)</code></h3>
 
 Check the status of all clipboards that have content.
 ```sh
@@ -1036,7 +1036,7 @@ $ cb status | cat
 
 <br>
 
-<b>Check Your Configuration</b> &emsp; <code>cb [[--]config|cfg]</code>
+<h3><b>Check Your Configuration</b> &emsp; <code>cb [[--]config|cfg]</code></h3>
 
 Check your configuration of CB.
 ```sh
@@ -1147,9 +1147,7 @@ cb note "Latest files from website ABCXYZ"
 
 ### <img src="documentation/readme-assets/Flags.png" alt="Flags" height=25px />
 
-<b><code>--all</code>, <code>-a</code> &emsp; Add this when clearing to clear all clipboards at once, or when searching to search all clipboards.</b>
-
-<br>
+<h3><b><code>--all</code>, <code>-a</code> &emsp; Add this when clearing to clear all clipboards at once, or when searching to search all clipboards.</b></h3>
 
 Start from a blank slate.
 ```sh
@@ -1159,9 +1157,7 @@ WARNING! This will get rid of everything you've stored with CB, so be very caref
 
 <br>
 
-<b><code>--clipboard (clipboard)</code>, <code>-c (clipboard)</code> &emsp; Add this to choose which clipboard you want to use. </b>
-
-<br>
+<h3><b><code>--clipboard (clipboard)</code>, <code>-c (clipboard)</code> &emsp; Add this to choose which clipboard you want to use. </b></h3>
 
 Choose a non-default clipboard.
 ```sh
@@ -1183,9 +1179,7 @@ $ cb -c _ copy "Generation Next"/*
 
 <br>
 
-<b><code>--entry (entry)</code>, <code>-e (entry)</code> &emsp; Add this to choose which history entry you want to use. </b>
-
-<br>
+<h3><b><code>--entry (entry)</code>, <code>-e (entry)</code> &emsp; Add this to choose which history entry you want to use. </b></h3>
 
 Choose a non-default history entry.
 ```sh
@@ -1197,9 +1191,7 @@ Note: To copy to a non-default entry, that entry must exist already.
 
 <br>
 
-<b><code>--fast-copy</code>, <code>-fc</code> &emsp; Add this to use links when copying, cutting, pasting, or loading. If you modify the items that you used with this flag, then the items you paste will have the same changes.</b>
-
-<br>
+<h3><b><code>--fast-copy</code>, <code>-fc</code> &emsp; Add this to use links when copying, cutting, pasting, or loading. If you modify the items that you used with this flag, then the items you paste will have the same changes.</b></h3>
 
 Copy a lot of files in much less time than before.
 ```sh
@@ -1208,9 +1200,7 @@ $ cb --fast-copy copy /usr/bin/*
 
 <br>
 
-<b><code>--mime</code>, <code>-m</code> &emsp; Add this to request a specific content MIME type from GUI clipboard systems.</b>
-
-<br>
+<h3><b><code>--mime</code>, <code>-m</code> &emsp; Add this to request a specific content MIME type from GUI clipboard systems.</b></h3>
 
 Save GUI clipboard content of a specific MIME type to the main clipboard.
 ```sh
@@ -1219,9 +1209,7 @@ $ cb --mime text/html | cb
 
 <br>
 
-<b><code>--no-confirmation</code>, <code>-nc</code> &emsp; Add this to disable confirmation messages from CB. </b>
-
-<br>
+<h3><b><code>--no-confirmation</code>, <code>-nc</code> &emsp; Add this to disable confirmation messages from CB. </b></h3>
 
 Reduce distractions after showing some text content.
 ```sh
@@ -1230,9 +1218,7 @@ $ cb -nc sh | cat
 
 <br>
 
-<b><code>--no-progress</code>, <code>-np</code> &emsp; Add this to disable progress messages from CB. </b>
-
-<br>
+<h3><b><code>--no-progress</code>, <code>-np</code> &emsp; Add this to disable progress messages from CB. </b></h3>
 
 Reduce distractions while doing a search that takes a while.
 ```sh
@@ -1241,9 +1227,7 @@ $ fzf | cb -np
 
 <br>
 
-<b><code>--secret</code> &emsp; Add this when ignoring content to ignore a secret (or secrets) instead. </b>
-
-<br>
+<h3><b><code>--secret</code> &emsp; Add this when ignoring content to ignore a secret (or secrets) instead. </b></h3>
 
 Ignore a password.
 ```sh
@@ -1261,9 +1245,7 @@ $ cb ignore --secret ""
 
 <br>
 
-<b><code>--bachata</code> &emsp; Add this for something special! </b>
-
-<br>
+<h3><b><code>--bachata</code> &emsp; Add this for something special! </b></h3>
 
 Make your life less boring.
 ```sh
@@ -1277,9 +1259,7 @@ $ cb --bachata
 
 ### <img src="documentation/readme-assets/EnvironmentVariables.png" alt="Environment Variables" height=25px />
 
-<b><code>CI</code> &emsp; Set this to "true" or "1" to make CB overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</b>
-
-<br>
+<h3><b><code>CI</code> &emsp; Set this to "true" or "1" to make CB overwrite existing items without a user prompt when pasting. This variable is intended for Continuous Integration scripts where a live human is not present to make decisions.</b></h3>
 
 Use CB in a CI script.
 ```sh
@@ -1292,9 +1272,7 @@ cb p
 
 <br>
 
-<b><code>CLIPBOARD_EDITOR</code> &emsp; Set this to the editor you want to use for the Edit action. </b>
-
-<br>
+<h3><b><code>CLIPBOARD_EDITOR</code> &emsp; Set this to the editor you want to use for the Edit action. </b></h3>
 
 Set a custom editor to use.
 ```sh
@@ -1305,9 +1283,7 @@ Note: The environment variables `EDITOR` and `VISUAL` by default take precedence
 
 <br>
 
-<b><code>CLIPBOARD_HISTORY</code> &emsp; Set this to the maximum history size you want to keep, like <code>10000</code> or <code>50gb</code>. </b>
-
-<br>
+<h3><b><code>CLIPBOARD_HISTORY</code> &emsp; Set this to the maximum history size you want to keep, like <code>10000</code> or <code>50gb</code>. </b></h3>
 
 `CLIPBOARD_HISTORY` supports up to 2^32 - 1 as a value. So, go ahead. Crank that b*tch up to a billion.
 ```sh
@@ -1332,9 +1308,7 @@ Note: You can choose between `y`, `m`, `w`, `d`, and `h` to specify amounts for 
 
 <br>
 
-<b><code>CLIPBOARD_LOCALE</code> &emsp; Set this to the locale that only CB will use for its commands and output, like <code>en_US.UTF-8</code> or <code>es_DO.UTF-8</code>. </b>
-
-<br>
+<h3><b><code>CLIPBOARD_LOCALE</code> &emsp; Set this to the locale that only CB will use for its commands and output, like <code>en_US.UTF-8</code> or <code>es_DO.UTF-8</code>. </b></h3>
 
 Change the locale to match what you're more comfortable with.
 ```sh
@@ -1354,9 +1328,7 @@ $ CLIPBOARD_LOCALE="" cb cp Foobar
 
 <br>
 
-<b><code>CLIPBOARD_TMPDIR</code> &emsp; Set this to the directory that only CB will use to hold the items you cut or copy into a temporary directory.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_TMPDIR</code> &emsp; Set this to the directory that only CB will use to hold the items you cut or copy into a temporary directory.</b></h3>
 
 Choose a special place to put your temporary clipboards this one time.
 ```sh
@@ -1376,9 +1348,7 @@ Note: By default, CB uses the C++ filesystem library function `fs::temp_director
 
 <br>
 
-<b><code>CLIPBOARD_PERSISTDIR</code> &emsp; Set this to the directory that only CB will use to hold the items you cut or copy into a persistent directory.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_PERSISTDIR</code> &emsp; Set this to the directory that only CB will use to hold the items you cut or copy into a persistent directory.</b></h3>
 
 Choose a special place to put your persistent clipboards this one time.
 ```sh
@@ -1398,9 +1368,7 @@ Note: By default, CB uses the user's home directory to generate the persistent d
 
 <br>
 
-<b><code>CLIPBOARD_CUSTOMPERSIST</code> &emsp; Set this to the clipboards you want to make persistent, using regex.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_CUSTOMPERSIST</code> &emsp; Set this to the clipboards you want to make persistent, using regex.</b></h3>
 
 Make everything you copy persistent.
 
@@ -1419,9 +1387,7 @@ $ cb copy5 Foo Bar Baz
 
 <br>
 
-<b><code>CLIPBOARD_NOAUDIO</code> &emsp; Set this to "true" or "1" to disable audio coming from CB.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_NOAUDIO</code> &emsp; Set this to "true" or "1" to disable audio coming from CB.</b></h3>
 
 Turn off those sound effects.
 ```sh
@@ -1432,9 +1398,7 @@ $ cb ffksdjfdj
 
 <br>
 
-<b><code>CLIPBOARD_NOGUI</code> &emsp; Set this to "true" or "1" to disable integration with GUI clipboards.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_NOGUI</code> &emsp; Set this to "true" or "1" to disable integration with GUI clipboards.</b></h3>
 
 Debug a flaky GUI system by disabling its integration with CB.
 
@@ -1446,9 +1410,7 @@ $ cb show
 
 <br>
 
-<b><code>CLIPBOARD_NOPROGRESS</code> &emsp; Set this to "true" or "1" to disable only progress messages from CB.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_NOPROGRESS</code> &emsp; Set this to "true" or "1" to disable only progress messages from CB.</b></h3>
 
 Reduce distractions while doing a search that takes a while.
 ```sh
@@ -1463,9 +1425,7 @@ $ fzf | cb
 
 <br>
 
-<b><code>CLIPBOARD_NOREMOTE</code> &emsp; Set this to "true" or "1" to disable remote clipboard sharing.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_NOREMOTE</code> &emsp; Set this to "true" or "1" to disable remote clipboard sharing.</b></h3>
 
 Disable all clipboard content transfers through the terminal.
 ```sh
@@ -1474,9 +1434,7 @@ $ export CLIPBOARD_NOREMOTE=1
 
 <br>
 
-<b><code>CLIPBOARD_SILENT</code> &emsp; Set this to "true" or "1" to disable progress and confirmation messages from CB.</b>
-
-<br>
+<h3><b><code>CLIPBOARD_SILENT</code> &emsp; Set this to "true" or "1" to disable progress and confirmation messages from CB.</b></h3>
 
 Rest in peace by seeing nothing that isn't an error.
 ```sh
@@ -1486,9 +1444,7 @@ $ cb cp "I'm running out of Aventura references"
 
 <br>
 
-<b><code>CLIPBOARD_THEME</code> &emsp; Set this to the color theme that CB will use. Choose between <code>light</code>, <code>darkhighcontrast</code>, <code>lighthighcontrast</code>, <code>amber</code>, <code>green</code>, and <code>ansi</code> (the default is <code>dark</code>).</b>
-
-<br>
+<h3><b><code>CLIPBOARD_THEME</code> &emsp; Set this to the color theme that CB will use. Choose between <code>light</code>, <code>darkhighcontrast</code>, <code>lighthighcontrast</code>, <code>amber</code>, <code>green</code>, and <code>ansi</code> (the default is <code>dark</code>).</b></h3>
 
 Remind yourself of the terminals of the past.
 ```sh
@@ -1506,9 +1462,7 @@ $ cb show
 
 <br>
 
-<b><code>FORCE_COLOR</code> &emsp; Set this to "true" or "1" to make CB always show color regardless of what you set <code>NO_COLOR</code> to.</b>
-
-<br>
+<h3><b><code>FORCE_COLOR</code> &emsp; Set this to "true" or "1" to make CB always show color regardless of what you set <code>NO_COLOR</code> to.</b></h3>
 
 Override somebody else's choice to disable colors.
 ```sh
@@ -1528,9 +1482,7 @@ $ CLICOLOR_FORCE=1 cb copy "There are almost no bachateros where I live right no
 
 <br>
 
-<b><code>NO_COLOR</code> &emsp; Set this to anything to make CB not show any colors.</b>
-
-<br>
+<h3><b><code>NO_COLOR</code> &emsp; Set this to anything to make CB not show any colors.</b></h3>
 
 Make CB look boring.
 ```sh
