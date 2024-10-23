@@ -200,7 +200,7 @@ bool isAClearingAction() {
 
 bool needsANewEntry() {
     using enum Action;
-    return (action == Copy || action == Cut || (action == Clear && !all_option)) && clipboard_entry == constants.default_clipboard_entry;
+    return (action == Copy || action == Cut || (action == Clear && !all_option && copying.items.size() == 0)) && clipboard_entry == constants.default_clipboard_entry;
 }
 
 [[nodiscard]] CopyPolicy userDecision(const std::string& item) {
@@ -573,7 +573,7 @@ void checkForNoItems() {
     if (action_is_one_of(Cut, Copy, Add, Remove) && io_type != IOType::Pipe && copying.items.size() < 1) {
         error_exit(choose_action_items_message(), actions[action], actions[action], clipboard_invocation, actions[action]);
     }
-    if (((action_is_one_of(Paste, Show) || (action == Clear && !all_option))) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
+    if (((action_is_one_of(Paste, Show) || (action == Clear && !all_option && copying.items.size() == 0))) && (!fs::exists(path.data) || fs::is_empty(path.data))) {
         PerformAction::status();
         exit(EXIT_SUCCESS);
     }
