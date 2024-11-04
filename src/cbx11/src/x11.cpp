@@ -160,7 +160,11 @@ public:
     using format16_t = std::uint16_t;
     using format32_t = std::conditional<sizeof(void*) == sizeof(std::uint64_t), std::uint64_t, std::uint32_t>::type;
 
-    enum Value : std::size_t { Format8 = 8, Format16 = 16, Format32 = 32 };
+    enum Value : std::size_t {
+        Format8 = 8,
+        Format16 = 16,
+        Format32 = 32
+    };
 
     constexpr X11PropertyFormat(Value value) : X11PropertyFormat(static_cast<std::size_t>(value), value == Format8 ? sizeof(format8_t) : value == Format16 ? sizeof(format16_t) : sizeof(format32_t)) {}
 
@@ -175,7 +179,11 @@ public:
     constexpr static inline X11PropertyFormat fromSize();
 };
 
-enum class X11PropertyMode : int { Replace = PropModeReplace, Append = PropModeAppend, Prepend = PropModePrepend };
+enum class X11PropertyMode : int {
+    Replace = PropModeReplace,
+    Append = PropModeAppend,
+    Prepend = PropModePrepend
+};
 
 class X11Property {
 private:

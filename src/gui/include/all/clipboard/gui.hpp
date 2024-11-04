@@ -24,7 +24,10 @@
 
 namespace fs = std::filesystem;
 
-enum class ClipboardPathsAction { Copy, Cut };
+enum class ClipboardPathsAction {
+    Copy,
+    Cut
+};
 
 std::ostream& operator<<(std::ostream&, const ClipboardPathsAction&);
 
@@ -41,7 +44,12 @@ public:
     [[nodiscard]] inline const std::vector<fs::path>& paths() const { return m_paths; }
 };
 
-enum class ClipboardContentType { Empty, Text, Paths, Binary };
+enum class ClipboardContentType {
+    Empty,
+    Text,
+    Paths,
+    Binary
+};
 
 class ClipboardContent {
 private:

@@ -103,7 +103,13 @@ struct Constants {
 };
 constexpr Constants constants;
 
-enum class CopyPolicy { ReplaceAll, ReplaceOnce, SkipOnce, SkipAll, Unknown };
+enum class CopyPolicy {
+    ReplaceAll,
+    ReplaceOnce,
+    SkipOnce,
+    SkipAll,
+    Unknown
+};
 
 struct Copying {
     bool use_safe_copy = true;
@@ -171,8 +177,16 @@ extern bool secret_selection;
 extern std::string preferred_mime;
 extern std::vector<std::string> available_mimes;
 
-enum class ClipboardState : int { Setup, Action, Error };
-enum class IndicatorState : int { Done, Active, Cancel };
+enum class ClipboardState : int {
+    Setup,
+    Action,
+    Error
+};
+enum class IndicatorState : int {
+    Done,
+    Active,
+    Cancel
+};
 
 extern std::condition_variable cv;
 extern std::mutex m;
@@ -202,11 +216,39 @@ struct IsTTY {
 };
 extern IsTTY is_tty;
 
-enum class Action : unsigned int { Cut, Copy, Paste, Clear, Show, Edit, Add, Remove, Note, Swap, Status, Info, Load, Import, Export, History, Ignore, Search, Undo, Redo, Config, Script, Share };
+enum class Action : unsigned int {
+    Cut,
+    Copy,
+    Paste,
+    Clear,
+    Show,
+    Edit,
+    Add,
+    Remove,
+    Note,
+    Swap,
+    Status,
+    Info,
+    Load,
+    Import,
+    Export,
+    History,
+    Ignore,
+    Search,
+    Undo,
+    Redo,
+    Config,
+    Script,
+    Share
+};
 
 extern Action action;
 
-enum class IOType : unsigned int { File, Pipe, Text };
+enum class IOType : unsigned int {
+    File,
+    Pipe,
+    Text
+};
 
 extern IOType io_type;
 
