@@ -58,6 +58,8 @@ std::string maximumHistorySize;
 
 std::string preferred_mime;
 std::vector<std::string> available_mimes;
+std::vector<std::string> script_actions;
+std::vector<std::string> script_timings;
 
 std::vector<std::string> arguments;
 
@@ -468,6 +470,8 @@ void setFlags() {
     if (flagIsPresent<bool>("--fast-copy") || flagIsPresent<bool>("-fc")) copying.use_safe_copy = false;
     if (auto flag = flagIsPresent<std::string>("--mime"); flag != "") preferred_mime = flag;
     if (auto flag = flagIsPresent<std::string>("-m"); flag != "") preferred_mime = flag;
+    if (auto flag = flagIsPresent<std::string>("--actions"); flag != "") script_actions = regexSplit(flag, std::regex(","));
+    if (auto flag = flagIsPresent<std::string>("--timings"); flag != "") script_timings = regexSplit(flag, std::regex(","));
     if (flagIsPresent<bool>("--no-progress") || flagIsPresent<bool>("-np")) progress_silent = true;
     if (flagIsPresent<bool>("--no-confirmation") || flagIsPresent<bool>("-nc")) confirmation_silent = true;
     if (flagIsPresent<bool>("--secret") || flagIsPresent<bool>("-s")) secret_selection = true;

@@ -48,6 +48,7 @@ Clipboard::Clipboard(const std::string& clipboard_name, const unsigned long& cli
     metadata.notes = metadata / constants.notes_name;
     metadata.originals = metadata / constants.original_files_name;
     metadata.script = metadata / constants.script_name;
+    metadata.script_config = metadata / constants.script_config_name;
     metadata.version = metadata / constants.storage_protocol_version_name;
 
     fs::create_directories(data);

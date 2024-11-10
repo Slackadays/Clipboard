@@ -72,7 +72,7 @@ std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t 
     const std::array<std::pair<char, std::string_view>, 8> replacementCharacters {
             {{'\n', "\\n"}, {'\r', "\\r"}, {'\a', "\\a"}, {'\b', "\\b"}, {'\f', "\\f"}, {'\t', "\\t"}, {'\v', "\\v"}, {'\0', "\\0"}}};
 
-    for (size_t i = 0; i < len - 1 && i < oldStr.size(); i++) {
+    for (size_t i = 0; i < len && i < oldStr.size(); i++) {
         bool matched = false;
         for (const auto& [character, replacement] : replacementCharacters) {
             if (oldStr[i] == character) {

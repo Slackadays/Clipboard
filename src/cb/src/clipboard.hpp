@@ -91,6 +91,7 @@ struct Constants {
     std::string_view ignore_secret_name = "ignore.secret";
     std::string_view lock_name = "lock";
     std::string_view script_name = "script";
+    std::string_view script_config_name = "script.config";
     std::string_view data_directory = "data";
     std::string_view metadata_directory = "metadata";
     std::string_view import_export_directory = "Exported_Clipboards";
@@ -144,7 +145,7 @@ static auto thisPID() {
 }
 
 std::optional<std::string> fileContents(const fs::path& path);
-std::vector<std::string> fileLines(const fs::path& path);
+std::vector<std::string> fileLines(const fs::path& path, bool includeEmptyLines = false);
 
 bool stopIndicator(bool change_condition_variable = true);
 
@@ -176,6 +177,8 @@ extern bool secret_selection;
 
 extern std::string preferred_mime;
 extern std::vector<std::string> available_mimes;
+extern std::vector<std::string> script_actions;
+extern std::vector<std::string> script_timings;
 
 enum class ClipboardState : int {
     Setup,
@@ -318,6 +321,7 @@ public:
         fs::path notes;
         fs::path originals;
         fs::path script;
+        fs::path script_config;
         fs::path version;
         operator fs::path() { return root; }
         operator fs::path() const { return root; }
@@ -463,6 +467,7 @@ void setTheme(const std::string_view& theme);
 size_t totalDirectorySize(const fs::path& directory);
 size_t directoryOverhead(const fs::path& directory);
 void runClipboardScript();
+void checkClipboardScriptEligibility();
 
 extern Message help_message;
 extern Message check_clipboard_status_message;

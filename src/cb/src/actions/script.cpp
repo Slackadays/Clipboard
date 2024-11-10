@@ -18,8 +18,23 @@
 #include <sys/wait.h>
 #endif
 
+bool runForThisAction = true;
+bool runBefore = true;
+bool runAfter = true;
+
 namespace PerformAction {
 void script() {
+    std::string dataToWrite;
+    for (const auto& action : script_actions) {
+        dataToWrite += action + " ";
+    }
+    if (dataToWrite.back() == ' ') dataToWrite.back() = '\n'; else dataToWrite += '\n';
+    for (const auto& timing : script_timings) {
+        dataToWrite += timing + " ";
+    }
+    if (dataToWrite.back() == ' ') dataToWrite.back() = '\n'; else dataToWrite += '\n';
+    writeToFile(path.metadata.script_config, dataToWrite);
+    checkClipboardScriptEligibility();
     if (io_type == IOType::File) {
         if (copying.items.size() > 1) {
             error_exit("%s", formatColors("[error][inverse] ✘ [noinverse] You can only set one script file to run. [help]⬤ Try providing a single script file instead.[blank]\n"));
@@ -45,6 +60,7 @@ void script() {
         fs::remove(path.metadata.script);
         fs::copy(copying.items.at(0), path.metadata.script);
         fs::permissions(path.metadata.script, fs::perms::owner_exec, fs::perm_options::add);
+
         if (output_silent || confirmation_silent) return;
         stopIndicator();
         fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Saved script \"%s\"[blank]\n").data(), fileContents(path.metadata.script).value().data());
@@ -72,6 +88,10 @@ void script() {
 } // namespace PerformAction
 
 void runClipboardScript() {
+    //std::cout << "Run for this action: " << runForThisAction << std::endl;
+    //std::cout << "Run before: " << runBefore << std::endl;
+    //std::cout << "Run after: " << runAfter << std::endl;
+
     if (!fs::is_regular_file(path.metadata.script)) return;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -101,13 +121,39 @@ void runClipboardScript() {
         }
     };
 
-    if (!secondRun)
-        execute("before");
-    else
-        execute("after");
+    if (runForThisAction) {
+        if (!secondRun && runBefore) {
+            execute("before");
+        } else if (secondRun && runAfter) {
+            execute("after");
+        }
+    }
 
     fs::current_path(currentPath);
 
     secondRun = true;
 #endif
+}
+
+void checkClipboardScriptEligibility() {
+    if (!fs::is_regular_file(path.metadata.script_config)) return;
+
+    auto lines = fileLines(path.metadata.script_config, true);
+
+    if (lines.empty()) return;
+
+    auto scriptActions = regexSplit(lines[0], std::regex(" "));
+
+    if (!scriptActions.empty() && scriptActions.back() != "") {
+        runForThisAction = (std::find(scriptActions.begin(), scriptActions.end(), actions[action]) != scriptActions.end()) || (std::find(scriptActions.begin(), scriptActions.end(), action_shortcuts[action]) != scriptActions.end());
+    }
+
+    if (lines.size() < 2) return;
+
+    auto scriptTimings = regexSplit(lines[1], std::regex(" "));
+
+    if (!scriptTimings.empty() && scriptTimings.back() != "") {
+        runBefore = std::find(scriptTimings.begin(), scriptTimings.end(), "before") != scriptTimings.end();
+        runAfter = std::find(scriptTimings.begin(), scriptTimings.end(), "after") != scriptTimings.end();
+    }
 }

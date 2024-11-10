@@ -143,9 +143,30 @@ void info() {
     if (fs::exists(path.metadata.script)) {
         auto script = fileContents(path.metadata.script).value();
         if (script.size() > 50) {
-            fprintf(stderr, formatColors("[info]%s┃ Script: [help]%s...[blank]\n").data(), endbar, makeControlCharactersVisible(removeExcessWhitespace(script.substr(0, 50))).data());
+            fprintf(stderr, formatColors("[info]%s┃ Script preview: [help]%s...[blank]\n").data(), endbar, makeControlCharactersVisible(removeExcessWhitespace(script.substr(0, 50))).data());
         } else {
-            fprintf(stderr, formatColors("[info]%s┃ Script: [help]%s[blank]\n").data(), endbar, makeControlCharactersVisible(removeExcessWhitespace(script)).data());
+            fprintf(stderr, formatColors("[info]%s┃ Script preview: [help]%s[blank]\n").data(), endbar, makeControlCharactersVisible(removeExcessWhitespace(script)).data());
+        }
+        auto lines  = fileLines(path.metadata.script_config, true);
+        if (lines[0] != "") {
+            fprintf(stderr, formatColors("[info]%s┃ Script actions: [help]").data(), endbar);
+            for (const auto& action : regexSplit(lines[0], std::regex(" "))) {
+                fprintf(stderr, "%s", action.data());
+                if (action != regexSplit(lines[0], std::regex(" ")).back()) fprintf(stderr, ", ");
+            }
+            fprintf(stderr, "%s", formatColors("[blank]\n").data());
+        } else {
+            fprintf(stderr, formatColors("[info]%s┃ This script is set to run for all actions.[blank]\n").data(), endbar);
+        }
+        if (lines.size() > 1 && lines[1] != "") {
+            fprintf(stderr, formatColors("[info]%s┃ Script timings: [help]").data(), endbar);
+            for (const auto& timing : regexSplit(lines[1], std::regex(" "))) {
+                fprintf(stderr, "%s", timing.data());
+                if (timing != regexSplit(lines[1], std::regex(" ")).back()) fprintf(stderr, ", ");
+            }
+            fprintf(stderr, "%s", formatColors("[blank]\n").data());
+        }  else {
+            fprintf(stderr, formatColors("[info]%s┃ This script is set to run before and after all actions.[blank]\n").data(), endbar);
         }
     } else {
         fprintf(stderr, formatColors("[info]%s┃ There is no script for this clipboard.[blank]\n").data(), endbar);
