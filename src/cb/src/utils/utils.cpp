@@ -506,7 +506,7 @@ void setFlags() {
                     .append(action_descriptions[static_cast<Action>(i)])
                     .append("[blank]\n");
         }
-        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), formatColors(actionsList).data());
+        printf(help_message().data(), constants.clipboard_version.data(), constants.clipboard_commit.data(), constants.clipboard_branch.data(), formatColors(actionsList).data());
         exit(EXIT_SUCCESS);
     }
 }

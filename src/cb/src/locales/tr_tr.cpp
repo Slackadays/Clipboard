@@ -113,7 +113,7 @@ void setLanguageTR() {
     action_descriptions[Ignore] = "Panodaki öğeyi yoksayar.";
     action_descriptions[Search] = "Panodaki öğeleri arar.";
 
-    help_message = "[info]┃ Clipboard Project %s (commit %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
+    help_message = "[info]┃ Clipboard Project %s (commit %s, branch %s), komut satırı için, kesme, kopyalama ve yapıştırma sistemidir.[blank]\n"
                    "[info][bold]┃ Nasıl kullanılır[blank]\n"
                    "[progress]┃ cb kes (öğe) [öğeler][blank] [help](Bu öğe(leri) keser.)[blank]\n"
                    "[progress]┃ cb kopyala (öğe) [öğeler][blank] [help](Bu öğe(leri) kopyalar.)[blank]\n"

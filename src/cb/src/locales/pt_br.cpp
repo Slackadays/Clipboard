@@ -94,7 +94,7 @@ void setLanguagePT() {
     action_descriptions[Ignore] = "Ignora um item ou itens do clipboard.";
     action_descriptions[Search] = "Busca um item ou itens do clipboard.";
 
-    help_message = "[info]┃ Este é Clipboard Project %s (commit %s), o sistema de recortar, copiar e colar para a linha de "
+    help_message = "[info]┃ Este é Clipboard Project %s (commit %s, branch %s), o sistema de recortar, copiar e colar para a linha de "
                    "comando.[blank]\n"
                    "[info][bold]┃ Como utilizar[blank]\n"
                    "[progress]┃ cb recortar (item) [itens][blank]\n"

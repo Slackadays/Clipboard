@@ -113,7 +113,7 @@ void setLanguageES_CO() {
     action_descriptions[Ignore] = "Ignora contenido en un portapapeles.";
     action_descriptions[Search] = "Busca contenido en un portapapeles.";
 
-    help_message = "[info]┃ Esto es Clipboard Project %s (commit %s), el sistema para cortar, copiar y pegar adentro del "
+    help_message = "[info]┃ Esto es Clipboard Project %s (commit %s, branch %s), el sistema para cortar, copiar y pegar adentro del "
                    "terminal.[blank]\n"
                    "[info][bold]┃ Cómo usar[blank]\n"
                    "[progress]┃ cb cortar (cosa) [cosas][blank]\n"

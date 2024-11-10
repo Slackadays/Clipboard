@@ -55,7 +55,7 @@ EnumArray<std::string_view, 23> action_descriptions = {
         "Set a script to run for this clipboard.",
         "Share a clipboard with others."};
 
-Message help_message = "[info]┃ This is the Clipboard Project %s (commit %s), the cut, copy, and paste system for the command line.[blank]\n"
+Message help_message = "[info]┃ This is the Clipboard Project %s (commit %s, branch %s), the cut, copy, and paste system for the command line.[blank]\n"
                        "[info][bold]┃ Examples[blank]\n"
                        "[progress]┃ cb ct Nuclear_Launch_Codes.txt contactsfolder[blank] [help](This cuts the following items into the "
                        "default clipboard, 0.)[blank]\n"

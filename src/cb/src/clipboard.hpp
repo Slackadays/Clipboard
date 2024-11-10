@@ -63,6 +63,10 @@ namespace fs = std::filesystem;
 #define GIT_COMMIT_HASH "not available"
 #endif
 
+#if !defined(GIT_BRANCH)
+#define GIT_BRANCH "not available"
+#endif
+
 #if !defined(CLIPBOARD_VERSION)
 #define CLIPBOARD_VERSION "(version not available)"
 #endif
@@ -82,6 +86,7 @@ extern GlobalFilepaths global_path;
 struct Constants {
     std::string_view clipboard_version = CLIPBOARD_VERSION;
     std::string_view clipboard_commit = GIT_COMMIT_HASH;
+    std::string_view clipboard_branch = GIT_BRANCH;
     std::string_view data_file_name = "rawdata.clipboard";
     std::string_view persistent_directory_name = ".local/state/clipboard";
     std::string_view original_files_name = "originals";
