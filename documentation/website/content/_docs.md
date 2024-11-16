@@ -324,6 +324,21 @@ $ cb --clr
 # These all work great!
 ```
 
+Clear a certain range of history entries.
+```sh
+$ cb clear 69-420
+# Clears entries 69 through 420 inclusive
+$ cb clr 0-100
+# Clears entries 0 through 100 inclusive
+# Note: Entry 0 is always the most recent one
+```
+
+Just clear everything.
+```sh
+$ cb clear -a
+# Note: This will really clear everything in all clipboards!
+```
+
 <br>
 
 <h3><b>Edit Clipboard Content</b> &emsp; <code>cb [--](edit|ed)[(num)|_(id)] [editor]</code></h3>
@@ -347,6 +362,83 @@ Use a custom editor to edit with.
 cb edit nano
 cb ed vim
 cb ed code
+```
+
+<br>
+
+<h3><b>Add Script to Clipboard</b> &emsp; <code>cb [--](script|sc)[(num)|_(id)] [script path|content]</code></h3>
+
+Start simple.
+```sh
+$ cb script pwd # Note: The exact output of "pwd" will vary depending on your system.
+$ cb
+/run/user/1000/Clipboard/0/data/0
+# The output of CB will be here
+/run/user/1000/Clipboard/0/data/0
+```
+
+Use a script file instead.
+```sh
+$ cat myscript.sh
+echo "Hello Clipboard!"
+echo "Here's what's in the directory:"
+ls
+$ cb script myscript.sh
+$ cb
+Hello Clipboard!
+Here's what's in the directory:
+rawdata.clipboard
+# The output of CB will be here
+Hello Clipboard!
+Here's what's in the directory:
+rawdata.clipboard
+```
+
+Customize during what action the script runs.
+```sh
+$ cb script ls --actions search,history
+$ cb
+$ cb history
+rawdata.clipboard
+# The output of CB will be here
+rawdata.clipboard
+$ cb search
+rawdata.clipboard
+# The output of CB will be here
+rawdata.clipboard
+$ cb copy
+$
+```
+
+Customize if the script runs before, after, or both.
+```sh
+$ cb script ls --timings before
+$ cb
+rawdata.clipboard
+# The output of CB will be here
+$ cb script ls --timings after
+$ cb
+# The output of CB will be here
+rawdata.clipboard
+$ cb script ls --timings before,after
+rawdata.clipboard
+# The output of CB will be here
+rawdata.clipboard
+```
+
+Customize both during what action the script runs and if the script runs before, after, or both.
+```sh
+$ cb script ls --actions copy --timings before
+$ cb
+$ cb copy
+rawdata.clipboard
+# The output of CB will be here
+```
+
+View the current script.
+```sh
+$ cb script
+# Script content shows here
 ```
 
 <br>
