@@ -1363,6 +1363,17 @@ cb p
 
 <br>
 
+<h3><b><code>CLIPBOARD_ACTION</code> &emsp; CB will set this to the current action when running a script. </b></h3>
+
+Start with a script.
+```sh
+$ cb script ls
+$ cb history
+# Now, whatever script CB runs will have access to the CLIPBOARD_ACTION environment variable, here with value "history"
+```
+
+<br>
+
 <h3><b><code>CLIPBOARD_EDITOR</code> &emsp; Set this to the editor you want to use for the Edit action. </b></h3>
 
 Set a custom editor to use.
@@ -1415,6 +1426,19 @@ Override the locale case-by-case.
 $ export CLIPBOARD_LOCALE=fr_CA.UTF-8
 ...
 $ CLIPBOARD_LOCALE="" cb cp Foobar
+```
+
+<br>
+
+<h3><b><code>CLIPBOARD_SCRIPT_TIMING</code> &emsp; CB will set this to the timing of the script that it runs.</b></h3>
+
+Start with a script.
+```sh
+$ cb script ls
+$ cb history
+# Now, whatever script CB runs will have access to the CLIPBOARD_SCRIPT_TIMING environment variable, here with value "before"
+# (output of "cb history")
+# Now, CLIPBOARD_SCRIPT_TIMING will have value "after"
 ```
 
 <br>
