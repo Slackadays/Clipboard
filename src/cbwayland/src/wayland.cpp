@@ -78,7 +78,7 @@ public:
 
         kill(getppid(), SIGUSR1);
 
-        while (!m_dataSource.isCancelled())
+        //while (!m_dataSource.isCancelled())
             m_display.dispatch();
     }
 };

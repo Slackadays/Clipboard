@@ -377,6 +377,11 @@ void setupGUIClipboardDaemon() {
         path.getLock();
         syncWithGUIClipboard(true);
         path.releaseLock();
+
+        if (auto res = getenv("XDG_SESSION_TYPE"); res && !strcmp(res, "wayland")) {
+            exit(EXIT_SUCCESS);
+        } // Skip daemon on Wayland for now
+
         std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         path = Clipboard(std::string(constants.default_clipboard_name));
     }

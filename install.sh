@@ -37,21 +37,6 @@ verify() {
     fi
 }
 
-compile() {
-    git clone --depth 1 https://github.com/slackadays/Clipboard
-    cd Clipboard/build
-    cmake ..
-    cmake --build .
-    cmake --install .
-
-    if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
-    then
-        doas cmake --install .
-    else
-        sudo cmake --install .
-    fi
-}
-
 can_use_sudo() {
     prompt=$(sudo -nv 2>&1)
     if sudo -nv > /dev/null 2>&1; then
@@ -63,6 +48,66 @@ can_use_sudo() {
       return 1
     fi
 }
+
+has_alsa(){
+    if command -v aplay >/dev/null 2>&1 && [ -d "/dev/snd" ]; then
+      return 0
+    else
+      return 1
+   fi 
+}
+missing_libssldev() {
+    ! dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -q "ok installed"
+}
+
+missing_libssl3() {
+    ! dpkg-query -W -f='${Status}' libssl3 2>/dev/null | grep -q "ok installed"
+}
+
+  if command -v apt-get > /dev/null 2>&1
+  then
+      if can_use_sudo
+      then
+          sudo apt-get update
+
+          if missing_libssl3
+          then
+              sudo apt-get install -y libssl3
+          fi
+
+          if missing_libssldev
+          then
+              sudo apt-get install -y libssl-dev
+          fi
+      fi
+  fi
+
+
+compile() {
+    git clone --depth 1 https://github.com/slackadays/Clipboard
+    cd Clipboard/build
+    
+    if has_alsa
+    then
+      cmake ..
+    else
+      cmake -DNO_ALSA=true ..
+    fi
+
+    cmake --build . 
+
+    if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
+    then
+        doas cmake --install .
+    elif can_use_sudo
+    then
+        sudo cmake --install .
+    else
+        cmake --install . --install-prefix="$HOME/.local"
+        export PATH="$PATH:$HOME/.local/bin"
+    fi
+}
+
 
 printf "\033[32mSearching for a package manager...\n\033[0m"
 
@@ -87,10 +132,6 @@ then
         sudo emerge -av app-misc/clipboard
         verify
     fi
-elif command -v brew > /dev/null 2>&1
-then
-    brew install clipboard
-    verify
 elif command -v flatpak > /dev/null 2>&1
 then
     if can_use_sudo
@@ -101,13 +142,13 @@ then
     fi
 
     verify_flatpak
-elif command -v snap > /dev/null 2>&1
-then
-    if can_use_sudo
-    then
-        sudo snap install clipboard
-        verify
-    fi
+# elif command -v snap > /dev/null 2>&1
+# then
+#     if can_use_sudo
+#     then
+#         sudo snap install clipboard
+#         verify
+#     fi
 elif command -v nix-env > /dev/null 2>&1
 then
     nix-env -iA nixpkgs.clipboard-jh
@@ -127,109 +168,13 @@ then
         sudo xbps-install -S clipboard
         verify
     fi
-fi
-
-tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
-cd "$tmp_dir"
-
-if can_use_sudo
-then
-    requires_sudo=true
-    install_path="/usr/local"
-    sudo mkdir -p "$install_path/bin"
-    sudo mkdir -p "$install_path/lib"
 else
-    requires_sudo=false
-    install_path="$HOME/.local"
-    mkdir -p "$install_path/bin"
-    mkdir -p "$install_path/lib"
+##TODO: If the download links are updated, I left the rest of the script in ./download.sh and this should work##
+# cd ..
+# sh ./download.sh
+printf "\033[32mNot found in package manager, compiling with cmake...\n\033[0m"
+    compile
 fi
 
-if [ "$(uname)" = "Linux" ]
-then
-    if [ "$(uname -m)" = "x86_64" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-amd64.zip
-    elif [ "$(uname -m)" = "aarch64" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-arm64.zip
-    elif [ "$(uname -m)" = "riscv64" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-riscv64.zip
-    elif [ "$(uname -m)" = "i386" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-i386.zip
-    elif [ "$(uname -m)" = "ppc64le" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-ppc64le.zip
-    elif [ "$(uname -m)" = "s390x" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-s390x.zip
-    else
-        download_link="skip"
-    fi
-    if [ "$download_link" != "skip" ]
-    then
-        curl -SL $download_link -o clipboard-linux.zip
-        unzip clipboard-linux.zip
-        rm clipboard-linux.zip
-        if [ "$requires_sudo" = true ]
-        then
-            sudo mv bin/cb "$install_path/bin/cb"
-        else
-            mv bin/cb "$install_path/bin/cb"
-        fi
-        chmod +x "$install_path/bin/cb"
-        if [ -f "lib/libcbx11.so" ]
-        then
-            if [ "$requires_sudo" = true ]
-            then
-                sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-            else
-                mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-            fi
-        fi
-        if [ -f "lib/libcbwayland.so" ]
-        then
-            if [ "$requires_sudo" = true ]
-            then
-                sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-            else
-                mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-            fi
-        fi
-    fi
-elif [ "$(uname)" = "Darwin" ]
-then
-    if [ "$(uname -m)" = "x86_64" ]
-    then
-        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-amd64.zip -o clipboard-macos.zip
-    elif [ "$(uname -m)" = "arm64" ]
-    then
-        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64.zip -o clipboard-macos.zip
-    fi
-    unzip clipboard-macos.zip
-    rm clipboard-macos.zip
-    sudo mv bin/cb "$install_path/bin/cb"
-    chmod +x "$install_path/bin/cb"
-elif [ "$(uname)" = "FreeBSD" ]
-then
-    unsupported "FreeBSD"
-    exit 0
-elif [ "$(uname)" = "OpenBSD" ]
-then
-    unsupported "OpenBSD"
-    exit 0
-elif [ "$(uname)" = "NetBSD" ]
-then
-    unsupported "NetBSD"
-    exit 0
-else
-compile
-fi
-
-cd ..
-
-rm -rf "$tmp_dir"
 
 verify
