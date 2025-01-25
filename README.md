@@ -269,7 +269,7 @@ $ alias cb='snap run clipboard'
 <br>
 
 ### <img src="documentation/readme-assets/InstallManually.png" alt="Install Manually" height=25px />
-You'll need CMake, C++20 support, and OpenSSL, and if you want X11 or Wayland support, you'll also need libx11 or libwayland plus Wayland Protocols respectively. If you're on Linux, you'll need ALSA.
+You'll need CMake, C++20 support, and OpenSSL(including libssl3 and libssl-dev), and if you want X11 or Wayland support, you'll also need libx11 or libwayland plus Wayland Protocols respectively. If you're on Linux, you'll need ALSA.
 
 Get the latest release instead of the latest commit by adding `--branch 0.9.1` right after `git clone...`.
 

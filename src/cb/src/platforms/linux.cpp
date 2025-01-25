@@ -14,8 +14,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.*/
 #include "../clipboard.hpp"
-#include <alsa/asoundlib.h>
 
+#if defined(USE_ALSA)
+#include <alsa/asoundlib.h>
+#endif
 void dummy_handler(const char* file, int line, const char* function, int err, const char* fmt, ...) {}
 
 bool playAsyncSoundEffect(const std::valarray<short>& samples) {
