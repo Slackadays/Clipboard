@@ -39,9 +39,8 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  if (NOT NO_ALSA)
+  if(USE_ALSA)
     find_package(ALSA REQUIRED)
-    add_definitions(-DUSE_ALSA)
   endif()
   #find_path(LIBURING_INCLUDE_DIR liburing.h)
   #if (LIBURING_INCLUDE_DIR)
@@ -50,6 +49,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   #else()
   #  message(FATAL_ERROR "Could not find liburing")
   #endif()
+
+  #If the system were not Linux, but -DUSE_ALSA was passed, unset it
+elseif(USE_ALSA)
+  unset(USE_ALSA)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -96,14 +99,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${LIB_LOCATION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${BIN_LOCATION})
 
 function(enable_lto this_target)
-include(CheckIPOSupported)
-check_ipo_supported(RESULT lto_supported)
-if(lto_supported AND NOT NO_LTO)
-  set_property(TARGET ${this_target} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT lto_supported)
+  if(lto_supported AND NOT NO_LTO)
+    set_property(TARGET ${this_target} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+    if(CMAKE_COMPILER_IS_GNUCXX)
+      list(APPEND CMAKE_CXX_COMPILE_OPTIONS_IPO "-flto=auto") # set the thread amount to what is available on the CPU
+    endif()
   endif()
-endif()
 endfunction()
 
 add_subdirectory(src/gui)
