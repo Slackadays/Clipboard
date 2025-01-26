@@ -50,11 +50,11 @@ can_use_sudo() {
 }
 
 has_alsa(){
-    if command -v aplay >/dev/null 2>&1 && [ -d "/dev/snd" ]; then
+    if command -v aplay >/dev/null 2>&1; then
       return 0
     else
       return 1
-   fi 
+   fi
 }
 missing_libssldev() {
     ! dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -q "ok installed"
@@ -103,8 +103,7 @@ compile() {
     then
         sudo cmake --install .
     else
-        cmake --install . --install-prefix="$HOME/.local"
-        export PATH="$PATH:$HOME/.local/bin"
+        cmake --install .
     fi
 }
 
@@ -169,9 +168,11 @@ then
         verify
     fi
 else
+
 ##TODO: If the download links are updated, I left the rest of the script in ./download.sh and this should work##
 # cd ..
 # sh ./download.sh
+
 printf "\033[32mNot found in package manager, compiling with cmake...\n\033[0m"
     compile
 fi
