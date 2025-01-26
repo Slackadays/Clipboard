@@ -51,11 +51,37 @@ can_use_sudo() {
 
 has_alsa(){
     if command -v aplay >/dev/null 2>&1 && [ -d "/dev/snd" ]; then
-      return 1 
-    else
       return 0
+    else
+      return 1
    fi 
 }
+missing_libssldev() {
+    ! dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -q "ok installed"
+}
+
+missing_libssl3() {
+    ! dpkg-query -W -f='${Status}' libssl3 2>/dev/null | grep -q "ok installed"
+}
+
+  if command -v apt-get > /dev/null 2>&1
+  then
+      if can_use_sudo
+      then
+          sudo apt-get update
+
+          if missing_libssl3
+          then
+              sudo apt-get install -y libssl3
+          fi
+
+          if missing_libssldev
+          then
+              sudo apt-get install -y libssl-dev
+          fi
+      fi
+  fi
+
 
 compile() {
     git clone --depth 1 https://github.com/slackadays/Clipboard
@@ -77,7 +103,8 @@ compile() {
     then
         sudo cmake --install .
     else
-        cmake --install .
+        cmake --install . --install-prefix="$HOME/.local"
+        export PATH="$PATH:$HOME/.local/bin"
     fi
 }
 
