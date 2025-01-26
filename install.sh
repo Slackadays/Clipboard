@@ -62,7 +62,7 @@ has_alsa(){
       if can_use_sudo
       then
           sudo apt-get update
-          sufo apt-get install -y libssl3 libssl-dev openssl cmake
+          sudo apt-get install -y libssl3 libssl-dev openssl cmake
       fi
   fi
 
