@@ -56,29 +56,13 @@ has_alsa(){
       return 0
    fi
 }
-missing_libssldev() {
-    ! dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -q "ok installed"
-}
-
-missing_libssl3() {
-    ! dpkg-query -W -f='${Status}' libssl3 2>/dev/null | grep -q "ok installed"
-}
 
   if command -v apt-get > /dev/null 2>&1
   then
       if can_use_sudo
       then
           sudo apt-get update
-
-          if missing_libssl3
-          then
-              sudo apt-get install -y libssl3
-          fi
-
-          if missing_libssldev
-          then
-              sudo apt-get install -y libssl-dev
-          fi
+          sufo apt-get install -y libssl3 libssl-dev openssl cmake
       fi
   fi
 
@@ -94,16 +78,14 @@ compile() {
       cmake -DNO_ALSA=true ..
     fi
 
-    cmake --build . 
+    cmake --build .
+    cmake --install .
 
     if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
     then
         doas cmake --install .
-    elif can_use_sudo
-    then
-        sudo cmake --install .
     else
-        cmake --install .
+        sudo cmake --install .
     fi
 }
 
