@@ -103,7 +103,7 @@ compile() {
     then
       cmake ..
     else
-      cmake -DNO_ALSA=true ..
+      cmake -DNO_ALSA=ON ..
     fi
 
     cmake --build .
