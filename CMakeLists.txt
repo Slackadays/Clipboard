@@ -39,8 +39,9 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  if(USE_ALSA)
+  if(NOT NO_ALSA)
     find_package(ALSA REQUIRED)
+    add_definitions(-DUSE_ALSA)
   endif()
   #find_path(LIBURING_INCLUDE_DIR liburing.h)
   #if (LIBURING_INCLUDE_DIR)
@@ -49,10 +50,6 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   #else()
   #  message(FATAL_ERROR "Could not find liburing")
   #endif()
-
-  #If the system were not Linux, but -DUSE_ALSA was passed, unset it
-elseif(USE_ALSA)
-  unset(USE_ALSA)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
