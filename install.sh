@@ -9,29 +9,24 @@ RED="\033[31m"
 YELLOW="\033[33m"
 RESET="\033[0m"
 
-print_success() { printf "%s\n" "${GREEN}$1${RESET}"; }
-print_error() { printf "%s\n" "${RED}$1${RESET}"; }
+print_success() { printf "%b\n" "${GREEN}$1${RESET}"; }
+print_error() { printf "%b\n" "${RED}$1${RESET}"; }
 
-print_failure(){
-    print_error "Couldn't install CB automatically."
-    print_success "Try compiling CB manually with 'cmake -DNO_ALSA=TRUE'"
-    print_success "Ensure you have the packages openssl, libssl3, and libssl-dev."
-}
 
 unsupported() {
     print_error "Sorry, but this installer script doesn't support $1."
-    printf "%s\n" "${GREEN}💡 However, you can still install CB using the other methods in the readme!${RESET}"
+    printf "%b\n" "${GREEN}💡 However, you can still install CB using the other methods in the readme!${RESET}"
 }
 
 verify_flatpak() {
     if flatpak list | grep -q "$flatpak_package"
     then
         print_success "Clipboard installed successfully!"
-        printf "%s\n" "${RESET}Add this alias to your terminal profile (like .bashrc) to make it work every time:${RESET}"
-        printf "%s\n" "${YELLOW}alias cb=\"flatpak run $flatpak_package\"${RESET}"
+        printf "%b\n" "${RESET}Add this alias to your terminal profile (like .bashrc) to make it work every time:${RESET}"
+        printf "%b\n" "${YELLOW}alias cb=\"flatpak run $flatpak_package\"${RESET}"
         exit 0
     fi
-    print_failure
+    print_error "Unable to install CB with Flatpak"
     exit 1
 }
 
@@ -45,8 +40,6 @@ verify() {
         fi
         print_success "Clipboard installed successfully!"
         exit 0
-    else
-        print_failure
     fi
     exit 1
 }
@@ -354,7 +347,7 @@ then
   then
     print_success "Download and installed complete with no errors!"
   else
-    print_fail "Something went wrong with the download, attempting to compile..."
+    print_error "Something went wrong with the download, attempting to compile..."
     compile
   fi
 else
