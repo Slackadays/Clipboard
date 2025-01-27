@@ -49,13 +49,6 @@ can_use_sudo() {
     fi
 }
 
-has_alsa(){
-    if command -v aplay >/dev/null 2>&1 && [ -d "/dev/snd" ]; then
-      return 0
-    else
-      return 1
-   fi 
-}
 missing_libssldev() {
     ! dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -q "ok installed"
 }
@@ -64,23 +57,42 @@ missing_libssl3() {
     ! dpkg-query -W -f='${Status}' libssl3 2>/dev/null | grep -q "ok installed"
 }
 
-  if command -v apt-get > /dev/null 2>&1
+missing_openssl() {
+    ! dpkg-query -W -f='${Status}' openssl 2>/dev/null | grep -q "ok installed"
+}
+
+if command -v apt-get > /dev/null 2>&1 && command -v dpkg-query > /dev/null 2>&1
+then
+  if can_use_sudo
   then
-      if can_use_sudo
-      then
-          sudo apt-get update
+    sudo apt-get update
+    
+    if missing_openssl
+    then
+      sudo apt-get install -y openssl
+    fi
+    
+    if missing_libssl3
+    then
+      sudo apt-get install -y libssl3
+    fi
 
-          if missing_libssl3
-          then
-              sudo apt-get install -y libssl3
-          fi
+    if missing_libssldev
+    then
+      sudo apt-get install -y libssl-dev
+    fi
 
-          if missing_libssldev
-          then
-              sudo apt-get install -y libssl-dev
-          fi
-      fi
   fi
+fi
+
+
+has_alsa(){
+    if command -v aplay >/dev/null 2>&1; then
+      return 1
+    else
+      return 0
+   fi
+}
 
 
 compile() {
@@ -94,17 +106,20 @@ compile() {
       cmake -DNO_ALSA=true ..
     fi
 
-    cmake --build . 
+    cmake --build .
+    cmake --install .
 
     if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
     then
-        doas cmake --install .
+      doas cmake --install .
+
     elif can_use_sudo
     then
-        sudo cmake --install .
+      sudo cmake --install .
+      
     else
-        cmake --install . --install-prefix="$HOME/.local"
-        export PATH="$PATH:$HOME/.local/bin"
+      mkdir -p $HOME/.local
+      cmake --install . --install-prefix=$HOME/.local
     fi
 }
 
@@ -175,6 +190,5 @@ else
 printf "\033[32mNot found in package manager, compiling with cmake...\n\033[0m"
     compile
 fi
-
 
 verify
