@@ -3,124 +3,282 @@ set -eu
 
 flatpak_package="app.getclipboard.Clipboard"
 
-unsupported() {
-    printf "\033[31mSorry, but this installer script doesn't support %s.\n\033[0m" "$1"
-    printf '\033[32m💡 However, you can still install CB using the other methods in the readme!\n\033[0m'
+# Color codes for better readability
+GREEN="\033[32m"
+RED="\033[31m"
+YELLOW="\033[33m"
+RESET="\033[0m"
+
+print_success() { printf "%s\n" "${GREEN}$1${RESET}"; }
+print_error() { printf "%s\n" "${RED}$1${RESET}"; }
+
+print_failure(){
+    print_error "Couldn't install CB automatically."
+    print_success "Try compiling CB manually with 'cmake -DNO_ALSA=TRUE'"
+    print_success "Ensure you have the packages openssl, libssl3, and libssl-dev."
 }
 
-verify_flatpak(){
-    if flatpak list | grep -q "$flatpak_package"; then
-        printf "\033[32mClipboard installed successfully!\n\033[0m"
-        printf "\033[0mAdd this alias to your terminal profile (like .bashrc) to make it work every time:\n\033[0m"
-        printf '\033[33malias cb="flatpak run %s"\n\033[0m' "$flatpak_package"
+unsupported() {
+    print_error "Sorry, but this installer script doesn't support $1."
+    printf "%s\n" "${GREEN}💡 However, you can still install CB using the other methods in the readme!${RESET}"
+}
+
+verify_flatpak() {
+    if flatpak list | grep -q "$flatpak_package"
+    then
+        print_success "Clipboard installed successfully!"
+        printf "%s\n" "${RESET}Add this alias to your terminal profile (like .bashrc) to make it work every time:${RESET}"
+        printf "%s\n" "${YELLOW}alias cb=\"flatpak run $flatpak_package\"${RESET}"
         exit 0
-    else
-        printf "\033[31mCouldn't install CB\n\033[0m"
-        exit 1
     fi
+    print_failure
+    exit 1
 }
 
 verify() {
-    if command -v cb 2>&1
+    if command -v cb >/dev/null 2>&1
     then
-        if ! cb 2>&1
+        if ! cb >/dev/null 2>&1
         then
             unsupported "this system"
             exit 1
-        else
-            printf "\033[32mClipboard installed successfully!\n\033[0m"
-            exit 0
         fi
+        print_success "Clipboard installed successfully!"
+        exit 0
     else
-        printf "\033[31mCouldn't install CB\n\033[0m"
-        exit 1
+        print_failure
+    fi
+    exit 1
+}
+
+can_use_sudo() {
+    prompt=$(sudo -nv 2>&1)
+    if sudo -nv >/dev/null 2>&1
+    then
+        return 0    # No password needed
+    fi
+    if echo "$prompt" | grep -q '^sudo:'
+    then
+        return 0    # Password needed but sudo available
+    fi
+    return 1       # Sudo not available
+}
+
+has_alsa() {
+    if command -v aplay >/dev/null 2>&1
+    then
+      return 0 # aplay executed successfully 
+    else
+      return 1 # aplay failed to execute
     fi
 }
 
 compile() {
     git clone --depth 1 https://github.com/slackadays/Clipboard
-    cd Clipboard/build
-    cmake ..
+    cd Clipboard/build || exit 1
+    
+    if has_alsa
+    then
+        cmake ..
+    else
+        cmake -DNO_ALSA=TRUE ..
+    fi
+    
     cmake --build .
-    cmake --install .
 
-    if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
+    if [ "$(uname)" = "OpenBSD" ]
     then
         doas cmake --install .
     else
-        sudo cmake --install .
+        if can_use_sudo
+        then
+            sudo cmake --install .
+        else
+            mkdir -p "$HOME/.local"
+            cmake --install . --install-prefix="$HOME/.local"
+        fi
     fi
 }
 
-can_use_sudo() {
-    prompt=$(sudo -nv 2>&1)
-    if sudo -nv > /dev/null 2>&1; then
-      # exit code of sudo-command is 0
-      return 0
-    elif echo "$prompt" | grep -q '^sudo:'; then
-      return 0
+download_and_install() {
+    # Temporarily disable exit on error
+    set +e
+    
+    zip_file="$1"
+    if ! curl -SL "$download_link" -o "$zip_file"
+    then
+        false
+        return
+    fi
+    
+    if ! unzip "$zip_file"
+    then
+        false
+        return
+    fi
+    
+    rm "$zip_file"
+
+    if [ "$requires_sudo" = true ]
+    then
+        if ! sudo mv bin/cb "$install_path/bin/cb"
+        then
+            false
+            return
+        fi
+        
+        if [ -f "lib/libcbx11.so" ]
+        then
+            if ! sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
+            then
+                false
+                return
+            fi
+        fi
+
+        if [ -f "lib/libcbwayland.so" ]
+        then
+            if ! sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+            then
+                false
+                return
+            fi
+        fi
     else
-      return 1
+        if ! mv bin/cb "$install_path/bin/cb"
+        then
+            false
+            return
+        fi
+
+        if [ -f "lib/libcbx11.so" ]
+        then
+            if ! mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
+            then
+                false
+                return
+            fi
+        fi
+
+        if [ -f "lib/libcbwayland.so" ]
+        then
+            if ! mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+            then
+                false
+                return
+            fi
+        fi
     fi
+    
+    if ! chmod +x "$install_path/bin/cb"
+    then
+        false
+        return
+    fi
+    
+    # Re-enable exit on error
+    set -e
+    true
+    return
 }
 
-printf "\033[32mSearching for a package manager...\n\033[0m"
+is_package_missing() {
+    dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "ok installed"
+    return
+}
 
-if command -v apk > /dev/null 2>&1
+install_debian_deps(){
+   deps=""
+    for pkg in openssl libssl3 libssl-dev
+    do
+        if is_package_missing "$pkg"
+        then
+            deps="$deps $pkg"
+        fi
+    done
+    
+    if [ -n "$deps" ]
+    then
+        sudo apt-get update
+        sudo apt-get install -y $deps
+    fi
+}
+# Start installation process
+print_success "Searching for a package manager..."
+
+# Try package managers first
+if command -v apk >/dev/null 2>&1
 then
     if can_use_sudo
     then
         sudo apk add clipboard
         verify
     fi
-elif command -v yay > /dev/null 2>&1
+fi
+
+if command -v yay >/dev/null 2>&1
 then
     if can_use_sudo
     then
         sudo yay -S clipboard
         verify
     fi
-elif command -v emerge > /dev/null 2>&1
+fi
+
+if command -v emerge >/dev/null 2>&1
 then
     if can_use_sudo
     then
         sudo emerge -av app-misc/clipboard
         verify
     fi
-elif command -v brew > /dev/null 2>&1
+fi
+
+if command -v brew >/dev/null 2>&1
 then
     brew install clipboard
     verify
-elif command -v flatpak > /dev/null 2>&1
+fi
+
+if command -v flatpak >/dev/null 2>&1
 then
     if can_use_sudo
     then
-      sudo flatpak install flathub "$flatpak_package" -y
+        sudo flatpak install flathub "$flatpak_package" -y
     else
-      flatpak install flathub "$flatpak_package" -y
+        flatpak install flathub "$flatpak_package" -y
     fi
-
     verify_flatpak
-elif command -v snap > /dev/null 2>&1
+fi
+
+if command -v snap >/dev/null 2>&1
 then
     if can_use_sudo
     then
         sudo snap install clipboard
         verify
     fi
-elif command -v nix-env > /dev/null 2>&1
+fi
+
+if command -v nix-env >/dev/null 2>&1
 then
     nix-env -iA nixpkgs.clipboard-jh
     verify
-elif command -v pacstall > /dev/null 2>&1
+fi
+
+if command -v pacstall >/dev/null 2>&1
 then
     pacstall -I clipboard-bin
     verify
-elif command -v scoop > /dev/null 2>&1
+fi
+
+if command -v scoop >/dev/null 2>&1
 then
     scoop install clipboard
     verify
-elif command -v xbps-install > /dev/null 2>&1
+fi
+
+if command -v xbps-install >/dev/null 2>&1
 then
     if can_use_sudo
     then
@@ -129,107 +287,81 @@ then
     fi
 fi
 
+if command -v apt-get >/dev/null 2>&1 && command -v dpkg-query >/dev/null 2>&1; then
+    if can_use_sudo; then
+        install_debian_deps
+    fi
+fi
+
+print_error "No supported package manager found."
+
+print_success "Attempting to download release zip file for architecture..."
+
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
-cd "$tmp_dir"
+cd "$tmp_dir" || exit 1
 
 if can_use_sudo
 then
     requires_sudo=true
     install_path="/usr/local"
-    sudo mkdir -p "$install_path/bin"
-    sudo mkdir -p "$install_path/lib"
+    sudo mkdir -p "$install_path/bin" "$install_path/lib"
 else
     requires_sudo=false
     install_path="$HOME/.local"
-    mkdir -p "$install_path/bin"
-    mkdir -p "$install_path/lib"
+    mkdir -p "$install_path/bin" "$install_path/lib"
 fi
 
-if [ "$(uname)" = "Linux" ]
-then
-    if [ "$(uname -m)" = "x86_64" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-amd64.zip
-    elif [ "$(uname -m)" = "aarch64" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-arm64.zip
-    elif [ "$(uname -m)" = "riscv64" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-riscv64.zip
-    elif [ "$(uname -m)" = "i386" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-i386.zip
-    elif [ "$(uname -m)" = "ppc64le" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-ppc64le.zip
-    elif [ "$(uname -m)" = "s390x" ]
-    then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-s390x.zip
-    else
-        download_link="skip"
-    fi
-    if [ "$download_link" != "skip" ]
-    then
-        curl -SL $download_link -o clipboard-linux.zip
-        unzip clipboard-linux.zip
-        rm clipboard-linux.zip
-        if [ "$requires_sudo" = true ]
+download_name="skip"
+
+case "$(uname)" in
+    "Linux")
+        case "$(uname -m)" in
+            "x86_64")  download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-amd64.zip" ;;
+            "aarch64") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-arm64.zip" ;;
+            "riscv64") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-riscv64.zip" ;;
+            "i386")    download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-i386.zip" ;;
+            "ppc64le") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-ppc64le.zip" ;;
+            "s390x")   download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-s390x.zip" ;;
+            *)         download_link="skip" ;;
+        esac
+        if [ "$download_link" != "skip" ]
         then
-            sudo mv bin/cb "$install_path/bin/cb"
-        else
-            mv bin/cb "$install_path/bin/cb"
+          download_name="clipboard-linux.zip"
         fi
-        chmod +x "$install_path/bin/cb"
-        if [ -f "lib/libcbx11.so" ]
-        then
-            if [ "$requires_sudo" = true ]
-            then
-                sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-            else
-                mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-            fi
-        fi
-        if [ -f "lib/libcbwayland.so" ]
-        then
-            if [ "$requires_sudo" = true ]
-            then
-                sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-            else
-                mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-            fi
-        fi
-    fi
-elif [ "$(uname)" = "Darwin" ]
+        ;; 
+    "Darwin")
+        case "$(uname -m)" in
+            "x86_64") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-amd64.zip" ;;
+            "arm64")  download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64.zip" ;;
+        esac
+          download_name="clipboard-macos.zip"        
+        ;;
+    "FreeBSD"|"OpenBSD"|"NetBSD")
+        unsupported "$(uname)"
+        exit 0
+        ;;
+    *)
+        print_error "No supported release download available."
+        print_success "Attempting compile with CMake..."
+        ;;
+esac
+  
+if [ "$download_name" != "skip" ]
 then
-    if [ "$(uname -m)" = "x86_64" ]
-    then
-        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-amd64.zip -o clipboard-macos.zip
-    elif [ "$(uname -m)" = "arm64" ]
-    then
-        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64.zip -o clipboard-macos.zip
-    fi
-    unzip clipboard-macos.zip
-    rm clipboard-macos.zip
-    sudo mv bin/cb "$install_path/bin/cb"
-    chmod +x "$install_path/bin/cb"
-elif [ "$(uname)" = "FreeBSD" ]
-then
-    unsupported "FreeBSD"
-    exit 0
-elif [ "$(uname)" = "OpenBSD" ]
-then
-    unsupported "OpenBSD"
-    exit 0
-elif [ "$(uname)" = "NetBSD" ]
-then
-    unsupported "NetBSD"
-    exit 0
+  print_success "Release download found for this platform!"
+  print_success "Attempting download and install..."
+  if download_and_install $download_name
+  then
+    print_success "Download and installed complete with no errors!"
+  else
+    print_fail "Something went wrong with the download, attempting to compile..."
+    compile
+  fi
 else
-compile
+  compile
 fi
 
 cd ..
-
 rm -rf "$tmp_dir"
 
 verify
