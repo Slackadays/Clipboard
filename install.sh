@@ -57,25 +57,25 @@ can_use_sudo() {
     return 1       # Sudo not available
 }
 
-has_alsa() {
-    if command -v aplay >/dev/null 2>&1
-    then
-      return 0 # aplay executed successfully 
-    else
-      return 1 # aplay failed to execute
-    fi
-}
+# has_alsa() {
+#     if command -v aplay >/dev/null 2>&1
+#     then
+#       return 0 # aplay executed successfully 
+#     else
+#       return 1 # aplay failed to execute
+#     fi
+# }
 
 compile() {
     git clone --depth 1 https://github.com/map588/Clipboard
     cd Clipboard/build || exit 1
     
-    if has_alsa
-    then
-        cmake ..
-    else
+    # if has_alsa
+    # then
+    #     cmake ..
+    # else
         cmake -DNO_ALSA=TRUE ..
-    fi
+    #fi
     
     cmake --build .
 
