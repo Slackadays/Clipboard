@@ -67,7 +67,7 @@ has_alsa() {
 }
 
 compile() {
-    git clone --depth 1 https://github.com/slackadays/Clipboard
+    git clone --depth 1 https://github.com/map588/Clipboard
     cd Clipboard/build || exit 1
     
     if has_alsa
