@@ -1642,6 +1642,7 @@ We're here for you! Check out [the Clipboard Project Wiki](https://github.com/Sl
 
 ### ![Thank You!](documentation/readme-assets/ThankYou.png)
 
+
 Say thank you to all our beautiful contributors who have helped make the Clipboard Project incredible[.](https://www.youtube.com/watch?v=yjdHGmRKz08)
  Want to join the club? We're always accepting [new contributions](https://github.com/Slackadays/Clipboard/blob/main/CONTRIBUTING.md) too.
 
