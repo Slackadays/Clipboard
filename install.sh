@@ -88,9 +88,9 @@ fi
 
 has_alsa(){
     if command -v aplay >/dev/null 2>&1; then
-      return 1
-    else
       return 0
+    else
+      return 1
    fi
 }
 
@@ -107,7 +107,6 @@ compile() {
     fi
 
     cmake --build .
-    cmake --install .
 
     if [ "$(uname)" = "OpenBSD" ] #check if OpenBSD
     then
