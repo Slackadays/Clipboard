@@ -251,14 +251,14 @@ then
     verify_flatpak
 fi
 
-if command -v snap >/dev/null 2>&1
-then
-    if can_use_sudo
-    then
-        sudo snap install clipboard
-        verify
-    fi
-fi
+# if command -v snap >/dev/null 2>&1
+# then
+#     if can_use_sudo
+#     then
+#         sudo snap install clipboard
+#         verify
+#     fi
+# fi
 
 if command -v nix-env >/dev/null 2>&1
 then
