@@ -116,6 +116,7 @@ compile() {
 
     if [ "$(uname)" = "OpenBSD" ]
     then
+        #It will get here but doas is not configured on testing
         doas cmake --install .
     else
         if can_use_sudo
@@ -318,7 +319,7 @@ download_link="skip"
 case "$(uname)" in
   "Linux")
     case "$(uname -m)" in
-      "x86_64" | "amd64" )  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
+      "amd64" )  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
       "aarch64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-arm64.zip" ;;
       "riscv64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-riscv64.zip" ;;
       "i386")    download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-i386.zip" ;;
@@ -351,8 +352,6 @@ case "$(uname)" in
                   ;; 
        esac
        ;;
-    "OpenBSD") doas pkg_add git
-      ;;
   *)
     print_error "No supported release download available for $(uname):$(uname -m)"
     print_success "Attempting compile with CMake..."
