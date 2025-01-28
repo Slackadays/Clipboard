@@ -215,6 +215,12 @@ download_and_install() {
      then
        print_warning "libcbwayland.so"
      fi
+     if can_use_sudo
+     then
+     [ -f "/etc/ld.so.conf" ] && sudo cat /etc/ld.so.conf
+     [ -d "/etc/ld.so.conf.d" ] && sudo cat /etc/ld.so.conf.d/*
+     fi
+
 }
 
 # Start installation process
@@ -300,7 +306,6 @@ then
         verify
     fi
 fi
-
 
 
 print_error "No supported package manager found."
