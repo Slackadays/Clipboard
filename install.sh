@@ -144,7 +144,9 @@ download_and_install() {
     install_path="$HOME/.local"
     mkdir -p "$install_path/bin" "$install_path/lib" || return 1
   fi
-
+  print_success "Install path: $install_path"
+  print_success "Current directory: $(pwd)"
+  print_success "Platform: $(uname):$(uname -m)"
   case "$os_type" in
     "Linux")
       curl -SL "$download_link" -o "clipboard.zip" || return 1
