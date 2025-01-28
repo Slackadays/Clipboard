@@ -53,7 +53,7 @@ jobs:
           sudo dpkg --add-architecture "${{ matrix.arch.os }}"
           sudo apt-get update
           sudo apt-get upgrade -y
-          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard libasound-dev liburing-dev
+          sudo apt-get install -y $PACKAGES xvfb sway xclip wl-clipboard squeekboard libasound-dev liburing-dev openssl libssl3 libssl-dev
 
           cd build
           cmake .. \
