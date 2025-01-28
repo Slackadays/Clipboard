@@ -362,6 +362,8 @@ esac
 if [ "$download_link" != "skip" ]
 then
   download_and_install "$download_link" "$(uname)" 
+else
+  compile
 fi
 
 cd ..
