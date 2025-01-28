@@ -187,29 +187,10 @@ download_and_install() {
     return
 }
 
-is_package_missing() {
-    dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "ok installed"
-    return
-}
-
 install_debian_deps(){
-   deps=""
-    for pkg in openssl libssl3 libssl-dev
-    do
-        if is_package_missing "$pkg"
-        then
-            print_error "$pkg is not installed on this machine!"
-            deps="$deps $pkg"
-        fi
-    done
-    
-    if [ -n "$deps" ]
-    then
-        sudo apt-get update
-        print_success "Attempting to install missing packages..."
-        print_success "$deps"
-        sudo apt-get install -y "$deps"
-    fi
+  sudo apt-get install -y openssl
+  sudo apt-get install -y libssl3
+  sudo apt-get install -y libssl-dev
 }
 # Start installation process
 print_success "Searching for a package manager..."
@@ -296,9 +277,10 @@ then
 fi
 
 if command -v apt-get >/dev/null 2>&1 && command -v dpkg-query >/dev/null 2>&1; then
-    if can_use_sudo; then
-        install_debian_deps
-    fi
+  if can_use_sudo
+  then
+    install_debian_deps
+  fi
 fi
 
 print_error "No supported package manager found."
