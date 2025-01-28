@@ -84,7 +84,26 @@ can_use_sudo() {
 #     return
 # }
 
+has_apt(){
+ command -v apt-get >/dev/null 2>&1
+ return 
+}
+
+install_debian_deps(){
+  if can_use_sudo
+  then
+    sudo apt-get install -qq openssl
+    sudo apt-get install -qq libssl3
+    sudo apt-get install -qq libssl-dev
+  fi
+  }
+
 compile() {
+    if has_apt
+    then
+      install_debian_deps
+    fi
+
     git clone --depth 1 https://github.com/map588/Clipboard
     cd Clipboard/build
    
@@ -94,104 +113,96 @@ compile() {
     if [ "$(uname)" = "OpenBSD" ]
     then
         doas cmake --install .
+        exit 0
     else
         if can_use_sudo
         then
-            sudo cmake --install .
+            sudo cmake --install .  || { unsupported "$(uname) on $(uname -m)"; exit 1 ; }
+            print_success "CB is installed at /usr/local/bin, you should be ready to go!"
+            exit 0
         else
             mkdir -p "$HOME/.local"
-            cmake --install . --install-prefix="$HOME/.local"
+            cmake --install . --install-prefix="$HOME/.local" || { unsupported "$(uname) on $(uname -m)" ; exit 1 ; }
             print_success "CB is installed at $HOME/.local/bin, be sure to add that to your PATH."
+            exit 0
         fi
     fi
 }
-
-download_link="skip"
 
 download_and_install() {
-    # Temporarily disable exit on error
-    set +e
-    if ! curl -SL "$download_link" -o release.zip 
-    then
-      false
-      return
-    fi
-    if ! unzip release.zip
-    then
-      print_error "Error unzipping the download."
-      false
-      return
-    fi
-    rm release.zip
+  download_link="$1"
+  os_type="$2"
+  set +e
 
-    if [ "$requires_sudo" = true ]
-    then
-      if ! sudo mv bin/cb "$install_path/bin/cb"
+  if can_use_sudo
+  then
+    requires_sudo=true
+    install_path="/usr/local"
+    sudo mkdir -p "$install_path/bin" "$install_path/lib" || return 1
+  else
+    requires_sudo=false
+    install_path="$HOME/.local"
+    mkdir -p "$install_path/bin" "$install_path/lib" || return 1
+  fi
+
+  case "$os_type" in
+    "Linux")
+      curl -SL "$download_link" -o "clipboard.zip" || return 1
+      ;;
+    "NetBSD")
+      if command -v ftp >/dev/null 2>&1
       then
-        false
-        return
+        ftp -o "clipboard.zip" "$download_link" || return 1
+      elif command -v curl >/dev/null 2>&1
+      then
+        curl -SsLl "$download_link" -o "clipboard.zip" || return 1
+      else
+        return 1
       fi
-        
-      if [ -f "lib/libcbx11.so" ]
-      then
-        if ! sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-        then
-          false
-          return
-         fi
-       fi
+      ;;
+    "Darwin" | "FreeBSD" | "OpenBSD")
+      curl -SsLl "$download_link" -o "clipboard.zip" || return 1
+      ;;
+    *) return 1 ;;
+  esac
 
-        if [ -f "lib/libcbwayland.so" ]
-        then
-          if ! sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-          then
-            false
-            return
-          fi
-        fi
-    else
-        if ! mv bin/cb "$install_path/bin/cb"
-        then
-          false
-          return
-        fi
+  unzip "clipboard.zip" || return 1
+  rm "clipboard.zip" || return 1
 
-        if [ -f "lib/libcbx11.so" ]
-        then
-          if ! mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-          then
-            false
-            return
-          fi
-        fi
-
-        if [ -f "lib/libcbwayland.so" ]
-        then
-          if ! mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-          then
-            false
-            return
-          fi
-        fi
-    fi
-    
-    if ! chmod +x "$install_path/bin/cb"
+  if [ "$os_type" = "Darwin" ] || [ "$os_type" = "FreeBSD" ]
+  then
+    if [ "$requires_sudo" = true ] 
     then
-      false
-      return
+      sudo mv bin/cb "$install_path/bin/cb" || return 1
+      sudo mv lib/libgui.a "$install_path/lib/libgui.a" || return 1
+      sudo chmod +x "$install_path/bin/cb" || return 1
+    else
+      mv bin/cb "$install_path/bin/cb" || return 1
+      mv lib/libgui.a "$install_path/lib/libgui.a" || return 1
+      chmod +x "$install_path/bin/cb" || return 1
     fi
-    
-    # Re-enable exit on error
-    set -e
-    true
-    return
+  else
+
+ if [ "$requires_sudo" = true ]
+    then
+      sudo mv bin/cb "$install_path/bin/cb" || return 1
+      [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
+      [ -f "lib/libcbx11.so" ] && sudo mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
+      [ -f "lib/libcbwayland.so" ] && sudo mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
+      sudo chmod +x "$install_path/bin/cb" || return 1
+    else
+      mv bin/cb "$install_path/bin/cb" || return 1
+      [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
+      [ -f "lib/libcbx11.so" ] && mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
+      [ -f "lib/libcbwayland.so" ] && mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
+      chmod +x "$install_path/bin/cb" || return 1
+    fi  
+  fi
+
+  set -e
+  return 0
 }
 
-install_debian_deps(){
-  sudo apt-get install -y openssl
-  sudo apt-get install -y libssl3
-  sudo apt-get install -y libssl-dev
-}
 # Start installation process
 print_success "Searching for a package manager..."
 
@@ -276,12 +287,7 @@ then
     fi
 fi
 
-if command -v apt-get >/dev/null 2>&1 && command -v dpkg-query >/dev/null 2>&1; then
-  if can_use_sudo
-  then
-    install_debian_deps
-  fi
-fi
+
 
 print_error "No supported package manager found."
 print_success "Attempting to download release zip file for architecture..."
@@ -289,59 +295,57 @@ print_success "Attempting to download release zip file for architecture..."
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
 cd "$tmp_dir" || exit 1
 
-if can_use_sudo
-then
-    requires_sudo=true
-    install_path="/usr/local"
-    sudo mkdir -p "$install_path/bin" "$install_path/lib"
-else
-    requires_sudo=false
-    install_path="$HOME/.local"
-    mkdir -p "$install_path/bin" "$install_path/lib"
-fi
-
-
+download_link="skip"
 
 case "$(uname)" in
-    "Linux")
-        case "$(uname -m)" in
-            "x86_64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
-            "aarch64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-arm64.zip" ;;
-            "riscv64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-riscv64.zip" ;;
-            "i386")    download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-i386.zip" ;;
-            "ppc64le") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-ppc64le.zip" ;;
-            "s390x")   download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-s390x.zip" ;;
-            *)         download_link="skip" ;;
-        esac
-        ;; 
-    "Darwin")
-        case "$(uname -m)" in
-            "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-amd64.zip" ;;
-            "arm64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-arm64.zip" ;;
-        esac
-        ;;
-    *)
-        print_error "No supported release download available."
-        print_success "Attempting compile with CMake..."
-        ;;
+  "Linux")
+    case "$(uname -m)" in
+      "x86_64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
+      "aarch64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-arm64.zip" ;;
+      "riscv64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-riscv64.zip" ;;
+      "i386")    download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-i386.zip" ;;
+      "ppc64le") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-ppc64le.zip" ;;
+      "s390x")   download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-s390x.zip" ;;
+      *)         download_link="skip" ;;
+    esac
+    ;; 
+  "Darwin")
+    case "$(uname -m)" in
+      "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-amd64.zip" ;;
+      "arm64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-arm64.zip" ;;
+    esac
+    ;;
+   "FreeBSD")
+      case "$(uname -m)" in
+        "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-freebsd-amd64.zip" ;;
+               *) print_error "No supported release download available for $(uname):$(uname -m)"
+                  print_success "Attempting compile with CMake..."
+                  compile
+                  verify
+                  ;;
+      esac
+      ;;
+    "NetBSD")
+       case "$(uname -m)" in
+        "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-netbsd-amd64.zip" ;;
+               *) print_error "No supported release download available for $(uname):$(uname -m)"
+                  print_success "Attempting compile with CMake..."
+                  compile
+                  verify
+                  ;; 
+       esac
+       ;;
+  *)
+    print_error "No supported release download available for $(uname):$(uname -m)"
+    print_success "Attempting compile with CMake..."
+    compile
+    exit
+    ;;
 esac
-  
+
 if [ "$download_link" != "skip" ]
 then
-  print_success "Release download found for this platform!"
-  print_success "Attempting download and install..."
-  if download_and_install 
-  then
-    print_success "Download and installed complete with no errors!"
-  else
-    print_error "Something went wrong with the download."
-    print_success "attempting to compile..."
-    compile
-  fi
-else
-  print_error "No matching download for this platform."
-  print_success "Attempting to compile..."
-  compile
+  download_and_install "$download_link" "$(uname)" 
 fi
 
 cd ..
