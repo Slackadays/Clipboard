@@ -58,24 +58,46 @@ can_use_sudo() {
     return 1       # Sudo not available
 }
 
-# has_alsa() {
-#     if command -v aplay >/dev/null 2>&1
-#     then
-#       return 0 # aplay executed successfully 
-#     else
-#       return 1 # aplay failed to execute
-#     fi
-# }
+
+has_header() {
+    header="$1"
+    # See if pre-processor exists 
+    if command -v cpp >/dev/null 2>&1
+    then
+        echo "#include <${header}>" | cpp -H -o /dev/null >/dev/null 2>&1
+        return
+    fi
+    # Try gcc if available
+    if command -v gcc >/dev/null 2>&1
+    then
+        echo "#include <${header}>" | gcc -E - >/dev/null 2>&1
+        return
+    fi
+    # Try clang if available
+    if command -v clang >/dev/null 2>&1
+    then
+        echo "#include <${header}>" | clang -E - >/dev/null 2>&1
+        return
+    fi
+    # No known compiler found
+    false
+    return
+}
+
+has_alsa() {
+    has_header "alsa/asoundlib.h"
+    return
+}
 
 compile() {
     git clone --depth 1 https://github.com/map588/Clipboard
     cd Clipboard/build
-    # if has_alsa
-    # then
-    #     cmake ..
-    # else
-        cmake -DNO_ALSA=TRUE ..
-    #fi
+    if has_alsa
+    then
+      cmake ..
+    else
+      cmake -DNO_ALSA=TRUE ..
+    fi
     
     cmake --build .
 
@@ -95,24 +117,22 @@ compile() {
 }
 
 download_link="skip"
-download_name="skip"
 
 download_and_install() {
     # Temporarily disable exit on error
     set +e
-    zip_file="$1"
-    if ! curl -SL "$download_link" -o "$zip_file"
+    if ! curl -SL "$download_link" -o release.zip 
     then
       false
       return
     fi
-    if ! unzip "$zip_file"
+    if ! unzip release.zip
     then
       print_error "Error unzipping the download."
       false
       return
     fi
-    rm "$zip_file"
+    rm release.zip
 
     if [ "$requires_sudo" = true ]
     then
@@ -313,25 +333,20 @@ fi
 case "$(uname)" in
     "Linux")
         case "$(uname -m)" in
-            "x86_64")  download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-amd64.zip" ;;
-            "aarch64") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-arm64.zip" ;;
-            "riscv64") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-riscv64.zip" ;;
-            "i386")    download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-i386.zip" ;;
-            "ppc64le") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-ppc64le.zip" ;;
-            "s390x")   download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-s390x.zip" ;;
+            "x86_64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
+            "aarch64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-arm64.zip" ;;
+            "riscv64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-riscv64.zip" ;;
+            "i386")    download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-i386.zip" ;;
+            "ppc64le") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-ppc64le.zip" ;;
+            "s390x")   download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-s390x.zip" ;;
             *)         download_link="skip" ;;
         esac
-        if [ "$download_link" != "skip" ]
-        then
-          download_name="clipboard-linux.zip"
-        fi
         ;; 
     "Darwin")
         case "$(uname -m)" in
-            "x86_64") download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-amd64.zip" ;;
-            "arm64")  download_link="https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64.zip" ;;
+            "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-amd64.zip" ;;
+            "arm64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-arm64.zip" ;;
         esac
-          download_name="clipboard-macos.zip"        
         ;;
     *)
         print_error "No supported release download available."
@@ -339,11 +354,11 @@ case "$(uname)" in
         ;;
 esac
   
-if [ "$download_name" != "skip" ]
+if [ "$download_link" != "skip" ]
 then
   print_success "Release download found for this platform!"
   print_success "Attempting download and install..."
-  if download_and_install $download_name
+  if download_and_install 
   then
     print_success "Download and installed complete with no errors!"
   else
