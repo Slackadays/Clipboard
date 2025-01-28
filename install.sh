@@ -189,13 +189,13 @@ download_and_install() {
 
  if [ "$requires_sudo" = true ]
     then
-      sudo mv bin/cb "$install_path/bin/cb" 
+      [ -f "bin/cb" ] && sudo mv bin/cb "$install_path/bin/cb" 
       [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && sudo mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && sudo mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
       sudo chmod +x "$install_path/bin/cb"
     else
-      mv bin/cb "$install_path/bin/cb"
+      [ -f "bin/cb" ] && mv bin/cb "$install_path/bin/cb"
       [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
@@ -216,16 +216,10 @@ download_and_install() {
        print_warning "libcbwayland.so"
      fi
 
-     if [ "$os_type" = "Linux" ]
+     if [ -f "$install_path/bin/cb" ]
      then
-        if can_use_sudo
-        then
-          [ -f "/etc/ld.so.conf" ] && sudo cat /etc/ld.so.conf
-          [ -d "/etc/ld.so.conf.d" ] && sudo cat /etc/ld.so.conf.d/*
-        fi
-        export LD_LIBRARY_PATH="$install_path/lib"
+       print_success "cb is in $install_path/bin!"
      fi
-
 }
 
 # Start installation process
