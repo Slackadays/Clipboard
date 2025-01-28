@@ -10,7 +10,7 @@ YELLOW="\033[33m"
 RESET="\033[0m"
 
 print_success() { printf "%b\n" "${GREEN}$1${RESET}"; }
-print_warning() { printf "b\n" "${YELLOW}$1${RESET}"; }
+print_warning() { printf "%b\n" "${YELLOW}$1${RESET}"; }
 print_error() { printf "%b\n" "${RED}$1${RESET}"; }
 
 
@@ -159,7 +159,7 @@ download_and_install() {
       then
         curl -SsLl "$download_link" -o "clipboard.zip" 
       else
-        return 1
+        unsupported "download $(uname):$(uname -m)"
       fi
       ;;
   "Darwin" | "FreeBSD" | "OpenBSD")
@@ -175,7 +175,7 @@ download_and_install() {
     if [ "$requires_sudo" = true ] 
     then
       sudo mv bin/cb "$install_path/bin/cb"
-    #  sudo mv lib/libgui.a "$install_path/lib/libgui.a"
+      sudo mv lib/libgui.a "$install_path/lib/libgui.a"
       sudo chmod +x "$install_path/bin/cb"
     else
       mv bin/cb "$install_path/bin/cb"
@@ -188,13 +188,13 @@ download_and_install() {
  if [ "$requires_sudo" = true ]
     then
       sudo mv bin/cb "$install_path/bin/cb" 
-     # [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
+      [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && sudo mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && sudo mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
       sudo chmod +x "$install_path/bin/cb"
     else
       mv bin/cb "$install_path/bin/cb"
-     # [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
+      [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
       chmod +x "$install_path/bin/cb"
@@ -300,7 +300,7 @@ download_link="skip"
 case "$(uname)" in
   "Linux")
     case "$(uname -m)" in
-      "x86_64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
+      "x86_64" | "amd64" )  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip" ;;
       "aarch64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-arm64.zip" ;;
       "riscv64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-riscv64.zip" ;;
       "i386")    download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-i386.zip" ;;
@@ -311,13 +311,13 @@ case "$(uname)" in
     ;; 
   "Darwin")
     case "$(uname -m)" in
-      "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-amd64.zip" ;;
+      "x86_64" | "amd64" ) download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-amd64.zip" ;;
       "arm64")  download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-arm64.zip" ;;
     esac
     ;;
    "FreeBSD")
       case "$(uname -m)" in
-        "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-freebsd-amd64.zip" ;;
+        "x86_64" | "amd64" ) download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-freebsd-amd64.zip" ;;
                *) print_error "No supported release download available for $(uname):$(uname -m)"
                   print_success "Attempting compile with CMake..."
                   compile
@@ -326,7 +326,7 @@ case "$(uname)" in
       ;;
     "NetBSD")
        case "$(uname -m)" in
-        "x86_64") download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-netbsd-amd64.zip" ;;
+        "x86_64" | "amd64" ) download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-netbsd-amd64.zip" ;;
                *) print_error "No supported release download available for $(uname):$(uname -m)"
                   print_success "Attempting compile with CMake..."
                   compile
