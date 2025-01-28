@@ -149,7 +149,7 @@ download_and_install() {
   print_success "Platform: $(uname):$(uname -m)"
   case "$os_type" in
     "Linux")
-      curl -SL "$download_link" -o "clipboard.zip" 
+      curl -SsLl "$download_link" -o "clipboard.zip" 
       ;;
     "NetBSD")
       if command -v ftp >/dev/null 2>&1
@@ -162,13 +162,15 @@ download_and_install() {
         unsupported "download $(uname):$(uname -m)"
       fi
       ;;
-  "Darwin" | "FreeBSD" | "OpenBSD")
+  "Darwin" | "FreeBSD")
       curl -SsLl "$download_link" -o "clipboard.zip" 
       ;;
     *) unsupported "$(uname):$(uname -m)"; exit 1 ;;
   esac
 
   unzip "clipboard.zip"
+
+  print_warning "Libraries in $install_path/lib:"
 
   if [ "$os_type" = "Darwin" ]
   then
@@ -179,7 +181,7 @@ download_and_install() {
       sudo chmod +x "$install_path/bin/cb"
     else
       mv bin/cb "$install_path/bin/cb"
-    #  mv lib/libgui.a "$install_path/lib/libgui.a"
+      mv lib/libgui.a "$install_path/lib/libgui.a"
       chmod +x "$install_path/bin/cb"
     fi
 
@@ -200,7 +202,19 @@ download_and_install() {
       chmod +x "$install_path/bin/cb"
     fi  
   fi
-
+  
+     if [ -f "$install_path/lib/libgui.a" ]
+     then
+       print_warning "libgui.a"
+     fi
+     if [ -f "$install_path/lib/libcbx11.so" ]
+     then
+       print_warning "libcbx11.so"
+     fi
+     if [ -f "$install_path/lib/libcbwayland.so" ]
+     then
+       print_warning "libcbwayland.so"
+     fi
 }
 
 # Start installation process
