@@ -35,12 +35,13 @@ verify() {
     then
         if ! cb >/dev/null 2>&1
         then
-            unsupported "this system"
+            print_error "Error with the runtime of cb, but able to execute." 
             exit 1
         fi
         print_success "Clipboard installed successfully!"
         exit 0
     fi
+    print_error "Clipboard is not able to be called, check that /usr/local/bin is accessible by PATH."
     exit 1
 }
 
@@ -68,8 +69,7 @@ can_use_sudo() {
 
 compile() {
     git clone --depth 1 https://github.com/map588/Clipboard
-    cd Clipboard/build || exit 1
-    
+    cd Clipboard/build
     # if has_alsa
     # then
     #     cmake ..
@@ -89,84 +89,86 @@ compile() {
         else
             mkdir -p "$HOME/.local"
             cmake --install . --install-prefix="$HOME/.local"
+            print_success "CB is installed at $HOME/.local/bin, be sure to add that to your PATH."
         fi
     fi
 }
 
+download_link="skip"
+download_name="skip"
+
 download_and_install() {
     # Temporarily disable exit on error
     set +e
-    
     zip_file="$1"
     if ! curl -SL "$download_link" -o "$zip_file"
     then
-        false
-        return
+      false
+      return
     fi
-    
     if ! unzip "$zip_file"
     then
-        false
-        return
+      print_error "Error unzipping the download."
+      false
+      return
     fi
-    
     rm "$zip_file"
 
     if [ "$requires_sudo" = true ]
     then
-        if ! sudo mv bin/cb "$install_path/bin/cb"
-        then
-            false
-            return
-        fi
+      if ! sudo mv bin/cb "$install_path/bin/cb"
+      then
+        false
+        return
+      fi
         
-        if [ -f "lib/libcbx11.so" ]
+      if [ -f "lib/libcbx11.so" ]
+      then
+        if ! sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
         then
-            if ! sudo mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-            then
-                false
-                return
-            fi
-        fi
+          false
+          return
+         fi
+       fi
 
         if [ -f "lib/libcbwayland.so" ]
         then
-            if ! sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-            then
-                false
-                return
-            fi
+          if ! sudo mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+          then
+            false
+            return
+          fi
         fi
     else
         if ! mv bin/cb "$install_path/bin/cb"
         then
-            false
-            return
+          false
+          return
         fi
 
         if [ -f "lib/libcbx11.so" ]
         then
-            if ! mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
-            then
-                false
-                return
-            fi
+          if ! mv lib/libcbx11.so "$install_path/lib/libcbx11.so"
+          then
+            false
+            return
+          fi
         fi
 
         if [ -f "lib/libcbwayland.so" ]
         then
-            if ! mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
-            then
-                false
-                return
-            fi
+          if ! mv lib/libcbwayland.so "$install_path/lib/libcbwayland.so"
+          then
+            false
+            return
+          fi
         fi
     fi
     
     if ! chmod +x "$install_path/bin/cb"
     then
-        false
-        return
+      false
+      return
     fi
     
     # Re-enable exit on error
@@ -186,6 +188,7 @@ install_debian_deps(){
     do
         if is_package_missing "$pkg"
         then
+            print_error "$pkg is not installed on this machine!"
             deps="$deps $pkg"
         fi
     done
@@ -193,7 +196,9 @@ install_debian_deps(){
     if [ -n "$deps" ]
     then
         sudo apt-get update
-        sudo apt-get install -y $deps
+        print_success "Attempting to install missing packages..."
+        print_success "$deps"
+        sudo apt-get install -y "$deps"
     fi
 }
 # Start installation process
@@ -287,7 +292,6 @@ if command -v apt-get >/dev/null 2>&1 && command -v dpkg-query >/dev/null 2>&1; 
 fi
 
 print_error "No supported package manager found."
-
 print_success "Attempting to download release zip file for architecture..."
 
 tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
@@ -304,7 +308,7 @@ else
     mkdir -p "$install_path/bin" "$install_path/lib"
 fi
 
-download_name="skip"
+
 
 case "$(uname)" in
     "Linux")
@@ -329,10 +333,6 @@ case "$(uname)" in
         esac
           download_name="clipboard-macos.zip"        
         ;;
-    "FreeBSD"|"OpenBSD"|"NetBSD")
-        unsupported "$(uname)"
-        exit 0
-        ;;
     *)
         print_error "No supported release download available."
         print_success "Attempting compile with CMake..."
@@ -347,10 +347,13 @@ then
   then
     print_success "Download and installed complete with no errors!"
   else
-    print_error "Something went wrong with the download, attempting to compile..."
+    print_error "Something went wrong with the download."
+    print_success "attempting to compile..."
     compile
   fi
 else
+  print_error "No matching download for this platform."
+  print_success "Attempting to compile..."
   compile
 fi
 
