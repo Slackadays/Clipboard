@@ -215,10 +215,15 @@ download_and_install() {
      then
        print_warning "libcbwayland.so"
      fi
-     if can_use_sudo
+
+     if [ "$os_type" = "Linux" ]
      then
-     [ -f "/etc/ld.so.conf" ] && sudo cat /etc/ld.so.conf
-     [ -d "/etc/ld.so.conf.d" ] && sudo cat /etc/ld.so.conf.d/*
+        if can_use_sudo
+        then
+          [ -f "/etc/ld.so.conf" ] && sudo cat /etc/ld.so.conf
+          [ -d "/etc/ld.so.conf.d" ] && sudo cat /etc/ld.so.conf.d/*
+        fi
+        export LD_LIBRARY_PATH="$install_path/lib:$LD_LIBRARY_PATH"
      fi
 
 }
@@ -352,6 +357,8 @@ case "$(uname)" in
                   ;; 
        esac
        ;;
+    "OpenBSD") doas pkg_add git
+      ;;
   *)
     print_error "No supported release download available for $(uname):$(uname -m)"
     print_success "Attempting compile with CMake..."
