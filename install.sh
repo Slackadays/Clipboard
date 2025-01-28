@@ -10,6 +10,7 @@ YELLOW="\033[33m"
 RESET="\033[0m"
 
 print_success() { printf "%b\n" "${GREEN}$1${RESET}"; }
+print_warning() { printf "b\n" "${YELLOW}$1${RESET}"; }
 print_error() { printf "%b\n" "${RED}$1${RESET}"; }
 
 
@@ -49,12 +50,15 @@ can_use_sudo() {
     prompt=$(sudo -nv 2>&1)
     if sudo -nv >/dev/null 2>&1
     then
-        return 0    # No password needed
+      print_success "Sudo ist nicht verboten!"
+      return 0    # No password needed
     fi
     if echo "$prompt" | grep -q '^sudo:'
     then
-        return 0    # Password needed but sudo available
+      print_warning "Sudo ist normalerweise verboten."
+      return 0    # Password needed but sudo available
     fi
+    print_error "Sudo ist verboten!"
     return 1       # Sudo not available
 }
 
@@ -134,11 +138,11 @@ download_and_install() {
   then
     requires_sudo=true
     install_path="/usr/local"
-    sudo mkdir -p "$install_path/bin" "$install_path/lib" 
+    sudo mkdir -p "$install_path/bin" "$install_path/lib"
   else
     requires_sudo=false
     install_path="$HOME/.local"
-    mkdir -p "$install_path/bin" "$install_path/lib" 
+    mkdir -p "$install_path/bin" "$install_path/lib"
   fi
   print_success "Install path: $install_path"
   print_success "Current directory: $(pwd)"
@@ -147,18 +151,18 @@ download_and_install() {
     "Linux")
       curl -SL "$download_link" -o "clipboard.zip" 
       ;;
-    # "NetBSD")
-    #   if command -v ftp >/dev/null 2>&1
-    #   then
-    #     ftp -o "clipboard.zip" "$download_link" 
-    #   elif command -v curl >/dev/null 2>&1
-    #   then
-    #     curl -SsLl "$download_link" -o "clipboard.zip" 
-    #   else
-    #     return 1
-    #   fi
-    #   ;;
-  "Darwin" ) # | "FreeBSD" | "OpenBSD")
+    "NetBSD")
+      if command -v ftp >/dev/null 2>&1
+      then
+        ftp -o "clipboard.zip" "$download_link" 
+      elif command -v curl >/dev/null 2>&1
+      then
+        curl -SsLl "$download_link" -o "clipboard.zip" 
+      else
+        return 1
+      fi
+      ;;
+  "Darwin" | "FreeBSD" | "OpenBSD")
       curl -SsLl "$download_link" -o "clipboard.zip" 
       ;;
     *) unsupported "$(uname):$(uname -m)"; exit 1 ;;
@@ -171,25 +175,26 @@ download_and_install() {
     if [ "$requires_sudo" = true ] 
     then
       sudo mv bin/cb "$install_path/bin/cb"
-      sudo mv lib/libgui.a "$install_path/lib/libgui.a"
+    #  sudo mv lib/libgui.a "$install_path/lib/libgui.a"
       sudo chmod +x "$install_path/bin/cb"
     else
       mv bin/cb "$install_path/bin/cb"
-      mv lib/libgui.a "$install_path/lib/libgui.a"
+    #  mv lib/libgui.a "$install_path/lib/libgui.a"
       chmod +x "$install_path/bin/cb"
     fi
+
   else
 
  if [ "$requires_sudo" = true ]
     then
       sudo mv bin/cb "$install_path/bin/cb" 
-      [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
+     # [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && sudo mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && sudo mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
       sudo chmod +x "$install_path/bin/cb"
     else
       mv bin/cb "$install_path/bin/cb"
-      [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
+     # [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
       chmod +x "$install_path/bin/cb"
@@ -316,7 +321,6 @@ case "$(uname)" in
                *) print_error "No supported release download available for $(uname):$(uname -m)"
                   print_success "Attempting compile with CMake..."
                   compile
-                  verify
                   ;;
       esac
       ;;
@@ -326,7 +330,6 @@ case "$(uname)" in
                *) print_error "No supported release download available for $(uname):$(uname -m)"
                   print_success "Attempting compile with CMake..."
                   compile
-                  verify
                   ;; 
        esac
        ;;
