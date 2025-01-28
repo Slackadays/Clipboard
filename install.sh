@@ -113,18 +113,15 @@ compile() {
     if [ "$(uname)" = "OpenBSD" ]
     then
         doas cmake --install .
-        exit 0
     else
         if can_use_sudo
         then
-            sudo cmake --install .  || { unsupported "$(uname) on $(uname -m)"; exit 1 ; }
-            print_success "CB is installed at /usr/local/bin, you should be ready to go!"
-            exit 0
+            print_success "Sudo used for cmake."
+            sudo cmake --install .
         else
+            print_success "Installing locally, sudo is verboten."
             mkdir -p "$HOME/.local"
-            cmake --install . --install-prefix="$HOME/.local" || { unsupported "$(uname) on $(uname -m)" ; exit 1 ; }
-            print_success "CB is installed at $HOME/.local/bin, be sure to add that to your PATH."
-            exit 0
+            cmake --install . --prefix="$HOME/.local"
         fi
     fi
 }
@@ -132,77 +129,73 @@ compile() {
 download_and_install() {
   download_link="$1"
   os_type="$2"
-  set +e
 
   if can_use_sudo
   then
     requires_sudo=true
     install_path="/usr/local"
-    sudo mkdir -p "$install_path/bin" "$install_path/lib" || return 1
+    sudo mkdir -p "$install_path/bin" "$install_path/lib" 
   else
     requires_sudo=false
     install_path="$HOME/.local"
-    mkdir -p "$install_path/bin" "$install_path/lib" || return 1
+    mkdir -p "$install_path/bin" "$install_path/lib" 
   fi
   print_success "Install path: $install_path"
   print_success "Current directory: $(pwd)"
   print_success "Platform: $(uname):$(uname -m)"
   case "$os_type" in
     "Linux")
-      curl -SL "$download_link" -o "clipboard.zip" || return 1
+      curl -SL "$download_link" -o "clipboard.zip" 
       ;;
-    "NetBSD")
-      if command -v ftp >/dev/null 2>&1
-      then
-        ftp -o "clipboard.zip" "$download_link" || return 1
-      elif command -v curl >/dev/null 2>&1
-      then
-        curl -SsLl "$download_link" -o "clipboard.zip" || return 1
-      else
-        return 1
-      fi
+    # "NetBSD")
+    #   if command -v ftp >/dev/null 2>&1
+    #   then
+    #     ftp -o "clipboard.zip" "$download_link" 
+    #   elif command -v curl >/dev/null 2>&1
+    #   then
+    #     curl -SsLl "$download_link" -o "clipboard.zip" 
+    #   else
+    #     return 1
+    #   fi
+    #   ;;
+  "Darwin" ) # | "FreeBSD" | "OpenBSD")
+      curl -SsLl "$download_link" -o "clipboard.zip" 
       ;;
-    "Darwin" | "FreeBSD" | "OpenBSD")
-      curl -SsLl "$download_link" -o "clipboard.zip" || return 1
-      ;;
-    *) return 1 ;;
+    *) unsupported "$(uname):$(uname -m)"; exit 1 ;;
   esac
 
-  unzip "clipboard.zip" || return 1
-  rm "clipboard.zip" || return 1
+  unzip "clipboard.zip"
 
-  if [ "$os_type" = "Darwin" ] || [ "$os_type" = "FreeBSD" ]
+  if [ "$os_type" = "Darwin" ]
   then
     if [ "$requires_sudo" = true ] 
     then
-      sudo mv bin/cb "$install_path/bin/cb" || return 1
-      sudo mv lib/libgui.a "$install_path/lib/libgui.a" || return 1
-      sudo chmod +x "$install_path/bin/cb" || return 1
+      sudo mv bin/cb "$install_path/bin/cb"
+      sudo mv lib/libgui.a "$install_path/lib/libgui.a"
+      sudo chmod +x "$install_path/bin/cb"
     else
-      mv bin/cb "$install_path/bin/cb" || return 1
-      mv lib/libgui.a "$install_path/lib/libgui.a" || return 1
-      chmod +x "$install_path/bin/cb" || return 1
+      mv bin/cb "$install_path/bin/cb"
+      mv lib/libgui.a "$install_path/lib/libgui.a"
+      chmod +x "$install_path/bin/cb"
     fi
   else
 
  if [ "$requires_sudo" = true ]
     then
-      sudo mv bin/cb "$install_path/bin/cb" || return 1
+      sudo mv bin/cb "$install_path/bin/cb" 
       [ -f "lib/libgui.a" ] && sudo mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && sudo mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && sudo mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
-      sudo chmod +x "$install_path/bin/cb" || return 1
+      sudo chmod +x "$install_path/bin/cb"
     else
-      mv bin/cb "$install_path/bin/cb" || return 1
+      mv bin/cb "$install_path/bin/cb"
       [ -f "lib/libgui.a" ] && mv "lib/libgui.a" "$install_path/lib/libgui.a"
       [ -f "lib/libcbx11.so" ] && mv "lib/libcbx11.so" "$install_path/lib/libcbx11.so"
       [ -f "lib/libcbwayland.so" ] && mv "lib/libcbwayland.so" "$install_path/lib/libcbwayland.so"
-      chmod +x "$install_path/bin/cb" || return 1
+      chmod +x "$install_path/bin/cb"
     fi  
   fi
 
-  set -e
-  return 0
 }
 
 # Start installation process
@@ -341,7 +334,6 @@ case "$(uname)" in
     print_error "No supported release download available for $(uname):$(uname -m)"
     print_success "Attempting compile with CMake..."
     compile
-    exit
     ;;
 esac
 
