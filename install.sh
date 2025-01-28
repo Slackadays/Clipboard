@@ -223,7 +223,7 @@ download_and_install() {
           [ -f "/etc/ld.so.conf" ] && sudo cat /etc/ld.so.conf
           [ -d "/etc/ld.so.conf.d" ] && sudo cat /etc/ld.so.conf.d/*
         fi
-        export LD_LIBRARY_PATH="$install_path/lib:$LD_LIBRARY_PATH"
+        export LD_LIBRARY_PATH="$install_path/lib"
      fi
 
 }
