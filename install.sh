@@ -59,46 +59,36 @@ can_use_sudo() {
 }
 
 
-has_header() {
-    header="$1"
-    # See if pre-processor exists 
-    if command -v cpp >/dev/null 2>&1
-    then
-        echo "#include <${header}>" | cpp -H -o /dev/null >/dev/null 2>&1
-        return
-    fi
-    # Try gcc if available
-    if command -v gcc >/dev/null 2>&1
-    then
-        echo "#include <${header}>" | gcc -E - >/dev/null 2>&1
-        return
-    fi
-    # Try clang if available
-    if command -v clang >/dev/null 2>&1
-    then
-        echo "#include <${header}>" | clang -E - >/dev/null 2>&1
-        return
-    fi
-    # No known compiler found
-    false
-    return
-}
-
-has_alsa() {
-    has_header "alsa/asoundlib.h"
-    return
-}
+# has_header() {
+#     header="$1"
+#     # See if pre-processor exists 
+#     if command -v cpp >/dev/null 2>&1
+#     then
+#         echo "#include <${header}>" | cpp -H -o /dev/null >/dev/null 2>&1
+#         return
+#     fi
+#     # Try gcc if available
+#     if command -v gcc >/dev/null 2>&1
+#     then
+#         echo "#include <${header}>" | gcc -E - >/dev/null 2>&1
+#         return
+#     fi
+#     # Try clang if available
+#     if command -v clang >/dev/null 2>&1
+#     then
+#         echo "#include <${header}>" | clang -E - >/dev/null 2>&1
+#         return
+#     fi
+#     # No known compiler found
+#     false
+#     return
+# }
 
 compile() {
     git clone --depth 1 https://github.com/map588/Clipboard
     cd Clipboard/build
-    if has_alsa
-    then
-      cmake ..
-    else
-      cmake -DNO_ALSA=TRUE ..
-    fi
-    
+   
+    cmake ..
     cmake --build .
 
     if [ "$(uname)" = "OpenBSD" ]
