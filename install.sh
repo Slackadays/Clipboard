@@ -149,22 +149,22 @@ if [ "$(uname)" = "Linux" ]
 then
     if [ "$(uname -m)" = "x86_64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-amd64.zip
+        download_link=https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-amd64.zip
     elif [ "$(uname -m)" = "aarch64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-arm64.zip
+        download_link=https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-arm64.zip
     elif [ "$(uname -m)" = "riscv64" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-riscv64.zip
+        download_link=https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-riscv64.zip
     elif [ "$(uname -m)" = "i386" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-i386.zip
+        download_link=https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-i386.zip
     elif [ "$(uname -m)" = "ppc64le" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-ppc64le.zip
+        download_link=https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-ppc64le.zip
     elif [ "$(uname -m)" = "s390x" ]
     then
-        download_link=https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-linux-s390x.zip
+        download_link=https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-linux-s390x.zip
     else
         download_link="skip"
     fi
@@ -203,10 +203,10 @@ elif [ "$(uname)" = "Darwin" ]
 then
     if [ "$(uname -m)" = "x86_64" ]
     then
-        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-amd64.zip -o clipboard-macos.zip
+        curl -SsLl https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-amd64.zip -o clipboard-macos.zip
     elif [ "$(uname -m)" = "arm64" ]
     then
-        curl -SsLl https://nightly.link/Slackadays/Clipboard/workflows/build-clipboard/main/clipboard-macos-arm64.zip -o clipboard-macos.zip
+        curl -SsLl https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-macos-arm64.zip -o clipboard-macos.zip
     fi
     unzip clipboard-macos.zip
     rm clipboard-macos.zip
