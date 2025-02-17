@@ -35,7 +35,7 @@ int SQEsSubmitted = 0;
 #include <sys/types.h>
 #endif
 
-#if (defined(UNIX_OR_UNIX_LIKE)) && !defined(__OpenBSD__)
+#if (defined(UNIX_OR_UNIX_LIKE)) && !defined(__OpenBSD__) && !defined(__HAIKU__)
 #define USE_AIO 1
 #include <aio.h>
 #endif
