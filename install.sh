@@ -3,6 +3,9 @@ set -eu
 
 flatpak_package="app.getclipboard.Clipboard"
 
+user_prefix="$HOME/.local"
+sudo_prefix="/usr/local"
+
 # Color codes for better readability
 GREEN="\033[32m"
 RED="\033[31m"
@@ -39,25 +42,36 @@ verify() {
             print_error "Error with the runtime of cb, but able to execute." 
             exit 1
         fi
-        print_success "Clipboard installed successfully!"
+        print_success "cb installed successfully!"
         exit 0
     fi
-    print_error "Clipboard is not able to be called, check that /usr/local/bin is accessible by PATH."
+
+    if [ -f "$install_path/bin/cb" ]
+    then
+        print_error "cb is not able to be executed, check that $install_path/bin is accessible by PATH."
+    else
+        print_error "cb was not able to be installed in $install_path/bin, check your file permissions."
+    fi
+
     exit 1
 }
-
+requires_sudo=""
+#requires_password=""
 can_use_sudo() {
     prompt=$(sudo -nv 2>&1)
     if sudo -nv >/dev/null 2>&1
     then
-      print_success "Sudo does not need a password."
+      requires_sudo=true
       return 0    # No password needed
     fi
     if echo "$prompt" | grep -q '^sudo:'
     then
-      print_warning "Using sudo, will require your password, possibly more than once."
+      requires_sudo=true
+#      requires_password=true
+      print_warning "Using sudo will require your password, possibly more than once."
       return 0     # Password needed but sudo available
     fi
+    requires_sudo=false
     print_error "User is not able to use sudo, local installation."
     return 1       # Sudo not available
 }
@@ -69,15 +83,18 @@ has_apt(){
 }
 
 install_debian_deps(){
-  if can_use_sudo
+  if [ $requires_sudo = true ]
   then
-    sudo apt-get install -qq openssl
-    sudo apt-get install -qq libssl3
-    sudo apt-get install -qq libssl-dev
+    sudo apt-get install -qq openssl libssl3 libssl-dev git cmake
+  else
+    print_warn "Was not able to install dependencies, build may fail."
+    print_warn "Ensure installed: openssl libssl3 libssl-dev git cmake"
   fi
-  }
+}
 
 compile() {
+    can_use_sudo
+
     if has_apt
     then
       install_debian_deps
@@ -96,16 +113,17 @@ compile() {
         #It will get here but doas is not configured on testing
         doas cmake --install .
     else
-        if can_use_sudo
+        if [ $requires_sudo = true ] 
         then
-            print_success "Sudo used for cmake."
+            print_success "Installing at "
             sudo cmake --install .
         else
             print_success "Installing locally, sudo is not available."
-            mkdir -p "$HOME/.local"
-            cmake --install . --prefix="$HOME/.local"
+            mkdir -p "$user_prefix"
+            cmake --install . --prefix="$user_prefix"
         fi
     fi
+    verify
 }
 
 package="find"
@@ -128,10 +146,10 @@ download_and_install() {
   if can_use_sudo
   then
     requires_sudo=true
-    install_path="/usr/local"
+    install_path="$sudo_prefix" 
   else
     requires_sudo=false
-    install_path="$HOME/.local"
+    install_path="$user_prefix"
     mkdir -p "$install_path/bin" "$install_path/lib"
   fi
   print_success "Install path: $install_path"
@@ -190,10 +208,8 @@ download_and_install() {
       chmod +x "$install_path/bin/cb"
     fi  
   fi
-     if [ -f "$install_path/bin/cb" ]
-     then
-       print_success "cb is in $install_path/bin!"
-     fi
+
+  verify
 }
 
 print_usage(){
@@ -313,10 +329,10 @@ then
     print_success "Attempting to download release binary for your system and architecture..."
 
     tmp_dir=$(mktemp -d -t cb-XXXXXXXXXX)
-    cd "$tmp_dir" || exit 1
+    cd "$tmp_dir" || eval "$(print_error "Temp Directory not acccessible."; if [ "$compile_source" = "try" ]; then compile; fi)"
+    
 
     download_link="skip"
-
     case "$(uname)" in
       "Linux")
         case "$(uname -m)" in
@@ -347,7 +363,6 @@ then
            case "$(uname -m)" in
             "x86_64" | "amd64" ) download_link="https://github.com/Slackadays/Clipboard/releases/download/0.10.0/clipboard-netbsd-amd64.zip" ;;
                    *) print_error "No supported release download available for $(uname):$(uname -m)"
-                      print_success "Attempting compile with CMake..."
                       ;; 
            esac
            ;;
@@ -373,4 +388,3 @@ then
   compile
 fi #Compile
 
-verify
