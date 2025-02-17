@@ -321,7 +321,7 @@ void verifyClipboardName() {
     constexpr std::array forbiddenFilenameCharacters {'<', '>', ':', '"', '/', '\\', '|', '?', '*'};
 #elif defined(__APPLE__)
     constexpr std::array forbiddenFilenameCharacters {'/', ':'};
-#elif defined(__linux__) || defined(__unix__)
+#elif defined(__linux__) || defined(__unix__) || defined(__HAIKU__)
     constexpr std::array forbiddenFilenameCharacters {'/'};
 #else
     constexpr std::array forbiddenFilenameCharacters {};
