@@ -6,6 +6,8 @@ flatpak_package="app.getclipboard.Clipboard"
 user_prefix="$HOME/.local"
 sudo_prefix="/usr/local"
 
+requires_sudo=""
+
 # Color codes for better readability
 GREEN="\033[32m"
 RED="\033[31m"
@@ -57,9 +59,10 @@ verify() {
 }
 
 check_install_prefix(){
-    if [ "$requires_sudo" = true ]
+    if [ "$requires_sudo" = "true" ]
     then
-        test_dir=$(mktemp -d -t cb-test-XXXXXXXXXX)
+        current_dir="$(pwd)"
+        test_dir="$(mktemp -d -t cb-test-XXXXXXXXXX)"
         cd "$test_dir"
         touch test
         if ! sudo mv test "$sudo_prefix" >/dev/null 2>&1
@@ -67,27 +70,27 @@ check_install_prefix(){
             print_warning "User has sudo permissions, but no access to $sudo_prefix."
             sudo_prefix="$user_prefix"
         fi
+        cd "$current_dir"
         rm -rf "$test_dir"
     fi
 }
 
-requires_sudo=""
 can_use_sudo() {
     prompt=$(sudo -nv 2>&1)
     if sudo -nv >/dev/null 2>&1
     then
-      requires_sudo=true
+      requires_sudo="true"
       check_install_prefix
       return 0    # No password needed
     fi
     if echo "$prompt" | grep -q '^sudo:'
     then
-      requires_sudo=true
+      requires_sudo="true"
       check_install_prefix
       print_warning "Using sudo will require your password, possibly more than once."  
       return 0     # Password needed but sudo available
     fi
-    requires_sudo=false
+    requires_sudo="false"
     print_error "User is not able to use sudo, local installation."
     return 1       # Sudo not available
 }
@@ -100,7 +103,7 @@ has_apt(){
 }
 
 install_debian_deps(){
-  if [ $requires_sudo = true ]
+  if [ "$requires_sudo" = "true" ]
   then
     sudo apt-get install -qq openssl libssl3 libssl-dev git cmake
   else
