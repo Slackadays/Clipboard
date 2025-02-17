@@ -60,8 +60,9 @@ check_install_prefix(){
     if [ "$requires_sudo" = true ]
     then
         test_dir=$(mktemp -d -t cb-test-XXXXXXXXXX)
+        cd test_dir
         touch test
-        if ! sudo mv test "$test_dir" >/dev/null 2>&1
+        if ! sudo mv test "$sudo_prefix" >/dev/null 2>&1
         then 
             print_warning "User has sudo permissions, but no access to $sudo_prefix."
             sudo_prefix="$user_prefix"
