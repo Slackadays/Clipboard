@@ -55,26 +55,42 @@ verify() {
 
     exit 1
 }
+
+check_install_prefix(){
+    if [ "$requires_sudo" = true ]
+    then
+        test_dir=$(mktemp -d -t cb-test-XXXXXXXXXX)
+        touch test
+        if ! sudo mv test "$test_dir" >/dev/null 2>&1
+        then 
+            print_warning "User has sudo permissions, but no access to $sudo_prefix."
+            sudo_prefix="$user_prefix"
+        fi
+        rm -rf "$test_dir"
+    fi
+}
+
 requires_sudo=""
-#requires_password=""
 can_use_sudo() {
     prompt=$(sudo -nv 2>&1)
     if sudo -nv >/dev/null 2>&1
     then
       requires_sudo=true
+      check_install_prefix
       return 0    # No password needed
     fi
     if echo "$prompt" | grep -q '^sudo:'
     then
       requires_sudo=true
-#      requires_password=true
-      print_warning "Using sudo will require your password, possibly more than once."
+      check_install_prefix
+      print_warning "Using sudo will require your password, possibly more than once."  
       return 0     # Password needed but sudo available
     fi
     requires_sudo=false
     print_error "User is not able to use sudo, local installation."
     return 1       # Sudo not available
 }
+
 
 
 has_apt(){
