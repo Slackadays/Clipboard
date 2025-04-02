@@ -1,3 +1,16 @@
+
+<div align="center" markdown="1">
+   <sup>Special thanks to:</sup>
+   <br>
+   <br>
+   <a href="https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=clipboard">
+      <img alt="Warp sponsorship" width="400" src="https://github.com/user-attachments/assets/ab8dd143-b0fd-4904-bdc5-dd7ecac94eae">
+   </a>
+
+### [Warp, the intelligent terminal for developers](https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=clipboard)
+[Available for MacOS, Linux, & Windows](https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=clipboard)<br>
+
+</div>
 <br>
 
 ### ![The Clipboard Project](documentation/readme-assets/CBBanner.png)
