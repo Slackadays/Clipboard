@@ -1271,7 +1271,7 @@ $ cb --clipboard 10 copy BarBaz
 
 Copy to a temporary clipboard that doesn't start with a number.
 ```sh
-$ cb -c SomeCB copy "A really really long sentence, and I mean really realy super DUPER long!"
+$ cb -c SomeCB copy "A really really long sentence, and I mean really really super DUPER long!"
 ```
 
 Note: Although copying to a temporary clipboard that doesn't start with a number is impossible using the conventional method of adding it to the end of the action, this alternative method is completely supported and works great.

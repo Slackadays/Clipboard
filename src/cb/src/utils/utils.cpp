@@ -250,7 +250,7 @@ void setupHandlers() {
     auto exitCleanly = [](int) {
         fprintf(stderr, "%s", formatColors("[blank]").data());
         if (!stopIndicator(false)) {
-            // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancelation
+            // Indicator thread is not currently running. TODO: Write an unbuffered newline, and maybe a cancellation
             // message, directly to standard error. Note: There is no standard C++ interface for this, so this requires
             // an OS call.
             path.releaseLock();
