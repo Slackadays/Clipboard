@@ -68,7 +68,7 @@ std::string makeControlCharactersVisible(const std::string_view& oldStr, size_t 
 
     if (len == 0) len = oldStr.size();
 
-    // format characters such as \n and \r such that they appear as \n and \r surrounded by lightning terminal colors
+    // format characters such as \n and \r such that they appear as \n and \r surrounded by lightening terminal colors
     const std::array<std::pair<char, std::string_view>, 8> replacementCharacters {
             {{'\n', "\\n"}, {'\r', "\\r"}, {'\a', "\\a"}, {'\b', "\\b"}, {'\f', "\\f"}, {'\t', "\\t"}, {'\v', "\\v"}, {'\0', "\\0"}}};
 
