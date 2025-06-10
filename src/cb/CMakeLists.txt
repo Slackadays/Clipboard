@@ -59,7 +59,11 @@ elseif(APPLE)
     src/platforms/macos.mm
   )
   target_link_libraries(cb "-framework AppKit")
-  target_compile_options(cb PRIVATE -fobjc-arc)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+    target_compile_options(cb PRIVATE -fobjc-arc)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(cb PRIVATE -fobjc-gc)
+  endif()
 elseif(HAIKU)
   target_sources(cb PRIVATE
     src/platforms/haiku.cpp
