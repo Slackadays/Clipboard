@@ -138,11 +138,16 @@ void indicatorThread() {
         std::valarray<short> samples(success_pcm_len / 2);
         for (size_t i = 0; i < success_pcm_len; i += 2)
             samples[i / 2] = static_cast<short>(success_pcm[i] | (success_pcm[i + 1] << 8));
+        for (auto& sample : samples)
+            // Decrease volume
+            sample = static_cast<short>(sample * 0.15);
         if (!playAsyncSoundEffect(samples)) printf("\007");
     } else if (clipboard_state == ClipboardState::Error && !envVarIsTrue("CLIPBOARD_NOAUDIO")) {
         std::valarray<short> samples(error_pcm_len / 2);
         for (size_t i = 0; i < error_pcm_len; i += 2)
             samples[i / 2] = static_cast<short>(error_pcm[i] | (error_pcm[i + 1] << 8));
+        for (auto& sample : samples)
+            sample = static_cast<short>(sample * 0.15);
         if (!playAsyncSoundEffect(samples)) printf("\007");
     }
 
