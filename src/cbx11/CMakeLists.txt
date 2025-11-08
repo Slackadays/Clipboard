@@ -1,5 +1,10 @@
-add_library(cbx11 MODULE
+add_library(cbx11 SHARED
   src/x11.cpp
+)
+
+set_target_properties(cbx11 PROPERTIES
+  VERSION 1.0
+  SOVERSION 1
 )
 
 target_link_libraries(cbx11
