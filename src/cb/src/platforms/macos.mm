@@ -70,6 +70,10 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
             [fileArray addObject:[NSURL fileURLWithPath:@(path.c_str())]];
         }
         [[NSPasteboard generalPasteboard] writeObjects:fileArray];
+        // Workaround for a macOS bug: after writing multiple items to the
+        // pasteboard, only the last one may persist unless we read them back.
+        // See https://github.com/Slackadays/Clipboard/issues/234
+        [[NSPasteboard generalPasteboard] readObjectsForClasses:@[ [NSURL class] ] options:nil];
     } else {
         // Write blank content
         [[NSPasteboard generalPasteboard] setString:@"" forType:NSPasteboardTypeString];

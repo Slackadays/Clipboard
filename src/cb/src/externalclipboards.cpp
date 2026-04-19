@@ -256,6 +256,15 @@ void syncWithExternalClipboards(bool force) {
         ClipboardContent content;
         if (!envVarIsTrue("CLIPBOARD_NOREMOTE")) content = getRemoteClipboard();
         if (content.type() == Empty && !envVarIsTrue("CLIPBOARD_NOGUI")) content = getGUIClipboard(preferred_mime);
+        // For non-write actions (Paste, Show, etc.), don't write GUI clipboard content
+        // into internal storage. On macOS, other apps (e.g. terminal) may overwrite
+        // the system clipboard between copy and paste, and writing that stale/wrong
+        // content as a new entry would break the paste operation.
+        // See https://github.com/Slackadays/Clipboard/issues/234
+        if (!isAWriteAction() && !force) {
+            available_mimes = content.availableTypes();
+            return;
+        }
         if (content.type() == Text) {
             convertFromGUIClipboard(content.text());
             copying.mime = !content.mime().empty() ? content.mime() : inferMIMEType(content.text()).value_or("text/plain");
