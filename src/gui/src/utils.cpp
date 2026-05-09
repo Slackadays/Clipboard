@@ -39,7 +39,7 @@ StringOrLiteral::operator const char*() const {
 }
 
 StringOrLiteral::operator std::string_view() const {
-    return std::visit([](auto&& data) -> std::string_view { return {data}; }, m_data);
+    return std::visit([](auto&& data) -> std::string_view { return std::string_view(data); }, m_data);
 }
 
 std::string urlDecode(std::string_view value) {
