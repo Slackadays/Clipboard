@@ -65,11 +65,14 @@ void writeToGUIClipboard(const ClipboardContent& clipboard) {
     if (clipboard.type() == ClipboardContentType::Text || clipboard.type() == ClipboardContentType::Binary) {
         [[NSPasteboard generalPasteboard] setString:@(clipboard.text().c_str()) forType:NSPasteboardTypeString];
     } else if (clipboard.type() == ClipboardContentType::Paths) {
-        NSMutableArray *fileArray = [NSMutableArray new];
+        NSMutableArray *items = [NSMutableArray new];
         for (auto const& path : clipboard.paths().paths()) {
-            [fileArray addObject:[NSURL fileURLWithPath:@(path.c_str())]];
+            NSURL *url = [NSURL fileURLWithPath:@(path.c_str())];
+            NSPasteboardItem *item = [[NSPasteboardItem alloc] init];
+            [item setString:url.absoluteString forType:NSPasteboardTypeFileURL];
+            [items addObject:item];
         }
-        [[NSPasteboard generalPasteboard] writeObjects:fileArray];
+        [[NSPasteboard generalPasteboard] writeObjects:items];
     } else {
         // Write blank content
         [[NSPasteboard generalPasteboard] setString:@"" forType:NSPasteboardTypeString];
