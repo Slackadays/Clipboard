@@ -36,7 +36,7 @@ add_custom_target(cbwayland_generatedheaders
   DEPENDS "${GENERATED_XDG_SHELL_HEADER}"
 )
 
-add_library(cbwayland MODULE
+add_library(cbwayland SHARED
   src/fd.cpp
   src/wayland.cpp
 
@@ -69,6 +69,11 @@ target_link_libraries(cbwayland
 target_include_directories(cbwayland PRIVATE
   ${WAYLAND_CLIENT_INCLUDE_DIRS}
   ${GENERATED_INCLUDE_DIR}
+)
+
+set_target_properties(cbwayland PROPERTIES
+  VERSION 1.0
+  SOVERSION 1
 )
 
 install(TARGETS cbwayland LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
