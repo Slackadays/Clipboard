@@ -168,20 +168,19 @@ void ignoreItemsPreemptively(std::vector<fs::path>& items) {
     if (path.holdsIgnoreRegexes()) {
         auto regexes = path.ignoreRegexes();
         for (const auto& regex : regexes)
-            for (const auto& item : items)
-                if (std::regex_match(item.string(), regex)) items.erase(std::find(items.begin(), items.end(), item));
+            items.erase(std::remove_if(items.begin(), items.end(), [&regex](const auto& item) { return std::regex_match(item.string(), regex); }), items.end());
     }
     if (path.holdsIgnoreSecrets()) {
         auto secrets = path.ignoreSecrets();
         std::array<unsigned char, SHA512_DIGEST_LENGTH> hash;
         for (const auto& secret : secrets) {
-            for (const auto& item : items) {
+            items.erase(std::remove_if(items.begin(), items.end(), [&secret, &hash](const auto& item) {
                 SHA512(reinterpret_cast<const unsigned char*>(item.string().data()), item.string().size(), hash.data());
                 std::stringstream ss;
                 for (const auto& byte : hash)
                     ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
-                if (ss.str() == secret) items.erase(std::find(items.begin(), items.end(), item));
-            }
+                return ss.str() == secret;
+            }), items.end());
         }
     }
 }
@@ -241,8 +240,10 @@ void setupHandlers() {
         }
 #elif defined(UNIX_OR_UNIX_LIKE)
         if (isAWriteAction()) {
-            fsync(open(global_path.temporary.string().data(), O_RDONLY));
-            fsync(open(global_path.persistent.string().data(), O_RDONLY));
+            int fd1 = open(global_path.temporary.string().data(), O_RDONLY);
+            if (fd1 != -1) { fsync(fd1); close(fd1); }
+            int fd2 = open(global_path.persistent.string().data(), O_RDONLY);
+            if (fd2 != -1) { fsync(fd2); close(fd2); }
         }
 #endif
     });

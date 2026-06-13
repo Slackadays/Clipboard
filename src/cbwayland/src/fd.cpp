@@ -20,6 +20,8 @@
 
 #include <sys/mman.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <limits.h>
 
 #include <clipboard/logging.hpp>
 
@@ -75,7 +77,8 @@ PipeFd::PipeFd(PipeFd&& other) noexcept {
 }
 
 PipeFd& PipeFd::operator=(PipeFd&& other) noexcept {
-    PipeFd::~PipeFd();
+    closeRead();
+    closeWrite();
     std::swap(m_readFd, other.m_readFd);
     std::swap(m_writeFd, other.m_writeFd);
     return *this;

@@ -51,7 +51,27 @@ void noteText() {
 }
 
 void notePipe() {
-    std::string content(pipedInContent());
+    std::string rawContent(pipedInContent());
+    // Strip trailing newlines and carriage returns
+    std::string content(rawContent);
+    while (!content.empty() && 
+           (content.back() == '\n' || content.back() == '\r')) {
+        content.pop_back();
+    }
+    if (rawContent.empty()) {
+        if (fs::is_regular_file(path.metadata.notes)) {
+            std::string noteContent(fileContents(path.metadata.notes).value());
+            if (is_tty.out) {
+                stopIndicator();
+                printf(formatColors("[info]┃ Note for this clipboard: %s[blank]\n").data(), noteContent.data());
+            } else
+                printf(formatColors("%s").data(), noteContent.data());
+        } else {
+            stopIndicator();
+            fprintf(stderr, "%s", formatColors("[info]┃ There is no note for this clipboard.[blank]\n").data());
+        }
+        return;
+    }
     writeToFile(path.metadata.notes, content);
     if (output_silent || confirmation_silent) return;
     stopIndicator();

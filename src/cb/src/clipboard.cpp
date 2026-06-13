@@ -64,11 +64,14 @@ std::deque<unsigned long> Clipboard::generatedEntryIndex() {
     fs::create_directories(entriesDir);
 #if defined(UNIX_OR_UNIX_LIKE)
     auto dirptr = opendir(entriesDir.string().data());
-    errno = 0;
-    for (auto* dir = readdir(dirptr); dir != nullptr; dir = readdir(dirptr), errno = 0) {
-        pathNames.emplace_back(0);
-        if (auto [ptr, ec] = std::from_chars(dir->d_name, dir->d_name + strlen(dir->d_name), pathNames.back()); ec != std::errc()) [[unlikely]]
-            pathNames.pop_back();
+    if (dirptr != nullptr) {
+        errno = 0;
+        for (auto* dir = readdir(dirptr); dir != nullptr; dir = readdir(dirptr), errno = 0) {
+            pathNames.emplace_back(0);
+            if (auto [ptr, ec] = std::from_chars(dir->d_name, dir->d_name + strlen(dir->d_name), pathNames.back()); ec != std::errc()) [[unlikely]]
+                pathNames.pop_back();
+        }
+        closedir(dirptr);
     }
 #else
     for (const auto& entry : fs::directory_iterator(entriesDir))

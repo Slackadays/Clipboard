@@ -174,7 +174,7 @@ std::string generatedEndbar() {
 std::string repeatString(const std::string_view& character, const size_t& length) {
     std::string repeated;
     repeated.reserve(character.size() * length);
-    for (int i = 0; i < length; i++)
+    for (size_t i = 0; i < length; i++)
         repeated += character;
     return repeated;
 }

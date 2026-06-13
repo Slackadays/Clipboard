@@ -70,7 +70,10 @@ ClipboardContent getRemoteClipboard() {
 
     // remove terminal control characters
     response = response.substr(response.find_last_of(';') + 1);
-    response = response.substr(0, response.size() - 2); // remove the \007 character and something before it
+    if (response.size() >= 2)
+        response = response.substr(0, response.size() - 2); // remove the \007 character and something before it
+    else
+        response.clear();
 
     if (response.empty()) return {};
 
@@ -83,7 +86,7 @@ ClipboardContent getRemoteClipboard() {
         constexpr std::string_view convertToChar("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
         std::string output;
         output.reserve(content.size() * 3 / 4);
-        for (size_t i = 0; i < content.size(); i += 4) {
+        for (size_t i = 0; i + 1 < content.size(); i += 4) {
             auto first = content.at(i);
             auto second = content.at(i + 1);
             auto byte = static_cast<char>((convertToChar.find(first) << 2) | (convertToChar.find(second) >> 4));
@@ -131,8 +134,7 @@ void convertFromGUIClipboard(const ClipboardPaths& clipboard) {
     auto regexes = path.ignoreRegexes();
     auto paths = clipboard.paths();
     for (const auto& regex : regexes)
-        for (auto&& path : paths)
-            if (std::regex_match(path.filename().string(), regex)) paths.erase(std::find(paths.begin(), paths.end(), path));
+        paths.erase(std::remove_if(paths.begin(), paths.end(), [&regex](auto& path) { return std::regex_match(path.filename().string(), regex); }), paths.end());
 
     // Only clear the temp directory if all files in the clipboard are outside the temp directory
     // This avoids the situation where we delete the very files we're trying to copy
@@ -369,7 +371,7 @@ void setupGUIClipboardDaemon() {
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
 
-#elif defined(_WIN32) | defined(_WIN64)
+#elif defined(_WIN32) || defined(_WIN64)
 
 #endif
 

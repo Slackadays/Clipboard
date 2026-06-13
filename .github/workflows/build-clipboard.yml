@@ -158,8 +158,10 @@ jobs:
 
       - name: Run a script
         run: |
+          vcpkg install openssl:x64-windows
+          $env:PATH = "$env:VCPKG_ROOT;$env:PATH"
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
           cmake --build . --config Release -j 3
       - uses: actions/upload-artifact@v4
         with:
@@ -176,7 +178,7 @@ jobs:
           vcpkg install openssl:arm64-windows
           $env:PATH = "$env:VCPKG_ROOT;$env:PATH"
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=ARM64
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=ARM64 -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
           cmake --build . --config Release -j 3
       - uses: actions/upload-artifact@v4
         with:
@@ -184,88 +186,104 @@ jobs:
           path: build/output
   freebsd-amd64:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: cpa.sh {0}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run a script
-        uses: cross-platform-actions/action@v0.13.0
+      - name: Start VM
+        uses: cross-platform-actions/action@v1.2.0
         with:
           operating_system: freebsd
           architecture: x86-64
-          version: '13.1'
-          shell: bash
-          run: |
-            sudo pkg install -y cmake llvm15 xorg wayland
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang15 -DCMAKE_CXX_COMPILER=clang++15 -DNO_X11=1
-            cmake --build . -j 2
+          version: '14.2'
+
+      - name: Build
+        run: |
+          sudo pkg install -y cmake llvm15 xorg wayland
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang15 -DCMAKE_CXX_COMPILER=clang++15 -DNO_X11=1
+          cmake --build . -j 2
       - uses: actions/upload-artifact@v4
         with:
           name: clipboard-freebsd-amd64
           path: build/output
   openbsd-amd64:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: cpa.sh {0}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run a script
-        uses: cross-platform-actions/action@v0.13.0
+      - name: Start VM
+        uses: cross-platform-actions/action@v1.2.0
         with:
           operating_system: openbsd
           architecture: x86-64
-          version: '7.2'
-          shell: bash
-          run: |
-            sudo pkg_add cmake
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
-            cmake --build . -j 2
+          version: '7.6'
+
+      - name: Build
+        run: |
+          sudo pkg_add cmake
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
+          cmake --build . -j 2
       - uses: actions/upload-artifact@v4
         with:
           name: clipboard-openbsd-amd64
           path: build/output
   openbsd-arm64:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: cpa.sh {0}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run a script
-        uses: cross-platform-actions/action@v0.13.0
+      - name: Start VM
+        uses: cross-platform-actions/action@v1.2.0
         with:
           operating_system: openbsd
           architecture: arm64
-          version: '7.2'
-          shell: bash
-          run: |
-            sudo pkg_add cmake
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
-            cmake --build . -j 2
+          version: '7.6'
+
+      - name: Build
+        run: |
+          sudo pkg_add cmake
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DNO_X11=1
+          cmake --build . -j 2
       - uses: actions/upload-artifact@v4
         with:
           name: clipboard-openbsd-arm64
           path: build/output
   netbsd-amd64:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: cpa.sh {0}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run a script
-        uses: cross-platform-actions/action@v0.13.0
+      - name: Start VM
+        uses: cross-platform-actions/action@v1.2.0
         with:
           operating_system: netbsd
-          architecture: x86_64
-          version: '9.2'
-          shell: bash
-          run: |
-            sudo pkgin -y install cmake gcc12
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
-            cmake --build . -j 2
+          architecture: x86-64
+          version: '10.1'
+
+      - name: Build
+        run: |
+          sudo pkgin -y install cmake gcc12
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/pkg/gcc12/bin/gcc -DCMAKE_CXX_COMPILER=/usr/pkg/gcc12/bin/g++
+          cmake --build . -j 2
       - uses: actions/upload-artifact@v4
         with:
           name: clipboard-netbsd-amd64

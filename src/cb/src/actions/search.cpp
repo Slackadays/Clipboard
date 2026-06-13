@@ -73,13 +73,13 @@ void displaySearchResults(const std::vector<Result>& results) {
 
 void displaySearchJSON(const std::vector<Result>& results) {
     printf("[\n");
-    for (size_t i = results.size() - 1; i > 0; i--) {
+    for (size_t i = 0; i < results.size(); i++) {
         printf("    {\n");
         printf("        \"clipboard\": \"%s\",\n", results.at(i).clipboard.data());
         printf("        \"entry\": %lu,\n", results.at(i).entry);
         printf("        \"preview\": \"%s\",\n", JSONescape(results.at(i).preview).data());
         printf("        \"score\": %lu\n", results.at(i).score);
-        printf("    }%s\n", i == 1 ? "" : ",");
+        printf("    }%s\n", i == results.size() - 1 ? "" : ",");
     }
     printf("]\n");
 }
@@ -150,7 +150,7 @@ void searchInternal(std::function<void(const std::vector<Result>&)> nextStep) {
     };
 
     for (auto& clipboard : targets) {
-        for (auto entry = 0; entry < clipboard.entryIndex.size(); entry++) {
+        for (size_t entry = 0; entry < clipboard.entryIndex.size(); entry++) {
             auto adjustScoreByEntryPosition = [&](Result& result) {
                 float multiplier = 1.0f - (static_cast<float>(entry) / (20.0f * static_cast<float>(clipboard.entryIndex.size())));
                 float newScore = static_cast<float>(result.score) * multiplier;

@@ -152,7 +152,7 @@ void history() {
     constexpr size_t batchInterval = 65536;
 #endif
 
-    auto longestEntryLength = numberLength(path.entryIndex.size() - 1);
+    auto longestEntryLength = path.entryIndex.empty() ? 1 : numberLength(path.entryIndex.size() - 1);
 
     stopIndicator();
     auto available = thisTerminalSize();
@@ -182,7 +182,7 @@ void history() {
     size_t longestDateLength = atomicLongestDateLength.load(std::memory_order_relaxed);
     size_t longestSizeLength = atomicLongestSizeLength.load(std::memory_order_relaxed);
 
-    for (long entry = path.entryIndex.size() - 1; entry >= 0; entry--) {
+    for (long entry = static_cast<long>(path.entryIndex.size()) - 1; entry >= 0; entry--) {
         path.setEntry(entry);
 
         if (batchedMessage.size() - offset > batchInterval) {

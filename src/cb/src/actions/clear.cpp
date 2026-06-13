@@ -42,7 +42,7 @@ void clear() {
                 clipboards_cleared++;
             }
             stopIndicator();
-            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Cleared %d clipboard%s[blank]\n").data(), clipboards_cleared, clipboards_cleared == 1 ? "" : "s");
+            fprintf(stderr, formatColors("[success][inverse] ✔ [noinverse] Cleared %lu clipboard%s[blank]\n").data(), clipboards_cleared, clipboards_cleared == 1 ? "" : "s");
         }
     } else {
         if (copying.items.size() >= 1) {
